@@ -9,3 +9,15 @@ E:\E-Internship Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internshi
 E:\E-Internship Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.dll
 E:\E-Internship Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.pdb
 E:\E-Internship Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.csprojResolveAssemblyReference.cache
+C:\Users\Qi Xiang\Documents\GitKraken\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.deps.json
+C:\Users\Qi Xiang\Documents\GitKraken\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.runtimeconfig.json
+C:\Users\Qi Xiang\Documents\GitKraken\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.runtimeconfig.dev.json
+C:\Users\Qi Xiang\Documents\GitKraken\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.dll
+C:\Users\Qi Xiang\Documents\GitKraken\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.pdb
+C:\Users\Qi Xiang\Documents\GitKraken\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.csprojResolveAssemblyReference.cache
+C:\Users\Qi Xiang\Documents\GitKraken\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.csproj.CoreCompileInputs.cache
+C:\Users\Qi Xiang\Documents\GitKraken\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\UserSecretsAssemblyInfo.cs
+C:\Users\Qi Xiang\Documents\GitKraken\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.AssemblyInfoInputs.cache
+C:\Users\Qi Xiang\Documents\GitKraken\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.AssemblyInfo.cs
+C:\Users\Qi Xiang\Documents\GitKraken\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.dll
+C:\Users\Qi Xiang\Documents\GitKraken\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.pdb

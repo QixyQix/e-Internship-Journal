@@ -13,7 +13,6 @@ namespace E_Internship_Journal.Models
         public Boolean Approved { get; set; }
         public string SoftSkillsCompetency { get; set; }
         public string TechnicalCompetency { get; set; }
-        public Internship_Record InternshipId { get; set; }
 
         public int CommunicationGrading { get; set; }
         public int TechnicalGrading { get; set; }
@@ -21,6 +20,11 @@ namespace E_Internship_Journal.Models
         public int PerformanceGrading { get; set; }
         public int OverallGrading { get; set; }
         public string OverallFeedback { get; set; }
+        
+        public Internship_Record Internship { get; set; }
+        public int InternshipRecordId { get; set; }
+
+        public List<Day_Record> DayRecords { get; set; }
 
     }
 }

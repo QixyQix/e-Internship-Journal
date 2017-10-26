@@ -7,7 +7,7 @@ namespace E_Internship_Journal.Models
 {
     public class Day_Record
     {
-        public int Id { get; set; }
+        public int DayId { get; set; }
         public DateTime Date { get; set; }
         public Boolean MC { get; set; }
         public Boolean CompanyOff { get; set; }
@@ -18,6 +18,6 @@ namespace E_Internship_Journal.Models
         public Month_Record Month { get; set; }
         public int MonthRecordId { get; set; }
 
-        public List<Task> Tasks { get; set; }
+        public List<Task_Record> Tasks { get; set; }
     }
 }

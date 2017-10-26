@@ -15,11 +15,14 @@ namespace E_Internship_Journal.Models
 
         public ApplicationUser LiaisonOfficer { get; set; }
         public int LiaisonOfficeId { get; set; }
+
         public UserBatch UserBatch { get; set; }
+        public int UserBatchId { get; set; }
+
         public Project Project { get; set; }
         public int ProjectId { get; set; }
 
-        public List<TouchPoint> TouchPoints { get; set; }
+        public List<TouchPoint_Record> TouchPoints { get; set; }
         public List<Month_Record> MonthRecords { get; set; }
 
 
