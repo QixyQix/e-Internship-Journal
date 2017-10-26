@@ -11,6 +11,7 @@ namespace E_Internship_Journal.Models
         public string TitleDescriotion { get; set; }
         public string Description { get; set; }
         public Course CourseId { get; set; }
+        public List<Competency_Checked> Competency_Checkeds { get; set; }
 
     }
 }

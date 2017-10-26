@@ -10,6 +10,8 @@ namespace E_Internship_Journal.Models
         public int CourseId { get; set; }
         public string CourseCode { get; set; }
         public string CourseName { get; set; }
-        public ApplicationUser SLO_User_Id { get; set; }
+        public List<Batch> Batches { get; set; }
+        public List<ApplicationUser> SLO_Useres { get; set; }
+        public List<Competencies> Competencies { get; set; }
     }
 }
