@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using E_Internship_Journal.Models;
+/* Additional using statements besides the defaults (Start) */
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+/* Additional using statements besides the defaults (End) */
 
 namespace E_Internship_Journal.Data
 {
@@ -41,13 +45,112 @@ namespace E_Internship_Journal.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //----------- Defining Batches Entity - Start --------------
-            //Make the CourseId a  Primary Key and 
-            //Test
+            //----------- Defining Course Entity - Start --------------
+            //Make the CourseId a  Primary Key
             modelBuilder.Entity<Course>()
                 .HasKey(courses => courses.CourseId)
                 .HasName("PrimaryKey_CourseId");
 
+            modelBuilder.Entity<Course>()
+                .Property(courses => courses.CourseId)
+                .HasColumnName("CourseId")
+                .HasColumnType("int")
+                .UseSqlServerIdentityColumn()
+                .ValueGeneratedOnAdd()
+                .IsRequired();
+
+            modelBuilder.Entity<Course>()
+                .Property(courses => courses.CourseCode)
+                .HasColumnName("CourseCode")
+                .HasColumnType("VARCHAR(10)")
+                .IsRequired();
+
+            modelBuilder.Entity<Course>()
+                .Property(courses => courses.CourseName)
+                .HasColumnName("CourseName")
+                .HasColumnType("VARCHAR(100)")
+                .IsRequired();
+
+
+            modelBuilder.Entity<Course>()
+                .HasIndex(courses => courses.CourseCode).IsUnique()
+                .HasName("Course_CourseCode_UniqueConstraint");
+
+            //----------- Defining Course Entity - End --------------
+
+
+            //----------- Defining Batches Entity - Start --------------
+            modelBuilder.Entity<Batch>()
+                .HasKey(batches => batches.BatchId)
+                .HasName("PrimaryKey_BatchId");
+
+            modelBuilder.Entity<Batch>()
+                .Property(batches => batches.BatchId)
+                .HasColumnName("BatchId")
+                .HasColumnType("int")
+                .UseSqlServerIdentityColumn()
+                .ValueGeneratedOnAdd()
+                .IsRequired();
+
+            modelBuilder.Entity<Batch>()
+                .Property(batches => batches.BatchName)
+                .HasColumnName("BatchName")
+                .HasColumnType("VARCHAR(20)")
+                .IsRequired();
+
+            modelBuilder.Entity<Batch>()
+                .Property(batches => batches.StartDate)
+                .IsRequired();
+
+            modelBuilder.Entity<Batch>()
+                .Property(batches => batches.EndDate)
+                .IsRequired();
+
+            modelBuilder.Entity<Batch>()
+                .Property(batches => batches.CourseId)
+                .HasColumnName("CourseId")
+                .HasColumnType("int")
+                .IsRequired();
+
+            modelBuilder.Entity<Batch>()
+                .HasIndex(batches => batches.BatchName).IsUnique()
+                .HasName("Batch_BatchName_UniqueConstraint");
+
+            //----------- Defining Batches Entity - End --------------
+
+            //----------- Defining UserBatches Entity - Start --------------
+
+            modelBuilder.Entity<UserBatch>()
+                .HasKey(userBatches => userBatches.UserBatchId)
+                .HasName("PrimaryKey_UserBatchId");
+
+            modelBuilder.Entity<UserBatch>()
+                .Property(userBatches => userBatches.UserBatchId)
+                .HasColumnName("UserBatchId")
+                .HasColumnType("int")
+                .UseSqlServerIdentityColumn()
+                .ValueGeneratedOnAdd()
+                .IsRequired();
+
+            modelBuilder.Entity<UserBatch>()
+                .Property(userBatches => userBatches.BatchId)
+                .HasColumnName("BatchId")
+                .HasColumnType("int")
+                .IsRequired();
+
+            modelBuilder.Entity<UserBatch>()
+                .HasOne(userBatches => userBatches.User)
+                .WithMany()
+                .HasForeignKey(userBatches => userBatches.UserId)
+                .HasPrincipalKey(applicationUserClass => applicationUserClass.Id)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            modelBuilder.Entity<UserBatch>()
+                .Property(userBatches => userBatches.InternsipRecordId)
+                .HasColumnName("InternsipRecordId")
+                .HasColumnType("int")
+                .IsRequired();
 
             base.OnModelCreating(modelBuilder);
             // Customize the ASP.NET Identity model and override the defaults if needed.
