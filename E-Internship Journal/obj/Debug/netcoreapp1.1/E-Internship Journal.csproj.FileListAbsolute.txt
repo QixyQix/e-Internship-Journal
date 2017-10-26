@@ -1,0 +1,11 @@
+E:\E-Internship Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.deps.json
+E:\E-Internship Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.runtimeconfig.json
+E:\E-Internship Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.runtimeconfig.dev.json
+E:\E-Internship Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.dll
+E:\E-Internship Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.pdb
+E:\E-Internship Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.csproj.CoreCompileInputs.cache
+E:\E-Internship Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\UserSecretsAssemblyInfo.cs
+E:\E-Internship Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.AssemblyInfo.cs
+E:\E-Internship Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.dll
+E:\E-Internship Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.pdb
+E:\E-Internship Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.csprojResolveAssemblyReference.cache
