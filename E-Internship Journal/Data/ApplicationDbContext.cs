@@ -43,7 +43,7 @@ namespace E_Internship_Journal.Data
         {
             //----------- Defining Batches Entity - Start --------------
             //Make the CourseId a  Primary Key and 
-
+            //Test
             modelBuilder.Entity<Course>()
                 .HasKey(courses => courses.CourseId)
                 .HasName("PrimaryKey_CourseId");
