@@ -7,7 +7,7 @@ namespace E_Internship_Journal.Models
 {
     public class Competency_Checked
     {
-        public int Compentency_CheckedId { get; set; }
+        public int CompentencyCheckedId { get; set; }
         public Month_Record MonthId { get; set; }
         public Competencies CompentencyId { get; set; }
     }

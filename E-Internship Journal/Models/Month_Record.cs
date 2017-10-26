@@ -11,8 +11,16 @@ namespace E_Internship_Journal.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public Boolean Approved { get; set; }
-        public string Soft_Skills_Competency { get; set; }
-        public string Technical_Competency { get; set; }
+        public string SoftSkillsCompetency { get; set; }
+        public string TechnicalCompetency { get; set; }
         public Internship_Record InternshipId { get; set; }
+
+        public int CommunicationGrading { get; set; }
+        public int TechnicalGrading { get; set; }
+        public int IndependenceGrading { get; set; }
+        public int PerformanceGrading { get; set; }
+        public int OverallGrading { get; set; }
+        public string OverallFeedback { get; set; }
+
     }
 }
