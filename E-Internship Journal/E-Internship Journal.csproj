@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
     <UserSecretsId>aspnet-E_Internship_Journal-4DCE2C3F-3B23-4DA4-B3A0-32D9B1D6769A</UserSecretsId>
+    <RootNamespace>E_Internship_Journal</RootNamespace>
   </PropertyGroup>
 
 
