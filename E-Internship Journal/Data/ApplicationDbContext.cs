@@ -39,9 +39,17 @@ namespace E_Internship_Journal.Data
             optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;Database=E_Internship_Journal;Trusted_Connection=True;MultipleActiveResultSets=True");
         }
 
-        protected override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(builder);
+            //----------- Defining Batches Entity - Start --------------
+            //Make the CourseId a  Primary Key and 
+
+            modelBuilder.Entity<Course>()
+                .HasKey(courses => courses.CourseId)
+                .HasName("PrimaryKey_CourseId");
+
+
+            base.OnModelCreating(modelBuilder);
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
