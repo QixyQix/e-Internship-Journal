@@ -10,6 +10,20 @@ namespace E_Internship_Journal.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<UserBatch> UserBatches { get; set; }
+        public DbSet<Batch> Batches { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<Competency_Checked> Competency_Checkeds { get; set; }
+        public DbSet<Competency> competencies { get; set; }
+        public DbSet<Internship_Record> Internship_Records { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<Month_Record> Month_Records { get; set; }
+        public DbSet<Day_Record> Day_Records { get; set; }
+        public DbSet<Task_Record> Tasks { get; set; }
+        public DbSet<RegistrationPin> RegistrationPins { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
