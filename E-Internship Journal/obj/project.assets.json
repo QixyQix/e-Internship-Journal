@@ -10958,11 +10958,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "E:\\E-Internship Journal\\E-Internship Journal\\E-Internship Journal.csproj",
+      "projectUniqueName": "E:\\e-Internship-Journal\\E-Internship Journal\\E-Internship Journal.csproj",
       "projectName": "E-Internship Journal",
-      "projectPath": "E:\\E-Internship Journal\\E-Internship Journal\\E-Internship Journal.csproj",
+      "projectPath": "E:\\e-Internship-Journal\\E-Internship Journal\\E-Internship Journal.csproj",
       "packagesPath": "C:\\Users\\Yattie\\.nuget\\packages\\",
-      "outputPath": "E:\\E-Internship Journal\\E-Internship Journal\\obj\\",
+      "outputPath": "E:\\e-Internship-Journal\\E-Internship Journal\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Yattie\\AppData\\Roaming\\NuGet\\NuGet.Config",
