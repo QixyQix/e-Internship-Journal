@@ -21,3 +21,14 @@ C:\Users\Qi Xiang\Documents\GitKraken\e-Internship-Journal\E-Internship Journal\
 C:\Users\Qi Xiang\Documents\GitKraken\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.AssemblyInfo.cs
 C:\Users\Qi Xiang\Documents\GitKraken\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.dll
 C:\Users\Qi Xiang\Documents\GitKraken\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.pdb
+E:\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.deps.json
+E:\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.runtimeconfig.json
+E:\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.runtimeconfig.dev.json
+E:\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.dll
+E:\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.pdb
+E:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.csprojResolveAssemblyReference.cache
+E:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.csproj.CoreCompileInputs.cache
+E:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\UserSecretsAssemblyInfo.cs
+E:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.AssemblyInfo.cs
+E:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.dll
+E:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.pdb
