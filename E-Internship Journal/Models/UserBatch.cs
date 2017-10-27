@@ -14,6 +14,6 @@ namespace E_Internship_Journal.Models
         public ApplicationUser User { get; set; }
         public int UserId { get; set; }
         public Internship_Record InternshipRecord { get; set; }
-        public int InternsipRecordId { get; set; }
+        public int InternshipRecordId { get; set; }
     }
 }

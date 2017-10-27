@@ -147,10 +147,35 @@ namespace E_Internship_Journal.Data
                 .IsRequired();
 
             modelBuilder.Entity<UserBatch>()
-                .Property(userBatches => userBatches.InternsipRecordId)
-                .HasColumnName("InternsipRecordId")
+                .Property(userBatches => userBatches.InternshipRecordId)
+                .HasColumnName("InternshipRecordId")
                 .HasColumnType("int")
                 .IsRequired();
+            //----------- Defining UserBatches Entity - End --------------
+            //----------- Defining Company Entity - Start --------------
+            modelBuilder.Entity<Company>()
+                .HasKey(companies => companies.CompanyId)
+                .HasName("PrimaryKey_CompanyId");
+
+            modelBuilder.Entity<Company>()
+                .Property(companies => companies.CompanyId)
+                .HasColumnName("CompanyId")
+                .HasColumnType("int")
+                .UseSqlServerIdentityColumn()
+                .ValueGeneratedOnAdd()
+                .IsRequired();
+            modelBuilder.Entity<Company>()
+                .Property(companies => companies.Name)
+                .HasColumnName("Company Name")
+                .HasColumnType("VARCHAR(100)")
+                .IsRequired();
+            modelBuilder.Entity<Company>()
+                .Property(companies => companies.Address)
+                .HasColumnName("Company Address")
+                .HasColumnType("VARCHAR(MAX)")
+                .IsRequired();
+            //----------- Defining Company Entity - End --------------
+
 
             base.OnModelCreating(modelBuilder);
             // Customize the ASP.NET Identity model and override the defaults if needed.
