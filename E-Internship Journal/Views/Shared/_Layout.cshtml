@@ -82,13 +82,14 @@
     <meta name="author" content="">
     <title>SB Student - Start Bootstrap Template</title>
     <!-- Bootstrap core CSS -->
-    <link href="js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="js/bootstrap/css/bootstrap.css" rel="stylesheet">
     <!-- Custom fonts for this template -->
     <link href="js/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <!-- Plugin CSS -->
     <link href="js/datatables/dataTables.bootstrap4.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="css/sb-admin.css" rel="stylesheet">
+    <link href="css/fullcalendar.css" rel="stylesheet">
 </head>
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
     <!-- Navigation -->
@@ -1385,6 +1386,8 @@
     </div>
     <!-- Bootstrap core JavaScript -->
     <script src="js/jquery/jquery.min.js"></script>
+    <script src="js/calendar/moment.min.js"></script>
+    <script src="js/calendar/fullcalendar.js"></script>
     <script src="js/popper/popper.min.js"></script>
     <script src="js/bootstrap/js/bootstrap.min.js"></script>
     <!-- Plugin JavaScript -->
@@ -1394,6 +1397,139 @@
     <script src="js/datatables/dataTables.bootstrap4.js"></script>
     <!-- Custom scripts for this template -->
     <script src="js/sb-admin.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            $('#calendar').fullCalendar('today');
+            $('#calendar').fullCalendar({
+                //defaultDate: '2017-10-12',
+                editable: true,
+                eventLimit: true, // allow "more" link when too many events
+                events: [
+                    {
+                        title: 'All Day Event',
+                        start: '2017-10-01'
+                    },
+                    {
+                        title: 'Long Event',
+                        start: '2017-10-07',
+                        end: '2017-10-10'
+                    },
+                    {
+                        id: 999,
+                        title: 'Repeating Event',
+                        start: '2017-10-09T16:00:00'
+                    },
+                    {
+                        id: 999,
+                        title: 'Repeating Event',
+                        start: '2017-10-16T16:00:00'
+                    },
+                    {
+                        title: 'Conference',
+                        start: '2017-10-11',
+                        end: '2017-10-13'
+                    },
+                    {
+                        title: 'Meeting eat eat eat sleep drink bath',
+                        start: '2017-10-12T10:30:00',
+                        end: '2017-10-12T12:30:00'
+                    },
+                    {
+                        title: 'Lunch',
+                        start: '2017-10-12T12:00:00'
+                    },
+                    {
+                        title: 'Meeting',
+                        start: '2017-10-12T14:30:00'
+                    },
+                    {
+                        title: 'Happy Hour',
+                        start: '2017-10-12T17:30:00'
+                    },
+                    {
+                        title: 'Dinner',
+                        start: '2017-10-12T20:00:00'
+                    },
+                    {
+                        title: 'Birthday Party',
+                        start: '2017-10-13T07:00:00'
+                    },
+                    {
+                        title: 'Click for Google',
+                        url: 'http://google.com/',
+                        start: '2017-10-28'
+                    }
+                ],
+                dayClick: function (date, jsEvent, view, event) {
+                    var task;
+                    if (confirm('Clicked on: ' + date.format() + '\nDo you want to add a task?')) {
+                        task = prompt("Please enter task", "");
+                            event.title = task;
+                            $('#calendar').fullCalendar('addEvent', event);
+                    } else {
+                        alert('No action was taken');
+                    }
+                    //alert('Clicked on: ' + date.format() + '\nDo you want to add a task?');
+
+                    //alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+
+                    //alert('Current view: ' + view.name);
+
+                    // change the day's background color just for fun
+                    //$(this).css('background-color', 'red');
+                },
+                eventClick: function (event, element) {
+                    var task;
+                    task = prompt("Please re-enter task", event.title);
+                        event.title = task;
+                        $('#calendar').fullCalendar('updateEvent', event);
+                    //var info;
+                    //event.title = "CLICKED!";
+
+                   // $('#calendar').fullCalendar('updateEvent', event);
+
+                    //if (event.title == null || event.title == "") {
+                    //    info == "";
+                    //    task = prompt("Please enter task", "");
+                    //    event.title = task;
+                    //} else {
+                    //    task = prompt("Please re-enter task", event.title);
+                    //    event.title = task;
+                    //    $('#calendar').fullCalendar('updateEvent', event);
+                    //}
+                }
+                //dayClick: function () {
+                //    alert('a day has been clicked!'); //for clicking
+                //}
+            });
+            function myFunction() {
+                var txt;
+                var task = prompt("Please enter task", "");
+                if (task == null || task == "") {
+                    txt = "User cancelled the prompt.";
+                } else {
+                    txt = "Hello " + person + "! How are you today?";
+                }
+                document.getElementById("demo").innerHTML = txt;
+            }
+        });
+
+    </script>
+    <style>
+        body {
+            margin: 40px 10px;
+            padding: 0;
+            font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+            font-size: 14px;
+        }
+
+        #calendar {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+    </style>
 </body>
 </html>
 
