@@ -10950,7 +10950,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Yattie\\.nuget\\packages\\": {}
+    "C:\\Users\\Qi Xiang\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
@@ -10958,14 +10958,14 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "E:\\e-Internship-Journal\\E-Internship Journal\\E-Internship Journal.csproj",
+      "projectUniqueName": "C:\\Users\\Qi Xiang\\Documents\\GitKraken\\e-Internship-Journal\\E-Internship Journal\\E-Internship Journal.csproj",
       "projectName": "E-Internship Journal",
-      "projectPath": "E:\\e-Internship-Journal\\E-Internship Journal\\E-Internship Journal.csproj",
-      "packagesPath": "C:\\Users\\Yattie\\.nuget\\packages\\",
-      "outputPath": "E:\\e-Internship-Journal\\E-Internship Journal\\obj\\",
+      "projectPath": "C:\\Users\\Qi Xiang\\Documents\\GitKraken\\e-Internship-Journal\\E-Internship Journal\\E-Internship Journal.csproj",
+      "packagesPath": "C:\\Users\\Qi Xiang\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Qi Xiang\\Documents\\GitKraken\\e-Internship-Journal\\E-Internship Journal\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Yattie\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Qi Xiang\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -10973,12 +10973,18 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp1.1": {
           "projectReferences": {}
         }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
       }
     },
     "frameworks": {

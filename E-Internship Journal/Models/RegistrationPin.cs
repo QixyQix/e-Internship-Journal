@@ -7,7 +7,7 @@ namespace E_Internship_Journal.Models
 {
     public class RegistrationPin
     {
-        public int PinId { get; set; }
+        public int RegistrationPinId { get; set; }
         public string Pin { get; set; }
 
         public ApplicationUser User { get; set; }
