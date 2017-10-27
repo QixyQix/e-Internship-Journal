@@ -9,8 +9,8 @@ namespace E_Internship_Journal.Models
     {
         public int DayId { get; set; }
         public DateTime Date { get; set; }
-        public Boolean MC { get; set; }
-        public Boolean CompanyOff { get; set; }
+        public Boolean? MC { get; set; }
+        public Boolean? CompanyOff { get; set; }
         public DateTime ArrivalTime { get; set; }
         public DateTime DepartureTime { get; set; }
         public int WeekNo { get; set; }
