@@ -8,7 +8,7 @@ namespace E_Internship_Journal.Models
     public class Project
     {
         public int ProjectId { get; set; }
-        public string Name { get; set; }
+        public string ProjectName { get; set; }
 
         public ApplicationUser Supervisor { get; set; }
         public int SupervisorId { get; set; }
