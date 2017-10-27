@@ -165,16 +165,51 @@ namespace E_Internship_Journal.Data
                 .ValueGeneratedOnAdd()
                 .IsRequired();
             modelBuilder.Entity<Company>()
-                .Property(companies => companies.Name)
-                .HasColumnName("Company Name")
+                .Property(companies => companies.CompanyName)
+                .HasColumnName("CompanyName")
                 .HasColumnType("VARCHAR(100)")
                 .IsRequired();
             modelBuilder.Entity<Company>()
-                .Property(companies => companies.Address)
-                .HasColumnName("Company Address")
+                .Property(companies => companies.CompanyAddress)
+                .HasColumnName("CompanyAddress")
                 .HasColumnType("VARCHAR(MAX)")
                 .IsRequired();
             //----------- Defining Company Entity - End --------------
+
+            //----------- Defining Project Entity - Start --------------
+            modelBuilder.Entity<Project>()
+                .HasKey(projects => projects.ProjectId)
+                .HasName("PrimaryKey_CompanyId");
+
+            modelBuilder.Entity<Project>()
+                .Property(projects => projects.ProjectId)
+                .HasColumnName("ProjectId")
+                .HasColumnType("int")
+                .UseSqlServerIdentityColumn()
+                .ValueGeneratedOnAdd()
+                .IsRequired();
+            modelBuilder.Entity<Project>()
+                .Property(projects => projects.ProjectName)
+                .HasColumnName("ProjectName")
+                .HasColumnType("VARCHAR(100)")
+                .IsRequired();
+            modelBuilder.Entity<Project>()
+                .Property(projects => projects.SupervisorId)
+                .HasColumnName("SupervisorId")
+                .HasColumnType("int")
+                .IsRequired();
+            modelBuilder.Entity<Project>()
+                .Property(projects => projects.CompanyID)
+                .HasColumnName("CompanyID")
+                .HasColumnType("int")
+                .IsRequired();
+
+
+
+
+            //----------- Defining Project Entity - End --------------
+
+
 
 
             base.OnModelCreating(modelBuilder);

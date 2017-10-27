@@ -8,8 +8,8 @@ namespace E_Internship_Journal.Models
     public class Company
     {
         public int CompanyId { get; set; }
-        public string Name { get; set; }
-        public string Address { get; set; }
+        public string CompanyName { get; set; }
+        public string CompanyAddress { get; set; }
     
         public List<Project> Projects { get; set; }
 
