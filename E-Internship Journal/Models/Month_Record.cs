@@ -23,10 +23,11 @@ namespace E_Internship_Journal.Models
         public int? OverallGrading { get; set; }
         public string OverallFeedback { get; set; }
         
-        public Internship_Record Internship { get; set; }
+        public Internship_Record InternshipRecord { get; set; }
         public int InternshipRecordId { get; set; }
 
         public List<Day_Record> DayRecords { get; set; }
+        public List<Competency_Checked> CompetencyCheckeds { get; set; }
 
     }
 }

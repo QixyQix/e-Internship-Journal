@@ -33,7 +33,7 @@ namespace E_Internship_Journal.Models
         public string FeedbackLeastEnjoy { get; set; }
 
         public ApplicationUser LiaisonOfficer { get; set; }
-        public int LiaisonOfficeId { get; set; }
+       public string LiaisonOfficerId { get; set; }
 
         public UserBatch UserBatch { get; set; }
         public int UserBatchId { get; set; }

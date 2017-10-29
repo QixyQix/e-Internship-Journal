@@ -77,7 +77,9 @@ namespace E_Internship_Journal.Data
                 .HasName("Course_CourseCode_UniqueConstraint");
 
             //----------- Defining Course Entity - End --------------
-
+            modelBuilder.Entity<ApplicationUser>()
+     .Property(courses => courses.CourseId)
+     .IsRequired(false);
 
             //----------- Defining Batches Entity - Start --------------
             modelBuilder.Entity<Batch>()
@@ -146,11 +148,11 @@ namespace E_Internship_Journal.Data
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 
-            modelBuilder.Entity<UserBatch>()
+            /* modelBuilder.Entity<UserBatch>()
                 .Property(userBatches => userBatches.InternshipRecordId)
                 .HasColumnName("InternshipRecordId")
                 .HasColumnType("int")
-                .IsRequired();
+                .IsRequired();*/
             //----------- Defining UserBatches Entity - End --------------
             //----------- Defining Company Entity - Start --------------
             modelBuilder.Entity<Company>()
@@ -179,7 +181,7 @@ namespace E_Internship_Journal.Data
             //----------- Defining Project Entity - Start --------------
             modelBuilder.Entity<Project>()
                 .HasKey(projects => projects.ProjectId)
-                .HasName("PrimaryKey_CompanyId");
+                .HasName("PrimaryKey_ProjectId");
 
             modelBuilder.Entity<Project>()
                 .Property(projects => projects.ProjectId)
@@ -194,17 +196,18 @@ namespace E_Internship_Journal.Data
                 .HasColumnType("VARCHAR(100)")
                 .IsRequired();
             modelBuilder.Entity<Project>()
-                .Property(projects => projects.SupervisorId)
-                .HasColumnName("SupervisorId")
-                .HasColumnType("int")
-                .IsRequired();
-            modelBuilder.Entity<Project>()
                 .Property(projects => projects.CompanyID)
                 .HasColumnName("CompanyID")
                 .HasColumnType("int")
                 .IsRequired();
 
-
+            modelBuilder.Entity<Project>()
+                .HasOne(project => project.Supervisor)
+                .WithMany()
+                .HasForeignKey(project => project.SupervisorId)
+                .HasPrincipalKey(applicationUserClass => applicationUserClass.Id)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
 
 
             //----------- Defining Project Entity - End --------------
@@ -212,7 +215,7 @@ namespace E_Internship_Journal.Data
             //----------- Defining Competency Entity - Start --------------
             modelBuilder.Entity<Competency>()
                 .HasKey(compenties => compenties.CompetencyId)
-                .HasName("PrimaryKey_CompanyId");
+                .HasName("PrimaryKey_CompetencyId");
 
             modelBuilder.Entity<Competency>()
                 .Property(compenties => compenties.CompetencyId)
@@ -242,7 +245,7 @@ namespace E_Internship_Journal.Data
             //----------- Defining Competency Entity - Start --------------
             modelBuilder.Entity<Competency>()
                 .HasKey(compenties => compenties.CompetencyId)
-                .HasName("PrimaryKey_CompanyId");
+                .HasName("PrimaryKey_CompetencyId");
 
             modelBuilder.Entity<Competency>()
                 .Property(compenties => compenties.CompetencyId)
@@ -385,10 +388,17 @@ namespace E_Internship_Journal.Data
             .HasColumnName("VARCHAR(100)")
             .HasColumnType("bit");
 
-            modelBuilder.Entity<Internship_Record>()
+            /*  modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.LiaisonOfficeId)
             .HasColumnName("LiaisonOfficeId")
             .HasColumnType("int")
+            .IsRequired();*/
+            modelBuilder.Entity<Internship_Record>()
+            .HasOne(userBatches => userBatches.LiaisonOfficer)
+            .WithMany()
+            .HasForeignKey(userBatches => userBatches.LiaisonOfficerId)
+            .HasPrincipalKey(applicationUserClass => applicationUserClass.Id)
+            .OnDelete(DeleteBehavior.Restrict)
             .IsRequired();
 
             modelBuilder.Entity<Internship_Record>()
@@ -608,6 +618,150 @@ namespace E_Internship_Journal.Data
 
 
             //----------- Defining Competency_Checked Entity - End --------------
+
+            //----------- Defining Task_Record Entity - Start --------------
+            modelBuilder.Entity<Task_Record>()
+            .HasKey(task_Records => task_Records.TaskRecordId)
+            .HasName("PrimaryKey_TaskRecordId");
+
+            modelBuilder.Entity<Task_Record>()
+            .Property(task_Records => task_Records.TaskRecordId)
+            .HasColumnName("TaskRecordId")
+            .HasColumnType("int")
+            .UseSqlServerIdentityColumn()
+            .ValueGeneratedOnAdd()
+            .IsRequired();
+
+
+            modelBuilder.Entity<Task_Record>()
+            .Property(task_Records => task_Records.Description)
+            .HasColumnName("Description")
+            .HasColumnType("VARCHAR(MAX)")
+            .IsRequired();
+
+            modelBuilder.Entity<Task_Record>()
+            .Property(task_Records => task_Records.DayRecordId)
+            .HasColumnName("DayRecordId")
+            .HasColumnType("int")
+            .IsRequired();
+
+
+            //----------- Defining Task_Record Entity - End --------------
+
+            //----------- Defining RegistrationPin Entity - Start --------------
+            modelBuilder.Entity<RegistrationPin>()
+            .HasKey(task_Records => task_Records.RegistrationPinId)
+            .HasName("PrimaryKey_RegistrationPinId");
+
+            modelBuilder.Entity<RegistrationPin>()
+            .Property(task_Records => task_Records.RegistrationPinId)
+            .HasColumnName("RegistrationPinId")
+            .HasColumnType("int")
+            .UseSqlServerIdentityColumn()
+            .ValueGeneratedOnAdd()
+            .IsRequired();
+
+            modelBuilder.Entity<RegistrationPin>()
+            .HasOne(registration => registration.User)
+            .WithMany()
+            .HasForeignKey(registration => registration.UserId)
+            .HasPrincipalKey(applicationUserClass => applicationUserClass.Id)
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired();
+
+            //----------- Defining RegistrationPin Entity - End --------------
+
+            //----------------------------------------------------------------------------
+            //Define Entity relationship
+            //----------------------------------------------------------------------------
+
+            //------ Relationship Brand-Course -------------------/
+            modelBuilder.Entity<Batch>()
+            .HasOne(BatchObject => BatchObject.Course)
+            .WithMany(CourseObject => CourseObject.Batches)
+            .HasForeignKey(BatchObject => BatchObject.CourseId);
+
+            //------ Relationship Brand-Course End-------------------/
+
+            //------ Relationship UserBatch-Internship_Record -------------------/
+            modelBuilder.Entity<UserBatch>()
+            .HasOne(InternshipObject => InternshipObject.InternshipRecord)
+            .WithOne(UserBatchObject => UserBatchObject.UserBatch)
+            .HasForeignKey<Internship_Record>(UserBatchObject => UserBatchObject.UserBatchId);
+            //------ Relationship UserBatch-Internship_Record End -------------------/
+
+            //------ Relationship Competency-Course -------------------/
+            modelBuilder.Entity<Competency>()
+            .HasOne(CompetencyObject => CompetencyObject.Course)
+            .WithMany(CourseObject => CourseObject.Competencies)
+            .HasForeignKey(CompetencyObject => CompetencyObject.CourseId);
+
+            //------ Relationship Competency-Course End-------------------/
+
+            modelBuilder.Entity<ApplicationUser>()
+            .HasOne(ApplicationUserObject => ApplicationUserObject.Course)
+            .WithMany(CourseObject => CourseObject.User)
+            .HasForeignKey(ApplicationUserObject => ApplicationUserObject.CourseId)
+            .IsRequired(false);
+
+            //------ Relationship Project-Company -------------------/
+            modelBuilder.Entity<Project>()
+            .HasOne(ProjectObject => ProjectObject.Company)
+            .WithMany(CompanyObject => CompanyObject.Projects)
+            .HasForeignKey(ProjectObject => ProjectObject.CompanyID);
+
+            //------ Relationship Project-Company End -------------------/
+
+            /*modelBuilder.Entity<Internship_Record>()
+            .HasOne(InternshipObject => InternshipObject.UserBatch)
+            .WithOne(UserBatchObject => UserBatchObject.InternshipRecord)
+            .HasForeignKey<UserBatch>(UserBatchObject => UserBatchObject.UserBatchId);*/
+
+            //------ Relationship Internship_Record-Project -------------------/
+            modelBuilder.Entity<Internship_Record>()
+            .HasOne(InternshipObject => InternshipObject.Project)
+            .WithMany(ProjectObject => ProjectObject.InternshipRecords)
+            .HasForeignKey(InternshipObject => InternshipObject.ProjectId);
+            //------ Relationship Internship_Record-Project End-------------------/
+
+            //------ Relationship Internship_RecordTouchPoint -------------------/
+            modelBuilder.Entity<TouchPoint_Record>()
+            .HasOne(TouchPointObject => TouchPointObject.InternshipRecord)
+            .WithMany(InternshipObject => InternshipObject.TouchPoints)
+            .HasForeignKey(TouchPointObject => TouchPointObject.InternshipRecordId);
+            //------ Relationship Internship_RecordTouchPoint End-------------------/
+
+            //------ Relationship Internship_Record-MonthRecord -------------------/
+            modelBuilder.Entity<Month_Record>()
+            .HasOne(MonthObject => MonthObject.InternshipRecord)
+            .WithMany(InternshipObject => InternshipObject.MonthRecords)
+            .HasForeignKey(MonthObject => MonthObject.InternshipRecordId);
+            //------ Relationship Internship_Record-MonthRecord End-------------------/
+
+            //------ Relationship MonthRecordDayRecord -------------------/
+            modelBuilder.Entity<Day_Record>()
+            .HasOne(DayObject => DayObject.Month)
+            .WithMany(MonthObject => MonthObject.DayRecords)
+            .HasForeignKey(DayObject => DayObject.MonthRecordId);
+            //------ Relationship MonthRecord-DayRecord End-------------------/
+
+            //------ Relationship Competency-MonthRecord -------------------/
+            modelBuilder.Entity<Competency_Checked>()
+            .HasKey(u => new { u.MonthRecordId, u.CompetencyId })
+            .HasName("PrimaryKey_MonthCompetency");
+            modelBuilder.Entity<Competency_Checked>()
+            .HasOne(MCRDefinition => MCRDefinition.MonthRecord)
+            .WithMany(MCRDefinition => MCRDefinition.CompetencyCheckeds)
+            .HasForeignKey(MCRDefinition => MCRDefinition.MonthRecordId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Competency_Checked>()
+            .HasOne(MCRDefinition => MCRDefinition.Competency)
+            .WithMany(MCRDefinition => MCRDefinition.CompetencyCheckeds)
+            .HasForeignKey(MCRDefinition => MCRDefinition.CompetencyId)
+            .OnDelete(DeleteBehavior.Restrict);
+            //------ Relationship Competency-MonthRecord End-------------------/
+
 
             base.OnModelCreating(modelBuilder);
             // Customize the ASP.NET Identity model and override the defaults if needed.

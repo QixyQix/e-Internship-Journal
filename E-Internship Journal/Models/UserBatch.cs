@@ -12,8 +12,9 @@ namespace E_Internship_Journal.Models
         public Batch Batch { get; set; }
         public int BatchId { get; set; }
         public ApplicationUser User { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
+
         public Internship_Record InternshipRecord { get; set; }
-        public int InternshipRecordId { get; set; }
+        //public int InternshipRecordId { get; set; }
     }
 }
