@@ -12,6 +12,9 @@ using Microsoft.Extensions.Logging;
 using E_Internship_Journal.Data;
 using E_Internship_Journal.Models;
 using E_Internship_Journal.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Newtonsoft.Json.Serialization;
 
 namespace E_Internship_Journal
 {
@@ -39,15 +42,31 @@ namespace E_Internship_Journal
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddApplicationInsightsTelemetry(Configuration);
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            services.AddSession();
+            services.AddMemoryCache();
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+            var defaultPolicy = new AuthorizationPolicyBuilder()
+       .RequireAuthenticatedUser()
+       .Build();
+            services.AddAuthorization(options =>
+            {
+                // inline policies
+                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("ADMIN"));
+                options.AddPolicy("RequireOfficerRole", policy => policy.RequireRole("OFFICER"));
+            });
+            services.AddMvc(setup =>
+            {
+                setup.Filters.Add(new AuthorizeFilter(defaultPolicy));
+            });
+            services.AddMvc()
+                  .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
-            services.AddMvc();
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
