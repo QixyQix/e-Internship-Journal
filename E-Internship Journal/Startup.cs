@@ -58,7 +58,10 @@ namespace E_Internship_Journal
             {
                 // inline policies
                 options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("ADMIN"));
-                options.AddPolicy("RequireOfficerRole", policy => policy.RequireRole("OFFICER"));
+                options.AddPolicy("RequireSeniorOfficerRole", policy => policy.RequireRole("SLO"));
+                options.AddPolicy("RequireOfficerRole", policy => policy.RequireRole("LO"));
+                options.AddPolicy("RequireSupervisorRole", policy => policy.RequireRole("SUPERVISOR"));
+                options.AddPolicy("RequireStudentRole", policy => policy.RequireRole("STUDENT"));
             });
             services.AddMvc(setup =>
             {
@@ -91,7 +94,7 @@ namespace E_Internship_Journal
             }
 
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseIdentity();
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
