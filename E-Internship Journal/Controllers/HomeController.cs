@@ -4,16 +4,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace E_Internship_Journal.Controllers
+namespace FYP_beta.Controllers
 {
     public class HomeController : Controller
     {
-
         public IActionResult Index()
         {
             return View();
         }
         public IActionResult Index1()
+        {
+            return View();
+        }
+        public IActionResult Login()
         {
             return View();
         }
