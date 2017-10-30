@@ -53,31 +53,31 @@ namespace E_Internship_Journal.Data
             var userStore = new UserStore<ApplicationUser>(db);
             var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
             //Admin
-            var adminUser = new ApplicationUser { FullName = "Mr Administrator", Email = "ADMIN@TEST.COM" };
+            var adminUser = new ApplicationUser { UserName = "ADMIN@TEST.COM", FullName = "Mr Administrator", Email = "ADMIN@TEST.COM" };
             PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
             adminUser.PasswordHash = ph.HashPassword(adminUser, "P@ssw0rd"); //More complex password
             await userManager.CreateAsync(adminUser);
             await userManager.AddToRoleAsync(adminUser, "ADMIN");
             //Student
-            var studentUser = new ApplicationUser { FullName = "James Bond", Email = "STUDENT@TEST.COM", Course=courseObject};
+            var studentUser = new ApplicationUser { UserName = "STUDENT@TEST.COM", FullName = "James Bond", Email = "STUDENT@TEST.COM", Course=courseObject};
             ph = new PasswordHasher<ApplicationUser>();
             studentUser.PasswordHash = ph.HashPassword(studentUser, "P@ssw0rd"); //More complex password
             await userManager.CreateAsync(studentUser);
             await userManager.AddToRoleAsync(studentUser, "STUDENT");
             //Supervisor
-            var supervisorUser = new ApplicationUser { FullName = "Santhosh Kumar", Email = "SUPERVISOR@TEST.COM"};
+            var supervisorUser = new ApplicationUser { UserName = "SUPERVISOR@TEST.COM", FullName = "Santhosh Kumar", Email = "SUPERVISOR@TEST.COM"};
             ph = new PasswordHasher<ApplicationUser>();
             supervisorUser.PasswordHash = ph.HashPassword(supervisorUser, "P@ssw0rd"); //More complex password
             await userManager.CreateAsync(supervisorUser);
             await userManager.AddToRoleAsync(supervisorUser, "SUPERVISOR");
             //LO
-            var LOUser = new ApplicationUser { FullName = "Leong Fong Sow", Email = "LO@TEST.COM"};
+            var LOUser = new ApplicationUser { UserName = "LO@TEST.COM", FullName = "Leong Fong Sow", Email = "LO@TEST.COM"};
             ph = new PasswordHasher<ApplicationUser>();
             LOUser.PasswordHash = ph.HashPassword(LOUser, "P@ssw0rd"); //More complex password
             await userManager.CreateAsync(LOUser);
             await userManager.AddToRoleAsync(LOUser, "LO");
             //SLO
-            var SLOUser = new ApplicationUser { FullName = "Teo Seok Ling", Email = "SLO@TEST.COM", Course = courseObject };
+            var SLOUser = new ApplicationUser { UserName = "SLO@TEST.COM", FullName = "Teo Seok Ling", Email = "SLO@TEST.COM", Course = courseObject };
             ph = new PasswordHasher<ApplicationUser>();
             SLOUser.PasswordHash = ph.HashPassword(SLOUser, "P@ssw0rd"); //More complex password
             await userManager.CreateAsync(SLOUser);
