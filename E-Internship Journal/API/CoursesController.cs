@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using E_Internship_Journal.Data;
 using E_Internship_Journal.Models;
 using Newtonsoft.Json;
+using Microsoft.VisualBasic;
+using System.IO;
 
 namespace E_Internship_Journal.API
 {
@@ -124,6 +126,59 @@ namespace E_Internship_Journal.API
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
+            }
+
+            //  _context.Courses.Add(course);
+            string customMessage = "";
+            var courseNewInput = JsonConvert.DeserializeObject<dynamic>(value);
+            Course newCourse = new Course();
+
+            try
+            {
+                newCourse.CourseCode = courseNewInput.CourseCode.Value;
+                newCourse.CourseName = courseNewInput.CourseName.Value;
+                _context.Courses.Add(newCourse);
+                await _context.SaveChangesAsync();
+
+            }
+            catch (Exception exceptionObject)
+            {
+                customMessage = "Unable to save to database";
+            }
+            var successRequestResultMessage = new
+            {
+                Message = "Saved Course into database"
+            };
+
+            OkObjectResult httpOkResult =
+new OkObjectResult(successRequestResultMessage);
+            return httpOkResult;
+            //return CreatedAtAction("GetCourse", new { id = course.CourseId }, course);
+        }
+
+        // POST: api/Courses
+        [HttpPost("SaveNewCourseViaFile")]
+        //public async Task<IActionResult> SaveNewCourseInformation([FromBody] Course course)
+        public async Task<IActionResult> SaveNewCourseViaFile([FromBody] string value)
+        {
+          
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            using (var reader = new StreamReader(@"C:\test.csv"))
+            {
+                List<string> listA = new List<string>();
+                List<string> listB = new List<string>();
+                reader.ReadLine();
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var values = line.Split(';');
+
+                    listA.Add(values[0]);
+                    listB.Add(values[1]);
+                }
             }
 
             //  _context.Courses.Add(course);

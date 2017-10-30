@@ -32,6 +32,126 @@
         <script src="~/js/chart.js/Chart.min.js"></script>*@
     <script src="~/js/datatables/jquery.dataTables.js"></script>
     <script src="~/js/datatables/dataTables.bootstrap4.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            $('#calendar').fullCalendar('today');
+            $('#calendar').fullCalendar({
+                //defaultDate: '2017-10-12',
+                editable: true,
+                eventLimit: true, // allow "more" link when too many events
+                events: [
+                    {
+                        title: 'All Day Event',
+                        start: '2017-10-01'
+                    },
+                    {
+                        title: 'Long Event',
+                        start: '2017-10-07',
+                        end: '2017-10-10'
+                    },
+                    {
+                        id: 999,
+                        title: 'Repeating Event',
+                        start: '2017-10-09T16:00:00'
+                    },
+                    {
+                        id: 999,
+                        title: 'Repeating Event',
+                        start: '2017-10-16T16:00:00'
+                    },
+                    {
+                        title: 'Conference',
+                        start: '2017-10-11',
+                        end: '2017-10-13'
+                    },
+                    {
+                        title: 'Meeting eat eat eat sleep drink bath',
+                        start: '2017-10-12T10:30:00',
+                        end: '2017-10-12T12:30:00'
+                    },
+                    {
+                        title: 'Lunch',
+                        start: '2017-10-12T12:00:00'
+                    },
+                    {
+                        title: 'Meeting',
+                        start: '2017-10-12T14:30:00'
+                    },
+                    {
+                        title: 'Happy Hour',
+                        start: '2017-10-12T17:30:00'
+                    },
+                    {
+                        title: 'Dinner',
+                        start: '2017-10-12T20:00:00'
+                    },
+                    {
+                        title: 'Birthday Party',
+                        start: '2017-10-13T07:00:00'
+                    },
+                    {
+                        title: 'Click for Google',
+                        url: 'http://google.com/',
+                        start: '2017-10-28'
+                    }
+                ],
+                dayClick: function (date, jsEvent, view, event) {
+                    //$("#cafeId").val($(this).data('id'));
+                    $('#myModal').modal('show');
+                    //var task;
+                    //if (confirm('Clicked on: ' + date.format() + '\nDo you want to add a task?')) {
+                    //    task = prompt("Please enter task", "");
+                    //    event.title = task;
+                    //    $('#calendar').fullCalendar('addEvent', event);
+                    //} else {
+                    //    alert('No action was taken');
+                    //}
+
+                    //alert('Clicked on: ' + date.format() + '\nDo you want to add a task?');
+                    //alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+                    //alert('Current view: ' + view.name);
+                    // change the day's background color just for fun
+                    //$(this).css('background-color', 'red');
+                },
+                eventClick: function (event, element) {
+                    var task;
+                    task = prompt("Please re-enter task", event.title);
+                    event.title = task;
+                    $('#calendar').fullCalendar('updateEvent', event);
+                    //var info;
+                    //event.title = "CLICKED!";
+
+                    // $('#calendar').fullCalendar('updateEvent', event);
+
+                    //if (event.title == null || event.title == "") {
+                    //    info == "";
+                    //    task = prompt("Please enter task", "");
+                    //    event.title = task;
+                    //} else {
+                    //    task = prompt("Please re-enter task", event.title);
+                    //    event.title = task;
+                    //    $('#calendar').fullCalendar('updateEvent', event);
+                    //}
+                }
+                //dayClick: function () {
+                //    alert('a day has been clicked!'); //for clicking
+                //}
+            });
+            function myFunction() {
+                var txt;
+                var task = prompt("Please enter task", "");
+                if (task == null || task == "") {
+                    txt = "User cancelled the prompt.";
+                } else {
+                    txt = "Hello " + person + "! How are you today?";
+                }
+                document.getElementById("demo").innerHTML = txt;
+            }
+        });
+
+    </script>
 </head>
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
 
