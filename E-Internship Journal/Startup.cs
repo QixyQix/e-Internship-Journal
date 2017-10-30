@@ -102,6 +102,8 @@ namespace E_Internship_Journal
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            DataSeeder.SeedData(new ApplicationDbContext());
         }
     }
 }
