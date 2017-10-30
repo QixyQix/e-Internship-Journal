@@ -87,8 +87,8 @@ namespace E_Internship_Journal.Data
 
             //Create Batch
             var batchObject = new Batch { BatchName = "AY1718S2", Description = "Academic Yeat 2017-2018 Semester 2",
-                StartDate = DateTime.Parse("30/10/2017"),
-                EndDate = DateTime.Parse("30/12/2017"),
+                StartDate = DateTime.ParseExact("30/10/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                EndDate = DateTime.ParseExact("30/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture),
                 Course = courseObject
             };
             db.Batches.Add(batchObject);

@@ -3,25 +3,12 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace E_Internship_Journal.Data.Migrations
+namespace E_Internship_Journal.Migrations
 {
-    public partial class a : Migration
+    public partial class efTest : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_AspNetUserRoles_UserId",
-                table: "AspNetUserRoles");
-
-            migrationBuilder.DropIndex(
-                name: "RoleNameIndex",
-                table: "AspNetRoles");
-
-            migrationBuilder.AddColumn<int>(
-                name: "CourseId",
-                table: "AspNetUsers",
-                nullable: true);
-
             migrationBuilder.CreateTable(
                 name: "Companies",
                 columns: table => new
@@ -51,23 +38,129 @@ namespace E_Internship_Journal.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RegistrationPins",
+                name: "AspNetRoles",
                 columns: table => new
                 {
-                    RegistrationPinId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Pin = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: false)
+                    Id = table.Column<string>(nullable: false),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PrimaryKey_RegistrationPinId", x => x.RegistrationPinId);
+                    table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    LoginProvider = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Value = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    CourseId = table.Column<int>(nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    FullName = table.Column<string>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RegistrationPins_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        name: "FK_AspNetUsers_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "CourseId",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Batches",
+                columns: table => new
+                {
+                    BatchId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    BatchName = table.Column<string>(type: "VARCHAR(20)", nullable: false),
+                    CourseId = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    EndDate = table.Column<DateTime>(nullable: false),
+                    StartDate = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PrimaryKey_BatchId", x => x.BatchId);
+                    table.ForeignKey(
+                        name: "FK_Batches_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "CourseId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Competencies",
+                columns: table => new
+                {
+                    CompetencyId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CourseId = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "VARCHAR(MAX)", nullable: false),
+                    TitleDescription = table.Column<string>(type: "VARCHAR(50)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PrimaryKey_CompetencyId", x => x.CompetencyId);
+                    table.ForeignKey(
+                        name: "FK_Competencies_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "CourseId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetRoleClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true),
+                    RoleId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetRoleClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -98,46 +191,87 @@ namespace E_Internship_Journal.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Batches",
+                name: "RegistrationPins",
                 columns: table => new
                 {
-                    BatchId = table.Column<int>(type: "int", nullable: false)
+                    RegistrationPinId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    BatchName = table.Column<string>(type: "VARCHAR(20)", nullable: false),
-                    CourseId = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(nullable: true),
-                    EndDate = table.Column<DateTime>(nullable: false),
-                    StartDate = table.Column<DateTime>(nullable: false)
+                    Pin = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PrimaryKey_BatchId", x => x.BatchId);
+                    table.PrimaryKey("PrimaryKey_RegistrationPinId", x => x.RegistrationPinId);
                     table.ForeignKey(
-                        name: "FK_Batches_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
-                        principalColumn: "CourseId",
+                        name: "FK_RegistrationPins_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ClaimType = table.Column<string>(nullable: true),
+                    ClaimValue = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "competencies",
+                name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    CompetencyId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CourseId = table.Column<int>(type: "int", nullable: false),
-                    Description = table.Column<string>(type: "VARCHAR(MAX)", nullable: false),
-                    TitleDescriotion = table.Column<string>(type: "VARCHAR(50)", nullable: false)
+                    LoginProvider = table.Column<string>(nullable: false),
+                    ProviderKey = table.Column<string>(nullable: false),
+                    ProviderDisplayName = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PrimaryKey_CompetencyId", x => x.CompetencyId);
+                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
-                        name: "FK_competencies_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
-                        principalColumn: "CourseId",
+                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(nullable: false),
+                    RoleId = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -173,29 +307,29 @@ namespace E_Internship_Journal.Data.Migrations
                 {
                     InternshipRecordId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Comment = table.Column<string>(type: "VARCHAR(MAX)", nullable: false),
-                    CompanyCheck1a = table.Column<bool>(type: "bit", nullable: false),
-                    CompanyCheck1b = table.Column<bool>(type: "bit", nullable: false),
-                    CompanyCheck2a = table.Column<bool>(type: "bit", nullable: false),
-                    CompanyCheck2b = table.Column<bool>(type: "bit", nullable: false),
-                    CompanyCheck2c = table.Column<bool>(type: "bit", nullable: false),
-                    CompanyCheck2d = table.Column<bool>(type: "bit", nullable: false),
-                    CompanyCheck2e = table.Column<bool>(type: "bit", nullable: false),
-                    CompanyCheck2f = table.Column<bool>(type: "bit", nullable: false),
-                    CompanyCheck3a = table.Column<bool>(type: "bit", nullable: false),
-                    CompanyCheck3b = table.Column<bool>(type: "bit", nullable: false),
-                    CompanyCheck3c = table.Column<bool>(type: "bit", nullable: false),
-                    FeedbackEnjoy = table.Column<string>(type: "VARCHAR(100)", nullable: true),
-                    FeedbackExperiences = table.Column<bool>(type: "bit", nullable: false),
-                    FeedbackImproved = table.Column<bool>(type: "bit", nullable: false),
-                    VARCHAR100 = table.Column<string>(name: "VARCHAR(100)", type: "bit", nullable: true),
-                    FeedbackRecommend = table.Column<bool>(type: "bit", nullable: false),
-                    FeedbackUseful = table.Column<bool>(type: "bit", nullable: false),
+                    Comment = table.Column<string>(type: "VARCHAR(MAX)", nullable: true, defaultValue: ""),
+                    CompanyCheck1a = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CompanyCheck1b = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CompanyCheck2a = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CompanyCheck2b = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CompanyCheck2c = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CompanyCheck2d = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CompanyCheck2e = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CompanyCheck2f = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CompanyCheck3a = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CompanyCheck3b = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CompanyCheck3c = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    FeedbackEnjoy = table.Column<string>(type: "VARCHAR(100)", nullable: true, defaultValue: ""),
+                    FeedbackExperiences = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    FeedbackImproved = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    FeedbackLeastEnjoy = table.Column<string>(type: "VARCHAR(100)", nullable: true, defaultValue: ""),
+                    FeedbackRecommend = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    FeedbackUseful = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     LiaisonOfficerId = table.Column<string>(nullable: false),
-                    Description = table.Column<string>(type: "VARCHAR(MAX)", nullable: true),
-                    PresentationGrading = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "VARCHAR(MAX)", nullable: true, defaultValue: ""),
+                    PresentationGrading = table.Column<int>(type: "int", nullable: true),
                     ProjectId = table.Column<int>(type: "int", nullable: false),
-                    ReflectionGrading = table.Column<int>(type: "int", nullable: false),
+                    ReflectionGrading = table.Column<int>(type: "int", nullable: true),
                     UserBatchId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -286,9 +420,9 @@ namespace E_Internship_Journal.Data.Migrations
                     table.PrimaryKey("PrimaryKey_MonthCompetency", x => new { x.MonthRecordId, x.CompetencyId });
                     table.UniqueConstraint("PrimaryKey_CompentencyCheckedId", x => x.CompentencyCheckedId);
                     table.ForeignKey(
-                        name: "FK_Competency_Checkeds_competencies_CompetencyId",
+                        name: "FK_Competency_Checkeds_Competencies_CompetencyId",
                         column: x => x.CompetencyId,
-                        principalTable: "competencies",
+                        principalTable: "Competencies",
                         principalColumn: "CompetencyId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -345,15 +479,20 @@ namespace E_Internship_Journal.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "RoleNameIndex",
-                table: "AspNetRoles",
-                column: "NormalizedName",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_CourseId",
                 table: "AspNetUsers",
                 column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "EmailIndex",
+                table: "AspNetUsers",
+                column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "UserNameIndex",
+                table: "AspNetUsers",
+                column: "NormalizedUserName",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "Batch_BatchName_UniqueConstraint",
@@ -367,8 +506,8 @@ namespace E_Internship_Journal.Data.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_competencies_CourseId",
-                table: "competencies",
+                name: "IX_Competencies_CourseId",
+                table: "Competencies",
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
@@ -443,21 +582,35 @@ namespace E_Internship_Journal.Data.Migrations
                 table: "UserBatches",
                 column: "UserId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUsers_Courses_CourseId",
-                table: "AspNetUsers",
-                column: "CourseId",
-                principalTable: "Courses",
-                principalColumn: "CourseId",
-                onDelete: ReferentialAction.Restrict);
+            migrationBuilder.CreateIndex(
+                name: "RoleNameIndex",
+                table: "AspNetRoles",
+                column: "NormalizedName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetRoleClaims_RoleId",
+                table: "AspNetRoleClaims",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserClaims_UserId",
+                table: "AspNetUserClaims",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserLogins_UserId",
+                table: "AspNetUserLogins",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserRoles_RoleId",
+                table: "AspNetUserRoles",
+                column: "RoleId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_AspNetUsers_Courses_CourseId",
-                table: "AspNetUsers");
-
             migrationBuilder.DropTable(
                 name: "Competency_Checkeds");
 
@@ -471,10 +624,28 @@ namespace E_Internship_Journal.Data.Migrations
                 name: "TouchPoint_Record");
 
             migrationBuilder.DropTable(
-                name: "competencies");
+                name: "AspNetRoleClaims");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserClaims");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserLogins");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserRoles");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Competencies");
 
             migrationBuilder.DropTable(
                 name: "Day_Records");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Month_Records");
@@ -495,29 +666,10 @@ namespace E_Internship_Journal.Data.Migrations
                 name: "Batches");
 
             migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
                 name: "Courses");
-
-            migrationBuilder.DropIndex(
-                name: "RoleNameIndex",
-                table: "AspNetRoles");
-
-            migrationBuilder.DropIndex(
-                name: "IX_AspNetUsers_CourseId",
-                table: "AspNetUsers");
-
-            migrationBuilder.DropColumn(
-                name: "CourseId",
-                table: "AspNetUsers");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUserRoles_UserId",
-                table: "AspNetUserRoles",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "RoleNameIndex",
-                table: "AspNetRoles",
-                column: "NormalizedName");
         }
     }
 }

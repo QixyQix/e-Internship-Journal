@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using E_Internship_Journal.Data;
 
-namespace E_Internship_Journal.Data.Migrations
+namespace E_Internship_Journal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20171030064949_a")]
-    partial class a
+    [Migration("20171030133028_efTest")]
+    partial class efTest
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,6 +33,8 @@ namespace E_Internship_Journal.Data.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("FullName");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -147,9 +149,9 @@ namespace E_Internship_Journal.Data.Migrations
                         .HasColumnName("Description")
                         .HasColumnType("VARCHAR(MAX)");
 
-                    b.Property<string>("TitleDescriotion")
+                    b.Property<string>("TitleDescription")
                         .IsRequired()
-                        .HasColumnName("TitleDescriotion")
+                        .HasColumnName("TitleDescription")
                         .HasColumnType("VARCHAR(50)");
 
                     b.HasKey("CompetencyId")
@@ -157,7 +159,7 @@ namespace E_Internship_Journal.Data.Migrations
 
                     b.HasIndex("CourseId");
 
-                    b.ToTable("competencies");
+                    b.ToTable("Competencies");
                 });
 
             modelBuilder.Entity("E_Internship_Journal.Models.Competency_Checked", b =>
@@ -269,86 +271,123 @@ namespace E_Internship_Journal.Data.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Comment")
-                        .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("Comment")
-                        .HasColumnType("VARCHAR(MAX)");
+                        .HasColumnType("VARCHAR(MAX)")
+                        .HasDefaultValue("");
 
                     b.Property<bool>("CompanyCheck1a")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("CompanyCheck1a")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("CompanyCheck1b")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("CompanyCheck1b")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("CompanyCheck2a")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("CompanyCheck2a")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("CompanyCheck2b")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("CompanyCheck2b")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("CompanyCheck2c")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("CompanyCheck2c")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("CompanyCheck2d")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("CompanyCheck2d")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("CompanyCheck2e")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("CompanyCheck2e")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("CompanyCheck2f")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("CompanyCheck2f")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("CompanyCheck3a")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("CompanyCheck3a")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("CompanyCheck3b")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("CompanyCheck3b")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("CompanyCheck3c")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("CompanyCheck3c")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("FeedbackEnjoy")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("FeedbackEnjoy")
-                        .HasColumnType("VARCHAR(100)");
+                        .HasColumnType("VARCHAR(100)")
+                        .HasDefaultValue("");
 
                     b.Property<bool>("FeedbackExperiences")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("FeedbackExperiences")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("FeedbackImproved")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("FeedbackImproved")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("FeedbackLeastEnjoy")
-                        .HasColumnName("VARCHAR(100)")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("FeedbackLeastEnjoy")
+                        .HasColumnType("VARCHAR(100)")
+                        .HasDefaultValue("");
 
                     b.Property<bool>("FeedbackRecommend")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("FeedbackRecommend")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("FeedbackUseful")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("FeedbackUseful")
-                        .HasColumnType("bit");
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("LiaisonOfficerId")
                         .IsRequired();
 
                     b.Property<string>("PosterUrl")
+                        .ValueGeneratedOnAdd()
                         .HasColumnName("Description")
-                        .HasColumnType("VARCHAR(MAX)");
+                        .HasColumnType("VARCHAR(MAX)")
+                        .HasDefaultValue("");
 
-                    b.Property<int>("PresentationGrading")
+                    b.Property<int?>("PresentationGrading")
                         .HasColumnName("PresentationGrading")
                         .HasColumnType("int");
 
@@ -356,7 +395,7 @@ namespace E_Internship_Journal.Data.Migrations
                         .HasColumnName("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ReflectionGrading")
+                    b.Property<int?>("ReflectionGrading")
                         .HasColumnName("ReflectionGrading")
                         .HasColumnType("int");
 
