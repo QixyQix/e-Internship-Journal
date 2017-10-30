@@ -19,7 +19,7 @@ namespace E_Internship_Journal.Data
         public DbSet<Batch> Batches { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Competency_Checked> Competency_Checkeds { get; set; }
-        public DbSet<Competency> competencies { get; set; }
+        public DbSet<Competency> Competencies { get; set; }
         public DbSet<Internship_Record> Internship_Records { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Company> Companies { get; set; }
@@ -30,6 +30,10 @@ namespace E_Internship_Journal.Data
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
+        {
+        }
+
+        public ApplicationDbContext()
         {
         }
 
@@ -225,8 +229,8 @@ namespace E_Internship_Journal.Data
                 .ValueGeneratedOnAdd()
                 .IsRequired();
             modelBuilder.Entity<Competency>()
-                .Property(compenties => compenties.TitleDescriotion)
-                .HasColumnName("TitleDescriotion")
+                .Property(compenties => compenties.TitleDescription)
+                .HasColumnName("TitleDescription")
                 .HasColumnType("VARCHAR(50)")
                 .IsRequired();
             modelBuilder.Entity<Competency>()
@@ -242,36 +246,6 @@ namespace E_Internship_Journal.Data
 
             //----------- Defining Competency Entity - End --------------
 
-            //----------- Defining Competency Entity - Start --------------
-            modelBuilder.Entity<Competency>()
-                .HasKey(compenties => compenties.CompetencyId)
-                .HasName("PrimaryKey_CompetencyId");
-
-            modelBuilder.Entity<Competency>()
-                .Property(compenties => compenties.CompetencyId)
-                .HasColumnName("CompetencyId")
-                .HasColumnType("int")
-                .UseSqlServerIdentityColumn()
-                .ValueGeneratedOnAdd()
-                .IsRequired();
-            modelBuilder.Entity<Competency>()
-                .Property(compenties => compenties.TitleDescriotion)
-                .HasColumnName("TitleDescriotion")
-                .HasColumnType("VARCHAR(50)")
-                .IsRequired();
-            modelBuilder.Entity<Competency>()
-                .Property(compenties => compenties.Description)
-                .HasColumnName("Description")
-                .HasColumnType("VARCHAR(MAX)")
-                .IsRequired();
-            modelBuilder.Entity<Competency>()
-            .Property(compenties => compenties.CourseId)
-            .HasColumnName("CourseId")
-            .HasColumnType("int")
-            .IsRequired();
-
-            //----------- Defining Competency Entity - End --------------
-
             //----------- Defining Internship_Record Entity - Start --------------
             modelBuilder.Entity<Internship_Record>()
             .HasKey(Internship_Records => Internship_Records.InternshipRecordId)
@@ -284,109 +258,133 @@ namespace E_Internship_Journal.Data
             .UseSqlServerIdentityColumn()
             .ValueGeneratedOnAdd()
             .IsRequired();
+
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.PresentationGrading)
             .HasColumnName("PresentationGrading")
             .HasColumnType("int")
-            .IsRequired();
+            .IsRequired(false);
+
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.ReflectionGrading)
             .HasColumnName("ReflectionGrading")
             .HasColumnType("int")
-            .IsRequired();
+            .IsRequired(false);
+
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.Comment)
             .HasColumnName("Comment")
             .HasColumnType("VARCHAR(MAX)")
-            .IsRequired();
+            .HasDefaultValue("");
+
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.PosterUrl)
             .HasColumnName("Description")
-            .HasColumnType("VARCHAR(MAX)");
+            .HasColumnType("VARCHAR(MAX)")
+            .HasDefaultValue("");
 
             //This is for Company Checklist when student first enter the company
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.CompanyCheck1a)
             .HasColumnName("CompanyCheck1a")
-            .HasColumnType("bit");
+            .HasColumnType("bit")
+            .HasDefaultValue(0);
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.CompanyCheck1b)
             .HasColumnName("CompanyCheck1b")
-            .HasColumnType("bit");
+            .HasColumnType("bit")
+            .HasDefaultValue(0);
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.CompanyCheck2a)
             .HasColumnName("CompanyCheck2a")
-            .HasColumnType("bit");
+            .HasColumnType("bit")
+            .HasDefaultValue(0);
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.CompanyCheck2b)
             .HasColumnName("CompanyCheck2b")
-            .HasColumnType("bit");
+            .HasColumnType("bit")
+            .HasDefaultValue(0);
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.CompanyCheck2c)
             .HasColumnName("CompanyCheck2c")
-            .HasColumnType("bit");
+            .HasColumnType("bit")
+            .HasDefaultValue(0);
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.CompanyCheck2d)
             .HasColumnName("CompanyCheck2d")
-            .HasColumnType("bit");
+            .HasColumnType("bit")
+            .HasDefaultValue(0);
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.CompanyCheck2e)
             .HasColumnName("CompanyCheck2e")
-            .HasColumnType("bit");
+            .HasColumnType("bit")
+            .HasDefaultValue(0);
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.CompanyCheck2f)
             .HasColumnName("CompanyCheck2f")
-            .HasColumnType("bit");
+            .HasColumnType("bit")
+            .HasDefaultValue(0);
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.CompanyCheck3a)
             .HasColumnName("CompanyCheck3a")
-            .HasColumnType("bit");
+            .HasColumnType("bit")
+            .HasDefaultValue(0);
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.CompanyCheck3b)
             .HasColumnName("CompanyCheck3b")
-            .HasColumnType("bit");
+            .HasColumnType("bit")
+            .HasDefaultValue(0);
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.CompanyCheck3c)
             .HasColumnName("CompanyCheck3c")
-            .HasColumnType("bit");
+            .HasColumnType("bit")
+            .HasDefaultValue(0);
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.FeedbackUseful)
             .HasColumnName("FeedbackUseful")
-            .HasColumnType("bit");
+            .HasColumnType("bit")
+            .HasDefaultValue(0); 
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.FeedbackImproved)
             .HasColumnName("FeedbackImproved")
-            .HasColumnType("bit");
+            .HasColumnType("bit")
+            .HasDefaultValue(0);
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.FeedbackExperiences)
             .HasColumnName("FeedbackExperiences")
-            .HasColumnType("bit");
+            .HasColumnType("bit")
+            .HasDefaultValue(0);
+
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.FeedbackRecommend)
             .HasColumnName("FeedbackRecommend")
-            .HasColumnType("bit");
+            .HasColumnType("bit")
+            .HasDefaultValue(0);
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.FeedbackEnjoy)
             .HasColumnName("FeedbackEnjoy")
-            .HasColumnType("VARCHAR(100)");
+            .HasColumnType("VARCHAR(100)")
+            .HasDefaultValue("");
+
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.FeedbackLeastEnjoy)
-            .HasColumnName("VARCHAR(100)")
-            .HasColumnType("bit");
+            .HasColumnName("FeedbackLeastEnjoy")
+            .HasColumnType("VARCHAR(100)")
+            .HasDefaultValue("");
 
             /*  modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.LiaisonOfficeId)

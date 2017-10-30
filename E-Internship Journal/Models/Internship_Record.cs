@@ -8,8 +8,8 @@ namespace E_Internship_Journal.Models
     public class Internship_Record
     {
         public int InternshipRecordId { get; set; }
-        public int PresentationGrading { get; set; }
-        public int ReflectionGrading { get; set; }
+        public int? PresentationGrading { get; set; }
+        public int? ReflectionGrading { get; set; }
         public string Comment { get; set; }
         public string PosterUrl { get; set; }
 
