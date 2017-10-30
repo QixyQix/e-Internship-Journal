@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FYP_beta.Controllers
+namespace E_Internship_Journal.Controllers
 {
     public class HomeController : Controller
     {
@@ -17,6 +17,10 @@ namespace FYP_beta.Controllers
             return View();
         }
         public IActionResult Login()
+        {
+            return View();
+        }
+        public IActionResult Forget_Password()
         {
             return View();
         }
