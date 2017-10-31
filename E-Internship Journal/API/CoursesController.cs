@@ -166,7 +166,7 @@ new OkObjectResult(successRequestResultMessage);
             {
                 return BadRequest(ModelState);
             }
-            using (var reader = new StreamReader(@"C:\test.csv"))
+          /*  using (var reader = new StreamReader(@"C:\test.csv"))
             {
                 List<string> listA = new List<string>();
                 List<string> listB = new List<string>();
@@ -179,7 +179,7 @@ new OkObjectResult(successRequestResultMessage);
                     listA.Add(values[0]);
                     listB.Add(values[1]);
                 }
-            }
+            }*/
 
             //  _context.Courses.Add(course);
             string customMessage = "";
