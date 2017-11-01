@@ -83,6 +83,42 @@ namespace E_Internship_Journal.API
             return Ok(oneCourse);
         }
 
+        [HttpPut("UpdateOneCourse/{id}")]
+        public async Task<IActionResult> UpdateOneCourse(int id, [FromBody] string value)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            string customMessage = "";
+            if (CourseExists(id))
+            {
+
+
+                try
+                {
+                    var courseNewInput = JsonConvert.DeserializeObject<dynamic>(value);
+                    var foundOneCourse = _context.Courses.Find(id);
+
+                    foundOneCourse.CourseCode = courseNewInput.CourseCode.Value;
+                    foundOneCourse.CourseName = courseNewInput.CourseName.Value;
+                    _context.Courses.Update(foundOneCourse);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
         // PUT: api/Courses/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCourse([FromRoute] int id, [FromBody] Course course)
@@ -283,14 +319,14 @@ new OkObjectResult(successRequestResultMessage);
                 await test.CopyToAsync(testt);
                 //  await test.CopyToAsync(stream);
                 //  System.IO.File.Delete();
-              /*  testt.Seek(0, SeekOrigin.Begin); // <-- missing line
-                byte[] buf = new byte[testt.Length];
-                var qqqq = testt.Read(buf, 0, buf.Length);*/
+                /*  testt.Seek(0, SeekOrigin.Begin); // <-- missing line
+                  byte[] buf = new byte[testt.Length];
+                  var qqqq = testt.Read(buf, 0, buf.Length);*/
                 //var last = testt.ReadTo
                 testt.Position = 0;
                 using (var streamReader = new StreamReader(testt))
                 {
-                    
+
                     var tttt = streamReader.ReadToEnd();
                     var testtt = streamReader.ReadLine();
                     string msg4423 = "test";
