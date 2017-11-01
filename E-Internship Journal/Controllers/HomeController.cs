@@ -16,11 +16,27 @@ namespace E_Internship_Journal.Controllers
         {
             return View();
         }
-        public IActionResult Login()
+        public IActionResult Daily_Task()
         {
             return View();
         }
-        public IActionResult Forget_Password()
+        public IActionResult Add_Task()
+        {
+            return View();
+        }
+        public IActionResult Edit_Task()
+        {
+            return View();
+        }
+        public IActionResult Key_Attendance()
+        {
+            return View();
+        }
+        public IActionResult Attendance()
+        {
+            return View();
+        }
+        public IActionResult Monthly_Reflection()
         {
             return View();
         }
