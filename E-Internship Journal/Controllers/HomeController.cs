@@ -20,10 +20,7 @@ namespace E_Internship_Journal.Controllers
                 return View("~/Views/Home/Student/Index.cshtml");
             }
         }
-        public IActionResult Index1()
-        {
-            return View();
-        }
+        [Route("task/overview")]
         public IActionResult Daily_Task()
         {
             return View();
