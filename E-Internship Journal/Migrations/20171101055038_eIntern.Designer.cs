@@ -8,7 +8,7 @@ using E_Internship_Journal.Data;
 namespace E_Internship_Journal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20171031080832_eIntern")]
+    [Migration("20171101055038_eIntern")]
     partial class eIntern
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

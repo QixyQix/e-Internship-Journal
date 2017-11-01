@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using E_Internship_Journal.Data;
 using E_Internship_Journal.Models;
 using Newtonsoft.Json;
-using Microsoft.VisualBasic;
 using System.IO;
+using System.Net.Http;
 
 namespace E_Internship_Journal.API
 {
@@ -159,53 +159,145 @@ new OkObjectResult(successRequestResultMessage);
         // POST: api/Courses
         [HttpPost("SaveNewCourseViaFile")]
         //public async Task<IActionResult> SaveNewCourseInformation([FromBody] Course course)
-        public async Task<IActionResult> SaveNewCourseViaFile([FromBody] string value)
+        //public async Task<IActionResult> SaveNewCourseViaFile([FromBody] IList<IFormFile> fileInput)
+        public async Task<IActionResult> SaveNewCourseViaFile(List<IFormFile> files)
         {
-          
+            var test = files[0];
+
+
+            var filePath = Path.GetTempFileName();
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                //  await test.CopyToAsync(stream);
+                //  System.IO.File.Delete();
+
+            }
+
+            var form = Request.Form;
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-          /*  using (var reader = new StreamReader(@"C:\test.csv"))
+            //string ff = "@" + filePath;
+            string path = @"c:\temp\MyTest.txt";
+            // using (var reader = new StreamReader(path))
+            //using (StreamReader reader = System.IO.File.OpenText(filePath))
+            //{
+            //    List<string> listA = new List<string>();
+            //    List<string> listB = new List<string>();
+            //    reader.ReadLine();
+            //    while (!reader.EndOfStream)
+            //    {
+            //        var line = reader.ReadLine();
+            //        var values = line.Split(';');
+
+            //       /* listA.Add(values[0]);
+            //        listB.Add(values[1]);*/
+            //    }
+            //  //  File.del
+            //}
+
+            /*  string myFileName = test.Name;
+              byte[] myFileContent;
+
+              using (var memoryStream = new MemoryStream())
+              {
+                  await test.CopyToAsync(memoryStream);
+                  memoryStream.Seek(0, SeekOrigin.Begin);
+                  myFileContent = new byte[memoryStream.Length];
+                  var teeee = await memoryStream.ReadAsync(myFileContent, 0, myFileContent.Length);
+              }*/
+            // using (var reader = new StreamReader(@"C:\test.csv"))
+            //using (var readStream = test.OpenReadStream())
+            //{
+            //   /* StreamContent scontent = new StreamContent(readStream);
+            //    scontent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/vnd.ms-excel");
+            //    using (MultipartFormDataContent ss = new MultipartFormDataContent()) // Creates a multipart form data for the HTTP POST request
+            //    {
+            //        ss.Add(scontent, @"""file""", @"""image""");
+            //        string msg2 = "test";
+            //    }*/
+
+            //    //var reader = new StreamReader(readStream);
+            //    // readStream.;
+            //    string msg = "test";
+            //    /*   List<string> listA = new List<string>();
+            //       List<string> listB = new List<string>();
+            //       reader.ReadLine();
+            //       while (!reader.EndOfStream)
+            //       {
+            //           var line = reader.ReadLine();
+            //           var values = line.Split(';');
+
+            //           listA.Add(values[0]);
+            //           listB.Add(values[1]);*/
+            //    //}
+            //    // Stream TargetStream = new Stream;
+            //    Stream stream = new MemoryStream();
+
+            //    Stream TargetStream = Stream.Null;
+            //    const int BUFFER_SIZE = 4096;
+            //    byte[] buffer = new byte[BUFFER_SIZE];
+            //    //Reset the source stream in order to process all data.
+            //    if (readStream.CanSeek)
+            //        readStream.Position = 0;
+            //    //Copy data from the source stream to the target stream.
+            //    int BytesRead = 0;
+            //    while ((BytesRead = readStream.Read(buffer, 0, BUFFER_SIZE)) > 0)
+            //        TargetStream.Write(buffer, 0, BytesRead);
+            //    stream.Write(buffer, 0, BytesRead);
+            //    //Reset the source stream and the target stream to make them ready for any other operation.
+            //    if (readStream.CanSeek)
+            //        readStream.Position = 0;
+            //    if (TargetStream.CanSeek)
+            //        TargetStream.Position = 0;
+
+            //    var testtt = TargetStream.Read(buffer, 0, (int)stream.Length);
+            //    var ttt = System.Text.Encoding.UTF8.GetString((stream as MemoryStream).ToArray());
+            //    using (var streamReader = new StreamReader(stream))
+            //    {
+            //        var tttt = streamReader.ReadToEnd();
+            //        string msg4423 = "test";
+            //    }
+            //        string msg23 = "test";
+            //}
+
+
+            /*  using (var reader = new StreamReader(@"C:\test.csv"))
+              {
+                  List<string> listA = new List<string>();
+                  List<string> listB = new List<string>();
+                  reader.ReadLine();
+                  while (!reader.EndOfStream)
+                  {
+                      var line = reader.ReadLine();
+                      var values = line.Split(';');
+
+                      listA.Add(values[0]);
+                      listB.Add(values[1]);
+                  }
+              }*/
+            using (var testt = new MemoryStream())
             {
-                List<string> listA = new List<string>();
-                List<string> listB = new List<string>();
-                reader.ReadLine();
-                while (!reader.EndOfStream)
+                await test.CopyToAsync(testt);
+                //  await test.CopyToAsync(stream);
+                //  System.IO.File.Delete();
+                testt.Seek(0, SeekOrigin.Begin); // <-- missing line
+                byte[] buf = new byte[testt.Length];
+                var qqqq = testt.Read(buf, 0, buf.Length);
+                //var last = testt.ReadTo
+                testt.Position = 0;
+                using (var streamReader = new StreamReader(testt))
                 {
-                    var line = reader.ReadLine();
-                    var values = line.Split(';');
-
-                    listA.Add(values[0]);
-                    listB.Add(values[1]);
+                    
+                    var tttt = streamReader.ReadToEnd();
+                    var testtt = streamReader.ReadLine();
+                    string msg4423 = "test";
                 }
-            }*/
-
-            //  _context.Courses.Add(course);
-            string customMessage = "";
-            var courseNewInput = JsonConvert.DeserializeObject<dynamic>(value);
-            Course newCourse = new Course();
-
-            try
-            {
-                newCourse.CourseCode = courseNewInput.CourseCode.Value;
-                newCourse.CourseName = courseNewInput.CourseName.Value;
-                _context.Courses.Add(newCourse);
-                await _context.SaveChangesAsync();
-
+                string msg23 = "test";
             }
-            catch (Exception exceptionObject)
-            {
-                customMessage = "Unable to save to database";
-            }
-            var successRequestResultMessage = new
-            {
-                Message = "Saved Course into database"
-            };
-
-            OkObjectResult httpOkResult =
-new OkObjectResult(successRequestResultMessage);
-            return httpOkResult;
+            return Ok();
             //return CreatedAtAction("GetCourse", new { id = course.CourseId }, course);
         }
 
