@@ -283,9 +283,9 @@ new OkObjectResult(successRequestResultMessage);
                 await test.CopyToAsync(testt);
                 //  await test.CopyToAsync(stream);
                 //  System.IO.File.Delete();
-                testt.Seek(0, SeekOrigin.Begin); // <-- missing line
+              /*  testt.Seek(0, SeekOrigin.Begin); // <-- missing line
                 byte[] buf = new byte[testt.Length];
-                var qqqq = testt.Read(buf, 0, buf.Length);
+                var qqqq = testt.Read(buf, 0, buf.Length);*/
                 //var last = testt.ReadTo
                 testt.Position = 0;
                 using (var streamReader = new StreamReader(testt))

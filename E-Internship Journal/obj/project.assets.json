@@ -4392,7 +4392,7 @@
       ]
     },
     "Microsoft.AspNetCore.Cryptography.Internal/1.1.3": {
-      "sha512": "ireGhyBUGTjb6he/uyV99kKGa2fb7l9QnxB4Vlg/7iNjWoZ5apNGwxH7DVbgQV3ixwfV2bKwOpUreMxJI6Xb9w==",
+      "sha512": "Qa0hnyTqjtrzDr2u3vXBeW7uQqv0syOHM8zPwc3pvHesIodoS3sYtIznPc566wLCzsiss2Hly3KVV2j/3qa82Q==",
       "type": "package",
       "path": "microsoft.aspnetcore.cryptography.internal/1.1.3",
       "files": [
@@ -4418,7 +4418,7 @@
       ]
     },
     "Microsoft.AspNetCore.DataProtection/1.1.3": {
-      "sha512": "4am4PmrTDYexofUWxGdnyUItxPDLkhFUoY8JzPb4Cp3l8RCNs9e4WqLOynPLU/FZ3fJRdr+EJ6ub60LukHO7TA==",
+      "sha512": "gIsrcjFAm+Z5K35sMj7p8y0YWoNTKwRNy1JxfZsAu2fSaLtmilNu/sREW/DsxfET0JJMHJy2OcXg+aZ7vpJTEQ==",
       "type": "package",
       "path": "microsoft.aspnetcore.dataprotection/1.1.3",
       "files": [
@@ -4431,7 +4431,7 @@
       ]
     },
     "Microsoft.AspNetCore.DataProtection.Abstractions/1.1.3": {
-      "sha512": "bl3RN1XQcgx46mOzRaHA+pB+J35eH/P+SrCs5lG4vbk+B2TF1EeUvvRYPMr3QZpu32VyksKRDuF9HxmULFdV7A==",
+      "sha512": "d1w6hlNIOFJu4KzSQ+1DNVixobxp/mP24Cnqyp6FtqndV0El5fzVV0xlFKzBM9PV4sxdTu4ooutqYe1AjC0/+g==",
       "type": "package",
       "path": "microsoft.aspnetcore.dataprotection.abstractions/1.1.3",
       "files": [
@@ -4496,7 +4496,7 @@
       ]
     },
     "Microsoft.AspNetCore.Hosting.Abstractions/1.1.3": {
-      "sha512": "PW/WRPMLkzMGOAgC5Wfyh+eKOeQvdVHbIvEEbpOQoRBd1FmUE41n0v/0nhxN50jER94SmnHlSrXRzKwr3EJpUg==",
+      "sha512": "awCaLJqwEs5vJq1bQXGVcg7AW+Jrbu6B2OmWimlyMq2uJ3YL4ohTTR2XjaAFtI/Ec7vsJK8/rXGp2NVmP7d58g==",
       "type": "package",
       "path": "microsoft.aspnetcore.hosting.abstractions/1.1.3",
       "files": [
@@ -4509,7 +4509,7 @@
       ]
     },
     "Microsoft.AspNetCore.Hosting.Server.Abstractions/1.1.3": {
-      "sha512": "RxJzm3vIoEjlyrnVkZGQynQL/TCDmZwwuPajaVE22C1qv9CdXvdMj9LPGVG9a9qIAoRHTxmReeDv/koD0DscUg==",
+      "sha512": "3GP7Wz9Vg/JN50D0B9mojjIWd9ixUmD7bckkTmCO3hAjqKHZp6jn3vqDX81CahiOMj/84MPHGuZMpjpoj/v/7Q==",
       "type": "package",
       "path": "microsoft.aspnetcore.hosting.server.abstractions/1.1.3",
       "files": [
@@ -10981,7 +10981,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Qi Xiang\\.nuget\\packages\\": {}
+    "C:\\Users\\Yattie\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
@@ -10989,14 +10989,14 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "C:\\Users\\Qi Xiang\\Documents\\GitKraken\\e-Internship-Journal\\E-Internship Journal\\E-Internship Journal.csproj",
+      "projectUniqueName": "E:\\e-Internship-Journal\\E-Internship Journal\\E-Internship Journal.csproj",
       "projectName": "E-Internship Journal",
-      "projectPath": "C:\\Users\\Qi Xiang\\Documents\\GitKraken\\e-Internship-Journal\\E-Internship Journal\\E-Internship Journal.csproj",
-      "packagesPath": "C:\\Users\\Qi Xiang\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Qi Xiang\\Documents\\GitKraken\\e-Internship-Journal\\E-Internship Journal\\obj\\",
+      "projectPath": "E:\\e-Internship-Journal\\E-Internship Journal\\E-Internship Journal.csproj",
+      "packagesPath": "C:\\Users\\Yattie\\.nuget\\packages\\",
+      "outputPath": "E:\\e-Internship-Journal\\E-Internship Journal\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Qi Xiang\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Yattie\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -11004,18 +11004,12 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netcoreapp1.1": {
           "projectReferences": {}
         }
-      },
-      "warningProperties": {
-        "warnAsError": [
-          "NU1605"
-        ]
       }
     },
     "frameworks": {
