@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace E_Internship_Journal.Migrations
 {
-    public partial class a : Migration
+    public partial class eIntern : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

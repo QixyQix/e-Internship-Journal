@@ -3,51 +3,55 @@
 @using Microsoft.AspNetCore.Http.Authentication
 @model LoginViewModel
 @inject SignInManager<ApplicationUser> SignInManager
-<div class="text-center">
-    <img src="~/images/sp_informal_logo_spot_Aug2014.png" style="width:50%;padding: 1em 0em" />
-</div>
-<div class="card card-login mx-auto mt-5">
-    <div class="card-header">Account Login</div>
-    <div class="card-body">
-        <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Email"></label>
-               
-                    <input asp-for="Email" class="form-control" placeholder="Enter Email"/>
+<body style="background-color:white !important">
+
+
+    <div class="text-center">
+        <img src="~/images/sp_informal_logo_spot_Aug2014.png" style="width:50%;padding: 1em 0em" />
+    </div>
+    <div class="card card-login mx-auto mt-5">
+        <div class="card-header">Account Login</div>
+        <div class="card-body">
+            <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+
+                    <input asp-for="Email" class="form-control" placeholder="Enter Email" />
                     <span asp-validation-for="Email" class="text-danger"></span>
-          
-            </div>
-            <div class="form-group">
-                <label asp-for="Password"></label>
-                <input asp-for="Password" class="form-control" placeholder="Enter Password"/>
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <div >
-                    <div class="checkbox">
-                        <label asp-for="RememberMe">
-                            <input asp-for="RememberMe" />
-                            @Html.DisplayNameFor(m => m.RememberMe)
-                        </label>
+
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="form-control" placeholder="Enter Password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div>
+                        <div class="checkbox">
+                            <label asp-for="RememberMe">
+                                <input asp-for="RememberMe" />
+                                @Html.DisplayNameFor(m => m.RememberMe)
+                            </label>
+
+                        </div>
 
                     </div>
 
                 </div>
 
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </form>
+            <div class="text-center">
+                @*<a class="d-block small mt-3" href="register.html">Register an Account</a>
+                    <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register as a new user?</a>
+                *@
+                <a asp-action="ForgotPassword">Forgot your password?</a>
             </div>
-
-            <button type="submit" class="btn btn-primary btn-block">Login</button>
-        </form>
-        <div class="text-center">
-                       @*<a class="d-block small mt-3" href="register.html">Register an Account</a>
-        <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Register as a new user?</a>
-                    *@ 
-            <a asp-action="ForgotPassword">Forgot your password?</a>
         </div>
     </div>
-</div>
 
+</body>
 
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }

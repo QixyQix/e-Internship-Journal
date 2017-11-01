@@ -1,34 +1,33 @@
-@model E_Internship_Journal.Models.Course
 
-@{
-    ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-<h2>Create</h2>
-
-<form asp-action="Create">
+<form id="dataForm" role="form" class="form-horizontal">
     <div class="form-horizontal">
         <h4>Course</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="CourseCode" class="col-md-2 control-label"></label>
+            <label class="col-md-2 control-label" for="CourseCodeInput">Course Code</label>
+            @*<label asp-for="CourseCode" class="col-md-2 control-label"></label>*@
             <div class="col-md-10">
-                <input asp-for="CourseCode" class="form-control" />
-                <span asp-validation-for="CourseCode" class="text-danger"></span>
+                <input type="text" id="courseCodeInput" class="form-control font-bold"
+                       maxlength="10" placeholder="Enter Course Code" value="" />
+                @*<input asp-for="CourseCode" class="form-control" />*@
+                @*<span asp-validation-for="CourseCode" class="text-danger"></span>*@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="CourseName" class="col-md-2 control-label"></label>
+            <label class="col-md-2 control-label" for="CourseNameInput">Course Name</label>
+            @*<label asp-for="CourseName" class="col-md-2 control-label"></label>*@
             <div class="col-md-10">
-                <input asp-for="CourseName" class="form-control" />
-                <span asp-validation-for="CourseName" class="text-danger"></span>
+                @*<input asp-for="CourseName" class="form-control" />*@
+                <input type="text" id="courseNameInput" class="form-control font-bold"
+                       maxlength="100" placeholder="Enter Course Name" value="" />
+                @*<span asp-validation-for="CourseName" class="text-danger"></span>*@
             </div>
         </div>
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="button" value="Create" id="saveButton" class="btn btn-success" />
             </div>
         </div>
     </div>
@@ -37,7 +36,28 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+<script>
+    $('#saveButton').on('click', function () {
+        //Collect data from input elements
+        var collectedCourseCode = $('#courseCodeInput').val();
+        var collectedCourseName = $('#courseNameInput').val();
+        var webFormData = new WebFormData(collectedCourseCode, collectedCourseName);
+        var webFormDataInString = JSON.stringify(webFormData);
+        $saveBrandHandler = jQuery.ajax({
+            method: 'post',
+            contentType: 'application/json',
+            url: '/API/Courses/',
+            dataType: 'json',
+            data: "'" + webFormDataInString + "'"
+        });
+        $saveBrandHandler.done(function (data, textStatus, jqXHR) {
+           // window.$brandPhotoInputElement.fileinput('upload');
+            data.Message;
+        });
+    });
+    function WebFormData(inCourseCode, inCourseName) {
+        this.CourseCode = inCourseCode;
+        this.CourseName = inCourseName;
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    }
+</script>
