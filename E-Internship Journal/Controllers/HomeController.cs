@@ -10,12 +10,17 @@ namespace E_Internship_Journal.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            var test = User.IsInRole("SUPERVISOR");
+            if (User.IsInRole("SUPERVISOR"))
+            {
+                return View("~/Views/Home/Supervisor/Index.cshtml");
+            }
+            else
+            {
+                return View("~/Views/Home/Student/Index.cshtml");
+            }
         }
-        public IActionResult Index1()
-        {
-            return View();
-        }
+        [Route("task/overview")]
         public IActionResult Daily_Task()
         {
             return View();

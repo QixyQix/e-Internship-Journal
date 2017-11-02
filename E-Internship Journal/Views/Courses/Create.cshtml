@@ -1,9 +1,8 @@
 
-<form id="dataForm" role="form" class="form-horizontal">
+<form  class="form-horizontal" action="/API/Courses/SaveNewCourseViaFile" method="post">
     <div class="form-horizontal">
         <h4>Course</h4>
         <hr />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
             <label class="col-md-2 control-label" for="CourseCodeInput">Course Code</label>
             @*<label asp-for="CourseCode" class="col-md-2 control-label"></label>*@
@@ -27,31 +26,66 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="button" value="Create" id="saveButton" class="btn btn-success" />
+                <input id="fileInput" name="fileInput" type="file" class="file input-group-lg" multiple />
+                <input type="submit" value="Create" id="saveButton" class="btn btn-success" />
             </div>
         </div>
     </div>
 </form>
 
+
+<form asp-action="SaveNewCourseViaFile" 
+      asp-controller="Courses" 
+      method="post"
+      enctype="multipart/form-data">
+    <input type="file" name="files" multiple />
+    <input type="submit" value="Upload Selected Files" />
+
+</form>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
 <script>
-    $('#saveButton').on('click', function () {
+    $('#saveButton2').on('click', function () {
         //Collect data from input elements
-        var collectedCourseCode = $('#courseCodeInput').val();
-        var collectedCourseName = $('#courseNameInput').val();
-        var webFormData = new WebFormData(collectedCourseCode, collectedCourseName);
-        var webFormDataInString = JSON.stringify(webFormData);
+        /* var collectedCourseCode = $('#courseCodeInput').val();
+         var collectedCourseName = $('#courseNameInput').val();
+         var webFormData = new WebFormData(collectedCourseCode, collectedCourseName);
+         var webFormDataInString = JSON.stringify(webFormData);*/
+
+        // Checking whether FormData is available in browser
+
+          /*  var fileUpload = $("#fileInput").get(0);
+            var files = fileUpload.files;
+
+            // Create FormData object
+            var fileData = new FormData();
+
+            // Looping over all files and add it to FormData object
+            for (var i = 0; i < files.length; i++) {
+                fileData.append(files[i].name, files[i]);
+            }
+        */
+            // Adding one more key to FormData object
+            //fileData.append('username', 'Manas');
         $saveBrandHandler = jQuery.ajax({
             method: 'post',
-            contentType: 'application/json',
-            url: '/API/Courses/',
-            dataType: 'json',
-            data: "'" + webFormDataInString + "'"
+            //contentType: 'multipart/form-data',
+            url: '/API/Courses/SaveNewCourseViaFile',
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+          //  data: fileData,
+            //data: "'" + webFormDataInString + "'"
         });
+        //$saveBrandHandler = jQuery.ajax({
+        //    method: 'post',
+        //    contentType: 'application/json',
+        //    url: '/API/Courses/',
+        //    dataType: 'json',
+        //    //data: "'" + webFormDataInString + "'"
+        //});
         $saveBrandHandler.done(function (data, textStatus, jqXHR) {
-           // window.$brandPhotoInputElement.fileinput('upload');
+            // window.$brandPhotoInputElement.fileinput('upload');
             data.Message;
         });
     });
