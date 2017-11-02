@@ -9,6 +9,10 @@ using E_Internship_Journal.Data;
 using E_Internship_Journal.Models;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
+using System.IO;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System.Text;
 
 namespace E_Internship_Journal.API
 {
@@ -128,9 +132,121 @@ namespace E_Internship_Journal.API
                 return BadRequest(httpFailRequestResultMessage);
 
             }
-
-
             return NoContent();
+        }
+
+        //PUT: Enroll student into batch
+        [HttpPost("EnrollStudent/{id}")]
+        //[Authorize(Roles = "SLO")]
+        public async Task<IActionResult> EnrollStudent(int id, List<IFormFile> files)
+        {
+
+            //Get the batch & course
+            var thisBatch = _context.Batches
+                .Where(batch => batch.BatchId == id)
+                .Include(batch => batch.Course)
+                .Single();
+
+            var csvFile = files[0];
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await csvFile.CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
+                using (var streamReader = new StreamReader(memoryStream))
+                {
+                    var heading = streamReader.ReadLine();
+
+                    //Check if CSV file is in correct order
+                    if (!heading.Equals("Student Name,Email,Contact No,Project,Company"))
+                    {
+                        return BadRequest("CSV file does not follow correct format");
+                    }
+
+                    //Read the file
+                    string fileLine = "";
+                    //try
+                    //{
+                        while ((fileLine = streamReader.ReadLine()) != null)
+                        {
+                            //Get individual data
+                            string[] oneStudentData = fileLine.Split(',');
+
+                            var name = oneStudentData[0];
+                            var email = oneStudentData[1];
+                            var mobileNo = oneStudentData[2];
+
+                            //Create user
+                            var userStore = new UserStore<ApplicationUser>(_context);
+                            var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
+
+                            var newStudentUser = new ApplicationUser
+                            {
+                                UserName = email,
+                                Email = email,
+                                FullName = name,
+                                PhoneNumber = mobileNo,
+                                Course = thisBatch.Course
+                            };
+                            PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
+                            newStudentUser.PasswordHash = ph.HashPassword(newStudentUser, generateRandomString(11)); //TODO: Random default password generator
+
+                            await userManager.CreateAsync(newStudentUser);
+                            await userManager.AddToRoleAsync(newStudentUser, "STUDENT");
+
+                            //Create UserBatch objects
+                            var newUserBatch = new UserBatch
+                            {
+                                Batch = thisBatch,
+                                User = newStudentUser
+                            };
+                            _context.UserBatches.Add(newUserBatch);
+                            _context.SaveChanges();
+
+                        var repeatPinGeneration = false;
+
+                        do
+                        {
+                            repeatPinGeneration = false;
+                            try
+                            {
+                                //Create new registration pin
+                                var newRegistrationPin = new RegistrationPin
+                                {
+                                    User = newStudentUser,
+                                    RegistrationPinId = generateRandomString(50)
+                                };
+                                _context.RegistrationPins.Add(newRegistrationPin);
+                                _context.SaveChanges();
+                            }
+                            catch (Exception ex) {
+                                repeatPinGeneration = true;
+                            }
+                        } while (repeatPinGeneration);
+                        }
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    return BadRequest();
+                    //}
+                }
+            }
+            return Ok();
+        }
+
+        public string generateRandomString(int size)
+        {
+            //ACKNOWLEDGEMENT: http://azuliadesigns.com/generate-random-strings-characters/
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 1; i < size + 1; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+
+            return builder.ToString();
         }
 
         [HttpPost("SaveNewBatchInformation")]
