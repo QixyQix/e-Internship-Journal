@@ -7,7 +7,7 @@
 
 
     <div class="text-center">
-        <img src="~/images/sp_informal_logo_spot_Aug2014.png" style="width:50%;padding: 1em 0em" />
+        <img src="~/images/sp_informal_logo_spot_Aug2014.png" class="sch-img" />
     </div>
     <div class="card card-login mx-auto mt-5">
         <div class="card-header">Account Login</div>
@@ -52,7 +52,26 @@
     </div>
 
 </body>
+<style>
+@@media (max-width: 576px) {
+    .sch-img {
+        width: 100%;
+        padding: 1em 0em;
+    } }
 
+@@media (min-width: 768px) {
+    .sch-img {
+        width: 35%;
+        padding: 1em 0em;
+    } }
+
+@@media (min-width: 1200px) {
+    .sch-img {
+        width: 35%;
+        padding: 1em 0em;
+    }
+    }
+</style>
 @section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
