@@ -90,9 +90,11 @@ namespace E_Internship_Journal.API
             try
             {
                 var companyNewInput = JsonConvert.DeserializeObject<dynamic>(value);
-                Company newCompany = new Company();
-                newCompany.CompanyName = companyNewInput.CompanyName;
-                newCompany.CompanyAddress = companyNewInput.CompanyAddress;
+                Company newCompany = new Company
+                {
+                    CompanyName = companyNewInput.CompanyName,
+                    CompanyAddress = companyNewInput.CompanyAddress
+                };
 
                 _context.Companies.Add(newCompany);
                 await _context.SaveChangesAsync();
