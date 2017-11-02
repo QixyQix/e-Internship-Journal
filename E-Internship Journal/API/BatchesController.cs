@@ -31,25 +31,7 @@ namespace E_Internship_Journal.API
             return _context.Batches;
         }
 
-        // GET: api/Batches/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetBatch([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var batch = await _context.Batches.SingleOrDefaultAsync(m => m.BatchId == id);
-
-            if (batch == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(batch);
-        }
-
+       
         // PUT: api/Batches/5
         [HttpPut("UpdateOneBatch/{id}")]
         [AllowAnonymous]
@@ -80,45 +62,10 @@ namespace E_Internship_Journal.API
 
             }
             
-            
-
-
-            //_context.Entry(batch).State = EntityState.Modified;
-
-            //try
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!BatchExists(id))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
-
 
             return NoContent();
         }
 
-        // POST: api/Batches
-        [HttpPost]
-        public async Task<IActionResult> PostBatch([FromBody] Batch batch)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            _context.Batches.Add(batch);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetBatch", new { id = batch.BatchId }, batch);
-        }
         [HttpPost("SaveNewBatchInformation")]
         public async Task<IActionResult> SaveNewBatchInformation([FromBody] string value)
         {

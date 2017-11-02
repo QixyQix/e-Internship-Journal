@@ -57,35 +57,30 @@ namespace E_Internship_Journal.API
         }
 
         // PUT: api/Projects/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProject([FromRoute] int id, [FromBody] Project project)
+        [HttpPut("UpdateOneProject/{id}")]
+        public async Task<IActionResult> UpdateOneProject(int id, [FromBody] string value)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != project.ProjectId)
+            string customMessage = "";
+            if (ProjectExists(id))
             {
-                return BadRequest();
-            }
+                var projectNewInput = JsonConvert.DeserializeObject<dynamic>(value);
+                var foundOneProject = _context.Projects.Find(id);
 
-            _context.Entry(project).State = EntityState.Modified;
+                foundOneProject.ProjectName = projectNewInput.ProjectName;
+                foundOneProject.CompanyID = projectNewInput.CompanyID;
+                foundOneProject.SupervisorId = await _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail);
 
-            try
-            {
+                _context.Projects.Update(foundOneProject);
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!ProjectExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+
             }
 
             return NoContent();
@@ -120,10 +115,12 @@ namespace E_Internship_Journal.API
             {
 
                 var projectNewInput = JsonConvert.DeserializeObject<dynamic>(value);
-                Project newProject = new Project();
-                newProject.ProjectName = projectNewInput.ProjectName;
-                newProject.CompanyID = projectNewInput.CompanyID;
-                newProject.SupervisorId = await _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail);
+                Project newProject = new Project
+                {
+                    ProjectName = projectNewInput.ProjectName,
+                    CompanyID = projectNewInput.CompanyID,
+                    SupervisorId = await _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail)
+                };
                 // newProject.SupervisorId = _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail);
                 //var ttt = _userManager.GetUserId(_userManager.FindByEmailAsync(projectNewInput.SupervisorEmail));
 
