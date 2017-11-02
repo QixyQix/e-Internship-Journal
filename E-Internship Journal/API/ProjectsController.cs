@@ -126,9 +126,9 @@ namespace E_Internship_Journal.API
                 var projectNewInput = JsonConvert.DeserializeObject<dynamic>(value);
                 var foundOneProject = _context.Projects.Find(id);
 
-                foundOneProject.ProjectName = projectNewInput.ProjectName;
-                foundOneProject.CompanyID = projectNewInput.CompanyID;
-                foundOneProject.SupervisorId = (await _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail)).Id;
+                foundOneProject.ProjectName = projectNewInput.ProjectName.Value;
+                foundOneProject.CompanyID = projectNewInput.CompanyID.Value;
+                foundOneProject.SupervisorId = (await _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail.Value)).Id;
 
                 _context.Projects.Update(foundOneProject);
                 await _context.SaveChangesAsync();
@@ -171,9 +171,9 @@ namespace E_Internship_Journal.API
                 var projectNewInput = JsonConvert.DeserializeObject<dynamic>(value);
                 Project newProject = new Project
                 {
-                    ProjectName = projectNewInput.ProjectName,
-                    CompanyID = projectNewInput.CompanyID,
-                    SupervisorId = (await _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail)).Id
+                    ProjectName = projectNewInput.ProjectName.Value,
+                    CompanyID = projectNewInput.CompanyID.Value,
+                    SupervisorId = (await _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail.Value)).Id
                 };
                 // newProject.SupervisorId = _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail);
                 //var ttt = _userManager.GetUserId(_userManager.FindByEmailAsync(projectNewInput.SupervisorEmail));

@@ -68,6 +68,7 @@ namespace E_Internship_Journal.API
                     .Include(eachCourse => eachCourse.Course).Single();
                     var response = new
                     {
+                        BatchId = foundCourses.BatchId,
                         CourseId = foundCourses.CourseId,
                         Description = foundCourses.Description,
                         StartDate = foundCourses.StartDate,
@@ -115,10 +116,10 @@ namespace E_Internship_Journal.API
                 var batchNewInput = JsonConvert.DeserializeObject<dynamic>(value);
                 var foundOneBatch = _context.Batches.Find(id);
 
-                foundOneBatch.BatchName = batchNewInput.BatchName;
-                foundOneBatch.Description = batchNewInput.Description;
-                foundOneBatch.StartDate = batchNewInput.StartDate;
-                foundOneBatch.EndDate = batchNewInput.EndDate;
+                foundOneBatch.BatchName = batchNewInput.BatchName.Value;
+                foundOneBatch.Description = batchNewInput.Description.Value;
+                foundOneBatch.StartDate = batchNewInput.StartDate.Value;
+                foundOneBatch.EndDate = batchNewInput.EndDate.Value;
                 foundOneBatch.CourseId = batchNewInput.CourseId.Value;
 
                 _context.Batches.Update(foundOneBatch);

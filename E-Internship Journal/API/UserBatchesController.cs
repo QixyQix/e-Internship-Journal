@@ -91,8 +91,8 @@ namespace E_Internship_Journal.API
                 var userBatchNewInput = JsonConvert.DeserializeObject<dynamic>(value);
                 var foundOneUserBatch = _context.UserBatches.Find(id);
 
-                foundOneUserBatch.BatchId = userBatchNewInput.BatchId;
-                foundOneUserBatch.UserBatchId = (await _userManager.FindByEmailAsync(userBatchNewInput.Email)).Id;
+                foundOneUserBatch.BatchId = userBatchNewInput.BatchId.Value;
+                foundOneUserBatch.UserBatchId = (await _userManager.FindByEmailAsync(userBatchNewInput.Email.Value)).Id;
 
                 _context.UserBatches.Update(foundOneUserBatch);
                 await _context.SaveChangesAsync();
@@ -121,8 +121,8 @@ namespace E_Internship_Journal.API
                 var userBatchNewInput = JsonConvert.DeserializeObject<dynamic>(value);
                 UserBatch newUserBatch = new UserBatch
                 {
-                    BatchId = userBatchNewInput.BatchId,
-                    UserId = (await _userManager.FindByEmailAsync(userBatchNewInput.Email)).Id
+                    BatchId = userBatchNewInput.BatchId.Value,
+                    UserId = (await _userManager.FindByEmailAsync(userBatchNewInput.Email.Value)).Id
                 };
                 // newProject.SupervisorId = _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail);
                 //var ttt = _userManager.GetUserId(_userManager.FindByEmailAsync(projectNewInput.SupervisorEmail));
