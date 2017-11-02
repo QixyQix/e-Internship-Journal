@@ -1,106 +1,53 @@
-﻿<div class="content-wrapper">
-    <div class="container-fluid">
-        <!-- Breadcrumbs -->
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a href="#">Internship Programme</a>
-            </li>
-            <li class="breadcrumb-item active">My Profile</li>
-        </ol>
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
 
-        <div class="card text-center">
-            <div class="card-block">
-                <div class="col-md-12">
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Time In</th>
-                                    <th>Time Out</th>
-                                    <th>Remarks</th>
-                                    <th>Comments</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>11/10/2017</td>
-                                    <td>09:00</td>
-                                    <td>16:00</td>
-                                    <td>-</td>
-                                    <td><input type="text" class="form-control" value="good progress" /></td>
-                                </tr>
-                                <tr>
-                                    <td>12/10/2017</td>
-                                    <td>09:00</td>
-                                    <td>16:00</td>
-                                    <td>-</td>
-                                    <td><input type="text" class="form-control" value="" /></td>
-                                </tr>
-                                <tr>
-                                    <td>13/10/2017</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>PH</td>
-                                    <td><input type="text" class="form-control" value="" /></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="form-group">
-                            <label class="control-label col-md-3"></label>
-                            <div class="pull-right">
-                                <input type="button" class="btn btn-outline-secondary" value="Reject" id="rejectButton" />
-                                <input type="button" class="btn btn-primary" value="Approve" id="approveButton" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--button type="button" class="btn btn-outline-secondary">Reject</button>-->
-                <!--<button class="btn btn-primary" type="submit">Approve</button>-->
-
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Public Holidays</th>
-                                            <th>MCs</th>
-                                            <th>Company Off-Day</th>
-                                            <th>Leave Of Absence</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3" for="totaldays">Total no. of days required:</label>
-                    <div class="pull-right">
-                        <input type="text" id="total days" class="form-control input-group-sm"
-                               maxlength="50" placeholder="" value="80" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-md-3" for="totaldays">No. of working days</label>
-                    <div class="pull-right">
-                        <input type="text" id="total days" class="form-control input-group-sm"
-                               maxlength="50" placeholder="" value="-" />
-                    </div>
-                </div>
-            </div>
+<div class="container-fluid">
+    <!-- Breadcrumbs -->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="#">Internship Programme</a>
+        </li>
+        <li class="breadcrumb-item active">Homepage</li>
+    </ol>
+    <h3>Welcome</h3>
+    <div class="container">
+        <div class="table-responsive">
+            <table class="table table-bordered" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Student Info</th>
+                        <th>Student Journal</th>
+                        <th>Pending Review</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Amelia Goh</td>
+                        <td>09:00</td>
+                        <td>16:00</td>
+                        <td>-</td>
+                        <td><input type="text" class="form-control" value="good progress" /></td>
+                    </tr>
+                    <tr>
+                        <td>12/10/2017</td>
+                        <td>09:00</td>
+                        <td>16:00</td>
+                        <td>-</td>
+                        <td><input type="text" class="form-control" value="" /></td>
+                    </tr>
+                    <tr>
+                        <td>13/10/2017</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>PH</td>
+                        <td><input type="text" class="form-control" value="" /></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
-    <!-- /.container-fluid -->
 </div>
+<!-- /.container-fluid -->
 <!-- /.content-wrapper -->
+

@@ -26,36 +26,81 @@ namespace E_Internship_Journal.API
         // GET: api/Batches
         [HttpGet]
         [AllowAnonymous]
-        public IEnumerable<Batch> GetBatches()
+        public JsonResult GetBatches()
         {
-            return _context.Batches;
+            List<object> batchList = new List<object>();
+            var batches = _context.Batches
+           .Include(eachBatchEntity => eachBatchEntity.Course).AsNoTracking();
+            foreach (var onebatch in batches)
+            {
+                //   List<int> categoryIdList = new List<int>();
+                batchList.Add(new
+                {
+                    onebatch.BatchId,
+                    onebatch.BatchName,
+                    onebatch.Description,
+                    onebatch.StartDate,
+                    onebatch.EndDate
+                });
+            }
+
+            return new JsonResult(batchList);
         }
 
-        // GET: api/Batches/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetBatch([FromRoute] int id)
+        // GET api/Brands/5
+        [HttpGet("GetOneBatches/{id}")]
+        public IActionResult GetOneBatches(int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            var batch = await _context.Batches.SingleOrDefaultAsync(m => m.BatchId == id);
-
-            if (batch == null)
+            if (BatchExists(id))
             {
-                return NotFound();
+                try
+                {
+                    var foundCourses = _context.Batches
+                    .Where(eachCourse => eachCourse.CourseId == id)
+                    .Include(eachCourse => eachCourse.Course).Single();
+                    var response = new
+                    {
+                        CourseId = foundCourses.CourseId,
+                        Description = foundCourses.Description,
+                        StartDate = foundCourses.StartDate,
+                        EndDate = foundCourses.EndDate,
+                        CourseName = foundCourses.Course.CourseName,
+                        CourseCode = foundCourses.Course.CourseCode
+                    };//end of creation of the response object
+                    return new JsonResult(response);
+                }
+                catch (Exception exceptionObject)
+                {
+                    //Create a fail message anonymous object
+                    //This anonymous object only has one Message property 
+                    //which contains a simple string message
+                    object httpFailRequestResultMessage =
+                    new { Message = "Unable to obtain brand information." };
+                    //Return a bad http response message to the client
+                    return BadRequest(httpFailRequestResultMessage);
+                }
+            }
+            else
+            {
+                object httpFailRequestResultMessage =
+                new { Message = "Unable to obtain brand information." };
+                //Return a bad http response message to the client
+                return BadRequest(httpFailRequestResultMessage);
             }
 
-            return Ok(batch);
-        }
+        }//End of Get(id) Web API method
+
 
         // PUT: api/Batches/5
         [HttpPut("UpdateOneBatch/{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> UpdateOneBatch(int id, [FromBody] string value)
         {
-            
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -77,48 +122,17 @@ namespace E_Internship_Journal.API
             }
             else
             {
+                object httpFailRequestResultMessage =
+                new { Message = "Invalid Batch ID" };
+                //Return a bad http response message to the client
+                return BadRequest(httpFailRequestResultMessage);
 
             }
-            
-            
-
-
-            //_context.Entry(batch).State = EntityState.Modified;
-
-            //try
-            //{
-            //    await _context.SaveChangesAsync();
-            //}
-            //catch (DbUpdateConcurrencyException)
-            //{
-            //    if (!BatchExists(id))
-            //    {
-            //        return NotFound();
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
 
 
             return NoContent();
         }
 
-        // POST: api/Batches
-        [HttpPost]
-        public async Task<IActionResult> PostBatch([FromBody] Batch batch)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            _context.Batches.Add(batch);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetBatch", new { id = batch.BatchId }, batch);
-        }
         [HttpPost("SaveNewBatchInformation")]
         public async Task<IActionResult> SaveNewBatchInformation([FromBody] string value)
         {
@@ -153,7 +167,7 @@ namespace E_Internship_Journal.API
             };
 
             OkObjectResult httpOkResult =
-new OkObjectResult(successRequestResultMessage);
+            new OkObjectResult(successRequestResultMessage);
             return httpOkResult;
         }
 
