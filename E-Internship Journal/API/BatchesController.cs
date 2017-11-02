@@ -198,8 +198,8 @@ namespace E_Internship_Journal.API
                             //Create UserBatch objects
                             var newUserBatch = new UserBatch
                             {
-                                Batch = thisBatch,
-                                User = newStudentUser
+                                BatchId = thisBatch.BatchId,
+                                UserId = newStudentUser.Id
                             };
                             _context.UserBatches.Add(newUserBatch);
                             _context.SaveChanges();
