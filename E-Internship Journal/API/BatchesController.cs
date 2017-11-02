@@ -132,6 +132,8 @@ namespace E_Internship_Journal.API
                 return BadRequest(httpFailRequestResultMessage);
 
             }
+            return NoContent();
+        }
 
         //PUT: Enroll student into batch
         [HttpPost("EnrollStudent/{id}")]
