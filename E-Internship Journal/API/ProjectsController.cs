@@ -9,6 +9,8 @@ using E_Internship_Journal.Data;
 using E_Internship_Journal.Models;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace E_Internship_Journal.API
 {
@@ -26,10 +28,11 @@ namespace E_Internship_Journal.API
             _signInManager = signInManager;
             _context = context;
         }
-
+        
         // GET: api/Projects
         [HttpGet]
-        public IEnumerable<Project> GetProjects()
+        [AllowAnonymous]
+        public IEnumerable<Project> GetProjectsAsync()
         {
             return _context.Projects;
         }
@@ -95,17 +98,34 @@ namespace E_Internship_Journal.API
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
-            }
+            }                //string tqq = "ADMIN@TEST.com";
+                //_userManager.
+                //var userManager = await _userManager.FindByEmailAsync(tqq);
+                //userManager.Id;
+                //var qqq = userManager.Id;
+                //var claims = _userManager.GetClaimsAsync();
+                //_userManager.GetUserId((ClaimsPrincipal)qqq);
+                //_userManager.
+                //var ttt = await _userManager.GetClaimsAsync(userManager);
+                //var qw = _userManager.GetClaimsAsync(userManager);
+                //var user = User;
+                //var iden = (ClaimsIdentity)User;
+                //var claims = _userManager.GetClaimsAsync(userManager);
+                //IEnumerable<Claim> claims = iden.Claims;
+                //var ww = _context.ApplicationUsers.Find("ADMIN@TEST.com");
+                //var ttt = _userManager.GetUserId(userManager);
             string customMessage = "";
 
             try
             {
+
                 var projectNewInput = JsonConvert.DeserializeObject<dynamic>(value);
                 Project newProject = new Project();
                 newProject.ProjectName = projectNewInput.ProjectName;
                 newProject.CompanyID = projectNewInput.CompanyID;
-                newProject.SupervisorId = _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail);
-                var ttt = _userManager.GetUserId(_userManager.FindByEmailAsync(projectNewInput.SupervisorEmail));
+                newProject.SupervisorId = await _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail);
+                // newProject.SupervisorId = _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail);
+                //var ttt = _userManager.GetUserId(_userManager.FindByEmailAsync(projectNewInput.SupervisorEmail));
 
                 _context.Projects.Add(newProject);
                 await _context.SaveChangesAsync();
