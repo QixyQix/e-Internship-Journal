@@ -9,9 +9,11 @@ namespace E_Internship_Journal.Models
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
-      /*  public List<UserBatch> UserBatches { get; set; }
+        public List<UserBatch> UserBatches { get; set; }
         public List<Project> Projects { get; set; }
-        public List<RegistrationPin> RegistrationPins { get; set; }*/
+        public List<RegistrationPin> RegistrationPins { get; set; }
+
+        public Boolean IsEnabled { get; set; }
         public string FullName { get; set; }
         public Course Course { get; set; }
         public int? CourseId { get; set; }

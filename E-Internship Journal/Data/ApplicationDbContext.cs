@@ -648,16 +648,26 @@ namespace E_Internship_Journal.Data
 
             //----------- Defining RegistrationPin Entity - Start --------------
             modelBuilder.Entity<RegistrationPin>()
-            .HasKey(task_Records => task_Records.RegistrationPinId)
+            .HasKey(registrationPin => registrationPin.RegistrationPinId)
             .HasName("PrimaryKey_RegistrationPinId");
 
             modelBuilder.Entity<RegistrationPin>()
-            .Property(task_Records => task_Records.RegistrationPinId)
+            .Property(registrationPin => registrationPin.RegistrationPinId)
             .HasColumnName("RegistrationPinId")
-            .HasColumnType("int")
-            .UseSqlServerIdentityColumn()
-            .ValueGeneratedOnAdd()
+            .HasColumnType("VARCHAR(100)")
             .IsRequired();
+
+            modelBuilder.Entity<RegistrationPin>()
+                .HasIndex(registrationPin => registrationPin.RegistrationPinId)
+                .IsUnique()
+                .HasName("RegistrationPin_RegistrationPinId_UniqueConstraint");
+
+            modelBuilder.Entity<RegistrationPin>()
+                .Property(registrationPin => registrationPin.Valid)
+                .HasColumnName("Vald")
+                .HasColumnType("bit")
+                .HasDefaultValue(0)
+                .IsRequired();
 
             modelBuilder.Entity<RegistrationPin>()
             .HasOne(registration => registration.User)
