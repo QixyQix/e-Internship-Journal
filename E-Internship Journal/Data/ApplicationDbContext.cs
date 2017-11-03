@@ -82,8 +82,8 @@ namespace E_Internship_Journal.Data
 
             //----------- Defining Course Entity - End --------------
             modelBuilder.Entity<ApplicationUser>()
-     .Property(courses => courses.CourseId)
-     .IsRequired(false);
+                .Property(courses => courses.CourseId)
+                .IsRequired(false);
 
             //----------- Defining Batches Entity - Start --------------
             modelBuilder.Entity<Batch>()
@@ -248,22 +248,22 @@ namespace E_Internship_Journal.Data
 
             //----------- Defining Internship_Record Entity - Start --------------
             modelBuilder.Entity<Internship_Record>()
-            .HasKey(Internship_Records => Internship_Records.InternshipRecordId)
-            .HasName("PrimaryKey_InternshipRecordId");
+                .HasKey(Internship_Records => Internship_Records.InternshipRecordId)
+                .HasName("PrimaryKey_InternshipRecordId");
 
             modelBuilder.Entity<Internship_Record>()
-            .Property(Internship_Records => Internship_Records.InternshipRecordId)
-            .HasColumnName("InternshipRecordId")
-            .HasColumnType("int")
-            .UseSqlServerIdentityColumn()
-            .ValueGeneratedOnAdd()
-            .IsRequired();
+                .Property(Internship_Records => Internship_Records.InternshipRecordId)
+                .HasColumnName("InternshipRecordId")
+                .HasColumnType("int")
+                .UseSqlServerIdentityColumn()
+                .ValueGeneratedOnAdd()
+                .IsRequired();
 
             modelBuilder.Entity<Internship_Record>()
-            .Property(Internship_Records => Internship_Records.PresentationGrading)
-            .HasColumnName("PresentationGrading")
-            .HasColumnType("int")
-            .IsRequired(false);
+                .Property(Internship_Records => Internship_Records.PresentationGrading)
+                .HasColumnName("PresentationGrading")
+                .HasColumnType("int")
+                .IsRequired(false);
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.ReflectionGrading)
@@ -354,7 +354,7 @@ namespace E_Internship_Journal.Data
             .Property(Internship_Records => Internship_Records.FeedbackUseful)
             .HasColumnName("FeedbackUseful")
             .HasColumnType("bit")
-            .HasDefaultValue(0); 
+            .HasDefaultValue(0);
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.FeedbackImproved)
@@ -550,6 +550,13 @@ namespace E_Internship_Journal.Data
             .IsRequired();
 
             modelBuilder.Entity<Day_Record>()
+            .Property(day_Records => day_Records.IsPresent)
+            .HasColumnName("IsPresent")
+            .HasColumnType("bit")
+            .HasDefaultValue(false)
+            .IsRequired(true);
+
+            modelBuilder.Entity<Day_Record>()
             .Property(day_Records => day_Records.MC)
             .HasColumnName("MC")
             .HasColumnType("bit")
@@ -648,15 +655,25 @@ namespace E_Internship_Journal.Data
 
             //----------- Defining RegistrationPin Entity - Start --------------
             modelBuilder.Entity<RegistrationPin>()
-            .HasKey(task_Records => task_Records.RegistrationPinId)
+            .HasKey(registrationPin => registrationPin.RegistrationPinId)
             .HasName("PrimaryKey_RegistrationPinId");
 
             modelBuilder.Entity<RegistrationPin>()
-            .Property(task_Records => task_Records.RegistrationPinId)
+            .Property(registrationPin => registrationPin.RegistrationPinId)
             .HasColumnName("RegistrationPinId")
-            .HasColumnType("int")
-            .UseSqlServerIdentityColumn()
-            .ValueGeneratedOnAdd()
+            .HasColumnType("VARCHAR(100)")
+            .IsRequired();
+
+            modelBuilder.Entity<RegistrationPin>()
+            .HasIndex(registrationPin => registrationPin.RegistrationPinId)
+            .IsUnique()
+            .HasName("RegistrationPin_RegistrationPinId_UniqueConstraint");
+
+            modelBuilder.Entity<RegistrationPin>()
+            .Property(registrationPin => registrationPin.Valid)
+            .HasColumnName("Vald")
+            .HasColumnType("bit")
+            .HasDefaultValue(0)
             .IsRequired();
 
             modelBuilder.Entity<RegistrationPin>()

@@ -14,6 +14,7 @@ namespace E_Internship_Journal.Models
         public DateTime ArrivalTime { get; set; }
         public DateTime DepartureTime { get; set; }
         public int WeekNo { get; set; }
+        public Boolean IsPresent { get; set; }
 
         public Month_Record Month { get; set; }
         public int MonthRecordId { get; set; }

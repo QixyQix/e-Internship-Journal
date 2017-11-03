@@ -63,8 +63,8 @@ namespace E_Internship_Journal.API
                 var companyNewInput = JsonConvert.DeserializeObject<dynamic>(value);
                 var foundOneCompany = _context.Companies.Find(id);
 
-                foundOneCompany.CompanyName = companyNewInput.CompanyName;
-                foundOneCompany.CompanyAddress = companyNewInput.CompanyAddress;
+                foundOneCompany.CompanyName = companyNewInput.CompanyName.Value;
+                foundOneCompany.CompanyAddress = companyNewInput.CompanyAddress.Value;
 
                 _context.Companies.Update(foundOneCompany);
                 await _context.SaveChangesAsync();
@@ -90,9 +90,11 @@ namespace E_Internship_Journal.API
             try
             {
                 var companyNewInput = JsonConvert.DeserializeObject<dynamic>(value);
-                Company newCompany = new Company();
-                newCompany.CompanyName = companyNewInput.CompanyName;
-                newCompany.CompanyAddress = companyNewInput.CompanyAddress;
+                Company newCompany = new Company
+                {
+                    CompanyName = companyNewInput.CompanyName.Value,
+                    CompanyAddress = companyNewInput.CompanyAddress.Value
+                };
 
                 _context.Companies.Add(newCompany);
                 await _context.SaveChangesAsync();

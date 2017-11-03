@@ -1,0 +1,38 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<form asp-action="EnrollStudent"
+      asp-route-id="1"
+      asp-controller="Batches"
+      method="post"
+      enctype="multipart/form-data">
+    <input type="file" name="files" multiple/>
+    <input type="submit" value="Upload Selected File" />
+</form>
+
+<form method="put" enctype="multipart/form-data" action="/api/Batches/EnrollStudent/1">
+    <div>
+        <p>Upload one or more files using this form:</p>
+        <input type="file" name="files" />
+    </div>
+    <div>
+        <input type="submit" value="Upload" />
+    </div>
+</form>
+
+<script>
+    $('#saveButton2').on('click', function () {
+        $saveBrandHandler = jQuery.ajax({
+            method: 'put',
+            url: '/API/Batches/EnrollStudent/1',
+            contentType: false, // Not to set any content header
+            processData: false, // Not to process data
+        });
+        $saveBrandHandler.done(function (data, textStatus, jqXHR) {
+            data.Message;
+        });
+    });
+</script>

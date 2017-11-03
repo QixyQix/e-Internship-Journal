@@ -9,6 +9,10 @@ using E_Internship_Journal.Data;
 using E_Internship_Journal.Models;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
+using System.IO;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System.Text;
 
 namespace E_Internship_Journal.API
 {
@@ -26,18 +30,82 @@ namespace E_Internship_Journal.API
         // GET: api/Batches
         [HttpGet]
         [AllowAnonymous]
-        public IEnumerable<Batch> GetBatches()
+        public JsonResult GetBatches()
         {
-            return _context.Batches;
+            List<object> batchList = new List<object>();
+            var batches = _context.Batches
+           .Include(eachBatchEntity => eachBatchEntity.Course).AsNoTracking();
+            foreach (var onebatch in batches)
+            {
+                //   List<int> categoryIdList = new List<int>();
+                batchList.Add(new
+                {
+                    onebatch.BatchId,
+                    onebatch.BatchName,
+                    onebatch.Description,
+                    onebatch.StartDate,
+                    onebatch.EndDate
+                });
+            }
+
+            return new JsonResult(batchList);
         }
 
-       
+        // GET api/Brands/5
+        [HttpGet("GetOneBatches/{id}")]
+        public IActionResult GetOneBatches(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (BatchExists(id))
+            {
+                try
+                {
+                    var foundCourses = _context.Batches
+                    .Where(eachCourse => eachCourse.CourseId == id)
+                    .Include(eachCourse => eachCourse.Course).Single();
+                    var response = new
+                    {
+                        BatchId = foundCourses.BatchId,
+                        CourseId = foundCourses.CourseId,
+                        Description = foundCourses.Description,
+                        StartDate = foundCourses.StartDate,
+                        EndDate = foundCourses.EndDate,
+                        CourseName = foundCourses.Course.CourseName,
+                        CourseCode = foundCourses.Course.CourseCode
+                    };//end of creation of the response object
+                    return new JsonResult(response);
+                }
+                catch (Exception exceptionObject)
+                {
+                    //Create a fail message anonymous object
+                    //This anonymous object only has one Message property 
+                    //which contains a simple string message
+                    object httpFailRequestResultMessage =
+                    new { Message = "Unable to obtain brand information." };
+                    //Return a bad http response message to the client
+                    return BadRequest(httpFailRequestResultMessage);
+                }
+            }
+            else
+            {
+                object httpFailRequestResultMessage =
+                new { Message = "Unable to obtain brand information." };
+                //Return a bad http response message to the client
+                return BadRequest(httpFailRequestResultMessage);
+            }
+
+        }//End of Get(id) Web API method
+
+
         // PUT: api/Batches/5
         [HttpPut("UpdateOneBatch/{id}")]
         [AllowAnonymous]
         public async Task<IActionResult> UpdateOneBatch(int id, [FromBody] string value)
         {
-            
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -48,10 +116,10 @@ namespace E_Internship_Journal.API
                 var batchNewInput = JsonConvert.DeserializeObject<dynamic>(value);
                 var foundOneBatch = _context.Batches.Find(id);
 
-                foundOneBatch.BatchName = batchNewInput.BatchName;
-                foundOneBatch.Description = batchNewInput.Description;
-                foundOneBatch.StartDate = batchNewInput.StartDate;
-                foundOneBatch.EndDate = batchNewInput.EndDate;
+                foundOneBatch.BatchName = batchNewInput.BatchName.Value;
+                foundOneBatch.Description = batchNewInput.Description.Value;
+                foundOneBatch.StartDate = batchNewInput.StartDate.Value;
+                foundOneBatch.EndDate = batchNewInput.EndDate.Value;
                 foundOneBatch.CourseId = batchNewInput.CourseId.Value;
 
                 _context.Batches.Update(foundOneBatch);
@@ -59,11 +127,127 @@ namespace E_Internship_Journal.API
             }
             else
             {
+                object httpFailRequestResultMessage =
+                new { Message = "Invalid Batch ID" };
+                //Return a bad http response message to the client
+                return BadRequest(httpFailRequestResultMessage);
 
             }
-            
-
             return NoContent();
+        }
+
+        //PUT: Enroll student into batch
+        [HttpPost("EnrollStudent/{id}")]
+        //[Authorize(Roles = "SLO")]
+        public async Task<IActionResult> EnrollStudent(int id, List<IFormFile> files)
+        {
+
+            //Get the batch & course
+            var thisBatch = _context.Batches
+                .Where(batch => batch.BatchId == id)
+                .Include(batch => batch.Course)
+                .Single();
+
+            var csvFile = files[0];
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await csvFile.CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
+                using (var streamReader = new StreamReader(memoryStream))
+                {
+                    var heading = streamReader.ReadLine();
+
+                    //Check if CSV file is in correct order
+                    if (!heading.Equals("Student Name,Email,Contact No,Project,Company"))
+                    {
+                        return BadRequest("CSV file does not follow correct format");
+                    }
+
+                    //Read the file
+                    string fileLine = "";
+                    //try
+                    //{
+                        while ((fileLine = streamReader.ReadLine()) != null)
+                        {
+                            //Get individual data
+                            string[] oneStudentData = fileLine.Split(',');
+
+                            var name = oneStudentData[0];
+                            var email = oneStudentData[1];
+                            var mobileNo = oneStudentData[2];
+
+                            //Create user
+                            var userStore = new UserStore<ApplicationUser>(_context);
+                            var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
+
+                            var newStudentUser = new ApplicationUser
+                            {
+                                UserName = email,
+                                Email = email,
+                                FullName = name,
+                                PhoneNumber = mobileNo,
+                                Course = thisBatch.Course
+                            };
+                            PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
+                            newStudentUser.PasswordHash = ph.HashPassword(newStudentUser, generateRandomString(11)); //TODO: Random default password generator
+
+                            await userManager.CreateAsync(newStudentUser);
+                            await userManager.AddToRoleAsync(newStudentUser, "STUDENT");
+
+                            //Create UserBatch objects
+                            var newUserBatch = new UserBatch
+                            {
+                                BatchId = thisBatch.BatchId,
+                                UserId = newStudentUser.Id
+                            };
+                            _context.UserBatches.Add(newUserBatch);
+                            _context.SaveChanges();
+
+                        var repeatPinGeneration = false;
+
+                        do
+                        {
+                            repeatPinGeneration = false;
+                            try
+                            {
+                                //Create new registration pin
+                                var newRegistrationPin = new RegistrationPin
+                                {
+                                    User = newStudentUser,
+                                    RegistrationPinId = generateRandomString(50)
+                                };
+                                _context.RegistrationPins.Add(newRegistrationPin);
+                                _context.SaveChanges();
+                            }
+                            catch (Exception ex) {
+                                repeatPinGeneration = true;
+                            }
+                        } while (repeatPinGeneration);
+                        }
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    return BadRequest();
+                    //}
+                }
+            }
+            return Ok();
+        }
+
+        public string generateRandomString(int size)
+        {
+            //ACKNOWLEDGEMENT: http://azuliadesigns.com/generate-random-strings-characters/
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 1; i < size + 1; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+
+            return builder.ToString();
         }
 
         [HttpPost("SaveNewBatchInformation")]
@@ -100,7 +284,7 @@ namespace E_Internship_Journal.API
             };
 
             OkObjectResult httpOkResult =
-new OkObjectResult(successRequestResultMessage);
+            new OkObjectResult(successRequestResultMessage);
             return httpOkResult;
         }
 
