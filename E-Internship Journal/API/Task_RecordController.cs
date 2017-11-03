@@ -12,57 +12,65 @@ using Newtonsoft.Json;
 namespace E_Internship_Journal.API
 {
     [Produces("application/json")]
-    [Route("api/Competencies")]
-    public class CompetenciesController : Controller
+    [Route("api/Task_Record")]
+    public class Task_RecordController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public CompetenciesController(ApplicationDbContext context)
+        public Task_RecordController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Competencies
+        // GET: api/Task_Record
         [HttpGet]
-        public IActionResult GetCompetencies()
-        {
-            List<object> competencies_List = new List<object>();
-            var competencies = _context.Competencies
-
-            .AsNoTracking();
-            foreach (var oneCompetency in competencies)
-            {
-                //   List<int> categoryIdList = new List<int>();
-                competencies_List.Add(new
-                {
-                    oneCompetency.Description,
-                    oneCompetency.TitleDescription
-                });
-            }
-
-            return new JsonResult(competencies_List);
-        }
-
-        // GET: api/Competencies/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCompetency([FromRoute] int id)
+        public IActionResult GetTasks()
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            if (CompetencyExists(id))
+            List<object> task_Record_List = new List<object>();
+            var task_Records = _context.Tasks
+
+            .AsNoTracking();
+            foreach (var oneTaskRecord in task_Records)
+            {
+                //   List<int> categoryIdList = new List<int>();
+                task_Record_List.Add(new
+                {
+                    oneTaskRecord.TaskRecordId,
+                    oneTaskRecord.DayRecordId,
+                    oneTaskRecord.Description
+                });
+            }
+
+            return new JsonResult(task_Record_List);
+        }
+
+        // GET: api/Task_Record/5
+        [HttpGet("{id}")]
+        public IActionResult GetTask_Record(int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (Task_RecordExists(id))
             {
                 try
                 {
-                    var foundOneCompetency = _context.Competencies
-                        .Where(eachCompetencyEntity => eachCompetencyEntity.CompetencyId == id)
+                    var foundOneTask = _context.Tasks
+                        .Where(eachTaskEntity => eachTaskEntity.DayRecordId == id)
+                        .Include(eachTaskENtity => eachTaskENtity.DayRecord)
                         .Single();
                     var response = new
                     {
-                        CompetencyId = foundOneCompetency.CompetencyId,
-                        Description = foundOneCompetency.Description,
-                        TitleDescription = foundOneCompetency.TitleDescription
+                        DayRecordId = foundOneTask.DayRecordId,
+                        TaskRecordId = foundOneTask.TaskRecordId,
+                        Description = foundOneTask.Description,
+                        Date = foundOneTask.DayRecord.Date,
+                        WeekNo = foundOneTask.DayRecord.WeekNo
                     };//end of creation of the response object
                     return new JsonResult(response);
                 }
@@ -72,7 +80,7 @@ namespace E_Internship_Journal.API
                     //This anonymous object only has one Message property 
                     //which contains a simple string message
                     object httpFailRequestResultMessage =
-                    new { Message = "Unable to obtain Competencies information." };
+                    new { Message = "Unable to obtain brand information." };
                     //Return a bad http response message to the client
                     return BadRequest(httpFailRequestResultMessage);
                 }
@@ -80,7 +88,7 @@ namespace E_Internship_Journal.API
             else
             {
                 object httpFailRequestResultMessage =
-                new { Message = "Unable to locate Competencies Item information." };
+                new { Message = "Unable to obtain brand information." };
                 //Return a bad http response message to the client
                 return BadRequest(httpFailRequestResultMessage);
 
@@ -88,36 +96,35 @@ namespace E_Internship_Journal.API
             }//End of Get(id) Web API method
         }
 
-        // PUT: api/Competencies/5
+        // PUT: api/Task_Record/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCompetency(int id, [FromBody] string value)
+        public async Task<IActionResult> PutTask_RecordAsync(int id, [FromBody] string value)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            if (CompetencyExists(id))
+            if (Task_RecordExists(id))
             {
-                var competencies_NewInput = JsonConvert.DeserializeObject<dynamic>(value);
+                var task_RecordNewInput = JsonConvert.DeserializeObject<dynamic>(value);
                 try
                 {
-                    var foundOneCompetencies = _context.Competencies
-                        .Where(eachCompetencyEntity => eachCompetencyEntity.CompetencyId == id)
+                    var foundOneTask = _context.Tasks
+                        .Where(eachTaskEntity => eachTaskEntity.DayRecordId == id)
                         .Single();
 
-                    Competency newCompetencies = new Competency
+                    Task_Record newTask_Record = new Task_Record
                     {
-                        CompetencyId = id,
-                        Description = competencies_NewInput.Description.Value,
-                        TitleDescription = competencies_NewInput.TitleDescription.Value
+                        Description = task_RecordNewInput.Description.Value,
+                        DayRecordId = task_RecordNewInput.DayRecordId.Value,
+
                     };
-                    _context.Competencies.Update(newCompetencies);
+                    _context.Tasks.Update(newTask_Record);
                     await _context.SaveChangesAsync();
 
                     var successRequestResultMessage = new
                     {
-                        Message = "Updated Competencies into database"
+                        Message = "Updated Task into database"
                     };
 
                     OkObjectResult httpOkResult =
@@ -139,7 +146,7 @@ namespace E_Internship_Journal.API
             else
             {
                 object httpFailRequestResultMessage =
-                new { Message = "Competencies ID not found" };
+                new { Message = "Task Record ID not found" };
                 //Return a bad http response message to the client
                 return BadRequest(httpFailRequestResultMessage);
 
@@ -147,9 +154,9 @@ namespace E_Internship_Journal.API
             }//End of Get(id) Web API method
         }
 
-        // POST: api/Competencies
-        [HttpPost]
-        public async Task<IActionResult> SaveNewCompetenciesInfromation([FromBody] string value)
+        // POST: api/Task_Record
+        [HttpPost("SaveNewTaskRecordInformation")]
+        public async Task<IActionResult> SaveNewTaskRecordInformation([FromBody] string value)
         {
             if (!ModelState.IsValid)
             {
@@ -159,12 +166,12 @@ namespace E_Internship_Journal.API
             try
             {
 
-                var competencies_NewInput = JsonConvert.DeserializeObject<dynamic>(value);
+                var task_RecordNewInput = JsonConvert.DeserializeObject<dynamic>(value);
                 Task_Record newTask_Record = new Task_Record
                 {
-                    Description = competencies_NewInput.Description.Value,
-                    DayRecordId = competencies_NewInput.DayRecordId.Value,
-
+                    Description = task_RecordNewInput.Description.Value,
+                    DayRecordId = task_RecordNewInput.DayRecordId.Value,
+                  
                 };
 
                 _context.Tasks.Add(newTask_Record);
@@ -186,30 +193,30 @@ namespace E_Internship_Journal.API
             return httpOkResult;
         }
 
-        // DELETE: api/Competencies/5
+        // DELETE: api/Task_Record/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCompetency([FromRoute] int id)
+        public async Task<IActionResult> DeleteTask_Record([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var competency = await _context.Competencies.SingleOrDefaultAsync(m => m.CompetencyId == id);
-            if (competency == null)
+            var task_Record = await _context.Tasks.SingleOrDefaultAsync(m => m.TaskRecordId == id);
+            if (task_Record == null)
             {
                 return NotFound();
             }
 
-            _context.Competencies.Remove(competency);
+            _context.Tasks.Remove(task_Record);
             await _context.SaveChangesAsync();
 
-            return Ok(competency);
+            return Ok(task_Record);
         }
 
-        private bool CompetencyExists(int id)
+        private bool Task_RecordExists(int id)
         {
-            return _context.Competencies.Any(e => e.CompetencyId == id);
+            return _context.Tasks.Any(e => e.TaskRecordId == id);
         }
     }
 }
