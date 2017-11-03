@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using E_Internship_Journal.Data;
 using E_Internship_Journal.Models;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Internship_Journal.API
 {
@@ -15,17 +18,44 @@ namespace E_Internship_Journal.API
     public class UserBatchesController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public UserBatchesController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        public UserBatchesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager)
         {
+             _userManager = userManager;
+            _signInManager = signInManager;
             _context = context;
         }
 
         // GET: api/UserBatches
         [HttpGet]
-        public IEnumerable<UserBatch> GetUserBatches()
+        [AllowAnonymous]
+        public IActionResult GetUserBatches()
         {
-            return _context.UserBatches;
+              List<object> userBatchList = new List<object>();
+            var userBatches = _context.UserBatches
+            .Include(eachUserBatchEntity => eachUserBatchEntity.User)
+            .Include(eacbProjectEntity => eacbProjectEntity.Batch)
+            .AsNoTracking();
+            foreach (var oneUserBatch in userBatches)
+            {
+                //   List<int> categoryIdList = new List<int>();
+                userBatchList.Add(new
+                {
+                    oneUserBatch.Batch.BatchId,
+                    oneUserBatch.Batch.BatchName,
+                     oneUserBatch.Batch.CourseId,
+                      oneUserBatch.Batch.Description,
+                       oneUserBatch.Batch.StartDate,
+                        oneUserBatch.Batch.EndDate,
+
+                    oneUserBatch.User.FullName,
+                     oneUserBatch.User.Email
+                });
+            }
+
+            return new JsonResult(userBatchList);
         }
 
         // GET: api/UserBatches/5
@@ -48,35 +78,28 @@ namespace E_Internship_Journal.API
         }
 
         // PUT: api/UserBatches/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUserBatch([FromRoute] int id, [FromBody] UserBatch userBatch)
+        [HttpPut("UpdateOneUserBatch/{id}")]
+        public async Task<IActionResult> UpdateOneUserBatch(int id, [FromBody] string value)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            if (id != userBatch.UserBatchId)
+            string customMessage = "";
+            if (UserBatchExists(id))
             {
-                return BadRequest();
-            }
+                var userBatchNewInput = JsonConvert.DeserializeObject<dynamic>(value);
+                var foundOneUserBatch = _context.UserBatches.Find(id);
 
-            _context.Entry(userBatch).State = EntityState.Modified;
+                foundOneUserBatch.BatchId = userBatchNewInput.BatchId.Value;
+                foundOneUserBatch.UserBatchId = (await _userManager.FindByEmailAsync(userBatchNewInput.Email.Value)).Id;
 
-            try
-            {
+                _context.UserBatches.Update(foundOneUserBatch);
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!UserBatchExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+
             }
 
             return NoContent();
@@ -84,17 +107,43 @@ namespace E_Internship_Journal.API
 
         // POST: api/UserBatches
         [HttpPost]
-        public async Task<IActionResult> PostUserBatch([FromBody] UserBatch userBatch)
+        public async Task<IActionResult> PostUserBatch([FromBody] string value)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            string customMessage = "";
+           
+            try
+            {
 
-            _context.UserBatches.Add(userBatch);
-            await _context.SaveChangesAsync();
+                var userBatchNewInput = JsonConvert.DeserializeObject<dynamic>(value);
+                UserBatch newUserBatch = new UserBatch
+                {
+                    BatchId = userBatchNewInput.BatchId.Value,
+                    UserId = (await _userManager.FindByEmailAsync(userBatchNewInput.Email.Value)).Id
+                };
+                // newProject.SupervisorId = _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail);
+                //var ttt = _userManager.GetUserId(_userManager.FindByEmailAsync(projectNewInput.SupervisorEmail));
 
-            return CreatedAtAction("GetUserBatch", new { id = userBatch.UserBatchId }, userBatch);
+                _context.UserBatches.Add(newUserBatch);
+                await _context.SaveChangesAsync();
+
+            }
+            catch (Exception exceptionObject)
+            {
+                customMessage = "Unable to save to database";
+                //return 
+            }
+            var successRequestResultMessage = new
+            {
+                Message = "Saved UserBatch into database"
+            };
+
+            OkObjectResult httpOkResult =
+            new OkObjectResult(successRequestResultMessage);
+            return httpOkResult;
         }
 
         // DELETE: api/UserBatches/5

@@ -28,5 +28,13 @@ namespace E_Internship_Journal.Controllers
         {
             return View();
         }
+        public IActionResult Index1()
+        {
+            return View();
+        }
+        public IActionResult Student_Info()
+        {
+            return View();
+        }
     }
 }

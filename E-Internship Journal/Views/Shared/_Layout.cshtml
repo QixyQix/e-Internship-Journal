@@ -39,7 +39,7 @@
             $("body").removeClass("sidenav-toggled")
         });
             $('#calendar').fullCalendar({
-                editable: true,
+                editable: false,
                 eventLimit: true, // allow "more" link when too many events
                 events: [
                     {
@@ -98,8 +98,9 @@
                     }
                 ],
                 dayClick: function (date, jsEvent, view, event) {
+                    $('#eventModal').modal('show');
                     //$("#cafeId").val($(this).data('id'));
-                    $('#myModal').modal('show');
+                    //$('#myModal').modal('show');
                     //var task;
                     //if (confirm('Clicked on: ' + date.format() + '\nDo you want to add a task?')) {
                     //    task = prompt("Please enter task", "");
@@ -116,10 +117,11 @@
                     //$(this).css('background-color', 'red');
                 },
                 eventClick: function (event, element) {
-                    var task;
-                    task = prompt("Please re-enter task", event.title);
-                    event.title = task;
-                    $('#calendar').fullCalendar('updateEvent', event);
+                    //var task;
+                    //task = prompt("Please re-enter task", event.title);
+                    //event.title = task;
+                    //$('#calendar').fullCalendar('updateEvent', event);
+
                     //var info;
                     //event.title = "CLICKED!";
 
@@ -139,16 +141,6 @@
                 //    alert('a day has been clicked!'); //for clicking
                 //}
             });
-            function myFunction() {
-                var txt;
-                var task = prompt("Please enter task", "");
-                if (task == null || task == "") {
-                    txt = "User cancelled the prompt.";
-                } else {
-                    txt = "Hello " + person + "! How are you today?";
-                }
-                document.getElementById("demo").innerHTML = txt;
-            }
         });
     </script>
 </head>
@@ -346,6 +338,27 @@
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
                     @await Html.PartialAsync("_LoginPartial")
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Event Modal -->
+    <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eventModalLabel">Ready to Leave?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Select "Logout" below if you are ready to end your current session.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
                 </div>
             </div>
         </div>
