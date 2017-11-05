@@ -115,7 +115,17 @@ namespace E_Internship_Journal.Data
             db.Internship_Records.Add(internshipObject);
             db.SaveChanges();
 
+            var monthObject = new Month_Record { InternshipRecordId = internshipObject.InternshipRecordId };
+            db.Month_Records.Add(monthObject);
+            db.SaveChanges();
 
+            var dayObject = new Day_Record { MonthRecordId = monthObject.MonthId, Date = DateTime.ParseExact("05/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), ArrivalTime = DateTime.Parse("9:00:00 AM"), DepartureTime = DateTime.Parse("9:00:00 AM"), WeekNo = 1, IsPresent = true };
+            db.Day_Records.Add(dayObject);
+            db.SaveChanges();
+
+            var taskObject = new Task_Record { DayRecordId = dayObject.DayId, Description = "I love slacking all day" };
+            db.Tasks.Add(taskObject);
+            db.SaveChanges();
             //Save changes
             db.SaveChanges();
         }

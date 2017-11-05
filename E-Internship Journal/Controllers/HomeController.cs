@@ -45,6 +45,10 @@ namespace E_Internship_Journal.Controllers
         {
             return View();
         }
+        public IActionResult Guide()
+        {
+            return View();
+        }
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
