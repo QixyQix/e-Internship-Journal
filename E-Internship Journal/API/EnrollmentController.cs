@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -88,8 +89,7 @@ namespace E_Internship_Journal.Controllers
                                         User = user
                                     };
                                     _context.UserBatches.Add(newUserBatch);
-                                    _context.SaveChanges();
-                                }//Else do nothing.
+                                }
                             }
                             else
                             {
@@ -118,7 +118,6 @@ namespace E_Internship_Journal.Controllers
                                     User = newStudentUser
                                 };
                                 _context.UserBatches.Add(newUserBatch);
-                                _context.SaveChanges();
 
                                 var repeatPinGeneration = false;
 
@@ -134,7 +133,6 @@ namespace E_Internship_Journal.Controllers
                                             RegistrationPinId = generateRandomString(50)
                                         };
                                         _context.RegistrationPins.Add(newRegistrationPin);
-                                        _context.SaveChanges();
                                     }
                                     catch (Exception ex)
                                     {
@@ -142,6 +140,7 @@ namespace E_Internship_Journal.Controllers
                                     }
                                 } while (repeatPinGeneration);
                             }
+                            await _context.SaveChangesAsync();
                         }
                         catch (Exception ex)
                         {
@@ -167,6 +166,50 @@ namespace E_Internship_Journal.Controllers
             }
 
             return builder.ToString();
+        }
+
+        [HttpPut("MassAssignStudent/{id}")]
+        [Authorize(Roles = "SLO")]
+        public async Task<IActionResult> MassAssignStudent(int id, [FromBody] string value) {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var assignmentInput = JsonConvert.DeserializeObject<dynamic>(value);
+
+            var studentProjects = assignmentInput.studentProjects;
+
+            foreach (var pairing in studentProjects) {
+
+                string studentUserId = pairing.studentId.ToString().Trim();
+                var projectIdInput = pairing.projectId;
+                int projectId = 0;
+
+                if (string.IsNullOrEmpty(studentUserId) || !Int32.TryParse(projectIdInput, out projectId)) {
+                    return BadRequest();
+                }
+
+                //Find the userbatch for the user
+                var userBatch = _context.UserBatches.SingleOrDefault(ub => ub.BatchId == id && ub.UserId.Equals(studentUserId));
+                //Find the project
+                var project = _context.Projects.Find(projectId);
+
+                if (userBatch == null || project == null) {
+                    return BadRequest();
+                }
+
+                var internshipRecord = new Internship_Record
+                {
+                    UserBatch = userBatch,
+                    Project = project
+                };
+
+                _context.Internship_Records.Add(internshipRecord);
+            }
+            //Save changes in db
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
