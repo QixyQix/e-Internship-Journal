@@ -11,7 +11,8 @@ namespace E_Internship_Journal.Models
         public string ProjectName { get; set; }
 
         public ApplicationUser Supervisor { get; set; }
-        public int SupervisorId { get; set; }
+        public string SupervisorId { get; set; }
+
         public Company Company { get; set; }
         public int CompanyID { get; set; }
 

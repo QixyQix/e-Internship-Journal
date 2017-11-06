@@ -12,6 +12,10 @@ namespace E_Internship_Journal.Models
         public List<UserBatch> UserBatches { get; set; }
         public List<Project> Projects { get; set; }
         public List<RegistrationPin> RegistrationPins { get; set; }
-        public List<Course> Courses { get; set; }
+
+        public Boolean IsEnabled { get; set; }
+        public string FullName { get; set; }
+        public Course Course { get; set; }
+        public int? CourseId { get; set; }
     }
 }

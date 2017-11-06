@@ -4,15 +4,48 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FYP_beta.Controllers
+namespace E_Internship_Journal.Controllers
 {
     public class HomeController : Controller
     {
         public IActionResult Index()
         {
+            var test = User.IsInRole("SUPERVISOR");
+            if (User.IsInRole("SUPERVISOR"))
+            {
+                return View("~/Views/Home/Supervisor/Index.cshtml");
+            }
+            else
+            {
+                return View("~/Views/Home/Student/Index.cshtml");
+            }
+        }
+        [Route("task/overview")]
+        public IActionResult Daily_Task()
+        {
             return View();
         }
-        public IActionResult Index1()
+        public IActionResult Add_Task()
+        {
+            return View();
+        }
+        public IActionResult Edit_Task()
+        {
+            return View();
+        }
+        public IActionResult Key_Attendance()
+        {
+            return View();
+        }
+        public IActionResult Attendance()
+        {
+            return View();
+        }
+        public IActionResult Monthly_Reflection()
+        {
+            return View();
+        }
+        public IActionResult Guide()
         {
             return View();
         }

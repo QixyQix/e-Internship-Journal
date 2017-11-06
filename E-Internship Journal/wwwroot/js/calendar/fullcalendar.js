@@ -8815,8 +8815,7 @@ var View = FC.View = InteractiveDateComponent.extend({
 	// Triggers handlers to 'dayClick'
 	// Span has start/end of the clicked area. Only the start is useful.
 	triggerDayClick: function(footprint, dayEl, ev) {
-		var dateProfile = this.calendar.footprintToDateProfile(footprint); // abuse of "Event"DateProfile?
-
+        var dateProfile = this.calendar.footprintToDateProfile(footprint); // abuse of "Event"DateProfile?
 		this.publiclyTrigger('dayClick', {
 			context: dayEl,
 			args: [ dateProfile.start, ev, this ]

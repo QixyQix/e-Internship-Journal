@@ -28,7 +28,30 @@ E:\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internshi
 E:\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.pdb
 E:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.csprojResolveAssemblyReference.cache
 E:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.csproj.CoreCompileInputs.cache
-E:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\UserSecretsAssemblyInfo.cs
 E:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.AssemblyInfo.cs
 E:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.dll
 E:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.pdb
+F:\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.deps.json
+F:\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.runtimeconfig.json
+F:\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.runtimeconfig.dev.json
+F:\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.dll
+F:\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.pdb
+F:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.csprojResolveAssemblyReference.cache
+F:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.csproj.CoreCompileInputs.cache
+F:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\UserSecretsAssemblyInfo.cs
+F:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.AssemblyInfo.cs
+F:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.dll
+F:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.pdb
+E:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\UserSecretsAssemblyInfo.cs
+D:\Downloads\Programs\Year 3\FYP\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.csprojResolveAssemblyReference.cache
+D:\Downloads\Programs\Year 3\FYP\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.csproj.CoreCompileInputs.cache
+D:\Downloads\Programs\Year 3\FYP\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\UserSecretsAssemblyInfo.cs
+D:\Downloads\Programs\Year 3\FYP\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.AssemblyInfoInputs.cache
+D:\Downloads\Programs\Year 3\FYP\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.AssemblyInfo.cs
+D:\Downloads\Programs\Year 3\FYP\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.dll
+D:\Downloads\Programs\Year 3\FYP\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.pdb
+D:\Downloads\Programs\Year 3\FYP\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.deps.json
+D:\Downloads\Programs\Year 3\FYP\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.runtimeconfig.json
+D:\Downloads\Programs\Year 3\FYP\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.runtimeconfig.dev.json
+D:\Downloads\Programs\Year 3\FYP\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.dll
+D:\Downloads\Programs\Year 3\FYP\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.pdb

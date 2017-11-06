@@ -1,0 +1,43 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>SB Admin - Start Bootstrap Template</title>
+    <!-- Bootstrap core CSS -->
+    <link href="~/js/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!-- Custom fonts for this template -->
+    <link href="~/js/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- Plugin CSS -->
+    <link href="~/js/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="~/css/sb-admin.css" rel="stylesheet">
+    <link href="~/css/fullcalendar.css" rel="stylesheet">
+</head>
+<body class="bg-dark">
+    <div class="container">
+        @RenderBody()
+    </div>
+    <!-- Bootstrap core JavaScript-->
+    <script src="~/js/jquery/jquery.min.js"></script>
+    <script src="~/js/calendar/moment.min.js"></script>
+    <script src="~/js/calendar/fullcalendar.js"></script>
+    <script src="~/js/popper/popper.min.js"></script>
+    <script src="~/js/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Plugin JavaScript -->
+    <script src="~/js/jquery-easing/jquery.easing.min.js"></script>
+    @*
+        <script src="~/js/chart.js/Chart.min.js"></script>*@
+    <script src="~/js/datatables/jquery.dataTables.js"></script>
+    <script src="~/js/datatables/dataTables.bootstrap4.js"></script>
+    <!-- Custom scripts for this template -->
+    <script src="~/js/sb-admin.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

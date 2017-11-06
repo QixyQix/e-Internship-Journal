@@ -1,0 +1,205 @@
+﻿<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="#">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active">Tables</li>
+    </ol>
+    <!-- Example DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-table"></i> Data Table Example
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                @*<span class="pull-right">
+                            <button class="btn btn-sm btn-primary btn-add-panel">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                            <button class="btn btn-sm btn-danger btn-add-panel">
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </span>*@
+
+                <div class="container">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Task Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        @*<tfoot>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Action</th>
+                                </tr>
+                            </tfoot>*@
+                    </table>
+                    <div class="col-md-10 col-sm-10 col-xs-12">
+                        <div class="form-group">
+                            <div class="pull-left">
+                                <button class="btn btn-default" name="submit" type="submit">
+                                    Back
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+
+        var editor = new $.fn.dataTable.Editor(table);
+
+        //var t = $('#dataTable').DataTable();
+        var counter = 1;
+
+        var table = $('#dataTable').DataTable({
+            "bPaginate": false,
+            "bLengthChange": false,
+            "bFilter": false,
+            "bSort": false,
+            "bInfo": false,
+            "bAutoWidth": false,
+            "asStripClasses": null,
+            //--disable the sorting--
+            //dom: 'Blrtip',
+            dom: 'Blrt',
+            buttons: [
+                {
+                    extend: "create", editor: editor,
+                    //text: 'Add Task',
+                    //className: 'btn.btn-default',
+                    //action: function (e, dt, node, config) {
+                    //    alert('Button activated');
+                    //}
+                }
+            ],
+            "aoColumns": [
+                { "mData": null, "sWidth": "10%" },
+                { "mData": "Task Description", "sTitle": "Task Description", "sWidth": "80%" },
+                { "mData": "Action", "sTitle": "Action", "sWidth": "10" },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o) { return '<a href=#/' + o.userid + '>' + 'Edit' + '</a>'; }
+                }
+            ],
+            language: {
+                emptyTable: "No records available - Got it?",
+            }
+        });
+
+        $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
+            console.log("button 1 is click");
+        });
+
+        //$('#dataTable tbody').on('click', 'btn-danger', function () {
+        //    alert('Button activated');
+        //    table
+        //        .row($(this).parents('tr'))
+        //        .remove()
+        //        .draw();
+        //});
+
+        $('#dt-button').on('click', 'button', function () {
+            table.DataTable().row.add([
+                counter + '.1',
+                counter + '.2',
+                counter + '.3'
+            ]).draw(false);
+
+            counter++;
+        });
+
+
+        // Automatically add a first row of data
+        //$('#addRow').click();
+
+        //var myTable = $('#dataTable').DataTable();
+
+        //$('#dataTable').on('click', 'tbody td', function () {
+        //    myTable.cell(this).edit();
+        //});
+    });
+</script>
+@*<script>
+    $(document).ready(function () {
+
+        var editor = new $.fn.dataTable.Editor(table);
+
+        //var t = $('#dataTable').DataTable();
+        var counter = 1;
+
+        var table = $('#dataTable').DataTable({
+            "bPaginate": false,
+            "bLengthChange": false,
+            "bFilter": false,
+            "bSort": false,
+            "bInfo": false,
+            "bAutoWidth": false,
+            "asStripClasses": null,
+            //--disable the sorting--
+            //dom: 'Blrtip',
+            dom: 'Blrt',
+            buttons: [
+                {
+                    extend: "create", editor: editor,
+                    //text: 'Add Task',
+                    //className: 'btn.btn-default',
+                    //action: function (e, dt, node, config) {
+                    //    alert('Button activated');
+                    //}
+                }
+            ],
+            //--added customise button
+            "columnDefs": [{
+                "targets": -1,
+                "data": null,
+                "defaultContent": "<button class='btn btn-sm btn-danger' id='deletebtn'><i class='fa fa-times'></i></button>"
+            }],
+            language: {
+                infoEmpty: "No records available - Got it?",
+            }
+        });
+
+        $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
+            console.log("button 1 is click");
+        });
+
+        //$('#dataTable tbody').on('click', 'btn-danger', function () {
+        //    alert('Button activated');
+        //    table
+        //        .row($(this).parents('tr'))
+        //        .remove()
+        //        .draw();
+        //});
+
+        $('#dt-button').on('click', 'button', function () {
+            table.DataTable().row.add([
+                counter + '.1',
+                counter + '.2',
+                counter + '.3'
+            ]).draw(false);
+
+            counter++;
+        });
+
+
+        // Automatically add a first row of data
+        //$('#addRow').click();
+
+        //var myTable = $('#dataTable').DataTable();
+
+        //$('#dataTable').on('click', 'tbody td', function () {
+        //    myTable.cell(this).edit();
+        //});
+    });
+</script>*@

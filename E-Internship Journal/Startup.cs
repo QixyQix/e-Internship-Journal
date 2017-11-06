@@ -12,6 +12,9 @@ using Microsoft.Extensions.Logging;
 using E_Internship_Journal.Data;
 using E_Internship_Journal.Models;
 using E_Internship_Journal.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Newtonsoft.Json.Serialization;
 
 namespace E_Internship_Journal
 {
@@ -39,15 +42,34 @@ namespace E_Internship_Journal
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddApplicationInsightsTelemetry(Configuration);
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            services.AddSession();
+            services.AddMemoryCache();
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+            var defaultPolicy = new AuthorizationPolicyBuilder()
+       .RequireAuthenticatedUser()
+       .Build();
+            services.AddAuthorization(options =>
+            {
+                // inline policies
+                options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("ADMIN"));
+                options.AddPolicy("RequireSeniorOfficerRole", policy => policy.RequireRole("SLO"));
+                options.AddPolicy("RequireOfficerRole", policy => policy.RequireRole("LO"));
+                options.AddPolicy("RequireSupervisorRole", policy => policy.RequireRole("SUPERVISOR"));
+                options.AddPolicy("RequireStudentRole", policy => policy.RequireRole("STUDENT"));
+            });
+            services.AddMvc(setup =>
+            {
+                setup.Filters.Add(new AuthorizeFilter(defaultPolicy));
+            });
+            services.AddMvc()
+                  .AddJsonOptions(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
-            services.AddMvc();
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
@@ -72,7 +94,7 @@ namespace E_Internship_Journal
             }
 
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseIdentity();
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
@@ -81,8 +103,10 @@ namespace E_Internship_Journal
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Account}/{action=Login}/{id?}");
             });
+
+            //DataSeeder.SeedData(new ApplicationDbContext());
         }
     }
 }
