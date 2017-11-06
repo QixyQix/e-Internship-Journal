@@ -36,5 +36,21 @@ namespace E_Internship_Journal.Controllers
         {
             return View();
         }
+        public IActionResult CompanyChecklist()
+        {
+            return View();
+        }
+        public IActionResult StudentJournal()
+        {
+            return View();
+        }
+        public IActionResult Review()
+        {
+            return View();
+        }
+        public IActionResult Update_Particular()
+        {
+            return View();
+        }
     }
 }
