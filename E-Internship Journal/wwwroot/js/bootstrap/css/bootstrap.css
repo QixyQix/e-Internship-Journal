@@ -3844,7 +3844,7 @@ tbody.collapse.show {
   padding: 0.75rem 1rem;
   margin-bottom: 1rem;
   list-style: none;
-  background-color: #e9ecef;
+  /*background-color: #e9ecef;*/
   border-radius: 0.25rem;
 }
 
@@ -8218,4 +8218,9 @@ div.guide {
     padding: 0 18px;
     background-color: white;
     display: none;
+}
+#add {
+    display: inline-block;
+    padding-left: 30px;
+    float: left;
 }
