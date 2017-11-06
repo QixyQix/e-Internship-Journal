@@ -129,7 +129,6 @@ namespace E_Internship_Journal.API
                 foundOneProject.ProjectName = projectNewInput.ProjectName.Value;
                 foundOneProject.CompanyID = projectNewInput.CompanyID.Value;
                 foundOneProject.SupervisorId = (await _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail.Value)).Id;
-
                 _context.Projects.Update(foundOneProject);
                 await _context.SaveChangesAsync();
             }

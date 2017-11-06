@@ -33,6 +33,10 @@ namespace E_Internship_Journal.Controllers
         {
             return View();
         }
+        public IActionResult Edit_Task2()
+        {
+            return View();
+        }
         public IActionResult Key_Attendance()
         {
             return View();
@@ -41,7 +45,15 @@ namespace E_Internship_Journal.Controllers
         {
             return View();
         }
+        public IActionResult Attendance2()
+        {
+            return View();
+        }
         public IActionResult Monthly_Reflection()
+        {
+            return View();
+        }
+        public IActionResult Guide()
         {
             return View();
         }
