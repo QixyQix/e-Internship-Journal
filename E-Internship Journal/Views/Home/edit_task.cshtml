@@ -2,71 +2,123 @@
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
-            <a href="#">Dashboard</a>
+            <a href="#">Home</a>
         </li>
-        <li class="breadcrumb-item active">Tables</li>
+        <li class="breadcrumb-item active">Edit Tasks</li>
     </ol>
     <!-- Example DataTables Card-->
     <div class="card mb-3">
         <div class="card-header">
-            <i class="fa fa-table"></i> Data Table Example
+            <i class="fa fa-pencil"></i> Edit Tasks
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 col-xs-12 pull-left">
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-calendar">
+                            </i>
+                        </div>
+                        <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
+                    </div>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
+                    <button class="btn btn-secondary form-control" name="submit" type="submit">
+                        Add Task +
+                    </button>
+                </div>
+            </div>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                @*<span class="pull-right">
-                            <button class="btn btn-sm btn-primary btn-add-panel">
-                        <i class="fa fa-plus"></i>
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>DayRecordId</th>
+                            <th>Description</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <div class="col-12 text-right">
+                    <button class="btn btn-default" onclick="window.history.go(-1); return false">
+                        Back
                     </button>
-                            <button class="btn btn-sm btn-danger btn-add-panel">
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </span>*@
-
-                <div class="container">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Task Description</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        @*<tfoot>
-                                <tr>
-                                    <th>Description</th>
-                                    <th>Action</th>
-                                </tr>
-                            </tfoot>*@
-                    </table>
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="form-group">
-                            <div class="pull-left">
-                                <button class="btn btn-default" name="submit" type="submit">
-                                    Back
-                                </button>
-
-                                <button class="btn btn-primary" name="submit" type="submit">
-                                    Save
-                                </button>
-                            </div>
-                            <div class="pull-right">
-                            </div>
-                        </div>
-                    </div>
+                    <button class="btn btn-primary" name="submit" type="submit">
+                        Save
+                    </button>
                 </div>
             </div>
         </div>
         <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
     </div>
 </div>
+@*<script>
+        $(document).ready(function () {
+
+            var editor = new $.fn.dataTable.Editor(table);
+
+            //var t = $('#dataTable').DataTable();
+            var counter = 1;
+
+            var table = $('#dataTable').DataTable({
+                ajax: {
+                    url: '/Api/Task_Record',
+                    dataSrc: ''
+                },
+                "bPaginate": false,
+                "bLengthChange": false,
+                "bFilter": false,
+                "bSort": false,
+                "bInfo": false,
+                "bAutoWidth": false,
+                "asStripClasses": null,
+                //--disable the sorting--
+                dom: 'lrt',
+                "aoColumns": [
+                    { "mData": "DayRecordId", "sWidth": "10%" },
+                    { "mData": "Description", "sTitle": "Description", "sWidth": "80%" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button>' }
+                    }
+                ],
+                language: {
+                    emptyTable: "No task was found, please create one.",
+                }
+            });
+            $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
+                console.log("button 1 is click");
+            });
+        });
+    </script>*@
 <script>
+    var editor;
     $(document).ready(function () {
-
-        var editor = new $.fn.dataTable.Editor(table);
-
-        //var t = $('#dataTable').DataTable();
-        var counter = 1;
-
+        editor = new $.fn.dataTable.Editor({
+            ajax: {
+                url: '/Api/Task_Record',
+                dataSrc: ''
+            },
+            table: "#dataTable",
+            idSrc: 'TaskRecordId',
+            fields: [ {
+                label: "Description:",
+                name: "Description"
+            }
+            ],
+            formOptions: {
+                inline: {
+                    submit: 'changed'
+                }
+            },
+            onblur: 'submit',
+        });
         var table = $('#dataTable').DataTable({
             ajax: {
                 url: '/Api/Task_Record',
@@ -80,145 +132,57 @@
             "bAutoWidth": false,
             "asStripClasses": null,
             //--disable the sorting--
-            //dom: 'Blrtip',
-            dom: 'Blrt',
-            buttons: [
-                {
-                    //extend: "create", editor: editor,
-                    text: 'Add Task',
-                    className: 'btn.btn-default',
-                    action: function (e, dt, node, config) {
-                        alert('Button activated');
-                    }
-                }
-            ],
-            "aoColumns": [
-                { "mData": null, "sWidth": "10%" },
-                { "mData": "Description", "sTitle": "Description", "sWidth": "80%" },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button>'}
-                }
-            ],
-            language: {
-                emptyTable: "No records available - Got it?",
+            dom: 'rti',
+            ajax: {
+                url: '/Api/Task_Record',
+                dataSrc: ''
             },
-            "columnDefs": [{
-            "searchable": false,
-            "orderable": false,
-            "targets": 0
-        }],
-            "order": [[1, 'asc']]
-        });
-        $('#dataTable tbody').on('order.dt search.dt', function () {
-            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
-                cell.innerHTML = i + 1;
-            });
-        }).draw();
-        $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
-            console.log("button 1 is click");
-        });
-
-        //$('#dataTable tbody').on('click', 'btn-danger', function () {
-        //    alert('Button activated');
-        //    table
-        //        .row($(this).parents('tr'))
-        //        .remove()
-        //        .draw();
-        //});
-
-        $('#dt-button').on('click', 'button', function () {
-            table.DataTable().row.add([
-                counter + '.1',
-                counter + '.2',
-                counter + '.3'
-            ]).draw(false);
-
-            counter++;
-        });
-
-
-        // Automatically add a first row of data
-        //$('#addRow').click();
-
-        //var myTable = $('#dataTable').DataTable();
-
-        //$('#dataTable').on('click', 'tbody td', function () {
-        //    myTable.cell(this).edit();
-        //});
-    });
-</script>
-@*<script>
-    $(document).ready(function () {
-
-        var editor = new $.fn.dataTable.Editor(table);
-
-        //var t = $('#dataTable').DataTable();
-        var counter = 1;
-
-        var table = $('#dataTable').DataTable({
-            "bPaginate": false,
-            "bLengthChange": false,
-            "bFilter": false,
-            "bSort": false,
-            "bInfo": false,
-            "bAutoWidth": false,
-            "asStripClasses": null,
-            //--disable the sorting--
-            //dom: 'Blrtip',
-            dom: 'Blrt',
-            buttons: [
+            order: [[1, 'asc']],
+            select: {
+                style: 'os',
+                selector: 'td:first-child'
+            },
+            "aoColumns": [
                 {
-                    extend: "create", editor: editor,
-                    //text: 'Add Task',
-                    //className: 'btn.btn-default',
-                    //action: function (e, dt, node, config) {
-                    //    alert('Button activated');
-                    //}
+                    "mData": "TaskRecordId", "sWidth": "10%"
+                },
+                { "mData": "Description", "sTitle": "Task Description", "sWidth": "80%" },
+                {
+                    "mData": "TaskRecordId",
+                    //function (d) { return '<a href=#/' + d.TaskRecordId + '>' + 'Edit' + '</a>'; },
+                    "bSortable": false,
+                    "sTitle": "Action", "sWidth": "10",
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn" value="' + o + '"><i class="fa fa-times"></i></button>' }
+                    //"mRender": function (d) { return '<a href=#/' + o.TaskRecordId + '>' + 'Edit' + '</a>'; }
                 }
             ],
-            //--added customise button
-            "columnDefs": [{
-                "targets": -1,
-                "data": null,
-                "defaultContent": "<button class='btn btn-sm btn-danger' id='deletebtn'><i class='fa fa-times'></i></button>"
-            }],
+            select: true,
             language: {
-                infoEmpty: "No records available - Got it?",
+                emptyTable: "No task was found, please create one.",
             }
         });
 
+        // Activate an inline edit on click of a table cell
+        $('#dataTable').on('click', 'tbody td:not(:first-child)', function (e) {
+            editor.inline(this, {
+                submit: 'changed'
+            });
+        });
+        //$('#dataTable').on('click', 'tbody tr', function () {
+        //    editor.inline(this, {
+        //        submit: 'allIfChanged'
+        //    });
+        //});
+        
+        editor.field('Description').input().on('change', function (e, d) {
+            //var ww = d.editorSet();
+           // var qq = d;
+            if (d && d.editorSet) return;
+            //console.dir($(this).val());
+            alert("You selected " + $(this).val());
+        });
         $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
             console.log("button 1 is click");
         });
-
-        //$('#dataTable tbody').on('click', 'btn-danger', function () {
-        //    alert('Button activated');
-        //    table
-        //        .row($(this).parents('tr'))
-        //        .remove()
-        //        .draw();
-        //});
-
-        $('#dt-button').on('click', 'button', function () {
-            table.DataTable().row.add([
-                counter + '.1',
-                counter + '.2',
-                counter + '.3'
-            ]).draw(false);
-
-            counter++;
-        });
-
-
-        // Automatically add a first row of data
-        //$('#addRow').click();
-
-        //var myTable = $('#dataTable').DataTable();
-
-        //$('#dataTable').on('click', 'tbody td', function () {
-        //    myTable.cell(this).edit();
-        //});
     });
-</script>*@
+</script>

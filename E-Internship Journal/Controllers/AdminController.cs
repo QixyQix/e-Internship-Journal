@@ -28,7 +28,7 @@ namespace E_Internship_Journal.Controllers
         {
             return View();
         }
-        public IActionResult Update_Particular()
+        public IActionResult Edit_Batch()
         {
             return View();
         }
