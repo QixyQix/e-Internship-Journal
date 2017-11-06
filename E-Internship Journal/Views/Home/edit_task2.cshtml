@@ -106,24 +106,17 @@
                 dataSrc: ''
             },
             table: "#dataTable",
-            idSrc: 'TaskRecordId',
-            fields: [ {
+            idSrc: 'id',
+            fields: [{
+                label: "DayRecordId:",
+                name: "DayRecordId"
+            }, {
                 label: "Description:",
                 name: "Description"
             }
-            ],
-            formOptions: {
-                inline: {
-                    submit: 'changed'
-                }
-            },
-            onblur: 'submit',
+            ]
         });
         var table = $('#dataTable').DataTable({
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
-            },
             "bPaginate": false,
             "bLengthChange": false,
             "bFilter": false,
@@ -138,25 +131,15 @@
                 dataSrc: ''
             },
             order: [[1, 'asc']],
-            select: {
-                style: 'os',
-                selector: 'td:first-child'
-            },
-            "aoColumns": [
+            columns: [
+                { data: "DayRecordId", "sWidth": "10%" },
+                { data: "Description", "sWidth": "80%" },
                 {
-                    "mData": "TaskRecordId", "sWidth": "10%"
-                },
-                { "mData": "Description", "sTitle": "Task Description", "sWidth": "80%" },
-                {
-                    "mData": "TaskRecordId",
-                    //function (d) { return '<a href=#/' + d.TaskRecordId + '>' + 'Edit' + '</a>'; },
+                    data: null,
                     "bSortable": false,
-                    "sTitle": "Action", "sWidth": "10",
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn" value="' + o + '"><i class="fa fa-times"></i></button>' }
-                    //"mRender": function (d) { return '<a href=#/' + o.TaskRecordId + '>' + 'Edit' + '</a>'; }
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button>' }
                 }
             ],
-            select: true,
             language: {
                 emptyTable: "No task was found, please create one.",
             }
@@ -164,22 +147,7 @@
 
         // Activate an inline edit on click of a table cell
         $('#dataTable').on('click', 'tbody td:not(:first-child)', function (e) {
-            editor.inline(this, {
-                submit: 'changed'
-            });
-        });
-        //$('#dataTable').on('click', 'tbody tr', function () {
-        //    editor.inline(this, {
-        //        submit: 'allIfChanged'
-        //    });
-        //});
-        
-        editor.field('Description').input().on('change', function (e, d) {
-            //var ww = d.editorSet();
-           // var qq = d;
-            if (d && d.editorSet) return;
-            //console.dir($(this).val());
-            alert("You selected " + $(this).val());
+            editor.inline(this);
         });
         $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
             console.log("button 1 is click");
