@@ -32,6 +32,7 @@ namespace E_Internship_Journal.API
             }
             List<object> task_Record_List = new List<object>();
             var task_Records = _context.Tasks
+                .Include(eachTaskEntity =>eachTaskEntity.DayRecord)
 
             .AsNoTracking();
             foreach (var oneTaskRecord in task_Records)
@@ -41,7 +42,9 @@ namespace E_Internship_Journal.API
                 {
                     oneTaskRecord.TaskRecordId,
                     oneTaskRecord.DayRecordId,
-                    oneTaskRecord.Description
+                    oneTaskRecord.Description,
+
+                   // oneTaskRecord.DayRecord.Date
                 });
             }
 
@@ -60,19 +63,25 @@ namespace E_Internship_Journal.API
             {
                 try
                 {
-                    var foundOneTask = _context.Tasks
+                    List<object> TaskList = new List<object>();
+                    var foundTasks = _context.Tasks
                         .Where(eachTaskEntity => eachTaskEntity.DayRecordId == id)
                         .Include(eachTaskENtity => eachTaskENtity.DayRecord)
-                        .Single();
-                    var response = new
+                        .AsNoTracking();
+                    foreach (var oneTask in foundTasks)
                     {
-                        DayRecordId = foundOneTask.DayRecordId,
-                        TaskRecordId = foundOneTask.TaskRecordId,
-                        Description = foundOneTask.Description,
-                        Date = foundOneTask.DayRecord.Date,
-                        WeekNo = foundOneTask.DayRecord.WeekNo
+                        TaskList.Add(new
+                        {
+                            DayRecordId = oneTask.DayRecordId,
+                            TaskRecordId = oneTask.TaskRecordId,
+                            Description = oneTask.Description,
+                            Date = oneTask.DayRecord.Date,
+                            WeekNo = oneTask.DayRecord.WeekNo
+
+                        });
+
                     };//end of creation of the response object
-                    return new JsonResult(response);
+                    return new JsonResult(TaskList);
                 }
                 catch (Exception exceptionObject)
                 {
@@ -171,7 +180,7 @@ namespace E_Internship_Journal.API
                 {
                     Description = task_RecordNewInput.Description.Value,
                     DayRecordId = task_RecordNewInput.DayRecordId.Value,
-                  
+
                 };
 
                 _context.Tasks.Add(newTask_Record);
