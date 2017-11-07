@@ -20,10 +20,77 @@ namespace E_Internship_Journal.Controllers
                 return View("~/Views/Home/Student/Index.cshtml");
             }
         }
-        [Route("task/overview")]
+        public IActionResult Attendance_Summary()
+        {
+            var test = User.IsInRole("SUPERVISOR");
+            if (User.IsInRole("SUPERVISOR"))
+            {
+                return View("~/Views/Home/Supervisor/attendance_summary.cshtml");
+            }
+            else /*if(User.IsInRole("STUDENT"))*/
+            {
+                return View("~/Views/Home/Student/attendance_summary.cshtml");
+            }
+        }
+        //public IActionResult Manage_Task()
+        //{
+        //    var test = User.IsInRole("SUPERVISOR");
+        //    if (User.IsInRole("SUPERVISOR"))
+        //    {
+        //        return View("~/Views/Home/Supervisor/edit_task2.cshtml");
+        //    }
+        //    else /*if(User.IsInRole("STUDENT"))*/
+        //    {
+        //        return View("~/Views/Home/Student/edit_task2.cshtml");
+        //    }
+        //}
+        public IActionResult Day_Task()
+        {
+            var test = User.IsInRole("SUPERVISOR");
+            if (User.IsInRole("SUPERVISOR"))
+            {
+                return View("~/Views/Home/Supervisor/day_task.cshtml");
+            }
+            else /*if(User.IsInRole("STUDENT"))*/
+            {
+                return View("~/Views/Home/Student/day_task.cshtml");
+            }
+        }
         public IActionResult Daily_Task()
         {
-            return View();
+            var test = User.IsInRole("SUPERVISOR");
+            if (User.IsInRole("SUPERVISOR"))
+            {
+                return View("~/Views/Home/Supervisor/daily_task.cshtml");
+            }
+            else /*if(User.IsInRole("STUDENT"))*/
+            {
+                return View("~/Views/Home/Student/daily_task.cshtml");
+            }
+        }
+        public IActionResult Monthly_Reflection()
+        {
+            var test = User.IsInRole("SUPERVISOR");
+            if (User.IsInRole("SUPERVISOR"))
+            {
+                return View("~/Views/Home/Supervisor/monthly_reflection.cshtml");
+            }
+            else /*if(User.IsInRole("STUDENT"))*/
+            {
+                return View("~/Views/Home/Student/monthly_reflection.cshtml");
+            }
+        }
+        public IActionResult Guide()
+        {
+            var test = User.IsInRole("SUPERVISOR");
+            if (User.IsInRole("SUPERVISOR"))
+            {
+                return View("~/Views/Home/Supervisor/guide.cshtml");
+            }
+            else /*if(User.IsInRole("STUDENT"))*/
+            {
+                return View("~/Views/Home/Student/guide.cshtml");
+            }
         }
         public IActionResult Add_Task()
         {
@@ -33,27 +100,15 @@ namespace E_Internship_Journal.Controllers
         {
             return View();
         }
-        public IActionResult Edit_Task2()
-        {
-            return View();
-        }
+        //public IActionResult Edit_Task2()
+        //{
+        //    return View();
+        //}
         public IActionResult Key_Attendance()
         {
             return View();
         }
         public IActionResult Attendance()
-        {
-            return View();
-        }
-        public IActionResult Attendance2()
-        {
-            return View();
-        }
-        public IActionResult Monthly_Reflection()
-        {
-            return View();
-        }
-        public IActionResult Guide()
         {
             return View();
         }
