@@ -23,6 +23,7 @@
     <link href="~/css/bootstrap-datepicker3.css" rel="stylesheet" />
     <link href="~/js/datatables/buttons.dataTables.css" rel="stylesheet" />
     <link href="~/js/datatables/editor.dataTables.css" rel="stylesheet" />
+    <link href="~/lib/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet" />
     <!-- Bootstrap core JavaScript -->
     <script src="~/js/jquery/jquery.js"></script>
     <script src="~/js/calendar/moment.min.js"></script>
@@ -63,6 +64,46 @@
                     </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Daily Task">
+                    <a class="nav-link" href="~/Home/Daily_Task">
+                        <i class="fa fa-fw fa-calendar"></i>
+                        <span class="nav-link-text">
+                            Daily Task
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Attendance Summary">
+                    <a class="nav-link" href="~/Home/Attendance_Summary">
+                        <i class="fa fa-fw fa-clock-o"></i>
+                        <span class="nav-link-text">
+                            Attendance Summary
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Competency Checklist">
+                    <a class="nav-link" href="~/Home/Index">
+                        <i class="fa fa-fw fa-bar-chart"></i>
+                        <span class="nav-link-text">
+                            Competency Checklist
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Monthly Reflection">
+                    <a class="nav-link" href="~/Home/Monthly_Reflection">
+                        <i class="fa fa-fw fa-check-square-o"></i>
+                        <span class="nav-link-text">
+                            Monthly Reflection
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Guidelines">
+                    <a class="nav-link" href="~/Home/Guide">
+                        <i class="fa fa-fw fa-info"></i>
+                        <span class="nav-link-text">
+                            Guidelines
+                        </span>
+                    </a>
+                </li>
+                @*<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Daily Task">
                     <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseDailyTask" data-parent="#exampleAccordion">
                         <i class="fa fa-fw fa-calendar"></i>
                         <span class="nav-link-text">
@@ -80,8 +121,8 @@
                             <a href="~/Home/Edit_Task">Edit Task</a>
                         </li>
                     </ul>
-                </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Attendance">
+                </li>*@
+                @*<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Attendance">
                     <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseAttendance" data-parent="#exampleAccordion">
                         <i class="fa fa-fw fa-clock-o"></i>
                         <span class="nav-link-text">
@@ -96,8 +137,8 @@
                             <a href="~/Home/Key_Attendance">Daily Attendance</a>
                         </li>
                     </ul>
-                </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Guides">
+                </li>*@
+                @*<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Guides">
                     <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseCompetency" data-parent="#exampleAccordion">
                         <i class="fa fa-fw fa-edit"></i>
                         <span class="nav-link-text">
@@ -118,8 +159,8 @@
                             <a href="#">Edit Task</a>
                         </li>
                     </ul>
-                </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Reflection">
+                </li>*@
+                @*<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Reflection">
                     <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseReflection" data-parent="#exampleAccordion">
                         <i class="fa fa-fw fa-check"></i>
                         <span class="nav-link-text">
@@ -161,7 +202,7 @@
                             </ul>
                         </li>
                     </ul>
-                </li>
+                </li>*@
             </ul>
             <ul class="navbar-nav sidenav-toggler">
                 <li class="nav-item">
@@ -260,22 +301,47 @@
                                         <i class="fa fa-calendar">
                                         </i>
                                     </div>
-                                    <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
+                                    <input class="form-control" id="date" name="date" placeholder="DD/MM/YYYY" type="text">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputEmail1">Email address</label>
-                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-                                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                <label class="control-label requiredField" for="timein">
+                                    Time in
+                                </label>
+                                <div class='input-group date' id='timein'>
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </div>
+
+                                    <input type='text' class="form-control" />
+                                </div>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputPassword1">Password</label>
-                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                                <label class="control-label requiredField" for="timeout">
+                                    Time out
+                                </label>
+                                <div class='input-group date' id='timeout'>
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </div>
+                                    <input type='text' class="form-control" id="timeoutval" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Remarks</label>
+                                <select class="form-control" id="exampleFormControlSelect1">
+                                    <option>-</option>
+                                    <option>MC</option>
+                                    <option>Holiday</option>
+                                    <option>LOA</option>
+                                    <option>Company Off-Day</option>
+                                </select>
                             </div>
                         </form>
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="submit">Submit</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
                 </div>
@@ -283,52 +349,8 @@
         </div>
     </div>
 
-    <!-- View Event Modal -->
-    <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="eventModalLabel">Add Task</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="https://formden.com/ajax/MlKtmY4x/" class="form-horizontal" method="post">
-                        <div class="form-group ">
-                            <label class="control-label col-sm-3 requiredField" for="date">
-                                Date
-                                <span class="asteriskField">
-                                    *
-                                </span>
-                            </label>
-                            <div class="col-sm-10">
-                                <div class="input-group">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar">
-                                        </i>
-                                    </div>
-                                    <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-10 col-sm-10 col-xs-12">
-                            <div class="form-group ">
-                                <div class="form-group">
-                                    <label class="control-label col-sm-3 requiredField" for="task">Task:</label>
-                                    <textarea class="form-control" rows="5" id="task"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="pull-right">
-                            <button class="btn btn-primary" name="submit" type="submit">Save</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+  
+
     <!-- Custom scripts for this template -->
     <script src="~/js/sb-admin.js"></script>
     <script src="~/js/datatables/dataTables.buttons.js"></script>
@@ -336,11 +358,14 @@
     <script src="~/js/datatables/buttons.print.js"></script>
     <script src="~/js/datatables/dataTables.select.js"></script>
     <script src="~/js/datetimepicker/bootstrap-datepicker.js"></script>
+    <script src="~/lib/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
     <script src="~/js/datatables/dataTables.editor.js"></script>
 
     <script>
         $(document).ready(function () {
-
+            $("#submit").click(function () {
+                console.log(convertTime12to24($("#timeoutval").val()));
+            });
             //------start custom script-----
             $(".navbar-toggler").click(function () {
                 $("body").removeClass("sidenav-toggled")
@@ -348,122 +373,43 @@
             //------end custom script-----
 
             //------start date script-----
+
+            $('#timein').datetimepicker({
+                allowInputToggle: true,
+                format: 'LT'
+            });
+            $('#timeout').datetimepicker({
+                allowInputToggle: true,
+                format: 'LT'
+            });
             var date_input = $('input[name="date"]'); //our date input has the name "date"
             var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
-            var options = {
+            var dateoptions = {
                 format: 'mm/dd/yyyy',
                 container: container,
                 todayHighlight: true,
                 autoclose: true,
             };
-            date_input.datepicker(options);
+            date_input.datepicker(dateoptions);
             //------end date script-----
+            // check if this day has an event before
+            
 
-            //------start calendar script-----
-            $('#calendar').fullCalendar({
-                editable: false,
-                eventLimit: true, // allow "more" link when too many events
-                events: [
-                    {
-                        title: 'All Day Event',
-                        start: '2017-11-01'
-                    },
-                    {
-                        title: 'Long Event',
-                        start: '2017-11-07',
-                        end: '2017-11-10'
-                    },
-                    {
-                        id: 999,
-                        title: 'Repeating Event',
-                        start: '2017-11-09T16:00:00'
-                    },
-                    {
-                        id: 999,
-                        title: 'Repeating Event',
-                        start: '2017-11-16T16:00:00'
-                    },
-                    {
-                        title: 'Conference',
-                        start: '2017-11-11',
-                        end: '2017-11-13'
-                    },
-                    {
-                        title: 'Meeting',
-                        start: '2017-11-12T10:30:00',
-                        end: '2017-11-12T12:30:00'
-                    },
-                    {
-                        title: 'Lunch',
-                        start: '2017-11-12T12:00:00'
-                    },
-                    {
-                        title: 'Meeting',
-                        start: '2017-11-12T14:30:00'
-                    },
-                    {
-                        title: 'Happy Hour',
-                        start: '2017-11-12T17:30:00'
-                    },
-                    {
-                        title: 'Dinner',
-                        start: '2017-11-12T20:00:00'
-                    },
-                    {
-                        title: 'Birthday Party',
-                        start: '2017-11-13T07:00:00'
-                    },
-                    {
-                        title: 'Click for Google',
-                        url: 'http://google.com/',
-                        start: '2017-11-28'
-                    }
-                ],
-                dayClick: function (date, jsEvent, view, event) {
-                    $('#eventModal').modal('show');
-                    //$("#cafeId").val($(this).data('id'));
-                    //$('#myModal').modal('show');
-                    //var task;
-                    //if (confirm('Clicked on: ' + date.format() + '\nDo you want to add a task?')) {
-                    //    task = prompt("Please enter task", "");
-                    //    event.title = task;
-                    //    $('#calendar').fullCalendar('addEvent', event);
-                    //} else {
-                    //    alert('No action was taken');
-                    //}
+            function convertTime12to24(time12h) {
+                const [time, modifier] = time12h.split(' ');
 
-                    //alert('Clicked on: ' + date.format() + '\nDo you want to add a task?');
-                    //alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
-                    //alert('Current view: ' + view.name);
-                    // change the day's background color just for fun
-                    //$(this).css('background-color', 'red');
-                },
-                eventClick: function (event, element) {
-                    //var task;
-                    //task = prompt("Please re-enter task", event.title);
-                    //event.title = task;
-                    //$('#calendar').fullCalendar('updateEvent', event);
+                let [hours, minutes] = time.split(':');
 
-                    //var info;
-                    //event.title = "CLICKED!";
-
-                    // $('#calendar').fullCalendar('updateEvent', event);
-
-                    //if (event.title == null || event.title == "") {
-                    //    info == "";
-                    //    task = prompt("Please enter task", "");
-                    //    event.title = task;
-                    //} else {
-                    //    task = prompt("Please re-enter task", event.title);
-                    //    event.title = task;
-                    //    $('#calendar').fullCalendar('updateEvent', event);
-                    //}
+                if (hours === '12') {
+                    hours = '00';
                 }
-                //dayClick: function () {
-                //    alert('a day has been clicked!'); //for clicking
-                //}
-            });
-            //------end date script-----
+
+                if (modifier === 'PM') {
+                    hours = parseInt(hours, 10) + 12;
+                }
+
+                return hours + ':' + minutes;
+            }
         });
     </script>
     <style>

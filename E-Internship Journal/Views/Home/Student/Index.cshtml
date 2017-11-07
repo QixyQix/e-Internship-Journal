@@ -5,52 +5,70 @@
     <div class="container-fluid">
         <!-- Breadcrumbs -->
         <ol class="breadcrumb">
-            <li class="breadcrumb-item">
+            @*<li class="breadcrumb-item">
                 <a href="#">Internship Programme</a>
-            </li>
+            </li>*@
             <li class="breadcrumb-item active">Homepage</li>
         </ol>
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-sm-4">
                     <div class="card text-center">
                         <div class="card-header">
-
+                            <i class="fa fa-calendar fa-5x"></i>
                         </div>
-
-                        <div class="card-block">
-                            <img src="~/images/file.png" class="m-auto" alt="Lights" style="width:50%;padding: 1em 0em">
-                        </div>
-                        <div class="card-footer text-muted">
-                            <button type="button" class="btn btn-primary btn-lg btn-block">Create Task</button>
+                        <div class="card-body">
+                            <h2>Daily Tasks</h2>
+                            @*<p>View Daily <strong>Tasks</strong></p>*@
+                            <a href="~/Home/daily_task" class="btn btn-primary">View Tasks</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-sm-4">
                     <div class="card text-center">
                         <div class="card-header">
-
+                            <i class="fa fa-clock-o fa-5x"></i>
                         </div>
-
-                        <div class="card-block">
-                            <img src="~/images/file.png" class="m-auto" alt="Lights" style="width:50%;padding: 1em 0em">
-                        </div>
-                        <div class="card-footer text-muted">
-                            <button type="button" class="btn btn-primary btn-lg btn-block">Delete Task</button>
+                        <div class="card-body">
+                            <h2>Attendance</h2>
+                            @*<p>View Daily <strong>Tasks</strong></p>*@
+                            <a href="~/Home/attendance_summary" class="btn btn-primary">Edit Attendance</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-sm-4">
                     <div class="card text-center">
                         <div class="card-header">
-
+                            <i class="fa fa-bar-chart fa-5x"></i>
                         </div>
-
-                        <div class="card-block">
-                            <img src="~/images/file.png" class="m-auto" alt="Lights" style="width:50%;padding: 1em 0em">
+                        <div class="card-body">
+                            <h2>Checklist</h2>
+                            @*<p>View Daily <strong>Tasks</strong></p>*@
+                            <a href="~/Home/attendance_summary" class="btn btn-primary">Check Competency Checklist</a>
                         </div>
-                        <div class="card-footer text-muted">
-                            <button type="button" class="btn btn-primary btn-lg btn-block">Edit Task</button>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            <i class="fa fa-check-square fa-5x"></i>
+                        </div>
+                        <div class="card-body">
+                            <h2>Reflection</h2>
+                            @*<p>View Daily <strong>Tasks</strong></p>*@
+                            <a href="~/Home/Monthly_Reflection" class="btn btn-primary">View Monthly Reflection</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            <i class="fa fa-info fa-5x"></i>
+                        </div>
+                        <div class="card-body">
+                            <h2>Guideline</h2>
+                            @*<p>View Daily <strong>Tasks</strong></p>*@
+                            <a href="~/Home/Guide" class="btn btn-primary">View Guidelines</a>
                         </div>
                     </div>
                 </div>

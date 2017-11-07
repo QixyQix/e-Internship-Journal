@@ -1,0 +1,169 @@
+﻿<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="#">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active">Users</li>
+    </ol>
+    <!-- Example DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-table"></i> Users
+        </div>
+        <div class="card-body">
+            <div class="form-inline">
+                <div class="btn-group pull-left">
+                    <label class="form-text">Filter by Role:</label>
+                    @*<button type="button" class="btn btn-outline-secondary">October 2017</button>*@
+                    <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Student <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Student</a>
+                        <a class="dropdown-item" href="#">Supervisor</a>
+                        <a class="dropdown-item" href="#">LO</a>
+                        <a class="dropdown-item" href="#">SLO</a>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-group pull-right">
+                <input type="button" class="btn btn-primary" value="Add User" id="adduserButton" />
+            </div>
+            <div class="form-text pull-left">
+            <u>Activated Accounts</u>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Company</th>
+                            <th>Project</th>
+                            <th>Role</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Cho Qi Xiang</td>
+                            <td>Websparks Pte Ltd</td>
+                            <td>Spade</td>
+                            <td>Student</td>
+                            <td>
+                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                <a href="/mypath"<i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Klein Ong</td>
+                            <td>TripleDots Technology</td>
+                            <td>Parliament</td>
+                            <td>Student</td>
+                            <td>
+                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                <a href="/mypath"<i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Amelia Goh</td>
+                            <td>RapidCloud</td>
+                            <td>WIS</td>
+                            <td>Student</td>
+                            <td>
+                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                <a href="/mypath"<i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>JiaWei Loo</td>
+                            <td>Aventure Pte Ltd</td>
+                            <td>CAAS</td>
+                            <td>Student</td>
+                            <td>
+                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                <a href="/mypath"<i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-inline">
+                <div class="btn-group pull-left">
+                    <label class="form-text">Filter by Role:</label>
+                    <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Student <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#">Student</a>
+                        <a class="dropdown-item" href="#">Supervisor</a>
+                        <a class="dropdown-item" href="#">LO</a>
+                        <a class="dropdown-item" href="#">SLO</a>
+                    </div>
+                </div>
+            </div>
+            <div class="form-text pull-left">
+                <u>Deactivated Accounts</u>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Company</th>
+                            <th>Project</th>
+                            <th>Role</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Tan Li Meng</td>
+                            <td>KPMG</td>
+                            <td>KARP</td>
+                            <td>Student</td>
+                            <td>
+                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                <a href="/mypath"<i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Maggie Lim</td>
+                            <td>TripleDots Technology</td>
+                            <td>Ryde</td>
+                            <td>Student</td>
+                            <td>
+                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                <a href="/mypath"<i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Susan Goh</td>
+                            <td>IBM</td>
+                            <td>Account</td>
+                            <td>Student</td>
+                            <td>
+                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                <a href="/mypath"<i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Benjamin Sim</td>
+                            <td>CISCO</td>
+                            <td>Security Management</td>
+                            <td>Student</td>
+                            <td>
+                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                <a href="/mypath"<i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+</div>
+
