@@ -119,8 +119,8 @@ namespace E_Internship_Journal.Data
                 .IsRequired();
 
             modelBuilder.Entity<Batch>()
-                .HasIndex(batches => batches.BatchName).IsUnique()
-                .HasName("Batch_BatchName_UniqueConstraint");
+                .HasIndex(batches => new { batches.BatchName, batches.CourseId }).IsUnique()
+                .HasName("Batch_BatchNameCourseId_UniqueConstraint");
 
             //----------- Defining Batches Entity - End --------------
 
