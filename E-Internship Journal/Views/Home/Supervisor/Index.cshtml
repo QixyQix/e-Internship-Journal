@@ -2,91 +2,88 @@
     ViewData["Title"] = "Home Page";
 }
 
-    <div class="container-fluid">
-        <!-- Breadcrumbs -->
-        <ol class="breadcrumb">
-            @*<li class="breadcrumb-item">
-                <a href="#">Internship Programme</a>
-            </li>*@
-            <li class="breadcrumb-item active">Homepage</li>
-        </ol>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-calendar fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Daily Tasks</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/daily_task" class="btn btn-primary">View Tasks</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-clock-o fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Attendance</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/attendance_summary" class="btn btn-primary">Edit Attendance</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-bar-chart fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Checklist</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/attendance_summary" class="btn btn-primary">Check Competency Checklist</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-check-square fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Reflection</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/attendance_summary" class="btn btn-primary">View Monthly Reflection</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-info fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Guideline</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/attendance_summary" class="btn btn-primary">View Guidelines</a>
-                        </div>
-                    </div>
-                </div>
+<div class="container-fluid">
+    <!-- Breadcrumbs -->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item active">Homepage</li>
+    </ol>
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-home"></i> Homepage
+        </div>
+            <div class="table-responsive">
+                <table class="table table-bordered" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Student Name</th>
+                            <th>Student Info</th>
+                            <th>Student Journal</th>
+                            <th>Pending Review</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>P1530247</td>
+                            <td>Amelia Goh</td>
+                            <td>
+                                <div class="text-center">
+                                    <a href="/supervisor/Student_Info" style="color:black"><i class="fa fa-fw fa-info"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <a href="/home/index" style="color:black"><i class="fa fa-fw fa-file"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <a href="/home/review" style="color:black"><i class="fa fa-fw fa-exclamation-circle"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>P1550342</td>
+                            <td>Cho Qi Xiang</td>
+                            <td>
+                                <div class="text-center">
+                                    <a href="/supervisor/Student_Info" style="color:black"><i class="fa fa-fw fa-info"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <a href="/home/index" style="color:black"><i class="fa fa-fw fa-file"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <a href="/home/review" style="color:black"><i class="fa fa-fw fa-exclamation-circle"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>P1551322</td>
+                            <td>Tan Chia Wei</td>
+                            <td>
+                                <div class="text-center">
+                                    <a href="/supervisor/Student_Info" style="color:black"><i class="fa fa-fw fa-info"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <a href="/home/index" style="color:black"><i class="fa fa-fw fa-file"></i></a>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="text-center">
+                                    <a href="/home/review" style="color:black"><i class="fa fa-fw fa-exclamation-circle"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div class="card-body">
-            <div class="form-group">
-                <div class="col-12">
-                    <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
-                        Back
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <br>
+        <!-- /.container-fluid -->
     </div>
-    <!-- /.container-fluid -->
 <!-- /.content-wrapper -->
-<script>
-</script>

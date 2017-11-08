@@ -7,16 +7,17 @@
         </li>
         <li class="breadcrumb-item active">Attendance Summary</li>
     </ol>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item pull-right">
-            <div class="form-inline">
-                <input type="button" value="View History" class="btn btn-default" onclick="location.href='@Url.Action("attendance_history", "Home" )'" />
-                @*<button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
-                        View History
-                    </button>*@
+    <div class="card" style="border-width:0px;">
+        <div class="card-body">
+            <div class="form-group">
+                <div class="pull-right">
+                    <div class="form-inline">
+                        <input type="button" value="View History" class="btn btn-default" onclick="location.href='@Url.Action("attendance_history", "Home" )'" />
+                    </div>
+                </div>
             </div>
-        </li>
-    </ol>
+        </div>
+    </div>
     <!-- Example DataTables Card-->
     <div class="card mb-3">
         <div class="card-header">
@@ -82,6 +83,155 @@
     </div>
     <br />
 </div>
+
+    <!-- Attendance Modal -->
+<div class="modal fade" id="attendanceModal" tabindex="-1" role="dialog" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="attendanceModalLabel">Create Attendance</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="container">
+                    <form>
+                        <div class="form-group">
+                            <label class="control-label requiredField" for="date">
+                                Date
+                                <span class="asteriskField">
+                                    *
+                                </span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar">
+                                    </i>
+                                </div>
+                                <input class="form-control" id="date" name="date" placeholder="DD/MM/YYYY" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label requiredField" for="timein">
+                                Time in
+                            </label>
+                            <div class='input-group date' id='timein'>
+                                <div class="input-group-addon">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+
+                                <input type='text' class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label requiredField" for="timeout">
+                                Time out
+                            </label>
+                            <div class='input-group date' id='timeout'>
+                                <div class="input-group-addon">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                                <input type='text' class="form-control" id="timeoutval" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect1">Remarks</label>
+                            <select class="form-control" id="exampleFormControlSelect1">
+                                <option>-</option>
+                                <option>MC</option>
+                                <option>Holiday</option>
+                                <option>LOA</option>
+                                <option>Company Off-Day</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="submit">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editattendanceModal" tabindex="-1" role="dialog" aria-labelledby="editattendanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editattendanceModalLabel">Edit Attendance</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="container">
+                    <form>
+                        <div class="form-group">
+                            <label class="control-label requiredField" for="date">
+                                Date
+                                <span class="asteriskField">
+                                    *
+                                </span>
+                            </label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar">
+                                    </i>
+                                </div>
+                                <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label requiredField" for="timein">
+                                Time in
+                            </label>
+                            <div class='input-group date' id='timein'>
+                                <div class="input-group-addon">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+
+                                <input type='text' class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label requiredField" for="timeout">
+                                Time out
+                            </label>
+                            <div class='input-group date' id='timeout'>
+                                <div class="input-group-addon">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                                <input type='text' class="form-control" id="timeoutval" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect1">Remarks</label>
+                            <select class="form-control" id="exampleFormControlSelect1">
+                                <option>-</option>
+                                <option>MC</option>
+                                <option>Holiday</option>
+                                <option>LOA</option>
+                                <option>Company Off-Day</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="submit">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     var editor;
     $(document).ready(function () {

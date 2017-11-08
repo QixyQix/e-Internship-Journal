@@ -14,13 +14,17 @@
                 </select>
             </li>*@
     </ol>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item pull-right">
-            <div class="form-inline">
-                <input type="button" value="View History" class="btn btn-default" onclick="location.href='@Url.Action("reflection_history", "Home" )'" />
+    <div class="card" style="border-width:0px;">
+        <div class="card-body">
+            <div class="form-group">
+                <div class="pull-right">
+                    <div class="form-inline">
+                        <input type="button" value="View History" class="btn btn-default" onclick="location.href='@Url.Action("reflection_history", "Home" )'" />
+                    </div>
+                </div>
             </div>
-        </li>
-    </ol>
+        </div>
+    </div>
     <div class="card">
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs" role="tablist">
@@ -35,70 +39,70 @@
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="Soft-Skill">
                 <div class="container text-left">
-                        <br />
-                        <div>
-                            <h5>In terms of workplace knowledge, communication and interpersonal skills, reflect on (a) areas you have done well, and (b) areas you would like to improve.</h5>
+                    <br />
+                    <div>
+                        <h5>In terms of workplace knowledge, communication and interpersonal skills, reflect on (a) areas you have done well, and (b) areas you would like to improve.</h5>
+                    </div>
+                    <hr />
+                    <div class="col-md-10 col-sm-10 col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-8 requiredField" for="softskill1">(a) Areas you have done well.</label>
+                            <textarea class="form-control" rows="5" id="softskill1"></textarea>
                         </div>
-                        <hr />
-                        <div class="col-md-10 col-sm-10 col-xs-12">
-                            <div class="form-group">
-                                <label class="control-label col-sm-8 requiredField" for="softskill1">(a) Areas you have done well.</label>
-                                <textarea class="form-control" rows="5" id="softskill1"></textarea>
-                            </div>
+                    </div>
+                    <div class="col-md-10 col-sm-10 col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-8 requiredField" for="softskill2">(b) Areas you would like to improve.</label>
+                            <textarea class="form-control" rows="5" id="softskill2"></textarea>
                         </div>
-                        <div class="col-md-10 col-sm-10 col-xs-12">
-                            <div class="form-group">
-                                <label class="control-label col-sm-8 requiredField" for="softskill2">(b) Areas you would like to improve.</label>
-                                <textarea class="form-control" rows="5" id="softskill2"></textarea>
-                            </div>
-                        </div>
+                    </div>
                 </div>
             </div>
             <div role="tabpanel" class="tab-pane fade" id="Technical">
                 <div class="container text-left">
-                        <br />
-                        <div>
-                            <h5>Reflect on (a) how you have applied what you have learnt in school and workplace, (b) areas you have done well, and (c) areas you would like to improve.</h5>
-                        </div>
-                        <hr />
+                    <br />
+                    <div>
+                        <h5>Reflect on (a) how you have applied what you have learnt in school and workplace, (b) areas you have done well, and (c) areas you would like to improve.</h5>
+                    </div>
+                    <hr />
 
-                        <div class="container text-left">
-                            <div class="col-md-10 col-sm-10 col-xs-12">
-                                <div class="form-group">
-                                    <label class="control-label col-sm-8 requiredField" for="hardskill1">(a) How you have applied what you have learnt in school and workplace</label>
-                                    <textarea class="form-control" rows="5" id="hardskill1"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-10 col-sm-10 col-xs-12">
-                                <div class="form-group">
-                                    <label class="control-label col-sm-8 requiredField" for="hardskill2">(b) Areas you have done well.</label>
-                                    <textarea class="form-control" rows="5" id="hardskill2"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-md-10 col-sm-10 col-xs-12">
-                                <div class="form-group ">
-                                    <label class="control-label col-sm-8 requiredField" for="hardskill3">(c) Areas you would like to improve.</label>
-                                    <textarea class="form-control" rows="5" id="hardskill3"></textarea>
-                                </div>
+                    <div class="container text-left">
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-8 requiredField" for="hardskill1">(a) How you have applied what you have learnt in school and workplace</label>
+                                <textarea class="form-control" rows="5" id="hardskill1"></textarea>
                             </div>
                         </div>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-8 requiredField" for="hardskill2">(b) Areas you have done well.</label>
+                                <textarea class="form-control" rows="5" id="hardskill2"></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <div class="form-group ">
+                                <label class="control-label col-sm-8 requiredField" for="hardskill3">(c) Areas you would like to improve.</label>
+                                <textarea class="form-control" rows="5" id="hardskill3"></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
-        <div class="card-body">
-             <div class="form-group">
-                    <div class="col-12">
-                        <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
-                            Back
-                        </button>
-                        <button class="btn btn-primary pull-right" name="submit" type="submit">
-                            Send to Review
-                        </button>
-                    </div>
-                </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                    Back
+                </button>
+                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                    Send to Review
+                </button>
+            </div>
         </div>
+    </div>
     <br />
 </div>
 

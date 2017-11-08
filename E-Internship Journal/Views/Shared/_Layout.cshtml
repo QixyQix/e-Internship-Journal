@@ -83,7 +83,7 @@
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Competency Checklist">
                     <a class="nav-link" href="~/Home/Competency_Checklist">
-                        <i class="fa fa-fw fa-bar-chart"></i>
+                        <i class="fa fa-fw fa-check-square-o"></i>
                         <span class="nav-link-text">
                             Competency Checklist
                         </span>
@@ -91,7 +91,7 @@
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Monthly Reflection">
                     <a class="nav-link" href="~/Home/Monthly_Reflection">
-                        <i class="fa fa-fw fa-check-square-o"></i>
+                        <i class="fa fa-fw fa-pencil"></i>
                         <span class="nav-link-text">
                             Monthly Reflection
                         </span>
@@ -285,153 +285,6 @@
         </div>
     </div>
 
-    <!-- Attendance Modal -->
-    <div class="modal fade" id="attendanceModal" tabindex="-1" role="dialog" aria-labelledby="attendanceModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="attendanceModalLabel">Create Attendance</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="container">
-                        <form>
-                            <div class="form-group">
-                                <label class="control-label requiredField" for="date">
-                                    Date
-                                    <span class="asteriskField">
-                                        *
-                                    </span>
-                                </label>
-                                <div class="input-group">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar">
-                                        </i>
-                                    </div>
-                                    <input class="form-control" id="date" name="date" placeholder="DD/MM/YYYY" type="text">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label requiredField" for="timein">
-                                    Time in
-                                </label>
-                                <div class='input-group date' id='timein'>
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-clock-o"></i>
-                                    </div>
-
-                                    <input type='text' class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label requiredField" for="timeout">
-                                    Time out
-                                </label>
-                                <div class='input-group date' id='timeout'>
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-clock-o"></i>
-                                    </div>
-                                    <input type='text' class="form-control" id="timeoutval" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleFormControlSelect1">Remarks</label>
-                                <select class="form-control" id="exampleFormControlSelect1">
-                                    <option>-</option>
-                                    <option>MC</option>
-                                    <option>Holiday</option>
-                                    <option>LOA</option>
-                                    <option>Company Off-Day</option>
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="submit">Submit</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit Modal -->
-    <div class="modal fade" id="editattendanceModal" tabindex="-1" role="dialog" aria-labelledby="editattendanceModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editattendanceModalLabel">Edit Attendance</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="container">
-                        <form>
-                            <div class="form-group">
-                                <label class="control-label requiredField" for="date">
-                                    Date
-                                    <span class="asteriskField">
-                                        *
-                                    </span>
-                                </label>
-                                <div class="input-group">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar">
-                                        </i>
-                                    </div>
-                                    <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label requiredField" for="timein">
-                                    Time in
-                                </label>
-                                <div class='input-group date' id='timein'>
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-clock-o"></i>
-                                    </div>
-
-                                    <input type='text' class="form-control" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label requiredField" for="timeout">
-                                    Time out
-                                </label>
-                                <div class='input-group date' id='timeout'>
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-clock-o"></i>
-                                    </div>
-                                    <input type='text' class="form-control" id="timeoutval" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="exampleFormControlSelect1">Remarks</label>
-                                <select class="form-control" id="exampleFormControlSelect1">
-                                    <option>-</option>
-                                    <option>MC</option>
-                                    <option>Holiday</option>
-                                    <option>LOA</option>
-                                    <option>Company Off-Day</option>
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="submit">Submit</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Reset Modal -->
     <div class="modal fade" id="resetModal" tabindex="-1" role="dialog" aria-labelledby="resetModalLabel" aria-hidden="true">

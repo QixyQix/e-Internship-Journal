@@ -213,6 +213,12 @@ namespace E_Internship_Journal.Controllers
             return View("~/Views/Home/Student/competency_history.cshtml");
         }
 
+        //Supervisor
+        public IActionResult Manage_Student()
+        {
+            return View("~/Views/Home/Supervisor/manage_student.cshtml");
+        }
+
         //LO
         public IActionResult Touchpoint()
         {
