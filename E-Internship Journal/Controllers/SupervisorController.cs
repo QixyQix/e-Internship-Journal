@@ -52,5 +52,10 @@ namespace E_Internship_Journal.Controllers
         {
             return View();
         }
+        public IActionResult CompetencyChecklist()
+        {
+            return View();
+
+        }
     }
 }
