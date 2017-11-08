@@ -4,19 +4,19 @@
         <li class="breadcrumb-item">
             <a href="~/Home/Index">Homepage</a>
         </li>
-        <li class="breadcrumb-item active">Account Settings</li>
+        <li class="breadcrumb-item active">Personal Particulars</li>
     </ol>
     <!-- Example DataTables Card-->
     <div class="card">
         <div class="card-header">
-            <i class="fa fa-pencil"></i> Account Settings
+            <i class="fa fa-pencil"></i> Personal Particulars
         </div>
         <div class="card-body">
                 <div class="form-group">
                     <label class="control-label" for="name">
                         Name:
                     </label>
-                    <input type='text' class="form-control" id="name" />
+                    <input type='text' class="form-control" id="name" readonly/>
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="contact">
@@ -30,17 +30,22 @@
                     </label>
                     <input type='text' class="form-control" id="email" />
                 </div>
-                <div class="form-group pull-right">
-                        <button class="btn btn-default" onclick="window.history.go(-1); return false">
-                            Back
-                        </button>
-                        <button class="btn btn-primary" id="promptreset">
-                            Reset Password
-                        </button>
-                </div>
         </div>
     </div>
 </div>
+<div class="card-body">
+    <div class="form-group">
+        <div class="col-12">
+            <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                Back
+            </button>
+            <button class="btn btn-primary pull-right" name="submit" type="submit">
+                Update Details
+            </button>
+        </div>
+    </div>
+</div>
+<br />
 <script>
     $('#promptreset').on('click', function (e) {
         $('#resetModal').modal('show');

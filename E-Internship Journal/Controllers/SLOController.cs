@@ -15,7 +15,7 @@ namespace E_Internship_Journal.Controllers
         {
             return View();
         }
-        public IActionResult BatchInformation()
+        public IActionResult CompetencyChecklist()
         {
             return View();
         }

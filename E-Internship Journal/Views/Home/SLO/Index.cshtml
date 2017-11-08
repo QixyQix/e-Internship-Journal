@@ -1,98 +1,64 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-    <div class="container-fluid">
-        <!-- Breadcrumbs -->
-        <ol class="breadcrumb">
-            @*<li class="breadcrumb-item">
-                <a href="#">Internship Programme</a>
-            </li>*@
-            <li class="breadcrumb-item active">Homepage</li>
-        </ol>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-calendar fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Company</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <div class="container">
-                                <a href="~/Home/#" class="btn btn-outline-dark btn-sm col-10">View</a>
-                                <a href="~/Home/#" class="btn btn-outline-dark btn-sm col-10">Add</a>
-                                <a href="~/Home/#" class="btn btn-outline-dark btn-sm col-10">Edit</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-clock-o fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Attendance</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/attendance_summary" class="btn btn-primary">Edit Attendance</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-bar-chart fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Checklist</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/attendance_summary" class="btn btn-primary">Check Competency Checklist</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-check-square fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Reflection</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/attendance_summary" class="btn btn-primary">View Monthly Reflection</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-info fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Guideline</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/attendance_summary" class="btn btn-primary">View Guidelines</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-graduation-cap fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Grading</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/grading" class="btn btn-primary">View Grades</a>
-                        </div>
-                    </div>
-                </div>
+﻿<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="#">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active">Batch Information</li>
+    </ol>
+    <!-- Example DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-table"></i> Batch Information
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Batch Name</th>
+                            <th>Diploma Name</th>
+                            <th>Competency Checklist</th>
+                            <th>Manage Students</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>AY13/14S1</td>
+                            <td>Diploma in Information Technology</td>
+                            <td><a href="/SLO/ViewBatchInfo"><i class="fa fa-info"></i></a></td>
+                            <td>
+                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>AY13/14S1</td>
+                            <td>Diploma in Business Information Technology</td>
+                            <td><a href="/SLO/ViewBatchInfo"><i class="fa fa-info"></i></a></td>
+                            <td>
+                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>AY13/14S2</td>
+                            <td>Diploma in Security Management</td>
+                            <td><a href="/SLO/ViewBatchInfo"><i class="fa fa-info"></i></a></td>
+                            <td>
+                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>AY13/14S2</td>
+                            <td>Diploma in Digital Animation</td>
+                            <td><a href="/SLO/ViewBatchInfo"><i class="fa fa-info"></i></a></td>
+                            <td>
+                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <br>
     </div>
-    <!-- /.container-fluid -->
-<!-- /.content-wrapper -->
-<script>
-</script>
+    <!--end with attendance taking-->
+</div>

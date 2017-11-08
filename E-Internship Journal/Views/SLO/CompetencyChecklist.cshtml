@@ -6,23 +6,26 @@
         </li>
         <li class="breadcrumb-item active">Competency Checklist</li>
     </ol>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item pull-right">
-            <div class="form-inline">
-                <input type="button" value="View History" class="btn btn-default" onclick="location.href='@Url.Action("competency_history", "Home" )'" />
-            </div>
-        </li>
-    </ol>
+
     <div class="card mb-3">
         <div class="card-header">
             <i class="fa fa-table"></i> Competency Checklist
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
+                    <button class="btn btn-secondary form-control" id="addChecklist">
+                        Add Checklist
+                    </button>
+                </div>
+            </div>
         </div>
         <div class="table-responsive">
             <table class="table table-bordered" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>A. Domain Immersation</th>
-                        <th>Tick if performed</th>
+                        <th>Description</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,7 +62,7 @@
                                     Assist project team for project requirements gathering and analysis
                                 </li>
                                 <li>
-                                    Assist in gathering of user requirements, which can be any activity such as design of questionnaire, logistics planning
+                                    Assisst in gathering of user requirements, which can be any activity such as design of questionnaire, logistics planning
                                 </li>
                                 <li>
                                     Identify and document an application problem or symptoms from users(when there is reported software bug)
@@ -170,24 +173,5 @@
                 </tbody>
             </table>
         </div>
-        @*<div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>*@
-    </div>
-</div>
-    <div class="card-body">
-        <div class="form-group">
-            <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
-                    Back
-                </button>
-                <button class="btn btn-primary pull-right" name="submit" id="submit">
-                    Submit for Review
-                </button>
-            </div>
         </div>
     </div>
-&nbsp;
-<script>
-    $('#submit').on('click', function (e) {
-        $("table input").attr("disabled", "disabled");
-    });
-</script>

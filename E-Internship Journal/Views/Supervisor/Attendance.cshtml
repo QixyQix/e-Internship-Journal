@@ -12,7 +12,9 @@
             <i class="fa fa-table"></i> View Student Attendance
         </div>
         <div class="card-body">
-
+            <div class="col-md-6 col-sm-6 col-xs-12 pull-left">
+                <label>Student Name:&nbsp</label><a href="#">Amelia Goh</a>
+            </div>
             <div class="btn-group pull-right">
                 <button type="button" class="btn btn-outline-secondary">October 2017</button>
                 <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -118,11 +120,13 @@
                 </form>
             </div>
 
-            <div class="form-group">
-                <label class="control-label col-md-3"></label>
-                <div class="btn pull-right">
-                    <input type="button" class="btn btn-outline-secondary" value="Reject" id="rejectButton" />
-                    <input type="button" class="btn btn-primary" value="Approve" id="approveButton" />
+            <div class="card-body">
+                <div class="form-group">
+                    <div class="col-12">
+                        <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                            Back
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
