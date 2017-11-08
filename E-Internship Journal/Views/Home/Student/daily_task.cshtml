@@ -1,4 +1,45 @@
-﻿
+﻿  <!-- View Event Modal -->
+<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    @*<div class="form-group ">
+                            <label class="control-label col-sm-3 requiredField" for="date">
+                                Date
+                                <span class="asteriskField">
+                                    *
+                                </span>
+                            </label>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar">
+                                        </i>
+                                    </div>
+                                    <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
+                                </div>
+                            </div>
+                        </div>*@
+                    <div>
+                        <div class="form-group ">
+                            <textarea class="form-control" rows="5" id="task" readonly>Attendance: Present&#13;&#10;There are no records for this day yet.</textarea>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <input type="button" id="btnManage" class="btn btn-primary" value="Manage Day Record" onclick="location.href='@Url.Action("Day_Task", "Home")'" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container-fluid">
     <!-- Breadcrumbs -->
     <ol class="breadcrumb">
@@ -29,9 +70,20 @@
         </div>
     </div>
 </div>
-
+<style>
+    #calendar {
+        max-width: 900px;
+        padding: 1em;
+        margin: 0 auto;
+    }
+</style>
 <script>
     loadProductData();
+    var dayRecordId;
+    var todayDate;
+    /* $('#calendar').fullCalendar({
+
+     });*/
     function loadProductData() {
         //Note: jQuery.ajax(..) is also often written is $.ajax(..)
         $loadProductDataHandler = jQuery.ajax({
@@ -46,10 +98,12 @@
 
                 var eachDay = data[e];
                 var source;
+
                 for (i = 0; i < eachDay.TaskDescription.length; i++) {
                     var source = {
                         events: [
                             {
+                                id: eachDay.DayId,
                                 title: eachDay.TaskDescription[i],//End of function
 
                                 //start: '2017-11-10',
@@ -78,12 +132,8 @@
                 //        }
                 //    ]
                 //}
-               // $('#calendar').fullCalendar('addEventSource', source);
-            }
-
-
-
-
+                // $('#calendar').fullCalendar('addEventSource', source);
+            }//End of For Loop
 
 
 
@@ -94,4 +144,188 @@
         )//end of the done() method;
 
     }//end of loadProductData();
+    $('#btnManage').on('click', function () {
+        var cookies = document.cookie.split(";");
+
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var eqPos = cookie.indexOf("=");
+            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            document.cookie = name + "=;path=/" + ";expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
+        var id = dayRecordId;
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        //document.cookie = "id" + "=" + id + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+        document.cookie = "id" + "=" + id + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+        document.cookie = "date" + "=" + todayDate + ";path=/" + ((exdate == null) ? "" : ";expires=" + exdate.toGMTString());
+
+    });
+    function IsDateHasEvent(date) {
+        var allEvents = [];
+        allEvents = $('#calendar').fullCalendar('clientEvents');
+        var event = $.grep(allEvents, function (v) {
+            return +v.start === +date;
+        });
+
+        return event;
+    }
+    //------start calendar script-----
+    $('#calendar').fullCalendar({
+        editable: false,
+        eventLimit: true, // allow "more" link when too many events
+        selectable: true,
+        select: function (date, jsEvent, view) {
+            //var title = prompt('Event Title:' + start + ' ' + end);
+            //start contains the date you have selected
+            //end contains the end date.
+            //Caution: the end date is exclusive (new since v2).
+            //var allDay = !start.hasTime() && !end.hasTime();
+            //alert(["Event Start date: " + moment(start).format(),
+            //"Event End date: " + moment(end).format(),
+            //"AllDay: " + allDay].join("\n"));
+
+            //if (IsDateHasEvent(date)) {
+            $('#eventModalLabel').text(date.format('DD MMMM YYYY'));
+            var selectedDate = IsDateHasEvent(date);
+            $('#task').empty();
+            if (selectedDate.length != 0) {
+                for (i = 0; i < selectedDate.length; i++) {
+                    dayRecordId = selectedDate[i].id;
+                    $('#task').append(selectedDate[i].title + "&#13;&#10;");
+                    
+                }
+
+                todayDate = (date.format('MM/DD/YYYY'));
+            } else {
+
+                todayDate = (date.format('MM/DD/YYYY'));
+            }
+            $('#eventModal').modal('show');
+
+            var www = "test";
+            //$("#divAddNewAppointment").dialog("open");
+
+
+            //$('<%= "#" + lblMessage.ClientID%>').html(" your error msg");
+            //$("#divMessage").dialog("open");
+
+        },
+        events: [
+            {
+                title: 'All Day Event',
+                start: '2017-11-01'
+            },
+            {
+                title: 'Long Event',
+                start: '2017-11-07',
+                end: '2017-11-10'
+            },
+            {
+                id: 999,
+                title: 'Repeating Event',
+                start: '2017-11-09',
+                end: '2017-11-09'
+            },
+            {
+                id: 999,
+                title: 'Repeating Event',
+                start: '2017-11-16',
+                end: '2017-11-16'
+            },
+            {
+                title: 'Conference',
+                start: '2017-11-11',
+                end: '2017-11-13'
+            },
+            {
+                title: 'Meeting',
+                start: '2017-11-12',
+                end: '2017-11-12'
+            },
+            {
+                title: 'Lunch',
+                start: '2017-11-12',
+                end: '2017-11-12'
+            },
+            {
+                title: 'Meeting',
+                start: '2017-11-12',
+                end: '2017-11-12'
+            },
+            {
+                title: 'Happy Hour',
+                start: '2017-11-12',
+                end: '2017-11-12'
+            },
+            {
+                title: 'Dinner',
+                start: '2017-11-12',
+                end: '2017-11-12'
+            },
+            {
+                title: 'Birthday Party',
+                start: '2017-11-13T07:00:00'
+            },
+            {
+                title: 'Click for Google',
+                url: 'http://google.com/',
+                start: '2017-11-28'
+            }
+        ],
+        dayClick: function (date, allDay, jsEvent, view) {
+            //var ww = date;
+            //alert('Clicked on: ' + date.format());
+
+            var www = $('#eventModalLabel');
+            //$('#eventModalLabel').text(date.format('DD MMMM YYYY'));
+            // $('#eventModal').modal('show');
+
+            //$("#cafeId").val($(this).data('id'));
+            //$('#myModal').modal('show');
+            //var task;
+            //if (confirm('Clicked on: ' + date.format() + '\nDo you want to add a task?')) {
+            //    task = prompt("Please enter task", "");
+            //    event.title = task;
+            //    $('#calendar').fullCalendar('addEvent', event);
+            //} else {
+            //    alert('No action was taken');
+            //}
+
+            //alert('Clicked on: ' + date.format() + '\nDo you want to add a task?');
+            //alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+            //alert('Current view: ' + view.name);
+            // change the day's background color just for fun
+            //$(this).css('background-color', 'red');
+        },
+        eventClick: function (calEvent, event, element) {
+            alert('Event: ' + calEvent.title);
+            //var task;
+            //task = prompt("Please re-enter task", event.title);
+            //event.title = task;
+            //$('#calendar').fullCalendar('updateEvent', event);
+
+            //var info;
+            //event.title = "CLICKED!";
+
+            // $('#calendar').fullCalendar('updateEvent', event);
+
+            //if (event.title == null || event.title == "") {
+            //    info == "";
+            //    task = prompt("Please enter task", "");
+            //    event.title = task;
+            //} else {
+            //    task = prompt("Please re-enter task", event.title);
+            //    event.title = task;
+            //    $('#calendar').fullCalendar('updateEvent', event);
+            //}
+        }
+        //dayClick: function () {
+        //    alert('a day has been clicked!'); //for clicking
+        //}
+    });
+            //------end date script-----
+
 </script>
