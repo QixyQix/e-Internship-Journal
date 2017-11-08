@@ -1,0 +1,486 @@
+﻿<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item active">Monthly Reflection</li>
+        @*<li class="nav-item pull-right">
+                <select class="form-control" id="exampleSelect1">
+                    <option>Week 1 to Week 4</option>
+                    <option>Week 5 to Week 8</option>
+                    <option>Week 9 to Week 12</option>
+                    <option>Week 13 to Week 16</option>
+                </select>
+            </li>*@
+    </ol>
+    @*<div class="card-body">
+            <div class="form-inline">
+                <select class="form-control" id="exampleSelect1">
+                    <option>Week 1 to Week 4</option>
+                    <option>Week 5 to Week 8</option>
+                    <option>Week 9 to Week 12</option>
+                    <option>Week 13 to Week 16</option>
+                </select>
+            </div>
+        </div>*@
+    <div class="card-body">
+        <div class="form-inline">
+            <select class="form-control" id="exampleSelect1">
+                <option>Week 1 to Week 4</option>
+                <option>Week 5 to Week 8</option>
+                <option>Week 9 to Week 12</option>
+                <option>Week 13 to Week 16</option>
+            </select>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#attendance" role="tab" data-toggle="tab">Attendance</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#reflection" role="tab" data-toggle="tab">Reflection</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#task" role="tab" data-toggle="tab">Daily Task</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#grading" role="tab" data-toggle="tab">Grading</a>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="attendance">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable_attendance" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time in</th>
+                                    <th>Time Out</th>
+                                    <th>Remarks</th>
+                                    <th>Comments</th>
+                                </tr>
+                            </thead>
+                            @*<tfoot>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Time in</th>
+                                        <th>Time Out</th>
+                                        <th>Remarks</th>
+                                        <th>Edit</th>
+                                    </tr>
+                                </tfoot>*@
+                            <tbody>
+                                <tr>
+                                    <td>2011/04/27</td>
+                                    <td>10:00</td>
+                                    <td>18:00</td>
+                                    <td>PH</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <i class="fa fa-table"></i> Attendance Overall
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Public Holidays</th>
+                                        <th>MCs</th>
+                                        <th>Company Off-Day</th>
+                                        <th>Leave of Absence</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
+                            <form class="form-inline">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">Total no. of days required:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" id="totaldays" type="text" value="80" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">No. of working days:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" id="totaldays" type="text" value="-" readonly>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="reflection">
+                    <div class="container text-left">
+                        <br />
+                        <div>
+                            <h5>In terms of workplace knowledge, communication and interpersonal skills, reflect on (a) areas you have done well, and (b) areas you would like to improve.</h5>
+                        </div>
+                        <hr />
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-8 requiredField" for="softskill1">(a) Areas you have done well.</label>
+                                <textarea class="form-control" rows="5" id="softskill1" readonly></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-8 requiredField" for="softskill2">(b) Areas you would like to improve.</label>
+                                <textarea class="form-control" rows="5" id="softskill2" readonly></textarea>
+                            </div>
+                        </div>
+                        <br />
+                        <div>
+                            <h5>Reflect on (a) how you have applied what you have learnt in school and workplace, (b) areas you have done well, and (c) areas you would like to improve.</h5>
+                        </div>
+                        <hr>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-8 requiredField" for="hardskill1">(a) How you have applied what you have learnt in school and workplace</label>
+                                <textarea class="form-control" rows="5" id="hardskill1" readonly></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <div class="form-group">
+                                <label class="control-label col-sm-8 requiredField" for="hardskill2">(b) Areas you have done well.</label>
+                                <textarea class="form-control" rows="5" id="hardskill2" readonly></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <div class="form-group ">
+                                <label class="control-label col-sm-8 requiredField" for="hardskill3">(c) Areas you would like to improve.</label>
+                                <textarea class="form-control" rows="5" id="hardskill3" readonly></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <div class="form-group ">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="feedback">Reflection Feedback:</label>
+                                    <textarea class="form-control" rows="5" id="feedback"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="task">
+                   <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable_task" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>DayRecordId</th>
+                                        <th>Description</th>
+                                        <th>remark</th>
+                                    </tr>
+                                </thead>
+                            </table>
+
+
+                            <div class="form-group ">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3" for="feedback">Daily Task Feedback:</label>
+                                    <textarea class="form-control" rows="5" id="feedback"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+            <div id="grading" class="tab-pane fade">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <div class="card">
+                            <div class="card-header" role="tab" id="headingOne">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        Rating Scale & Descriptions
+                                    </a>
+                                </h5>
+                            </div>
+
+                            <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
+                                <ul class="card-block">
+                                    <li>Exceeds expectations in the area assessed </li>
+                                    <li>Very good in the area assessed</li>
+                                    <li>Good in the area assessed</li>
+                                    <li>Generally effective in the area assessed</li>
+                                    <li>Does not meet expectations in the area accessed</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <table class="table table-bordered" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Assessment Criteria</th>
+                                    <th>Rating</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="card">
+                                            <div class="card-header" role="tab" id="headingTwo">
+                                                <h6 class="mb-0">
+                                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                        1. Workplace knowlegde, communication and interpersonal skills encompass the following areas
+                                                    </a>
+                                                </h6>
+                                            </div>
+                                            <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                                <ul class="card-block">
+                                                    <li>Plans and organises assigned work.</li>
+                                                    <li>Communicates effectively in verbal and/or written communcation.</li>
+                                                    <li>Maintains good attendance punctuality.</li>
+                                                    <li>Demonstrates commitment, motivation and reliability towards work assignment.</li>
+                                                    <li>Able to work effectively with others towards the accomplishment of common goals.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" id="rating1">
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="card">
+                                            <div class="card-header" role="tab" id="headingThree">
+                                                <h6 class="mb-0">
+                                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                        2. Technical Knowledge & Skills encompass the following areas
+                                                    </a>
+                                                </h6>
+                                            </div>
+                                            <div id="collapseThree" class="collapse" role="tabpanel" aria-labelledby="headingThree">
+                                                <ul class="card-block">
+                                                    <li>Able to apply relevant skills effectively and proficiently.</li>
+                                                    <li>Able to produce quality work in accordance with schedules and timelines.</li>
+                                                    <li>Is resourceful and can act and respond independently or with minimal guidance.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" id="rating2">
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="card">
+                                            <div class="card-header" role="tab" id="headingFour">
+                                                <h6 class="mb-0">
+                                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
+                                                        3. Independent learning skills encompass the following areas
+                                                    </a>
+                                                </h6>
+                                            </div>
+                                            <div id="collapseFour" class="collapse" role="tabpanel" aria-labelledby="headingFour">
+                                                <ul class="card-block">
+                                                    <li>Able to acquire new skills and apply knowledge learnt.</li>
+                                                    <li>Is resorceful and able to resolve problem when challenges are encountered</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" id="rating3">
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="card">
+                                            <div class="card-header" role="tab" id="headingFive">
+                                                <h6 class="mb-0">
+                                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseThree">
+                                                        4. Average rating to overall grade
+                                                    </a>
+                                                </h6>
+                                            </div>
+                                            <div id="collapseFive" class="collapse" role="tabpanel" aria-labelledby="headingFive">
+                                                <ul class="card-block">
+                                                    <li>Higher or equal to 4.5 -- Distinction</li>
+                                                    <li>Higher or equal to 4.0 -- A (Excellent)</li>
+                                                    <li>Higher or equal to 3.5 -- B+ (Very good)</li>
+                                                    <li>Higher or equal to 3.0 -- B (Good)</li>
+                                                    <li>Higher or equal to 2.5 -- C+ (Good Credit)</li>
+                                                    <li>Higher or equal to 2.0 -- C (Credit)</li>
+                                                    <li>Higher or equal to 1.5 -- D (Pass)</li>
+                                                    <li>Less than 1.5 -- F (Fail)</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" id="grading">
+                                            <option>Dist</option>
+                                            <option>A</option>
+                                            <option>B+</option>
+                                            <option>B</option>
+                                            <option>C+</option>
+                                            <option>C</option>
+                                            <option>D</option>
+                                            <option>F</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div>
+
+                        </div>
+                        <form class="form-group">
+                            <div class="form-group">
+                                <label class="col-md-8 control-label">Average rating based on the above four assessment criteria:</label>
+                                <div class="col-sm-5">
+                                    <input class="form-control" id="assessmentCriteria" type="text" value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Overall Grade:</label>
+                                <div class="col-sm-5">
+                                    <input class="form-control" id="overallGrade" type="text" value="">
+                                </div>
+                            </div>
+                        </form>
+
+
+
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <div class="form-group ">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-3 requiredField" for="overallComment">Overall Comments:</label>
+                                    <textarea class="form-control" rows="5" id="overallComment"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-12 text-right">
+            <button class="btn btn-default">
+                Reject
+            </button>
+            <button class="btn btn-primary" name="submit" type="submit">
+                Submit
+            </button>
+        </div>
+    </div>
+    <script>
+        var editor;
+        $(document).ready(function () {
+            var attendancetable = $('#dataTable_attendance').DataTable({
+                "scrollY": '250px',
+                "scrollCollapse": true,
+                "paging": false,
+                //--disable the sorting--
+                dom: 'rtp',
+                ajax: {
+                    url: '/Api/Task_Record',
+                    dataSrc: ''
+                },
+                columns: [
+                    { data: "DayRecordId" },
+                    { data: "Description" },
+                    { data: "Description" },
+                    { data: "Description" },
+                    {
+                        data: null,
+                        "bSortable": false,
+                        "mRender": function (o) { return '<input id="comments">' }
+                    }
+                ]
+            });
+
+            var tasktable = $('#dataTable_task').DataTable({
+                "bPaginate": true,
+                "bLengthChange": false,
+                "bFilter": false,
+                "bSort": false,
+                "bInfo": false,
+                "bAutoWidth": false,
+                "asStripClasses": null,
+                pageLength: 5,
+                //--disable the sorting--
+                dom: 'rtip',
+                ajax: {
+                    url: '/Api/Task_Record',
+                    dataSrc: ''
+                },
+                order: [[1, 'asc']],
+                columns: [
+                    { data: "DayRecordId", "sTitle": "Date", "sWidth": "10%" },
+                    { data: "Description", "sTitle": "Task Recorded", "sWidth": "80%" },
+                    {
+                        data: null,
+                        "sTitle": "Remarks",
+                        "bSortable": false,
+                        "mRender": function (o) { return '<input id="remarks">' }
+                    }
+                ],
+                language: {
+                    emptyTable: "No task was found, please create one.",
+                }
+            });
+
+            var tasktable = $('#dataTable').DataTable({
+                "bPaginate": true,
+                "bLengthChange": false,
+                "bFilter": false,
+                "bSort": false,
+                "bInfo": false,
+                "bAutoWidth": false,
+                "asStripClasses": null,
+                pageLength: 5,
+                //--disable the sorting--
+                dom: 'rtip'
+            });
+
+            //$('#addattendance').on('click', function (e) {
+            //    $('#attendanceModal').modal('show');
+            //});
+        });
+    </script>
