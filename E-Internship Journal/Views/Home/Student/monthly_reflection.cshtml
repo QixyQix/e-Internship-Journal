@@ -14,16 +14,13 @@
                 </select>
             </li>*@
     </ol>
-    <div class="card-body">
-        <div class="form-inline">
-            <select class="form-control" id="exampleSelect1">
-                <option>Week 1 to Week 4</option>
-                <option>Week 5 to Week 8</option>
-                <option>Week 9 to Week 12</option>
-                <option>Week 13 to Week 16</option>
-            </select>
-        </div>
-    </div>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item pull-right">
+            <div class="form-inline">
+                <input type="button" value="View History" class="btn btn-default" onclick="location.href='@Url.Action("reflection_history", "Home" )'" />
+            </div>
+        </li>
+    </ol>
     <div class="card">
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs" role="tablist">

@@ -25,85 +25,17 @@
         <div class="card-header">
             <i class="fa fa-pencil"></i> Manage Day Record
         </div>
-                <div class="text-center">
-        <div class="card mb-3">
-            <div class="card-header">
-                <i class="fa fa-pencil"></i> Manage Day Record
-            </div>
-            <div class="card-body">
-                <div class="container">
-                    <div class="text-center">
-                        <div class="row">
-                            <div class="col-4">
-                                <label for="dropdownselect">Remarks</label>
-                                <div class="input-group">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-pencil">
-                                        </i>
-                                    </div>
-                                    <select class="form-control" id="dropdownselect">
-                                        <option>-</option>
-                                        <option>MC</option>
-                                        <option>Holiday</option>
-                                        <option>LOA</option>
-                                        <option>Company Off-Day</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <label class="control-label requiredField" for="timein">
-                                    Time in
-                                </label>
-                                <div class='input-group date' id='timein'>
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-clock-o"></i>
-                                    </div>
+        <div class="card-body">
 
-                                    <input type='text' class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <label class="control-label requiredField" for="timeout">
-                                    Time out
-                                </label>
-                                <div class='input-group date' id='timeout'>
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-clock-o"></i>
-                                    </div>
-                                    <input type='text' class="form-control" id="timeoutval" />
-                                </div>
-                            </div>
-                        </div>
-                        @*<div class="col-6 pull-left">
-                            <div class="form-group pull-left">
-                                <label class="control-label requiredField" for="date">
-                                    Date
-                                    <span class="asteriskField">
-                                        *
-                                    </span>
-                                </label>
-                                <div class="input-group">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar">
-                                        </i>
-                                    </div>
-                                    <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
-                                </div>
-                            </div>
-                            <div class="form-group pull-right">
-                                <label for="dropdownselect">Remarks</label>
-                                <div class="input-group">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-pencil">
-                                        </i>
-                                    </div>
-                                    <select class="form-control" id="dropdownselect">
-                                        <option>-</option>
-                                        <option>MC</option>
-                                        <option>Holiday</option>
-                                        <option>LOA</option>
-                                        <option>Company Off-Day</option>
-                                    </select>
+            <div class="container">
+                <div class="text-center">
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="dropdownselect">Remarks</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-pencil">
+                                    </i>
                                 </div>
                                 <select class="form-control" id="dropdownselect">
                                     <option>-</option>
@@ -114,9 +46,7 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-6 pull-right">
-                        <div class="form-group pull-left">
+                        <div class="col-4">
                             <label class="control-label requiredField" for="timein">
                                 Time in
                             </label>
@@ -125,10 +55,10 @@
                                     <i class="fa fa-clock-o"></i>
                                 </div>
 
-                                <input type='text' class="form-control" id="inputTimein" />
+                                <input type='text' class="form-control" />
                             </div>
                         </div>
-                        <div class="form-group pull-right">
+                        <div class="col-4">
                             <label class="control-label requiredField" for="timeout">
                                 Time out
                             </label>
@@ -138,8 +68,73 @@
                                 </div>
                                 <input type='text' class="form-control" id="timeoutval" />
                             </div>
-                        </div>*@
+                        </div>
                     </div>
+                    @*<div class="col-6 pull-left">
+                                <div class="form-group pull-left">
+                                    <label class="control-label requiredField" for="date">
+                                        Date
+                                        <span class="asteriskField">
+                                            *
+                                        </span>
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar">
+                                            </i>
+                                        </div>
+                                        <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group pull-right">
+                                    <label for="dropdownselect">Remarks</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-pencil">
+                                            </i>
+                                        </div>
+                                        <select class="form-control" id="dropdownselect">
+                                            <option>-</option>
+                                            <option>MC</option>
+                                            <option>Holiday</option>
+                                            <option>LOA</option>
+                                            <option>Company Off-Day</option>
+                                        </select>
+                                    </div>
+                                    <select class="form-control" id="dropdownselect">
+                                        <option>-</option>
+                                        <option>MC</option>
+                                        <option>Holiday</option>
+                                        <option>LOA</option>
+                                        <option>Company Off-Day</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 pull-right">
+                            <div class="form-group pull-left">
+                                <label class="control-label requiredField" for="timein">
+                                    Time in
+                                </label>
+                                <div class='input-group date' id='timein'>
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </div>
+
+                                    <input type='text' class="form-control" id="inputTimein" />
+                                </div>
+                            </div>
+                            <div class="form-group pull-right">
+                                <label class="control-label requiredField" for="timeout">
+                                    Time out
+                                </label>
+                                <div class='input-group date' id='timeout'>
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </div>
+                                    <input type='text' class="form-control" id="timeoutval" />
+                                </div>
+                            </div>*@
                 </div>
             </div>
         </div>
@@ -149,357 +144,361 @@
     <div class="card mb-3">
         <div class="card-header">
             <i class="fa fa-pencil"></i> Manage Task
-            <div class="card-body">
-                <div class="form-group">
-                    @*<div class="col-md-3 col-sm-3 col-xs-12 pull-left">
-                            <div class="input-group">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-calendar">
-                                    </i>
-                                </div>
-                                <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
-                            </div>
-                        </div>*@
-                    <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
-                        <button class="btn btn-secondary form-control" name="submit" type="submit">
-                            Add Task +
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Description</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="form-group">
-                    <div class="col-12 text-right">
-                        <button class="btn btn-default" onclick="window.history.go(-1); return false">
-                            Back
-                        </button>
-                        <button class="btn btn-primary" name="submit" type="submit" id="btnSave">
-                            Save
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
         </div>
+        <div class="card-body">
+            <div class="form-group">
+                @*<div class="col-md-3 col-sm-3 col-xs-12 pull-left">
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar">
+                                </i>
+                            </div>
+                            <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
+                        </div>
+                    </div>*@
+                <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
+                    <button class="btn btn-secondary form-control" name="submit" type="submit">
+                        Add Task +
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Description</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
     </div>
-    @*<script>
-            $(document).ready(function () {
-
-                var editor = new $.fn.dataTable.Editor(table);
-
-                //var t = $('#dataTable').DataTable();
-                var counter = 1;
-
-                var table = $('#dataTable').DataTable({
-                    ajax: {
-                        url: '/Api/Task_Record',
-                        dataSrc: ''
-                    },
-                    "bPaginate": false,
-                    "bLengthChange": false,
-                    "bFilter": false,
-                    "bSort": false,
-                    "bInfo": false,
-                    "bAutoWidth": false,
-                    "asStripClasses": null,
-                    //--disable the sorting--
-                    dom: 'lrt',
-                    "aoColumns": [
-                        { "mData": "DayRecordId", "sWidth": "10%" },
-                        { "mData": "Description", "sTitle": "Description", "sWidth": "80%" },
-                        {
-                            "mData": null,
-                            "bSortable": false,
-                            "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button>' }
-                        }
-                    ],
-                    language: {
-                        emptyTable: "No task was found, please create one.",
-                    }
-                });
-                $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
-                    console.log("button 1 is click");
-                });
-            });
-        </script>*@
-    <script>
-        var editor;
+</div>
+<div class="card-body">
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                    Back
+                </button>
+                <button class="btn btn-primary pull-right" name="submit" id="btnSave" type="submit">
+                    Save
+                </button>
+            </div>
+        </div>
+    <br />
+</div>
+@*<script>
         $(document).ready(function () {
-            var cookieDate;
-            var cookieId;
 
-            var table = $('#dataTable2');
-            
-            //var dc = document.cookie;
-            //getCookie(dc);
-            var cookieDate = getCookie("date");
-            var cookieId = getCookie("id");
-            if (cookieDate != null || cookieDate != undefined) {
-                $('#date').val(cookieDate);
+            var editor = new $.fn.dataTable.Editor(table);
 
-            }
-            if (cookieId == "undefined" || cookieId == null) {
+            //var t = $('#dataTable').DataTable();
+            var counter = 1;
 
-                $('#btnSave').on('click', function () {
-                    var colectedTodayDate = $('#date').val().toString('MM/DD/YYYY');
-                    var colectedArrivalTime = $('#inputTimein').val();
-                    var collectedDepartureTime = ($('#timeoutval').val() != "") ? $('#timeoutval').val() : null;
-                    //var momentDate = moment(colectedTodayDate + colectedArrivalTime, 'YYYY-MM-DD HH:mm:ss');
-                    var formatedArrivalTime = new Date(colectedTodayDate + ' ' + colectedArrivalTime);
-                    var formatedDepartureTime = ($('#timeoutval').val() != "") ? new Date(colectedTodayDate + ' ' + collectedDepartureTime) : null;
-                    var webFormData = new WebFormData(colectedTodayDate,'test', formatedArrivalTime, formatedDepartureTime)
-                    $saveTaskHanlder = jQuery.ajax({
-                        url: '/Api/Task_Record/',
-                        method: 'POST',
-                        dataType: "json",
-                        contentType: "application/json; charset=utf-8",
-                        cache: false,
-                    });
-                    $getDayHandler.done(function (data, textStatus, jqXHR) { 
-
-
-
-
-                    });//End of Done
-
-
-
-                });
-
-
-            } else {
-                getTaskFunction(cookieId, table, editor);
-                
-                //editor = new $.fn.dataTable.Editor({
-                //    ajax: {
-                //        url: '/Api/Task_Record',
-                //        dataSrc: ''
-                //    },
-                //    table: "#dataTable",
-                //    idSrc: 'id',
-                //    fields: [{
-                //        label: "DayRecordId:",
-                //        name: "DayRecordId"
-                //    }, {
-                //        label: "Description:",
-                //        name: "Description"
-                //    }
-                //    ]
-                //});
-                //var table = $('#dataTable').DataTable({
-                //    "bPaginate": false,
-                //    "bLengthChange": false,
-                //    "bFilter": false,
-                //    "bSort": false,
-                //    "bInfo": false,
-                //    "bAutoWidth": false,
-                //    "asStripClasses": null,
-                //    //--disable the sorting--
-                //    dom: 'rti',
-                //    ajax: {
-                //        url: '/Api/Task_Record',
-                //        dataSrc: ''
-                //    },
-                //    order: [[1, 'asc']],
-                //    columns: [
-                //        { data: "DayRecordId", "sWidth": "10%" },
-                //        { data: "Description", "sWidth": "80%" },
-                //        {
-                //            data: null,
-                //            "bSortable": false,
-                //            "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button>' }
-                //        }
-                //    ],
-                //    language: {
-                //        emptyTable: "No task was found, please create one.",
-                //    }
-                //});
-                $('#dataTable2').on('click', 'tbody td:not(:first-child, :last-child)', function (e) {
-                    //console.log($('#dataTable2 tbody td:not(:first-child, :last-child)').closest('tr').find("td:eq(1)").html());
-                    //console.log($('#dataTable2 tbody tr:nth-child(' + 1 + ')').find("td:eq(1)").html());
-                    //console.log($('#dataTable2 tbody td:not(:first-child, :last-child) tr').find("td:eq(1)").html());
-                    editor.inline(this);
-                   
-
-                    //alert("You selected " + $(this).val()); 
-                });
-
-                $('#dataTable2 tbody').on('click', 'button.btn-danger', function (e) {
-                    console.log("button 1 is click");
-                });
-
-            }
-
-
-            // Activate an inline edit on click of a table cell
-  
-
-
-
-        });
-
-        function getCookie(name) {
-            var dc = document.cookie;
-            var prefix = name + "=";
-            var begin = dc.indexOf("; " + prefix);
-            if (begin == -1) {
-                begin = dc.indexOf(prefix);
-                if (begin != 0) return null;
-            } else {
-                begin += 2;
-            }
-            var end = document.cookie.indexOf(";", begin);
-            if (end == -1) {
-                end = dc.length;
-            }
-            return unescape(dc.substring(begin + prefix.length, end));
-        }
-        function formatAMPM(date) {
-            var hours = date.getHours();
-            var minutes = date.getMinutes();
-            var ampm = hours >= 12 ? 'pm' : 'am';
-            hours = hours % 12;
-            hours = hours ? hours : 12; // the hour '0' should be '12'
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            var strTime = hours + ':' + minutes + ' ' + ampm;
-            return strTime;
-        }
-        function WebFormData(inTodayDate, inRemarks, inTimein, inTimeOut) {
-            this.Date = inTodayDate;
-            this.Remarks = inRemarks;
-            this.ArrivalTime = inTimein;
-            this.DepartureTime = inTimeOut;
-
-        }
-        function getTaskFunction(cookieId, finalTable) {
-            var aa;
-            $getDayHandler = jQuery.ajax({
-                url: '/Api/Task_Record/' + cookieId,
-                method: 'GET',
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                cache: false,
-            });
-            $getDayHandler.done(function (data, textStatus, jqXHR) {
-                // window.$brandPhotoInputElement.fileinput('upload');
-                // data.Message;
-                //return data;
-                var oneArrivalTime = data[0].ArrivalTime;
-                
-                var formattedArrivalTime = formatAMPM(new Date(oneArrivalTime));
-
-                $('#inputTimein').val(formattedArrivalTime);
-                $('#inputTimein').attr('readonly', true);
-                if (data[0].DepartureTime != null || "undefined") {
-                    var oneDepartureTime = data[0].DepartureTime;
-                    var formattedDepartureTime = formatAMPM(new Date(oneDepartureTime));
-                    $('#timeoutval').val(formattedDepartureTime);
-                    $('#timeoutval').attr('readonly', true);
+            var table = $('#dataTable').DataTable({
+                ajax: {
+                    url: '/Api/Task_Record',
+                    dataSrc: ''
+                },
+                "bPaginate": false,
+                "bLengthChange": false,
+                "bFilter": false,
+                "bSort": false,
+                "bInfo": false,
+                "bAutoWidth": false,
+                "asStripClasses": null,
+                //--disable the sorting--
+                dom: 'lrt',
+                "aoColumns": [
+                    { "mData": "DayRecordId", "sWidth": "10%" },
+                    { "mData": "Description", "sTitle": "Description", "sWidth": "80%" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button>' }
+                    }
+                ],
+                language: {
+                    emptyTable: "No task was found, please create one.",
                 }
-              
-                //var time = oneArrivalTime.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-                //for (i = 0; i < data.length; i++) {
-                //    var 
+            });
+            $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
+                console.log("button 1 is click");
+            });
+        });
+    </script>*@
+<script>
+    var editor;
+    $(document).ready(function () {
+        var cookieDate;
+        var cookieId;
 
-                //}
-                editor = new $.fn.dataTable.Editor({
-               
-                    //data: data,
-                    table: finalTable,
-                    idSrc: 'TaskRecordId',
-                    fields: [ {
-                        label: "Description:",
-                        name: "Description"
-                    }
-                    ]
-                });
-                finalTable = finalTable.DataTable({
-                //finalTable({
-                    "bPaginate": false,
-                    "bLengthChange": false,
-                    "bFilter": false,
-                    "bSort": false,
-                    "bInfo": false,
-                    "bAutoWidth": false,
-                    "asStripClasses": null,
-                    //--disable the sorting--
-                    dom: 'rti',
-                    data: data,
-                    order: [[1, 'asc']],
-                    columns: [
-                        { data: "DayRecordId", "sWidth": "10%" },
-                        { data: "Description", "sWidth": "80%" },
-                        {
-                            "data": "TaskRecordId",
-                            "bSortable": false,
-                            "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn" value="' + o + '"><i class="fa fa-times"></i></button>' }
-                        }
-                    ],
-                    language: {
-                        emptyTable: "No task was found, please create one.",
-                    }
-                });// End of DataTable
-                $('#dataTable2').on('focusout', 'tbody td:not(:first-child, :last-child)', function (e) {
-                    //console.dir("test");
-                    //console.dir(editor.field('Description').val());
-                    //var changed = editor.field('Description').val();
-                    //var $tr = $(this).closest('tr');
-                    //var $column = $(this).closest('tr td');
-                    //var myRow = $("#dataTable2 tr").index($tr);
-                    //var myColumn = $("#dataTable2 td").index($column);
-                    //var qqqww = document.getElementById("dataTable2").rows[1].cells[1];
-                    //var qqwqeqwe = aa.row(myRow - 1);
-                    ////var myData = $tr.attr('data-myData')
-                    //console.log(myRow, myColumn);
-                    ////aa.row(0).columns(1).val();
-                    
-                    //var data = aa.row(myRow-1).data();
-                    //var row = $(aa.row(myRow - 1).node());
-                    //var qwewqeqwe = $(this).text();
-                    //data.Description = changed;
-                    //aa.row(row).data(data).draw();
-                    //console.dir($(e +'tbody tr:nth-child(' + myRow + ')').find("td:eq(1)").html())
-                    //$('#dataTable2 tbody tr:nth-child(' + myRow + ')').find("td:eq(1)").text(changed);
-                    //var qqq = finalTable.row(0).columns(1)
-                    //qqq.data(changed).draw();
-                })
-                //editor.field('Description').input().on('change', function (e, d) {
-                //    //var ww = d.editorSet(); 
-                //    // var qq = d; 
-                //    if (d && d.editorSet) return;
-                //    //console.dir($(this).val()); 
-                //    // alert("You selected " + $(this).val());
-                //    var changed = $(this).val();
-                //    //var ww = this.s.editRow;
-                //   // var www = $(this).row.data();
-                //    //var idx = finalTable
-                //     //   .row()
-                //    //  .index();
-                //    finalTable.row(0).columns(1).data(changed).draw();
-                //    finalTable.rows().iterator('row', function (context, index) {
-                //        //var changed2 = $(this).val();
-                //       // var iqwe = editor.field('Description');
-                //        var wqq = editor.field('Description').val();
-                //        var data = this.row(index).data();
-                //        var row = $(this.row(index).node());
-                //        data.Description = changed;
-                //        //data[0] = 'new data';
-                //       // finalTable.row(0).data(data).draw();
-                //    });
-                //}); 
-            });// End of Done Function
+        var table = $('#dataTable2');
+
+        //var dc = document.cookie;
+        //getCookie(dc);
+        var cookieDate = getCookie("date");
+        var cookieId = getCookie("id");
+        if (cookieDate != null || cookieDate != undefined) {
+            $('#date').val(cookieDate);
+
         }
-    </script>
+        if (cookieId == "undefined" || cookieId == null) {
+
+            $('#btnSave').on('click', function () {
+                var colectedTodayDate = $('#date').val().toString('MM/DD/YYYY');
+                var colectedArrivalTime = $('#inputTimein').val();
+                var collectedDepartureTime = ($('#timeoutval').val() != "") ? $('#timeoutval').val() : null;
+                //var momentDate = moment(colectedTodayDate + colectedArrivalTime, 'YYYY-MM-DD HH:mm:ss');
+                var formatedArrivalTime = new Date(colectedTodayDate + ' ' + colectedArrivalTime);
+                var formatedDepartureTime = ($('#timeoutval').val() != "") ? new Date(colectedTodayDate + ' ' + collectedDepartureTime) : null;
+                var webFormData = new WebFormData(colectedTodayDate, 'test', formatedArrivalTime, formatedDepartureTime)
+                $saveTaskHanlder = jQuery.ajax({
+                    url: '/Api/Task_Record/',
+                    method: 'POST',
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    cache: false,
+                });
+                $getDayHandler.done(function (data, textStatus, jqXHR) {
+
+
+
+
+                });//End of Done
+
+
+
+            });
+
+
+        } else {
+            getTaskFunction(cookieId, table, editor);
+
+            //editor = new $.fn.dataTable.Editor({
+            //    ajax: {
+            //        url: '/Api/Task_Record',
+            //        dataSrc: ''
+            //    },
+            //    table: "#dataTable",
+            //    idSrc: 'id',
+            //    fields: [{
+            //        label: "DayRecordId:",
+            //        name: "DayRecordId"
+            //    }, {
+            //        label: "Description:",
+            //        name: "Description"
+            //    }
+            //    ]
+            //});
+            //var table = $('#dataTable').DataTable({
+            //    "bPaginate": false,
+            //    "bLengthChange": false,
+            //    "bFilter": false,
+            //    "bSort": false,
+            //    "bInfo": false,
+            //    "bAutoWidth": false,
+            //    "asStripClasses": null,
+            //    //--disable the sorting--
+            //    dom: 'rti',
+            //    ajax: {
+            //        url: '/Api/Task_Record',
+            //        dataSrc: ''
+            //    },
+            //    order: [[1, 'asc']],
+            //    columns: [
+            //        { data: "DayRecordId", "sWidth": "10%" },
+            //        { data: "Description", "sWidth": "80%" },
+            //        {
+            //            data: null,
+            //            "bSortable": false,
+            //            "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button>' }
+            //        }
+            //    ],
+            //    language: {
+            //        emptyTable: "No task was found, please create one.",
+            //    }
+            //});
+            $('#dataTable2').on('click', 'tbody td:not(:first-child, :last-child)', function (e) {
+                //console.log($('#dataTable2 tbody td:not(:first-child, :last-child)').closest('tr').find("td:eq(1)").html());
+                //console.log($('#dataTable2 tbody tr:nth-child(' + 1 + ')').find("td:eq(1)").html());
+                //console.log($('#dataTable2 tbody td:not(:first-child, :last-child) tr').find("td:eq(1)").html());
+                editor.inline(this);
+
+
+                //alert("You selected " + $(this).val());
+            });
+
+            $('#dataTable2 tbody').on('click', 'button.btn-danger', function (e) {
+                console.log("button 1 is click");
+            });
+
+        }
+
+
+        // Activate an inline edit on click of a table cell
+
+
+
+
+    });
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+    function formatAMPM(date) {
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        return strTime;
+    }
+    function WebFormData(inTodayDate, inRemarks, inTimein, inTimeOut) {
+        this.Date = inTodayDate;
+        this.Remarks = inRemarks;
+        this.ArrivalTime = inTimein;
+        this.DepartureTime = inTimeOut;
+
+    }
+    function getTaskFunction(cookieId, finalTable) {
+        var aa;
+        $getDayHandler = jQuery.ajax({
+            url: '/Api/Task_Record/' + cookieId,
+            method: 'GET',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+        });
+        $getDayHandler.done(function (data, textStatus, jqXHR) {
+            // window.$brandPhotoInputElement.fileinput('upload');
+            // data.Message;
+            //return data;
+            var oneArrivalTime = data[0].ArrivalTime;
+
+            var formattedArrivalTime = formatAMPM(new Date(oneArrivalTime));
+
+            $('#inputTimein').val(formattedArrivalTime);
+            $('#inputTimein').attr('readonly', true);
+            if (data[0].DepartureTime != null || "undefined") {
+                var oneDepartureTime = data[0].DepartureTime;
+                var formattedDepartureTime = formatAMPM(new Date(oneDepartureTime));
+                $('#timeoutval').val(formattedDepartureTime);
+                $('#timeoutval').attr('readonly', true);
+            }
+
+            //var time = oneArrivalTime.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+            //for (i = 0; i < data.length; i++) {
+            //    var
+
+            //}
+            editor = new $.fn.dataTable.Editor({
+
+                //data: data,
+                table: finalTable,
+                idSrc: 'TaskRecordId',
+                fields: [{
+                    label: "Description:",
+                    name: "Description"
+                }
+                ]
+            });
+            finalTable = finalTable.DataTable({
+                //finalTable({
+                "bPaginate": false,
+                "bLengthChange": false,
+                "bFilter": false,
+                "bSort": false,
+                "bInfo": false,
+                "bAutoWidth": false,
+                "asStripClasses": null,
+                //--disable the sorting--
+                dom: 'rti',
+                data: data,
+                order: [[1, 'asc']],
+                columns: [
+                    { data: "DayRecordId", "sWidth": "10%" },
+                    { data: "Description", "sWidth": "80%" },
+                    {
+                        "data": "TaskRecordId",
+                        "bSortable": false,
+                        "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn" value="' + o + '"><i class="fa fa-times"></i></button>' }
+                    }
+                ],
+                language: {
+                    emptyTable: "No task was found, please create one.",
+                }
+            });// End of DataTable
+            $('#dataTable2').on('focusout', 'tbody td:not(:first-child, :last-child)', function (e) {
+                //console.dir("test");
+                //console.dir(editor.field('Description').val());
+                //var changed = editor.field('Description').val();
+                //var $tr = $(this).closest('tr');
+                //var $column = $(this).closest('tr td');
+                //var myRow = $("#dataTable2 tr").index($tr);
+                //var myColumn = $("#dataTable2 td").index($column);
+                //var qqqww = document.getElementById("dataTable2").rows[1].cells[1];
+                //var qqwqeqwe = aa.row(myRow - 1);
+                ////var myData = $tr.attr('data-myData')
+                //console.log(myRow, myColumn);
+                ////aa.row(0).columns(1).val();
+
+                //var data = aa.row(myRow-1).data();
+                //var row = $(aa.row(myRow - 1).node());
+                //var qwewqeqwe = $(this).text();
+                //data.Description = changed;
+                //aa.row(row).data(data).draw();
+                //console.dir($(e +'tbody tr:nth-child(' + myRow + ')').find("td:eq(1)").html())
+                //$('#dataTable2 tbody tr:nth-child(' + myRow + ')').find("td:eq(1)").text(changed);
+                //var qqq = finalTable.row(0).columns(1)
+                //qqq.data(changed).draw();
+            })
+            //editor.field('Description').input().on('change', function (e, d) {
+            //    //var ww = d.editorSet();
+            //    // var qq = d;
+            //    if (d && d.editorSet) return;
+            //    //console.dir($(this).val());
+            //    // alert("You selected " + $(this).val());
+            //    var changed = $(this).val();
+            //    //var ww = this.s.editRow;
+            //   // var www = $(this).row.data();
+            //    //var idx = finalTable
+            //     //   .row()
+            //    //  .index();
+            //    finalTable.row(0).columns(1).data(changed).draw();
+            //    finalTable.rows().iterator('row', function (context, index) {
+            //        //var changed2 = $(this).val();
+            //       // var iqwe = editor.field('Description');
+            //        var wqq = editor.field('Description').val();
+            //        var data = this.row(index).data();
+            //        var row = $(this.row(index).node());
+            //        data.Description = changed;
+            //        //data[0] = 'new data';
+            //       // finalTable.row(0).data(data).draw();
+            //    });
+            //});
+        });// End of Done Function
+    }
+</script>

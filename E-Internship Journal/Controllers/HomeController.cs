@@ -151,16 +151,16 @@ namespace E_Internship_Journal.Controllers
         {
             return View("~/Views/Home/Supervisor/Review.cshtml");
         }
-        public IActionResult Account_Settings()
+        public IActionResult Personal()
         {
             var test = User.IsInRole("SUPERVISOR");
             if (User.IsInRole("SUPERVISOR"))
             {
-                return View("~/Views/Home/Supervisor/account_settings.cshtml");
+                return View("~/Views/Home/Supervisor/personal.cshtml");
             }
             else /*if(User.IsInRole("STUDENT"))*/
             {
-                return View("~/Views/Home/Student/account_settings.cshtml");
+                return View("~/Views/Home/Student/personal.cshtml");
             }
         }
         public IActionResult Edit_Competency()
@@ -198,7 +198,21 @@ namespace E_Internship_Journal.Controllers
                 return View("~/Views/Home/SLO/view_student.cshtml");
             }
         }
+        
+        //Student
+        public IActionResult Reflection_History()
+        {
+            return View("~/Views/Home/Student/reflection_history.cshtml");
+        }
 
+        public IActionResult Attendance_History()
+        {
+            return View("~/Views/Home/Student/attendance_history.cshtml");
+        }
+        public IActionResult Competency_History()
+        {
+            return View("~/Views/Home/Student/competency_history.cshtml");
+        }
 
         //LO
         public IActionResult Touchpoint()
