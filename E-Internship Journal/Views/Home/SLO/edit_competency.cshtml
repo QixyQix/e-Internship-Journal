@@ -1,0 +1,130 @@
+﻿<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item active">Edit Competency</li>
+    </ol>
+    <!-- Example DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-pencil"></i> Edit Competency
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
+                    <button class="btn btn-secondary form-control" id="addcc">
+                        Add
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th width="90%">Description</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <div class="col-12">
+                    <button class="btn btn-default" onclick="window.history.go(-1); return false">
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+</div>
+@*<script>
+        $(document).ready(function () {
+
+            var editor = new $.fn.dataTable.Editor(table);
+
+            //var t = $('#dataTable').DataTable();
+            var counter = 1;
+
+            var table = $('#dataTable').DataTable({
+                ajax: {
+                    url: '/Api/Task_Record',
+                    dataSrc: ''
+                },
+                "bPaginate": false,
+                "bLengthChange": false,
+                "bFilter": false,
+                "bSort": false,
+                "bInfo": false,
+                "bAutoWidth": false,
+                "asStripClasses": null,
+                //--disable the sorting--
+                dom: 'lrt',
+                "aoColumns": [
+                    { "mData": "DayRecordId", "sWidth": "10%" },
+                    { "mData": "Description", "sTitle": "Description", "sWidth": "80%" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button>' }
+                    }
+                ],
+                language: {
+                    emptyTable: "No task was found, please create one.",
+                }
+            });
+            $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
+                console.log("button 1 is click");
+            });
+        });
+    </script>*@
+<script>
+    var editor;
+    $(document).ready(function () {
+        var table = $('#dataTable').DataTable({
+            "scrollY": '250px',
+            "scrollCollapse": true,
+            "paging": false,
+            "bPaginate": false,
+            "bLengthChange": false,
+            "bFilter": false,
+            "bSort": false,
+            "bInfo": false,
+            "bAutoWidth": false,
+            "asStripClasses": null,
+            //--disable the sorting--
+            dom: 'rti',
+            ajax: {
+                url: '/Api/Task_Record',
+                dataSrc: ''
+            },
+            order: [[1, 'asc']],
+            columns: [
+                { data: "Description"},
+                {
+                    data: null,
+                    "sWidth": "10%",
+                    "bSortable": false,
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
+                }
+            ],
+            language: {
+                emptyTable: "No competency checklist was found, please create one.",
+            }
+        });
+
+        $('#addcc').on('click', function (e) {
+            $('#addccModal').modal('show');
+        });
+
+        $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
+            $('#updateccModal').modal('show');
+        });
+    });
+</script>

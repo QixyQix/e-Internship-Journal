@@ -53,7 +53,7 @@ namespace E_Internship_Journal.API
 
         // GET: api/Task_Record/5
         [HttpGet("{id}")]
-        public IActionResult GetTask_Record(int id)
+        public async Task<IActionResult> GetTask_Record(int id)
         {
             if (!ModelState.IsValid)
             {
@@ -76,7 +76,9 @@ namespace E_Internship_Journal.API
                             TaskRecordId = oneTask.TaskRecordId,
                             Description = oneTask.Description,
                             Date = oneTask.DayRecord.Date,
-                            WeekNo = oneTask.DayRecord.WeekNo
+                            ArrivalTime = oneTask.DayRecord.ArrivalTime,
+                            DepartureTime = oneTask.DayRecord.DepartureTime
+                            //WeekNo = oneTask.DayRecord.WeekNo
 
                         });
 

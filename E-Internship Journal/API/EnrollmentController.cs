@@ -182,8 +182,8 @@ namespace E_Internship_Journal.Controllers
 
             foreach (var pairing in studentProjects) {
 
-                string studentUserId = pairing.studentId.ToString().Trim();
-                var projectIdInput = pairing.projectId;
+                string studentUserId = pairing.studentId.Value.ToString().Trim();
+                var projectIdInput = pairing.projectId.Value;
                 int projectId = 0;
 
                 if (string.IsNullOrEmpty(studentUserId) || !Int32.TryParse(projectIdInput, out projectId)) {

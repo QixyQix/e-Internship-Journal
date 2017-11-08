@@ -32,5 +32,45 @@ namespace E_Internship_Journal.Controllers
         {
             return View();
         }
+        public IActionResult Edit_Company()
+        {
+            return View();
+        }
+        public IActionResult Project()
+        {
+            return View();
+        }
+        public IActionResult Add_Project()
+        {
+            return View();
+        }
+        public IActionResult Edit_Project()
+        {
+            return View();
+        }
+        public IActionResult User()
+        {
+            return View();
+        }
+        public IActionResult Add_User()
+        {
+            return View();
+        }
+        public IActionResult Edit_User()
+        {
+            return View();
+        }
+        public IActionResult Course()
+        {
+            return View();
+        }
+        public IActionResult Add_Course()
+        {
+            return View();
+        }
+        public IActionResult Edit_Course()
+        {
+            return View();
+        }
     }
 }

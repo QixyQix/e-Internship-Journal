@@ -1,0 +1,171 @@
+﻿
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item active">Attendance Summary</li>
+    </ol>
+    <!-- Example DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-table"></i> Attendance Taking
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <div class="col-md-3 col-sm-3 col-xs-12 pull-left">
+                    <select class="form-control" id="selectweek">
+                        <option>Week 1 to Week 4</option>
+                        <option>Week 5 to Week 8</option>
+                        <option>Week 9 to Week 12</option>
+                        <option>Week 13 to Week 16</option>
+                    </select>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
+                    <button class="btn btn-secondary form-control" id="addattendance">
+                        Add
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time in</th>
+                            <th>Time Out</th>
+                            <th>Remarks</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    @*<tfoot>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time in</th>
+                                <th>Time Out</th>
+                                <th>Remarks</th>
+                                <th>Edit</th>
+                            </tr>
+                        </tfoot>*@
+                    <tbody>
+                        <tr>
+                            <td>2011/04/27</td>
+                            <td>10:00</td>
+                            <td>18:00</td>
+                            <td>PH</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+
+    <!--end with attendance taking-->
+
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-table"></i> Attendance Overall
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Public Holidays</th>
+                            <th>MCs</th>
+                            <th>Company Off-Day</th>
+                            <th>Leave of Absence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Total no. of days required:</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="totaldays" type="text" value="80" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">No. of working days:</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="totaldays" type="text" value="-" readonly>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                    Back
+                </button>
+                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                    Send to Review
+                </button>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+<script>
+    var editor;
+    $(document).ready(function () {
+        var table = $('#dataTable').DataTable({
+            "scrollY": '250px',
+            "scrollCollapse": true,
+            "paging": false,
+            //--disable the sorting--
+            dom: 'rtp',
+            ajax: {
+                url: '/Api/Task_Record',
+                dataSrc: ''
+            },
+            columns: [
+                { data: "DayRecordId" },
+                { data: "Description" },
+                { data: "Description" },
+                { data: "Description" },
+                {
+                    data: null,
+                    "bSortable": false,
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
+                }
+            ],
+            language: {
+                emptyTable: "No task was found, please create one.",
+            }
+        });
+
+        // Activate an inline edit on click of a table cell
+        $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
+            console.log("button 1 is click");
+        });
+
+        $('#addattendance').on('click', function (e) {
+            $('#attendanceModal').modal('show');
+        });
+
+        $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
+            $('#editattendanceModal').modal('show');
+        });
+    });
+</script>

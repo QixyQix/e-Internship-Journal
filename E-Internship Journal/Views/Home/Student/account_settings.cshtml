@@ -1,0 +1,49 @@
+﻿<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item active">Account Settings</li>
+    </ol>
+    <!-- Example DataTables Card-->
+    <div class="card">
+        <div class="card-header">
+            <i class="fa fa-pencil"></i> Account Settings
+        </div>
+        <div class="card-body">
+                <div class="form-group">
+                    <label class="control-label" for="name">
+                        Name:
+                    </label>
+                    <input type='text' class="form-control" id="name" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="contact">
+                        Contact:
+                    </label>
+                    <input type='text' class="form-control" id="contact" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="email">
+                        Email:
+                    </label>
+                    <input type='text' class="form-control" id="email" />
+                </div>
+                <div class="form-group pull-right">
+                        <button class="btn btn-default" onclick="window.history.go(-1); return false">
+                            Back
+                        </button>
+                        <button class="btn btn-primary" id="promptreset">
+                            Reset Password
+                        </button>
+                </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#promptreset').on('click', function (e) {
+        $('#resetModal').modal('show');
+        console.log("hi")
+    });
+</script>
