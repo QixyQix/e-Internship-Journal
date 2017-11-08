@@ -29,7 +29,7 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="batchTableBody">
                         <tr>
                             <td>AY13/14</td>
                             <td>DIT</td>
@@ -54,10 +54,66 @@
                             <td>10/2/2018</td>
                             <td>-</td>
                         </tr>
-                    </tbody>
+                    </tbodyid="productTableBody">
                 </table>
             </div>
         </div>
     </div>
     <!--end with attendance taking-->
 </div>
+
+<script>
+
+    $getBatchesHandler = jQuery.ajax({
+
+        url: '/API/Batches/getBatches',
+        method: 'get',
+        dataType: 'json',
+        cache: false
+
+    });
+    $getBatchesHandler.done(function (data, textStatus, jqXHR) {
+      //  $SLODownElement = $('#dropSLO');
+       // $CourseDownElement = $('#dropCourse')
+
+        $tableBodyElement = $('#batchTableBody');
+        for (i = 0; i < data.length; i++) {
+
+            batch = data[i];
+
+            batchId = batch.BatchId;
+            batchName = batch.BatchName;
+
+            startDate = new Date(batch.StartDate).toLocaleDateString();
+            endDate = new Date(batch.EndDate).toDateString();
+            fullName = batch.FullName;
+            courseCode = batch.CourseCode;
+            //courseName = batch.CourseName[0].CourseName;
+           
+            $rowElement = $('<tr></tr>');
+            $cellElement = $('<td></td>', { text: batchName });
+            $rowElement.append($cellElement);
+
+            $cellElement = $('<td></td>', { text: courseCode });
+            $rowElement.append($cellElement);
+
+            $cellElement = $('<td></td>', { text: fullName });
+            $rowElement.append($cellElement);
+            $cellElement = $('<td></td>', { text: startDate });
+            $rowElement.append($cellElement);
+            $cellElement = $('<td></td>', { text: endDate });
+            $rowElement.append($cellElement);
+
+
+            $hyperLinkElement = $('<a>Edit Batch</a>').attr('href', '~/../EditBatch/' + batchId);
+            $hyperLinkElement.addClass('btn btn-primary');
+            $cellElement = $('<td></td>');
+            $cellElement.append($hyperLinkElement);
+
+            $rowElement.append($cellElement);
+
+            $tableBodyElement.append($rowElement);
+        }
+    }); // End of .Done Handler
+
+</script>

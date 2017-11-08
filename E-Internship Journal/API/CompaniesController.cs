@@ -95,7 +95,6 @@ namespace E_Internship_Journal.API
                     CompanyName = companyNewInput.CompanyName.Value,
                     CompanyAddress = companyNewInput.CompanyAddress.Value
                 };
-
                 _context.Companies.Add(newCompany);
                 await _context.SaveChangesAsync();
 

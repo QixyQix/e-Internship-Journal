@@ -30,6 +30,7 @@ namespace E_Internship_Journal.Controllers
                 return View("~/Views/Home/Admin/Index.cshtml");
             }
         }
+        
         public IActionResult Grading()
         {
             var test = User.IsInRole("SUPERVISOR");
@@ -243,5 +244,60 @@ namespace E_Internship_Journal.Controllers
         {
             return View();
         }
+
+
+        //Admin
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult CreateBatch()
+        {
+            return View("~/Views/Home/Admin/Add_Batch.cshtml");
+        }
+        
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult EditBatch()
+        {
+            return View("~/Views/Home/Admin/Edit_Batch.cshtml");
+        }
+
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult ViewBatch()
+        {
+            return View("~/Views/Home/Admin/Batch.cshtml");
+        }
+
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult ViewCompany()
+        {
+            return View("~/Views/Home/Admin/Company.cshtml");
+        }
+
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult CreateCompany()
+        {
+            return View("~/Views/Home/Admin/Add_Company.cshtml");
+        }
+        //public IActionResult EditCompany()
+        //{
+        //    return View("~/Views/Home/LO/touchpoint.cshtml");
+        //}
+
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult ViewUser()
+        {
+            return View("~/Views/Home/Admin/User.cshtml");
+        }
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult CreateUser()
+        {
+            return View("~/Views/Home/Admin/Add_User.cshtml");
+        }
+
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult EditUser()
+        {
+            return View("~/Views/Home/Admin/Edit_User.cshtml");
+        }
+
+
     }
 }

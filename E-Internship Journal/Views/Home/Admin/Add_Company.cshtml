@@ -32,10 +32,40 @@
             <div class="form-group">
                 <label class="control-label col-md-3"></label>
                 <div class="btn pull-right">
-                    <button class="btn btn-primary" name="submit" type="submit">
+                    <button class="btn btn-primary" name="submit" type="submit" id="btnSave">
                         Save
                     </button>
                 </div>
             </div>
     </div>
 </div>
+<script>
+    function WebFormData(inCompanyName, inCompanyAddress) {
+        this.CompanyName = inCompanyName;
+        this.CompanyAddress = inCompanyAddress;
+     
+
+    }
+    $('#btnSave').on('click', function () {
+
+        var collectedCompanyName = $('#comapnyName').val();
+        var collectedCompanyAddress = $('#companyAddress').val();
+
+        var webFormData = new WebFormData(collectedCompanyName, collectedCompanyAddress);
+        var webFormDatainString = JSON.stringify(webFormData);
+        $saveBatchHandler = jQuery.ajax({
+            url: '/API/Companies/SaveNewCompanyInformation/',
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: "'" + webFormDatainString + "'"
+
+        });
+        $saveBatchHandler.done(function (data, textStatus, jqXHR) {
+            console.dir("Success");
+
+        });//End .Done
+
+    });
+
+</script>
