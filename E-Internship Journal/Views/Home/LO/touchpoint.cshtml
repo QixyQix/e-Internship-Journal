@@ -4,27 +4,21 @@
         <li class="breadcrumb-item">
             <a href="~/Home/Index">Homepage</a>
         </li>
-        <li class="breadcrumb-item active">Edit Tasks</li>
+        <li class="breadcrumb-item active">Touchpoint</li>
     </ol>
     <!-- Example DataTables Card-->
     <div class="card mb-3">
         <div class="card-header">
-            <i class="fa fa-pencil"></i> Edit Tasks
+            <i class="fa fa-pencil"></i> Touchpoint
         </div>
         <div class="card-body">
             <div class="form-group">
-                <div class="col-md-3 col-sm-3 col-xs-12 pull-left">
-                    <div class="input-group">
-                        <div class="input-group-addon">
-                            <i class="fa fa-calendar">
-                            </i>
-                        </div>
-                        <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
-                    </div>
+                <div class="col-md-6 col-sm-6 col-xs-12 pull-left">
+                    <label>Student Name:&nbsp</label><a href="#">Amelia Goh</a>
                 </div>
                 <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
-                    <button class="btn btn-secondary form-control" name="submit" type="submit">
-                        Add Task +
+                    <button class="btn btn-secondary form-control" id="addtp">
+                        Add
                     </button>
                 </div>
             </div>
@@ -34,8 +28,9 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>DayRecordId</th>
-                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Comment</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -44,12 +39,9 @@
         </div>
         <div class="card-body">
             <div class="form-group">
-                <div class="col-12 text-right">
+                <div class="col-12">
                     <button class="btn btn-default" onclick="window.history.go(-1); return false">
                         Back
-                    </button>
-                    <button class="btn btn-primary" name="submit" type="submit">
-                        Save
                     </button>
                 </div>
             </div>
@@ -100,23 +92,10 @@
 <script>
     var editor;
     $(document).ready(function () {
-        editor = new $.fn.dataTable.Editor({
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
-            },
-            table: "#dataTable",
-            idSrc: 'id',
-            fields: [{
-                label: "DayRecordId:",
-                name: "DayRecordId"
-            }, {
-                label: "Description:",
-                name: "Description"
-            }
-            ]
-        });
         var table = $('#dataTable').DataTable({
+            "scrollY": '250px',
+            "scrollCollapse": true,
+            "paging": false,
             "bPaginate": false,
             "bLengthChange": false,
             "bFilter": false,
@@ -132,12 +111,14 @@
             },
             order: [[1, 'asc']],
             columns: [
+                { data: "DayRecordId" },
                 { data: "DayRecordId", "sWidth": "10%" },
-                { data: "Description", "sWidth": "80%" },
+                { data: "Description", "sWidth": "60%" },
                 {
                     data: null,
+                    "sWidth": "10%",
                     "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button>' }
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
                 }
             ],
             language: {
@@ -145,12 +126,12 @@
             }
         });
 
-        // Activate an inline edit on click of a table cell
-        $('#dataTable').on('click', 'tbody td:not(:first-child)', function (e) {
-            editor.inline(this);
+        $('#addtp').on('click', function (e) {
+            $('#addtpModal').modal('show');
         });
-        $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
-            console.log("button 1 is click");
+        
+        $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
+            $('#updatetpModal').modal('show');
         });
     });
 </script>

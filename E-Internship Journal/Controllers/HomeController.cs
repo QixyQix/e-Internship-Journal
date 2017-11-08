@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Internship_Journal.Controllers
 {
     public class HomeController : Controller
     {
+        //[Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             var test = User.IsInRole("SUPERVISOR");
@@ -15,12 +17,32 @@ namespace E_Internship_Journal.Controllers
             {
                 return View("~/Views/Home/Supervisor/Index.cshtml");
             }
-            else
+            else if (User.IsInRole("STUDENT"))
             {
                 return View("~/Views/Home/Student/Index.cshtml");
             }
+            else if (User.IsInRole("LO"))
+            {
+                return View("~/Views/Home/LO/Index.cshtml");
+            }
+            else
+            {
+                return View("~/Views/Home/Admin/Index.cshtml");
+            }
         }
-        public IActionResult Attendance_Summary()
+        public IActionResult Grading()
+        {
+            var test = User.IsInRole("SUPERVISOR");
+            if (User.IsInRole("SUPERVISOR"))
+            {
+                return View("~/Views/Home/Supervisor/grading.cshtml");
+            }
+            else /*if(User.IsInRole("STUDENT"))*/
+            {
+                return View("~/Views/Home/Student/grading.cshtml");
+            }
+        }
+            public IActionResult Attendance_Summary()
         {
             var test = User.IsInRole("SUPERVISOR");
             if (User.IsInRole("SUPERVISOR"))
@@ -68,6 +90,18 @@ namespace E_Internship_Journal.Controllers
                 return View("~/Views/Home/Student/daily_task.cshtml");
             }
         }
+        public IActionResult Competency_Checklist()
+        {
+            var test = User.IsInRole("SUPERVISOR");
+            if (User.IsInRole("SUPERVISOR"))
+            {
+                return View("~/Views/Home/Supervisor/competency_checklist.cshtml");
+            }
+            else /*if(User.IsInRole("STUDENT"))*/
+            {
+                return View("~/Views/Home/Student/competency_checklist.cshtml");
+            }
+        }
         public IActionResult Monthly_Reflection()
         {
             var test = User.IsInRole("SUPERVISOR");
@@ -92,26 +126,85 @@ namespace E_Internship_Journal.Controllers
                 return View("~/Views/Home/Student/guide.cshtml");
             }
         }
-        public IActionResult Add_Task()
-        {
-            return View();
-        }
-        public IActionResult Edit_Task()
-        {
-            return View();
-        }
+        //public IActionResult Add_Task()
+        //{
+        //    return View();
+        //}
+        //public IActionResult Edit_Task()
+        //{
+        //    return View();
+        //}
         //public IActionResult Edit_Task2()
         //{
         //    return View();
         //}
-        public IActionResult Key_Attendance()
+        //public IActionResult Key_Attendance()
+        //{
+        //    return View();
+        //}
+        //public IActionResult Attendance()
+        //{
+        //    return View();
+        //}
+        public IActionResult Review()
         {
-            return View();
+            return View("~/Views/Home/Supervisor/Review.cshtml");
         }
-        public IActionResult Attendance()
+        public IActionResult Account_Settings()
         {
-            return View();
+            var test = User.IsInRole("SUPERVISOR");
+            if (User.IsInRole("SUPERVISOR"))
+            {
+                return View("~/Views/Home/Supervisor/account_settings.cshtml");
+            }
+            else /*if(User.IsInRole("STUDENT"))*/
+            {
+                return View("~/Views/Home/Student/account_settings.cshtml");
+            }
         }
+        public IActionResult Edit_Competency()
+        {
+            var test = User.IsInRole("SUPERVISOR");
+            if (User.IsInRole("SUPERVISOR"))
+            {
+                return View("~/Views/Home/Supervisor/edit_competency.cshtml");
+            }
+            else if (User.IsInRole("STUDENT"))
+            {
+                return View("~/Views/Home/Student/edit_competency.cshtml");
+            }else /*if(User.IsInRole("STUDENT"))*/
+            {
+                return View("~/Views/Home/SLO/edit_competency.cshtml");
+            }
+        }
+        public IActionResult View_Student()
+        {
+            var test = User.IsInRole("SUPERVISOR");
+            if (User.IsInRole("SUPERVISOR"))
+            {
+                return View("~/Views/Home/Supervisor/view_student.cshtml");
+            }
+            else if (User.IsInRole("STUDENT"))
+            {
+                return View("~/Views/Home/Student/view_student.cshtml");
+            }
+            else if (User.IsInRole("STUDENT"))
+            {
+                return View("~/Views/Home/SLO/view_student.cshtml");
+            }
+            else /*if(User.IsInRole("STUDENT"))*/
+            {
+                return View("~/Views/Home/SLO/view_student.cshtml");
+            }
+        }
+
+
+        //LO
+        public IActionResult Touchpoint()
+        {
+            return View("~/Views/Home/LO/touchpoint.cshtml");
+        }
+
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";

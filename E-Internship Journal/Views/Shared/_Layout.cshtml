@@ -45,6 +45,8 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
+        @*@if (User.IsInRole("STUDENT"))
+        {*@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav navbar-sidenav collapsed" id="exampleAccordion">
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
@@ -56,7 +58,7 @@
                     </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Account Settings">
-                    <a class="nav-link" href="~/Home/Index">
+                    <a class="nav-link" href="~/Home/Account_Settings">
                         <i class="fa fa-fw fa-user-o"></i>
                         <span class="nav-link-text">
                             Account Settings
@@ -80,7 +82,7 @@
                     </a>
                 </li>
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Competency Checklist">
-                    <a class="nav-link" href="~/Home/Index">
+                    <a class="nav-link" href="~/Home/Competency_Checklist">
                         <i class="fa fa-fw fa-bar-chart"></i>
                         <span class="nav-link-text">
                             Competency Checklist
@@ -103,106 +105,114 @@
                         </span>
                     </a>
                 </li>
-                @*<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Daily Task">
-                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseDailyTask" data-parent="#exampleAccordion">
-                        <i class="fa fa-fw fa-calendar"></i>
+                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Grading">
+                    <a class="nav-link" href="~/Home/Grading">
+                        <i class="fa fa-fw fa-graduation-cap"></i>
                         <span class="nav-link-text">
-                            Daily Task
+                            Grading
                         </span>
                     </a>
-                    <ul class="sidenav-second-level collapse collapsed" id="collapseDailyTask">
-                        <li>
-                            <a href="~/task/overview">Task Overview</a>
-                        </li>
-                        <li>
-                            <a href="~/Home/Add_Task">New Task</a>
-                        </li>
-                        <li>
-                            <a href="~/Home/Edit_Task">Edit Task</a>
-                        </li>
-                    </ul>
-                </li>*@
-                @*<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Attendance">
-                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseAttendance" data-parent="#exampleAccordion">
-                        <i class="fa fa-fw fa-clock-o"></i>
-                        <span class="nav-link-text">
-                            Attendance
-                        </span>
-                    </a>
-                    <ul class="sidenav-second-level collapse" id="collapseAttendance">
-                        <li>
-                            <a href="~/Home/Attendance">View Attendance</a>
-                        </li>
-                        <li>
-                            <a href="~/Home/Key_Attendance">Daily Attendance</a>
-                        </li>
-                    </ul>
-                </li>*@
-                @*<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Guides">
-                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseCompetency" data-parent="#exampleAccordion">
-                        <i class="fa fa-fw fa-edit"></i>
-                        <span class="nav-link-text">
-                            Competency Checklist
-                        </span>
-                    </a>
-                    <ul class="sidenav-second-level collapse" id="collapseCompetency">
-                        <li>
-                            <a href="#">Report Guide</a>
-                        </li>
-                        <li>
-                            <a href="#">Testing</a>
-                        </li>
-                        <li>
-                            <a href="#">New Task</a>
-                        </li>
-                        <li>
-                            <a href="#">Edit Task</a>
-                        </li>
-                    </ul>
-                </li>*@
-                @*<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Reflection">
-                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseReflection" data-parent="#exampleAccordion">
-                        <i class="fa fa-fw fa-check"></i>
-                        <span class="nav-link-text">
-                            Reflection
-                        </span>
-                    </a>
-                    <ul class="sidenav-second-level collapse" id="collapseReflection">
-                        <li>
-                            <a href="login.html">Current Reflection</a>
-                        </li>
-                        <li>
-                            <a href="register.html">Reflection History</a>
-                        </li>
-                    </ul>
                 </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
-                    <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseGuideline" data-parent="#exampleAccordion">
-                        <i class="fa fa-fw fa-info"></i>
-                        <span class="nav-link-text">
-                            Guideline
-                        </span>
-                    </a>
-                    <ul class="sidenav-second-level collapse" id="collapseGuideline">
-                        <li>
-                            <a href="#">Second Level Item</a>
-                        </li>
-                        <li>
-                            <a href="#">Second Level Item</a>
-                        </li>
-                        <li>
-                            <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti2">Third Level</a>
-                            <ul class="sidenav-third-level collapse" id="collapseMulti2">
-                                <li>
-                                    <a href="#">Third Level Item</a>
-                                </li>
-                                <li>
-                                    <a href="#">Third Level Item</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>*@
+                @*<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Daily Task">
+                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseDailyTask" data-parent="#exampleAccordion">
+                            <i class="fa fa-fw fa-calendar"></i>
+                            <span class="nav-link-text">
+                                Daily Task
+                            </span>
+                        </a>
+                        <ul class="sidenav-second-level collapse collapsed" id="collapseDailyTask">
+                            <li>
+                                <a href="~/task/overview">Task Overview</a>
+                            </li>
+                            <li>
+                                <a href="~/Home/Add_Task">New Task</a>
+                            </li>
+                            <li>
+                                <a href="~/Home/Edit_Task">Edit Task</a>
+                            </li>
+                        </ul>
+                    </li>*@
+                @*<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Attendance">
+                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseAttendance" data-parent="#exampleAccordion">
+                            <i class="fa fa-fw fa-clock-o"></i>
+                            <span class="nav-link-text">
+                                Attendance
+                            </span>
+                        </a>
+                        <ul class="sidenav-second-level collapse" id="collapseAttendance">
+                            <li>
+                                <a href="~/Home/Attendance">View Attendance</a>
+                            </li>
+                            <li>
+                                <a href="~/Home/Key_Attendance">Daily Attendance</a>
+                            </li>
+                        </ul>
+                    </li>*@
+                @*<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Guides">
+                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseCompetency" data-parent="#exampleAccordion">
+                            <i class="fa fa-fw fa-edit"></i>
+                            <span class="nav-link-text">
+                                Competency Checklist
+                            </span>
+                        </a>
+                        <ul class="sidenav-second-level collapse" id="collapseCompetency">
+                            <li>
+                                <a href="#">Report Guide</a>
+                            </li>
+                            <li>
+                                <a href="#">Testing</a>
+                            </li>
+                            <li>
+                                <a href="#">New Task</a>
+                            </li>
+                            <li>
+                                <a href="#">Edit Task</a>
+                            </li>
+                        </ul>
+                    </li>*@
+                @*<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Reflection">
+                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseReflection" data-parent="#exampleAccordion">
+                            <i class="fa fa-fw fa-check"></i>
+                            <span class="nav-link-text">
+                                Reflection
+                            </span>
+                        </a>
+                        <ul class="sidenav-second-level collapse" id="collapseReflection">
+                            <li>
+                                <a href="login.html">Current Reflection</a>
+                            </li>
+                            <li>
+                                <a href="register.html">Reflection History</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
+                        <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseGuideline" data-parent="#exampleAccordion">
+                            <i class="fa fa-fw fa-info"></i>
+                            <span class="nav-link-text">
+                                Guideline
+                            </span>
+                        </a>
+                        <ul class="sidenav-second-level collapse" id="collapseGuideline">
+                            <li>
+                                <a href="#">Second Level Item</a>
+                            </li>
+                            <li>
+                                <a href="#">Second Level Item</a>
+                            </li>
+                            <li>
+                                <a class="nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti2">Third Level</a>
+                                <ul class="sidenav-third-level collapse" id="collapseMulti2">
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Third Level Item</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>*@
             </ul>
             <ul class="navbar-nav sidenav-toggler">
                 <li class="nav-item">
@@ -212,18 +222,18 @@
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <form class="form-inline my-2 my-lg-0 mr-lg-2">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search for...">
-                            <span class="input-group-btn">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                        </div>
-                    </form>
-                </li>
+                @*<li class="nav-item">
+                        <form class="form-inline my-2 my-lg-0 mr-lg-2">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search for...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="button">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </form>
+                    </li>*@
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
                         <i class="fa fa-fw fa-sign-out"></i>
@@ -232,7 +242,7 @@
                 </li>
             </ul>
         </div>
-
+        @*}*@
     </nav>
 
     <div class="content-wrapper">
@@ -349,7 +359,363 @@
         </div>
     </div>
 
-  
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editattendanceModal" tabindex="-1" role="dialog" aria-labelledby="editattendanceModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editattendanceModalLabel">Edit Attendance</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="container">
+                        <form>
+                            <div class="form-group">
+                                <label class="control-label requiredField" for="date">
+                                    Date
+                                    <span class="asteriskField">
+                                        *
+                                    </span>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar">
+                                        </i>
+                                    </div>
+                                    <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label requiredField" for="timein">
+                                    Time in
+                                </label>
+                                <div class='input-group date' id='timein'>
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </div>
+
+                                    <input type='text' class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label requiredField" for="timeout">
+                                    Time out
+                                </label>
+                                <div class='input-group date' id='timeout'>
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </div>
+                                    <input type='text' class="form-control" id="timeoutval" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Remarks</label>
+                                <select class="form-control" id="exampleFormControlSelect1">
+                                    <option>-</option>
+                                    <option>MC</option>
+                                    <option>Holiday</option>
+                                    <option>LOA</option>
+                                    <option>Company Off-Day</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="submit">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Modal -->
+    <div class="modal fade" id="resetModal" tabindex="-1" role="dialog" aria-labelledby="resetModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resetModalLabel">Create Attendance</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="container">
+                        <form>
+                            <div class="form-group">
+                                <label class="control-label requiredField" for="oldpwd">
+                                    Current Password
+                                    <span class="asteriskField">
+                                        *
+                                    </span>
+                                </label>
+                                <input class="form-control" id="oldpwd" name="oldpwd" type="password">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label requiredField" for="newpwd">
+                                    New Password
+                                    <span class="asteriskField">
+                                        *
+                                    </span>
+                                </label>
+                                <input class="form-control" id="newpwd" name="newpwd" type="password">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label requiredField" for="cfmnewpwd">
+                                    Confirm New Password
+                                    <span class="asteriskField">
+                                        *
+                                    </span>
+                                </label>
+                                <input class="form-control" id="cfmnewpwd" name="cfmnewpwd" type="password">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="submit">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Competency Checklist Modal -->
+    <div class="modal fade" id="addccModal" tabindex="-1" role="dialog" aria-labelledby="addccModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addccModalLabel">Create Competency</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="container">
+                        <form>
+                            <div class="form-group ">
+                                <label class="control-label" for="description">
+                                    Description
+                                </label>
+                                <textarea class="form-control" rows="5" id="description"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="submit">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Competency Checklist Modal -->
+    <div class="modal fade" id="updateccModal" tabindex="-1" role="dialog" aria-labelledby="updateccModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateccModalLabel">Edit Competency</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="container">
+                        <form>
+                            <div class="form-group ">
+                                <label class="control-label" for="description">
+                                    Description
+                                </label>
+                                <textarea class="form-control" rows="5" id="description"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="submit">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Touchpoint Modal -->
+    <div class="modal fade" id="addtpModal" tabindex="-1" role="dialog" aria-labelledby="addtpModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addtpModalLabel">Add Touchpoint</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="container">
+                        <form>
+                            <div class="form-group">
+                                <label class="control-label requiredField" for="date">
+                                    Date
+                                    <span class="asteriskField">
+                                        *
+                                    </span>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar">
+                                        </i>
+                                    </div>
+                                    <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label requiredField" for="timein">
+                                    Time
+                                    <span class="asteriskField">
+                                        *
+                                    </span>
+                                </label>
+                                <div class='input-group date' id='timein'>
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </div>
+
+                                    <input type='text' class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <label class="control-label" for="comment">
+                                    Comment
+                                </label>
+                                <textarea class="form-control" rows="5" id="comment"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="submit">Create</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Touchpoint Modal -->
+    <div class="modal fade" id="updatetpModal" tabindex="-1" role="dialog" aria-labelledby="updatetpModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addtpModalLabel">Edit Touchpoint</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="container">
+                        <form>
+                            <div class="form-group">
+                                <label class="control-label requiredField" for="date">
+                                    Date
+                                    <span class="asteriskField">
+                                        *
+                                    </span>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar">
+                                        </i>
+                                    </div>
+                                    <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label requiredField" for="timein">
+                                    Time
+                                    <span class="asteriskField">
+                                        *
+                                    </span>
+                                </label>
+                                <div class='input-group date' id='timein'>
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </div>
+
+                                    <input type='text' class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <label class="control-label" for="comment">
+                                    Comment
+                                </label>
+                                <textarea class="form-control" rows="5" id="comment"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="submit">Update</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Event Modal -->
+    <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eventModalLabel">6th November 2017</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        @*<div class="form-group ">
+                                <label class="control-label col-sm-3 requiredField" for="date">
+                                    Date
+                                    <span class="asteriskField">
+                                        *
+                                    </span>
+                                </label>
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar">
+                                            </i>
+                                        </div>
+                                        <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
+                                    </div>
+                                </div>
+                            </div>*@
+                        <div>
+                            <div class="form-group ">
+                                <textarea class="form-control" rows="5" id="task" readonly>Attendance: Present&#13;&#10;There are no records for this day yet.</textarea>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <input type="button" class="btn btn-primary" value="Manage Day Record" onclick="location.href='@Url.Action("Day_Task", "Home")'" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Custom scripts for this template -->
     <script src="~/js/sb-admin.js"></script>

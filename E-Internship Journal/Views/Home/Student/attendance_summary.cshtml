@@ -3,7 +3,7 @@
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
-            <a href="#">Dashboard</a>
+            <a href="~/Home/Index">Homepage</a>
         </li>
         <li class="breadcrumb-item active">Attendance Summary</li>
     </ol>
@@ -22,11 +22,11 @@
                         <option>Week 13 to Week 16</option>
                     </select>
                 </div>
-                @*<div class="col-md-2 col-sm-2 col-xs-12 pull-right">
+                <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
                     <button class="btn btn-secondary form-control" id="addattendance">
                         Add
                     </button>
-                </div>*@
+                </div>
             </div>
         </div>
         <div class="card-body">
@@ -41,15 +41,15 @@
                             <th>Edit</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Date</th>
-                            <th>Time in</th>
-                            <th>Time Out</th>
-                            <th>Remarks</th>
-                            <th>Edit</th>
-                        </tr>
-                    </tfoot>
+                    @*<tfoot>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time in</th>
+                                <th>Time Out</th>
+                                <th>Remarks</th>
+                                <th>Edit</th>
+                            </tr>
+                        </tfoot>*@
                     <tbody>
                         <tr>
                             <td>2011/04/27</td>
@@ -64,6 +64,7 @@
         </div>
         <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
     </div>
+
     <!--end with attendance taking-->
 
 
@@ -106,18 +107,24 @@
                             <input class="form-control" id="totaldays" type="text" value="-" readonly>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-10 pull-right">
-                            <button class="btn btn-primary" name="submit" type="submit">
-                                Submit for Review
-                            </button>
-                        </div>
-                    </div>
                 </form>
             </div>
         </div>
         <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
     </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                    Back
+                </button>
+                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                    Send to Review
+                </button>
+            </div>
+        </div>
+    </div>
+    <br />
 </div>
 <script>
     var editor;
@@ -133,14 +140,14 @@
                 dataSrc: ''
             },
             columns: [
-                { data: "DayRecordId"},
+                { data: "DayRecordId" },
                 { data: "Description" },
                 { data: "Description" },
-                { data: "Description"},
+                { data: "Description" },
                 {
                     data: null,
                     "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary" id="deletebtn"><i class="fa fa-pencil"></i></button>' }
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
                 }
             ],
             language: {
@@ -155,6 +162,10 @@
 
         $('#addattendance').on('click', function (e) {
             $('#attendanceModal').modal('show');
+        });
+
+        $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
+            $('#editattendanceModal').modal('show');
         });
     });
 </script>

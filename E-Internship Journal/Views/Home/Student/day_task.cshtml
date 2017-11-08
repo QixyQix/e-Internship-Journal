@@ -2,7 +2,7 @@
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
-            <a href="#">Home</a>
+            <a href="~/Home/Index">Homepage</a>
         </li>
         <li class="breadcrumb-item active">Manage Day Record</li>
     </ol>
@@ -25,12 +25,58 @@
         <div class="card-header">
             <i class="fa fa-pencil"></i> Manage Day Record
         </div>
-        <div class="card-body">
-            <div class="container">
                 <div class="text-center">
-                    <div class="col-6 pull-left">
-                        <div class="form-group pull-left">
-                            @*<label class="control-label requiredField" for="date">
+        <div class="card mb-3">
+            <div class="card-header">
+                <i class="fa fa-pencil"></i> Manage Day Record
+            </div>
+            <div class="card-body">
+                <div class="container">
+                    <div class="text-center">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="dropdownselect">Remarks</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-pencil">
+                                        </i>
+                                    </div>
+                                    <select class="form-control" id="dropdownselect">
+                                        <option>-</option>
+                                        <option>MC</option>
+                                        <option>Holiday</option>
+                                        <option>LOA</option>
+                                        <option>Company Off-Day</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label class="control-label requiredField" for="timein">
+                                    Time in
+                                </label>
+                                <div class='input-group date' id='timein'>
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </div>
+
+                                    <input type='text' class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label class="control-label requiredField" for="timeout">
+                                    Time out
+                                </label>
+                                <div class='input-group date' id='timeout'>
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </div>
+                                    <input type='text' class="form-control" id="timeoutval" />
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="col-6 pull-left">
+                            <div class="form-group pull-left">
+                                <label class="control-label requiredField" for="date">
                                     Date
                                     <span class="asteriskField">
                                         *
@@ -42,14 +88,22 @@
                                         </i>
                                     </div>
                                     <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
-                                </div>*@
-                        </div>
-                        <div class="form-group pull-right">
-                            <label for="dropdownselect">Remarks</label>
-                            <div class="input-group">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-pencil">
-                                    </i>
+                                </div>
+                            </div>
+                            <div class="form-group pull-right">
+                                <label for="dropdownselect">Remarks</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-pencil">
+                                        </i>
+                                    </div>
+                                    <select class="form-control" id="dropdownselect">
+                                        <option>-</option>
+                                        <option>MC</option>
+                                        <option>Holiday</option>
+                                        <option>LOA</option>
+                                        <option>Company Off-Day</option>
+                                    </select>
                                 </div>
                                 <select class="form-control" id="dropdownselect">
                                     <option>-</option>
@@ -84,7 +138,7 @@
                                 </div>
                                 <input type='text' class="form-control" id="timeoutval" />
                             </div>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
             </div>

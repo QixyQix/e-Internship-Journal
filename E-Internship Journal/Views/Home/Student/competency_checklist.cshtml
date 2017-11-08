@@ -2,26 +2,49 @@
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
-            <a href="#">Dashboard</a>
+            <a href="~/Home/Index">Homepage</a>
         </li>
-        <li class="breadcrumb-item active">Checklist</li>
+        <li class="breadcrumb-item active">Competency Checklist</li>
     </ol>
-    <!-- Example DataTables Card-->
+
+    <div class="card-body">
+        <div class="col-md-3 col-sm-3 col-xs-12">
+            <select class="form-control" id="selectweek">
+                <option>Week 1 to Week 4</option>
+                <option>Week 5 to Week 8</option>
+                <option>Week 9 to Week 12</option>
+                <option>Week 13 to Week 16</option>
+            </select>
+        </div>
+    </div>
     <div class="card mb-3">
         <div class="card-header">
-            <i class="fa fa-table"></i> Checklist for Company
+            <i class="fa fa-table"></i> Competency Checklist
         </div>
         <div class="table-responsive">
             <table class="table table-bordered" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>1. Orientation</th>
+                        <th>A. Domain Immersation</th>
                         <th>Tick if performed</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>a. Brief the student policies, functions and operations, rules and regulations, and safely and security matters</td>
+                        <td>
+                            1. Describe and explain respectively domain knowledge
+                            <ul>
+                                <li>
+                                    Understand existing business operations
+                                </li>
+                                <li>
+                                    Identify roles and responsibilities of company staff members
+                                </li>
+                                <li>
+                                    Understand a project/system business requirements
+                                </li>
+                            </ul>
+                        </td>
                         <td>
                             <div class="checkbox">
                                 <input type="checkbox" name="checkboxQ1" id="q1" />
@@ -29,7 +52,27 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>b. Interoduce the student to fellow-colleagues and other important contacts within the organisation for him/her to be effective in his/her work</td>
+                        <th>B. Project/System Analysis & Design</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>
+                            2. Participate and contribute to the review, analysis and verification of business and software requirements
+                            <ul>
+                                <li>
+                                    Assist project team for project requirements gathering and analysis
+                                </li>
+                                <li>
+                                    Assisst in gathering of user requirements, which can be any activity such as design of questionnaire, logistics planning
+                                </li>
+                                <li>
+                                    Identify and document an application problem or symptoms from users(when there is reported software bug)
+                                </li>
+                                <li>
+                                    Propose solutions to an application problem with designated supervisors or mentors
+                                </li>
+                            </ul>
+                        </td>
                         <td>
                             <div class="checkbox">
                                 <input type="checkbox" name="checkboxQ2" id="q2" />
@@ -37,11 +80,23 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>2. Supervision</th>
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>a. Plan and discuss with the SP Liaison Officer on the internship requirements to ensure learning objectives are (This is recommended to be carried out prior or at the start of the internship)</td>
+                        <td>
+                            3. Prepare technical documentation and reports on requirements and analysis
+                            <ul>
+                                <li>
+                                    Report the workflow of a business requirement, in the form of UML(Sequence, State etc. diagrams) or any in company standard documentation format
+                                </li>
+                                <li>
+                                    Report or present a problem resolution/design to the users
+                                </li>
+                                <li>
+                                    Document constraints or possible impacts in the application, during any code or functionality changes from bugfix or change request
+                                </li>
+                                <li>
+                                    Perform an impact analysis (i.e. what could happen to the users, like loss of what data) of the risks involved in the reported application problem/error
+                                </li>
+                            </ul>
+                        </td>
                         <td>
                             <div class="checkbox">
                                 <input type="checkbox" name="checkboxQ3" id="q3" />
@@ -119,15 +174,20 @@
                 </tbody>
             </table>
         </div>
+        @*<div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>*@
+    </div>
+</div>
+    <div class="card-body">
         <div class="form-group">
-            <label class="control-label col-md-3"></label>
-            <div class="btn pull-right">
+            <div class="col-12 text-right">
+                <button class="btn btn-default" onclick="window.history.go(-1); return false">
+                    Back
+                </button>
                 <button class="btn btn-primary" name="submit" type="submit">
                     Save
                 </button>
             </div>
         </div>
     </div>
-</div>
-<div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-<!--end with attendance taking-->
+<script>
+</script>
