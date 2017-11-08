@@ -14,7 +14,7 @@
         <div class="card-body">
 
             <div class="btn-group pull-right">
-                <input type="button" class="btn btn-primary" value="Add Company" id="addcomapnyButton" />
+                <a asp-controller="Home" asp-action="CreateCompany" ><input href=""  type="button" class="btn btn-primary" value="Add Company" id="addcomapnyButton"/></a>
             </div>
 
             <div class="table-responsive">
@@ -26,7 +26,7 @@
                             <th>Edit</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="companyTableBody">
                         <tr>
                             <td>Websparks Pte Ltd</td>
                             <td>52 Horne Rd</td>
@@ -53,3 +53,48 @@
         </div>
         <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
     </div>
+
+
+<script>
+
+    $getCompanyHandler = jQuery.ajax({
+
+        url: '/API/Companies/',
+        method: 'get',
+        dataType: 'json',
+        cache: false
+
+    });
+    $getCompanyHandler.done(function (data, textStatus, jqXHR) {
+        //var test = data;
+
+        $tableBodyElement = $('#companyTableBody');
+        for (i = 0; i < data.length; i++) {
+
+            company = data[i];
+
+            companyId = company.CompanyId;
+            companyName = company.CompanyName;
+            companyAddress = company.CompanyAddress;
+
+            //courseName = batch.CourseName[0].CourseName;
+
+            $rowElement = $('<tr></tr>');
+            $cellElement = $('<td></td>', { text: companyName });
+            $rowElement.append($cellElement);
+
+            $cellElement = $('<td></td>', { text: companyAddress });
+            $rowElement.append($cellElement);
+           
+
+            $pencilElement = $('<i></i>').attr('class', 'fa fa-pencil');
+            $ahrefElement = $('<a></a>').attr('href', '~/../EditCompany/' + companyId);
+            $ahrefElement.append($pencilElement);
+            $cellElement = $('<td></td>');
+            $cellElement.append($ahrefElement);
+            $rowElement.append($cellElement);
+            
+            $tableBodyElement.append($rowElement);
+        }
+    });
+</script>

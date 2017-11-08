@@ -123,11 +123,11 @@ namespace E_Internship_Journal.API
         public async Task<IActionResult> GetUserCourseInformation(string returnUrl = null)
         {
             var usersList = new List<Object>();
-            var courseList = new List<Object>();
+            //var courseList = new List<Object>();
             foreach (ApplicationUser eachUser in _userManager.Users)
             {
-                var roles = (await _userManager.GetRolesAsync(eachUser));
-                if (roles.Contains("SLO"))
+                //var roles = (await _userManager.GetRolesAsync(eachUser));
+                if ((await _userManager.GetRolesAsync(eachUser)).Contains("SLO"))
                 {
                     usersList.Add(new
                     {
@@ -137,19 +137,20 @@ namespace E_Internship_Journal.API
                     });
                 }
             }
-            var courses = _context.Courses
-            .AsNoTracking();
+            //var courses = _context.Courses
+            //.AsNoTracking();
 
-            foreach (var eachCourse in courses)
-            {
-                courseList.Add(new
-                {
-                    CourseId = eachCourse.CourseId,
-                    CourseCode = eachCourse.CourseCode,
-                    // Course
+            //foreach (var eachCourse in courses)
+            //{
+            //    courseList.Add(new
+            //    {
+            //        CourseId = eachCourse.CourseId,
+            //        CourseCode = eachCourse.CourseCode,
+            //        // Course
 
-                });
-            }
+            //    });
+            //}
+            var courseList = _context.Courses.Select(courseItem => new { CourseId = courseItem.CourseId, CourseCode = courseItem.CourseCode });
 
             return new JsonResult(new { UserList = usersList, CourseList = courseList });
         }
@@ -255,14 +256,23 @@ namespace E_Internship_Journal.API
             {
                 var batchNewInput = JsonConvert.DeserializeObject<dynamic>(value);
                 var foundOneBatch = _context.Batches.Find(id);
+                //var foundOneBatch = _context.Batches
+                //     .Where(eachBatch => eachBatch.BatchId == id)
+                //     .AsNoTracking()
+                //     .Single();
 
+                var foundOneUserBatch = _context.UserBatches.Where(eachUserBatch => eachUserBatch.BatchId == id).AsNoTracking().Single();
                 foundOneBatch.BatchName = batchNewInput.BatchName.Value;
-                foundOneBatch.Description = batchNewInput.Description.Value;
+                foundOneBatch.Description = batchNewInput.BatchDescription.Value;
                 foundOneBatch.StartDate = batchNewInput.StartDate.Value;
                 foundOneBatch.EndDate = batchNewInput.EndDate.Value;
-                foundOneBatch.CourseId = batchNewInput.CourseId.Value;
+                foundOneBatch.CourseId = Convert.ToInt32(batchNewInput.CourseAssigned.Value.ToString());
+                foundOneUserBatch.UserId = (await _userManager.FindByEmailAsync(batchNewInput.SLOAssigned.Value)).Id;
 
-                _context.Batches.Update(foundOneBatch);
+
+
+                //_context.Batches.Update(foundOneBatch);
+                //_context.UserBatches.Update(foundOneUserBatch);
                 await _context.SaveChangesAsync();
             }
             else

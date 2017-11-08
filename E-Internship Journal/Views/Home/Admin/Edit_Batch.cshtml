@@ -20,6 +20,12 @@
                     </div>
                 </div>
                 <div class="form-inline">
+                    <label class="col-md-2 control-label">Batch Description:</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" id="batchDescription" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-inline">
                     <label class="col-md-2 control-label">Course Assigned:</label>
                     <input class="form-control" id="courseAssigned" type="text" value="" readonly>
                     <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -49,7 +55,7 @@
             <form class="form-group">
                 <div class="form-inline">
                     <label class="col-sm-2 control-label" for="date">
-                        Date
+                        Start Date
                         <span class="asteriskField">
                             *
                         </span>
@@ -64,7 +70,7 @@
                 </div>
                 <div class="form-inline">
                     <label class="col-sm-2 control-label" for="date">
-                        Date
+                        End Date
                         <span class="asteriskField">
                             *
                         </span>
@@ -100,7 +106,39 @@
 <script>
     var g_batchId = getBatchIdFromAddressBar();
     getDropDown();
+    $('#btnSave').on('click', function () {
+        var collectedBatchNo = $('#batchNo').val();
+        var collectedBatchDescription = $('#batchDescription').val();
+        var collectedCourseAssigned = $('#courseAssigned').attr('value');
+        var collectedSLOAssigned = $('#assignedSlo').attr('value');
+        var collectedStartDate = new Date($('.startDate').val());
+        var collectedEndDate = new Date($('.endDate').val());
 
+        var webFormData = new WebFormData(collectedBatchNo, collectedBatchDescription, collectedCourseAssigned, collectedSLOAssigned, collectedStartDate, collectedEndDate)
+        var webFormDatainString = JSON.stringify(webFormData);
+        $updateBatchHandler = jQuery.ajax({
+            url: '/API/Batches/UpdateOneBatch/' + g_batchId,
+            type: 'put',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: "'" + webFormDatainString + "'"
+
+        });
+        $updateBatchHandler.done(function (data, textStatus, jqXHR) {
+            console.dir("Success");
+            //getBatchDetails(g_batchId);
+        });//
+
+    });
+    function WebFormData(inBatchName, inBatchDescription, inCourseAssigned, inSLOAssigned, inStartDate, inEndDate) {
+        this.BatchName = inBatchName;
+        this.BatchDescription = inBatchDescription;
+        this.CourseAssigned = inCourseAssigned;
+        this.SLOAssigned = inSLOAssigned;
+        this.StartDate = inStartDate;
+        this.EndDate = inEndDate;
+
+    }
     function getBatchIdFromAddressBar() {
 
         var urlArray = window.location.href.split('/');
@@ -119,6 +157,7 @@
         $getUserHandler.done(function (data, textStatus, jqXHR) {
             $SLODownElement = $('#dropSLO');
             $CourseDownElement = $('#dropCourse')
+            getBatchDetails(g_batchId);
             for (i = 0; i < data.UserList.length; i++) {
                 // $tableBodyElement = $('.dropdown-menu');
                 Name = data.UserList[i].Name;
@@ -149,7 +188,7 @@
                 $('#assignedSlo').attr('value', $(this).attr('value'));
             });
 
-            getBatchDetails(g_batchId);
+            
         }); // End of .Done Handler
 
     }
@@ -182,6 +221,7 @@
             courseId = data.CourseId;
 
             $('#batchNo').val(batchName);
+            $('#batchDescription').val(description);
             $('#courseCode').val(courseCode);
             $('#assignedSlo').val(fullName);
             $('#assignedSlo').attr('value', email);
