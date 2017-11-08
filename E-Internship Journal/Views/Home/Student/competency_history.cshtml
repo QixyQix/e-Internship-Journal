@@ -4,12 +4,20 @@
         <li class="breadcrumb-item">
             <a href="~/Home/Index">Homepage</a>
         </li>
-        <li class="breadcrumb-item active">Competency Checklist</li>
+        <li class="breadcrumb-item">
+            <a href="~/Home/competency_checklist">Competency Checklist</a>
+        </li>
+        <li class="breadcrumb-item active">Competency History</li>
     </ol>
     <ol class="breadcrumb">
         <li class="breadcrumb-item pull-right">
             <div class="form-inline">
-                <input type="button" value="View History" class="btn btn-default" onclick="location.href='@Url.Action("competency_history", "Home" )'" />
+                <select class="form-control" id="exampleSelect1">
+                    <option>Week 1 to Week 4</option>
+                    <option>Week 5 to Week 8</option>
+                    <option>Week 9 to Week 12</option>
+                    <option>Week 13 to Week 16</option>
+                </select>
             </div>
         </li>
     </ol>
@@ -179,15 +187,10 @@
                 <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
                     Back
                 </button>
-                <button class="btn btn-primary pull-right" name="submit" id="submit">
-                    Submit for Review
-                </button>
             </div>
         </div>
     </div>
 &nbsp;
 <script>
-    $('#submit').on('click', function (e) {
-        $("table input").attr("disabled", "disabled");
-    });
+    $("div input").attr("disabled", "disabled");
 </script>

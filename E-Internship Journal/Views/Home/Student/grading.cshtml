@@ -4,21 +4,23 @@
         <li class="breadcrumb-item">
             <a href="~/Home/Index">Homepage</a>
         </li>
-        <li class="breadcrumb-item active">Account Settings</li>
+        <li class="breadcrumb-item active">Grading</li>
     </ol>
-    <div class="card-body">
-        <div class="form-inline">
-            <select class="form-control" id="exampleSelect1">
-                <option>Week 1 to Week 4</option>
-                <option>Week 5 to Week 8</option>
-                <option>Week 9 to Week 12</option>
-                <option>Week 13 to Week 16</option>
-            </select>
-        </div>
-    </div>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item pull-right">
+            <div class="form-inline">
+                <select class="form-control" id="exampleSelect1">
+                    <option>Week 1 to Week 4</option>
+                    <option>Week 5 to Week 8</option>
+                    <option>Week 9 to Week 12</option>
+                    <option>Week 13 to Week 16</option>
+                </select>
+            </div>
+        </li>
+    </ol>
     <div class="card">
         <div class="card-header">
-            <i class="fa fa-pencil"></i> Account Settings
+            <i class="fa fa-pencil"></i> Grading
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -179,39 +181,35 @@
                 <div>
 
                 </div>
-                <form class="form-group">
-                    <div class="form-group">
-                        <label class="col-md-8 control-label">Average rating based on the above four assessment criteria:</label>
-                        <div class="col-sm-5">
-                            <input class="form-control" id="assessmentCriteria" type="text" value="" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Overall Grade:</label>
-                        <div class="col-sm-5">
-                            <input class="form-control" id="overallGrade" type="text" value="" readonly>
-                        </div>
-                    </div>
-                </form>
-
-
-
-                <div class="col-md-10 col-sm-10 col-xs-12">
-                    <div class="form-group ">
-                        <div class="form-group">
-                            <label class="control-label col-sm-3 requiredField" for="overallComment">Overall Comments:</label>
-                            <textarea class="form-control" rows="5" id="overallComment" readonly></textarea>
-                        </div>
+                <div class="form-group">
+                    <label class="col-md-8 control-label">Average rating based on the above four assessment criteria:</label>
+                    <div class="col-sm-5">
+                        <input class="form-control" id="assessmentCriteria" type="text" value="" readonly>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Overall Grade:</label>
+                    <div class="col-sm-5">
+                        <input class="form-control" id="overallGrade" type="text" value="" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="overallComment">Overall Comments:</label>
+                    <textarea class="form-control" rows="5" id="overallComment" readonly></textarea>
+                </div>
             </div>
-
         </div>
     </div>
 </div>
+<div class="card-body">
+    <div class="form-group">
+        <div class="col-12">
+            <button class="btn btn-default" onclick="window.history.go(-1); return false">
+                Back
+            </button>
+        </div>
+    </div>
+</div>
+&nbsp;
 <script>
-    $('#promptreset').on('click', function (e) {
-        $('#resetModal').modal('show');
-        console.log("hi")
-    });
 </script>

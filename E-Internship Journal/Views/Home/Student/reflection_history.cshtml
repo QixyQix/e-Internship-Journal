@@ -1,0 +1,105 @@
+﻿<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="~/Home/monthly_reflection">Monthly Reflection</a>
+        </li>
+        <li class="breadcrumb-item active">Reflection History</li>
+        @*<li class="nav-item pull-right">
+                <select class="form-control" id="exampleSelect1">
+                    <option>Week 1 to Week 4</option>
+                    <option>Week 5 to Week 8</option>
+                    <option>Week 9 to Week 12</option>
+                    <option>Week 13 to Week 16</option>
+                </select>
+            </li>*@
+    </ol>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item pull-right">
+            <div class="form-inline">
+                <select class="form-control" id="exampleSelect1">
+                    <option>Week 1 to Week 4</option>
+                    <option>Week 5 to Week 8</option>
+                    <option>Week 9 to Week 12</option>
+                    <option>Week 13 to Week 16</option>
+                </select>
+            </div>
+        </li>
+    </ol>
+    <div class="card">
+        <div class="container text-left">
+            <br />
+            <div>
+                <h5>Soft Skills</h5>
+            </div>
+            <hr />
+            <div class="col-md-10 col-sm-10 col-xs-12">
+                <p>In terms of workplace knowledge, communication and interpersonal skills, reflect on:</p>
+            </div>
+            <div class="col-md-10 col-sm-10 col-xs-12">
+                <div class="form-group">
+                    <label class="control-label col-sm-8 requiredField" for="softskill1">(a) Areas you have done well.</label>
+                    <textarea class="form-control" rows="5" id="softskill1" readonly></textarea>
+                </div>
+            </div>
+            <div class="col-md-10 col-sm-10 col-xs-12">
+                <div class="form-group">
+                    <label class="control-label col-sm-8 requiredField" for="softskill2">(b) Areas you would like to improve.</label>
+                    <textarea class="form-control" rows="5" id="softskill2" readonly></textarea>
+                </div>
+            </div>
+            <br />
+            <div>
+                <h5>Hard Skills</h5>
+            </div>
+            <hr>
+            <div class="col-md-10 col-sm-10 col-xs-12">
+                <p>Reflect on:</p>
+            </div>
+            <div class="col-md-10 col-sm-10 col-xs-12">
+                <div class="form-group">
+                    <label class="control-label col-sm-8 requiredField" for="hardskill1">(a) How you have applied what you have learnt in school and workplace</label>
+                    <textarea class="form-control" rows="5" id="hardskill1" readonly></textarea>
+                </div>
+            </div>
+            <div class="col-md-10 col-sm-10 col-xs-12">
+                <div class="form-group">
+                    <label class="control-label col-sm-8 requiredField" for="hardskill2">(b) Areas you have done well.</label>
+                    <textarea class="form-control" rows="5" id="hardskill2" readonly></textarea>
+                </div>
+            </div>
+            <div class="col-md-10 col-sm-10 col-xs-12">
+                <div class="form-group ">
+                    <label class="control-label col-sm-8 requiredField" for="hardskill3">(c) Areas you would like to improve.</label>
+                    <textarea class="form-control" rows="5" id="hardskill3" readonly></textarea>
+                </div>
+            </div>
+            @*<br />
+            <div>
+                <h5>Feedback</h5>
+            </div>
+            <hr>
+            <div class="col-md-10 col-sm-10 col-xs-12">
+                <div class="form-group ">
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="feedback">Reflection Feedback:</label>
+                        <textarea class="form-control" rows="5" id="feedback" readonly></textarea>
+                    </div>
+                </div>
+            </div>*@
+        </div>
+    </div>
+        <div class="card-body">
+             <div class="form-group">
+                    <div class="col-12">
+                        <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                            Back
+                        </button>
+                    </div>
+                </div>
+        </div>
+    <br />
+</div>
