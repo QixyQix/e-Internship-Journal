@@ -10,6 +10,7 @@ using E_Internship_Journal.Models;
 using Newtonsoft.Json;
 using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace E_Internship_Journal.API
 {
@@ -18,9 +19,11 @@ namespace E_Internship_Journal.API
     public class Day_RecordController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public Day_RecordController(ApplicationDbContext context)
+        public Day_RecordController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
+            _userManager = userManager;
             _context = context;
         }
 
@@ -189,31 +192,43 @@ namespace E_Internship_Journal.API
                     .Include(ir => ir.MonthRecords.Select(mn => mn.DayRecords))
                     .SingleOrDefault(ir => ir.InternshipRecordId == internshipRecordId);
 
+                //Check if the internship record belongs to the user
+                if (!(internshipRecord.UserBatch.UserId.Equals(_userManager.GetUserId(User))))
+                {
+                    return BadRequest();
+                }
+
                 DateTime date = DateTime.ParseExact(day_RecordNewInput.Date.Value, "d/M/yyyy", CultureInfo.InvariantCulture);
+                DateTime startDate = internshipRecord.UserBatch.Batch.StartDate;
+
+                var noDaysFromStartDate = Int32.Parse((date - startDate).TotalDays.ToString());
 
                 Month_Record monthRecord = null;
 
+                //If the internship record has month records
                 if (!(internshipRecord.MonthRecords.Count < 1))
                 {
                     //Check if the date already exists
                     foreach (var month in internshipRecord.MonthRecords)
                     {
-                        if (month.DayRecords.Count < 36)
+                        foreach (var dayRecord in month.DayRecords)
                         {
-                            monthRecord = month;
-                            foreach (var dayRecord in month.DayRecords)
+                            if (dayRecord.Date.Equals(date))
                             {
-                                if (dayRecord.Date.Equals(date))
-                                {
-                                    return BadRequest();
-                                }
+                                return BadRequest();
                             }
                         }
+
                     }
                 }
-                else if(monthRecord == null)
+                //Determine which month object
+                var monthNo = Int32.Parse((noDaysFromStartDate / 28).ToString());
+                if (monthNo < internshipRecord.MonthRecords.Count)//If month number is less than the count (meaning it exists) 
                 {
-                    //Create new month record
+                    monthRecord = internshipRecord.MonthRecords[monthNo];
+                }
+                else//Else the month does not exist and create a new month record.
+                {
                     monthRecord = new Month_Record
                     {
                         InternshipRecord = internshipRecord
@@ -222,7 +237,7 @@ namespace E_Internship_Journal.API
                 }
 
                 //TODO VALIDATION FOR ATTENDANCE
-                string[] timeValArray = day_RecordNewInput.ArrivalTime.Value.ToString().Replace(" ","").Split(':');
+                string[] timeValArray = day_RecordNewInput.ArrivalTime.Value.ToString().Replace(" ", "").Split(':');
                 DateTime timeIn = date.AddHours(Int32.Parse(timeValArray[0])).AddMinutes(Int32.Parse(timeValArray[1]));
                 timeValArray = day_RecordNewInput.DepartureTime.Value.ToString().Replace(" ", "").Split(':');
                 DateTime timeOut = date.AddHours(Int32.Parse(timeValArray[0])).AddMinutes(Int32.Parse(timeValArray[1]));
@@ -232,9 +247,7 @@ namespace E_Internship_Journal.API
 
                 //Calculate the weekno
 
-                DateTime startDate = internshipRecord.UserBatch.Batch.StartDate;
-
-                int weekNo = (Int32.Parse((date - startDate).TotalDays.ToString()) /7 ) +1;
+                int weekNo = (Int32.Parse((date - startDate).TotalDays.ToString()) / 7) + 1;
 
                 var newDayRecord = new Day_Record
                 {
@@ -248,7 +261,8 @@ namespace E_Internship_Journal.API
                 };
 
                 List<Task_Record> tasks = new List<Task_Record>();
-                for (int i = 0; i < taskRecords.Count; i++) {
+                for (int i = 0; i < taskRecords.Count; i++)
+                {
                     var taskRecord = new Task_Record
                     {
                         Description = taskRecords[i].Value
@@ -265,7 +279,7 @@ namespace E_Internship_Journal.API
             }
             catch (Exception exceptionObject)
             {
-                customMessage = "Unable to save to database"; 
+                customMessage = "Unable to save to database";
             }
             var successRequestResultMessage = new
             {
