@@ -46,7 +46,7 @@
         </button>
 
         @*@if (User.IsInRole("STUDENT"))
-        {*@
+            {*@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav navbar-sidenav collapsed" id="exampleAccordion">
                 <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Home">
@@ -65,54 +65,76 @@
                         </span>
                     </a>
                 </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Daily Task">
-                    <a class="nav-link" href="~/Home/Daily_Task">
-                        <i class="fa fa-fw fa-calendar"></i>
-                        <span class="nav-link-text">
-                            Daily Task
-                        </span>
-                    </a>
-                </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Attendance Summary">
-                    <a class="nav-link" href="~/Home/Attendance_Summary">
-                        <i class="fa fa-fw fa-clock-o"></i>
-                        <span class="nav-link-text">
-                            Attendance Summary
-                        </span>
-                    </a>
-                </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Competency Checklist">
-                    <a class="nav-link" href="~/Home/Competency_Checklist">
-                        <i class="fa fa-fw fa-check-square-o"></i>
-                        <span class="nav-link-text">
-                            Competency Checklist
-                        </span>
-                    </a>
-                </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Monthly Reflection">
-                    <a class="nav-link" href="~/Home/Monthly_Reflection">
-                        <i class="fa fa-fw fa-pencil"></i>
-                        <span class="nav-link-text">
-                            Monthly Reflection
-                        </span>
-                    </a>
-                </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Guidelines">
-                    <a class="nav-link" href="~/Home/Guide">
-                        <i class="fa fa-fw fa-info"></i>
-                        <span class="nav-link-text">
-                            Guidelines
-                        </span>
-                    </a>
-                </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Grading">
-                    <a class="nav-link" href="~/Home/Grading">
-                        <i class="fa fa-fw fa-graduation-cap"></i>
-                        <span class="nav-link-text">
-                            Grading
-                        </span>
-                    </a>
-                </li>
+                @if (User.IsInRole("STUDENT"))
+                {
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Daily Task">
+                        <a class="nav-link" href="~/Home/Daily_Task">
+                            <i class="fa fa-fw fa-calendar"></i>
+                            <span class="nav-link-text">
+                                Daily Task
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Attendance Summary">
+                        <a class="nav-link" href="~/Home/Attendance_Summary">
+                            <i class="fa fa-fw fa-clock-o"></i>
+                            <span class="nav-link-text">
+                                Attendance Summary
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Competency Checklist">
+                        <a class="nav-link" href="~/Home/Competency_Checklist">
+                            <i class="fa fa-fw fa-check-square-o"></i>
+                            <span class="nav-link-text">
+                                Competency Checklist
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Monthly Reflection">
+                        <a class="nav-link" href="~/Home/Monthly_Reflection">
+                            <i class="fa fa-fw fa-pencil"></i>
+                            <span class="nav-link-text">
+                                Monthly Reflection
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Guidelines">
+                        <a class="nav-link" href="~/Home/Guide">
+                            <i class="fa fa-fw fa-info"></i>
+                            <span class="nav-link-text">
+                                Guidelines
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Grading">
+                        <a class="nav-link" href="~/Home/Grading">
+                            <i class="fa fa-fw fa-graduation-cap"></i>
+                            <span class="nav-link-text">
+                                Grading
+                            </span>
+                        </a>
+                    </li>
+                }else if (User.IsInRole("SUPERVISOR"))
+                {
+
+
+                }
+                else if (User.IsInRole("LO"))
+                {
+
+
+                }
+                else if (User.IsInRole("SLO"))
+                {
+
+
+                }
+                else
+                {
+
+
+                }
                 @*<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Daily Task">
                         <a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseDailyTask" data-parent="#exampleAccordion">
                             <i class="fa fa-fw fa-calendar"></i>
@@ -612,7 +634,7 @@
             date_input.datepicker(dateoptions);
             //------end date script-----
             // check if this day has an event before
-            
+
 
             function convertTime12to24(time12h) {
                 const [time, modifier] = time12h.split(' ');
