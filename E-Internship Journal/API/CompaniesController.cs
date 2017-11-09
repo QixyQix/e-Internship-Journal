@@ -66,7 +66,6 @@ namespace E_Internship_Journal.API
                 foundOneCompany.CompanyName = companyNewInput.CompanyName.Value;
                 foundOneCompany.CompanyAddress = companyNewInput.CompanyAddress.Value;
 
-                _context.Companies.Update(foundOneCompany);
                 await _context.SaveChangesAsync();
             }
             else
