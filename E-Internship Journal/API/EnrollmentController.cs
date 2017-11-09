@@ -106,7 +106,7 @@ namespace E_Internship_Journal.Controllers
                                     Course = thisBatch.Course
                                 };
                                 PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
-                                newStudentUser.PasswordHash = ph.HashPassword(newStudentUser, generateRandomString(11)); //TODO: Random default password generator
+                                newStudentUser.PasswordHash = ph.HashPassword(newStudentUser, generateRandomString(11));
 
                                 await userManager.CreateAsync(newStudentUser);
                                 await userManager.AddToRoleAsync(newStudentUser, "STUDENT");
@@ -119,13 +119,12 @@ namespace E_Internship_Journal.Controllers
                                 };
                                 _context.UserBatches.Add(newUserBatch);
 
-                                var repeatPinGeneration = false;
+                                var repeatPinGeneration = true;
 
                                 do
                                 {
-                                    repeatPinGeneration = false;
-                                    try
-                                    {
+                                    var registationPin = generateRandomString(50);
+                                    if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin))) {
                                         //Create new registration pin
                                         var newRegistrationPin = new RegistrationPin
                                         {
@@ -133,10 +132,7 @@ namespace E_Internship_Journal.Controllers
                                             RegistrationPinId = generateRandomString(50)
                                         };
                                         _context.RegistrationPins.Add(newRegistrationPin);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        repeatPinGeneration = true;
+                                        repeatPinGeneration = false;
                                     }
                                 } while (repeatPinGeneration);
                             }

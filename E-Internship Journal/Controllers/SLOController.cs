@@ -19,11 +19,11 @@ namespace E_Internship_Journal.Controllers
         {
             return View();
         }
-        public IActionResult ViewBatchInfo()
+        public IActionResult ManageStudent()
         {
             return View();
         }
-        public IActionResult EditBatchInfo()
+        public IActionResult UpdateParticularSLO()
         {
             return View();
         }
