@@ -1,0 +1,167 @@
+﻿<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="#">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active">Add Batch</li>
+    </ol>
+    <!-- Example DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-table"></i> Add Batch
+        </div>
+
+        <div>
+            <form class="form-group">
+                <div class="form-inline">
+                    <label class="col-md-2 control-label">Batch Name:</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" id="batchNo" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-md-2 control-label">Batch Description:</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" id="batchDescription" type="text" value="">
+                    </div>
+                </div>
+
+                <div class="form-inline">
+                    <label class="col-md-2 control-label">Course Assigned:</label>
+                    <input class="form-control" id="courseAssigned" type="text" value="" readonly>
+                    <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" id="dropCourse">
+                        @*<li><a class="dropdown-item" href="#">DIT</a></li>
+                        <li><a class="dropdown-item" href="#">DBIT</a></li>
+                        <li><a class="dropdown-item" href="#">DISM</a></li>
+                        <li><a class="dropdown-item" href="#">DDA</a></li>*@
+                    </ul>
+                </div>
+                <div class="form-inline">
+                    <label class="col-md-2 control-label">SLO Assigned:</label>
+                    <input class="form-control" id="assignedSlo" type="text" value="" readonly>
+                    <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" id="dropSLO">
+                        @*<a class="dropdown-item" href="#">Ms Teo Seok Lin</a>
+                        <a class="dropdown-item" href="#">Mr Tan Yao Tian</a>
+                        <a class="dropdown-item" href="#">Ms Goh Ling Ling</a>
+                        <a class="dropdown-item" href="#">Mr Ong Lai</a>*@
+                    </ul>
+                </div>
+            </form>
+            <form class="form-group">
+                <div class="form-inline">
+                    <label class="col-sm-2 control-label">Start Date:</label>
+                    <div class="col-sm-5">
+                        <input class="form-control" id="startDate" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-sm-2 control-label">End Date:</label>
+                    <div class="col-sm-5">
+                        <input class="form-control" id="endDate" type="text" value="">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-3"></label>
+            <div class="btn pull-right">
+                <button class="btn btn-primary" name="submit" type="submit" id="btnSave">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $getUserHandler = jQuery.ajax({
+
+        url: '/API/Batches/GetUserCourseInformation',
+        method: 'get',
+        dataType: 'json',
+        cache: false
+
+    });
+    $getUserHandler.done(function (data, textStatus, jqXHR) {
+        $SLODownElement = $('#dropSLO');
+        $CourseDownElement = $('#dropCourse')
+        for (i = 0; i < data.UserList.length; i++) {
+           // $tableBodyElement = $('.dropdown-menu');
+            Name = data.UserList[i].Name;
+            Emails = data.UserList[i].Email;
+            $dropElement = $('<a>', { text: Name }).attr('class', 'dropdown-item').attr('name', 'SLO').attr('value', Emails);
+            $drop2Element = $('<li>');
+            $drop2Element.append($dropElement);
+            //$dropElement = $('<input>').attr('type', 'radio').val(visibilityId).attr('name', 'visibilityIdInput');
+            $SLODownElement.append($drop2Element);
+        }
+        for (k = 0; k < data.CourseList.length; k++) {
+            CourseId = data.CourseList[k].CourseId;
+            CourseCode = data.CourseList[k].CourseCode;
+            $dropElement = $('<a>', { text: CourseCode }).attr('class', 'dropdown-item').attr('name', 'Course').attr('value', CourseId);
+            $drop2Element = $('<li>');
+            $drop2Element.append($dropElement);
+            $CourseDownElement.append($drop2Element)
+        }
+        $('#dropCourse li > a').on('click', function () {
+            // $('#courseAssigned').val($(this).text());
+            $('#courseAssigned').val($(this).text());
+            $('#courseAssigned').attr('value', $(this).attr('value'));
+           
+        });
+
+        $('#dropSLO li > a').on('click', function () {
+            $('#assignedSlo').val($(this).text());
+            $('#assignedSlo').attr('value' , $(this).attr('value'));
+        });
+    }); // End of .Done Handler
+
+    function WebFormData(inBatchName, inBatchDescription, inCourseAssigned, inSLOAssigned, inStartDate,inEndDate) {
+        this.BatchName = inBatchName;
+        this.BatchDescription = inBatchDescription;
+        this.CourseAssigned = inCourseAssigned;
+        this.SLOAssigned = inSLOAssigned;
+        this.StartDate = inStartDate;
+        this.EndDate = inEndDate;
+
+    }
+    $('#btnSave').on('click', function () {
+
+        var collectedBatchName = $('#batchNo').val();
+        var collectedBatchDescription = $('#batchDescription').val();
+        var collectedCourseAssigned = $('#courseAssigned').attr('value');
+        var collectedSLOAssigned = $('#assignedSlo').attr('value');
+        var collectedStartDate = new Date($('#startDate').val());
+        var collectedEndDate = new Date($('#endDate').val());
+
+        var webFormData = new WebFormData(collectedBatchName, collectedBatchDescription, collectedCourseAssigned, collectedSLOAssigned, collectedStartDate, collectedEndDate);
+        var webFormDatainString = JSON.stringify(webFormData);
+        $saveBatchHandler = jQuery.ajax({
+            url: '/API/Batches/SaveNewBatchInformation/',
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: "'" + webFormDatainString + "'"
+
+        });
+        $saveBatchHandler.done(function (data, textStatus, jqXHR) {
+          
+
+        });//
+
+
+
+    });
+
+
+
+</script>
