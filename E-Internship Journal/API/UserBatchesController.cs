@@ -38,19 +38,21 @@ namespace E_Internship_Journal.API
             .Include(eachUserBatchEntity => eachUserBatchEntity.User)
             .Include(eacbProjectEntity => eacbProjectEntity.Batch)
             .AsNoTracking();
+            //var courses = 
             foreach (var oneUserBatch in userBatches)
             {
+                var CourseName = _context.Courses.Select(courseItem => new { CourseName = courseItem.CourseName, CourseId = courseItem.CourseId }).Where(t => t.CourseId == oneUserBatch.Batch.CourseId);
                 //   List<int> categoryIdList = new List<int>();
                 userBatchList.Add(new
                 {
                     oneUserBatch.Batch.BatchId,
                     oneUserBatch.Batch.BatchName,
-                     oneUserBatch.Batch.CourseId,
-                      oneUserBatch.Batch.Description,
-                       oneUserBatch.Batch.StartDate,
-                        oneUserBatch.Batch.EndDate,
-
-                    oneUserBatch.User.FullName,
+                    oneUserBatch.Batch.Description,
+                    oneUserBatch.Batch.StartDate,
+                    oneUserBatch.Batch.EndDate,
+                    CourseName,
+                    //_context.Courses.Select(roleItem => new { CourseName = roleItem.CourseName }) },
+                oneUserBatch.User.FullName,
                      oneUserBatch.User.Email
                 });
             }
