@@ -25,6 +25,10 @@ namespace E_Internship_Journal.Controllers
             {
                 return View("~/Views/Home/LO/Index.cshtml");
             }
+            else if (User.IsInRole("SLO"))
+            {
+                return View("~/Views/Home/SLO/Index.cshtml");
+            }
             else
             {
                 return View("~/Views/Home/Admin/Index.cshtml");
@@ -55,18 +59,6 @@ namespace E_Internship_Journal.Controllers
                 return View("~/Views/Home/Student/attendance_summary.cshtml");
             }
         }
-        //public IActionResult Manage_Task()
-        //{
-        //    var test = User.IsInRole("SUPERVISOR");
-        //    if (User.IsInRole("SUPERVISOR"))
-        //    {
-        //        return View("~/Views/Home/Supervisor/edit_task2.cshtml");
-        //    }
-        //    else /*if(User.IsInRole("STUDENT"))*/
-        //    {
-        //        return View("~/Views/Home/Student/edit_task2.cshtml");
-        //    }
-        //}
         public IActionResult Day_Task()
         {
             var test = User.IsInRole("SUPERVISOR");
@@ -127,26 +119,6 @@ namespace E_Internship_Journal.Controllers
                 return View("~/Views/Home/Student/guide.cshtml");
             }
         }
-        //public IActionResult Add_Task()
-        //{
-        //    return View();
-        //}
-        //public IActionResult Edit_Task()
-        //{
-        //    return View();
-        //}
-        //public IActionResult Edit_Task2()
-        //{
-        //    return View();
-        //}
-        //public IActionResult Key_Attendance()
-        //{
-        //    return View();
-        //}
-        //public IActionResult Attendance()
-        //{
-        //    return View();
-        //}
         public IActionResult Review()
         {
             return View("~/Views/Home/Supervisor/Review.cshtml");
@@ -199,25 +171,83 @@ namespace E_Internship_Journal.Controllers
             }
         }
         
-        //Student
         public IActionResult Reflection_History()
         {
-            return View("~/Views/Home/Student/reflection_history.cshtml");
+            if (User.IsInRole("SUPERVISOR"))
+            {
+                return View("~/Views/Home/Supervisor/reflection_history.cshtml");
+            }
+            else if (User.IsInRole("STUDENT"))
+            {
+                return View("~/Views/Home/Student/reflection_history.cshtml");
+            }
+            else if (User.IsInRole("SLO"))
+            {
+                return View("~/Views/Home/SLO/reflection_history.cshtml");
+            }
+            else /*if(User.IsInRole("STUDENT"))*/
+            {
+                return View("~/Views/Home/LO/reflection_history.cshtml");
+            }
         }
-
         public IActionResult Attendance_History()
         {
-            return View("~/Views/Home/Student/attendance_history.cshtml");
+            if (User.IsInRole("SUPERVISOR"))
+            {
+                return View("~/Views/Home/Supervisor/attendance_history.cshtml");
+            }
+            else if (User.IsInRole("STUDENT"))
+            {
+                return View("~/Views/Home/Student/attendance_history.cshtml");
+            }
+            else if (User.IsInRole("SLO"))
+            {
+                return View("~/Views/Home/SLO/attendance_history.cshtml");
+            }
+            else /*if(User.IsInRole("STUDENT"))*/
+            {
+                return View("~/Views/Home/LO/attendance_history.cshtml");
+            }
         }
         public IActionResult Competency_History()
         {
-            return View("~/Views/Home/Student/competency_history.cshtml");
+            if (User.IsInRole("SUPERVISOR"))
+            {
+                return View("~/Views/Home/Supervisor/competency_history.cshtml");
+            }
+            else if (User.IsInRole("STUDENT"))
+            {
+                return View("~/Views/Home/Student/competency_history.cshtml");
+            }
+            else if (User.IsInRole("SLO"))
+            {
+                return View("~/Views/Home/SLO/competency_history.cshtml");
+            }
+            else /*if(User.IsInRole("STUDENT"))*/
+            {
+                return View("~/Views/Home/LO/competency_history.cshtml");
+            }
         }
 
+
+        //Student
+
         //Supervisor
-        public IActionResult Manage_Student()
+        public IActionResult Student_Journal()
         {
-            return View("~/Views/Home/Supervisor/manage_student.cshtml");
+            return View("~/Views/Home/Supervisor/student_journal.cshtml");
+        }
+        public IActionResult Student_Info()
+        {
+            return View("~/Views/Home/Supervisor/student_info.cshtml");
+        }
+        public IActionResult Company_Checklist()
+        {
+            return View("~/Views/Home/Supervisor/company_checklist.cshtml");
+        }
+        public IActionResult Task_History()
+        {
+            return View("~/Views/Home/Supervisor/task_history.cshtml");
         }
 
         //LO

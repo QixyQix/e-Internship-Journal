@@ -5,11 +5,20 @@
     <div class="container-fluid">
         <!-- Breadcrumbs -->
         <ol class="breadcrumb">
-            @*<li class="breadcrumb-item">
-                <a href="#">Internship Programme</a>
-            </li>*@
-            <li class="breadcrumb-item active">Homepage</li>
+            <li class="breadcrumb-item">
+                <a href="~/Home/Index">Homepage</a>
+            </li>
+            <li class="breadcrumb-item active">Student Journal</li>
         </ol>
+        <div class="card" style="border-width:0px;">
+            <div class="card-body">
+                <div class="form-group">
+                    <div class="pull-left">
+                            <label>Student Name:&nbsp</label><label>Amelia Goh</label>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="container">
             <div class="row">
                 <div class="col-sm-4">
@@ -20,7 +29,7 @@
                         <div class="card-body">
                             <h2>Daily Tasks</h2>
                             @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/daily_task" class="btn btn-primary">View Tasks</a>
+                            <a href="~/Home/Task_History" class="btn btn-primary">View Daily Tasks</a>
                         </div>
                     </div>
                 </div>
@@ -32,19 +41,7 @@
                         <div class="card-body">
                             <h2>Attendance</h2>
                             @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/attendance_summary" class="btn btn-primary">Edit Attendance</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-bar-chart fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Checklist</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/attendance_summary" class="btn btn-primary">Check Competency Checklist</a>
+                            <a href="~/Home/attendance_history" class="btn btn-primary">View Attendance</a>
                         </div>
                     </div>
                 </div>
@@ -54,9 +51,21 @@
                             <i class="fa fa-check-square fa-5x"></i>
                         </div>
                         <div class="card-body">
+                            <h2>Competency</h2>
+                            @*<p>View Daily <strong>Tasks</strong></p>*@
+                            <a href="~/Home/competency_history" class="btn btn-primary">Check Competency Checklist</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            <i class="fa fa-pencil-square fa-5x"></i>
+                        </div>
+                        <div class="card-body">
                             <h2>Reflection</h2>
                             @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/attendance_summary" class="btn btn-primary">View Monthly Reflection</a>
+                            <a href="~/Home/reflection_history" class="btn btn-primary">View Monthly Reflection</a>
                         </div>
                     </div>
                 </div>
@@ -68,7 +77,31 @@
                         <div class="card-body">
                             <h2>Guideline</h2>
                             @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/attendance_summary" class="btn btn-primary">View Guidelines</a>
+                            <a href="~/Home/guide" class="btn btn-primary">View Guidelines</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            <i class="fa fa-building fa-5x"></i>
+                        </div>
+                        <div class="card-body">
+                            <h2>Company</h2>
+                            @*<p>View Daily <strong>Tasks</strong></p>*@
+                            <a href="~/Home/company_checklist" class="btn btn-primary">Check Company Checklist</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            <i class="fa fa-graduation-cap fa-5x"></i>
+                        </div>
+                        <div class="card-body">
+                            <h2>Grading</h2>
+                            @*<p>View Daily <strong>Tasks</strong></p>*@
+                            <a href="~/Home/grading" class="btn btn-primary">Grading</a>
                         </div>
                     </div>
                 </div>
