@@ -254,15 +254,19 @@ namespace E_Internship_Journal.Controllers
 
         //Admin
         [Authorize(Roles = "ADMIN")]
-        public IActionResult CreateBatch()
+        public IActionResult ViewCompany()
         {
-            return View("~/Views/Home/Admin/Add_Batch.cshtml");
+            return View("~/Views/Home/Admin/Company.cshtml");
         }
-
         [Authorize(Roles = "ADMIN")]
-        public IActionResult EditBatch()
+        public IActionResult CreateCompany()
         {
-            return View("~/Views/Home/Admin/Edit_Batch.cshtml");
+            return View("~/Views/Home/Admin/Add_Company.cshtml");
+        }
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult EditCompany()
+        {
+            return View("~/Views/Home/Admin/Edit_Company.cshtml");
         }
 
         [Authorize(Roles = "ADMIN")]
@@ -270,22 +274,32 @@ namespace E_Internship_Journal.Controllers
         {
             return View("~/Views/Home/Admin/Batch.cshtml");
         }
-
         [Authorize(Roles = "ADMIN")]
-        public IActionResult ViewCompany()
+        public IActionResult CreateBatch()
         {
-            return View("~/Views/Home/Admin/Company.cshtml");
+            return View("~/Views/Home/Admin/Add_Batch.cshtml");
+        }
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult EditBatch()
+        {
+            return View("~/Views/Home/Admin/Edit_Batch.cshtml");
         }
 
         [Authorize(Roles = "ADMIN")]
-        public IActionResult CreateCompany()
+        public IActionResult ViewProject()
         {
-            return View("~/Views/Home/Admin/Add_Company.cshtml");
+            return View("~/Views/Home/Admin/Project.cshtml");
         }
-        //public IActionResult EditCompany()
-        //{
-        //    return View("~/Views/Home/LO/touchpoint.cshtml");
-        //}
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult CreateProject()
+        {
+            return View("~/Views/Home/Admin/Add_Project.cshtml");
+        }
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult EditProject()
+        {
+            return View("~/Views/Home/Admin/Edit_Project.cshtml");
+        }
 
         [Authorize(Roles = "ADMIN")]
         public IActionResult ViewUser()
@@ -297,13 +311,26 @@ namespace E_Internship_Journal.Controllers
         {
             return View("~/Views/Home/Admin/Add_User.cshtml");
         }
-
         [Authorize(Roles = "ADMIN")]
         public IActionResult EditUser()
         {
             return View("~/Views/Home/Admin/Edit_User.cshtml");
         }
 
-
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult ViewCourse()
+        {
+            return View("~/Views/Home/Admin/Course.cshtml");
+        }
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult CreateCourse()
+        {
+            return View("~/Views/Home/Admin/Add_Course.cshtml");
+        }
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult EditCourse()
+        {
+            return View("~/Views/Home/Admin/Edit_Course.cshtml");
+        }
     }
 }
