@@ -16,7 +16,7 @@
                     <i class="fa fa-calendar">
                     </i>
                 </div>
-                <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
+                <input class="form-control" id="date" name="date" placeholder="DD/MM/YYYY" type="text">
             </div>
             @*<small id="datehelp" class="form-text text-muted">Firstly, please select a date</small>*@
         </div>
@@ -38,11 +38,10 @@
                                     </i>
                                 </div>
                                 <select class="form-control" id="dropdownselect">
-                                    <option>-</option>
-                                    <option>MC</option>
-                                    <option>Holiday</option>
-                                    <option>LOA</option>
-                                    <option>Company Off-Day</option>
+                                    <option value="">-</option>
+                                    <option value="MC">MC</option>
+                                    <option value="LOA">LOA</option>
+                                    <option value="COMPANY OFF">Company Off-Day</option>
                                 </select>
                             </div>
                         </div>
@@ -55,7 +54,7 @@
                                     <i class="fa fa-clock-o"></i>
                                 </div>
 
-                                <input type='text' class="form-control" />
+                                <input type='text' class="form-control" id="timeinval" />
                             </div>
                         </div>
                         <div class="col-4">
@@ -146,41 +145,24 @@
             <i class="fa fa-pencil"></i> Manage Task
         </div>
         <div class="card-body">
-            <div class="form-group">
-                @*<div class="col-md-3 col-sm-3 col-xs-12 pull-left">
-                        <div class="input-group">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar">
-                                </i>
-                            </div>
-                            <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
-                        </div>
-                    </div>*@
-                <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
-                    <button class="btn btn-secondary form-control" name="submit" type="submit">
-                        Add Task +
-                    </button>
-                </div>
-            </div>
-        </div>
-        <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Description</th>
-                            <th>Action</th>
+                            <th width="95%">Description</th>
+                            <th width="5%">&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>I love to Slack</td>
+                        @*<tr>
+                            <td><textarea name="tasks" style="width: 100%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;"></textarea></td>
                             <td><button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button></td>
-                        </tr>
+                        </tr>*@
                     </tbody>
                 </table>
+                <button class="btn btn-primary form-control" id="addTaskBtn">
+                    <i class="fa fa-plus"></i> Add Task
+                </button>
             </div>
         </div>
         <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
@@ -199,46 +181,6 @@
         </div>
     <br />
 </div>
-@*<script>
-        $(document).ready(function () {
-
-            var editor = new $.fn.dataTable.Editor(table);
-
-            //var t = $('#dataTable').DataTable();
-            var counter = 1;
-
-            var table = $('#dataTable').DataTable({
-                ajax: {
-                    url: '/Api/Task_Record',
-                    dataSrc: ''
-                },
-                "bPaginate": false,
-                "bLengthChange": false,
-                "bFilter": false,
-                "bSort": false,
-                "bInfo": false,
-                "bAutoWidth": false,
-                "asStripClasses": null,
-                //--disable the sorting--
-                dom: 'lrt',
-                "aoColumns": [
-                    { "mData": "DayRecordId", "sWidth": "10%" },
-                    { "mData": "Description", "sTitle": "Description", "sWidth": "80%" },
-                    {
-                        "mData": null,
-                        "bSortable": false,
-                        "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button>' }
-                    }
-                ],
-                language: {
-                    emptyTable: "No task was found, please create one.",
-                }
-            });
-            $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
-                console.log("button 1 is click");
-            });
-        });
-    </script>*@
 <script>
     var editor;
     $(document).ready(function () {
@@ -251,108 +193,50 @@
         //getCookie(dc);
         var cookieDate = getCookie("date");
         var cookieId = getCookie("id");
+
+        $('#addTaskBtn').on('click', function () 
+        {
+            $('#dataTable2').append('<tr><td> <textarea name="taskInput" class="form-control" style="width: 100%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;"></textarea></td ><td><button class="btn btn-sm btn-danger" onClick="$(this).closest(\'tr\').remove();"><i class="fa fa-times"></i></button></td></tr >');
+        });
+
+        
+
         if (cookieDate != null || cookieDate != undefined) {
-            $('#date').val(cookieDate);
+            $('#date').val(moment(new Date(cookieDate)).format("DD/MM/YYYY"));
 
         }
         if (cookieId == "undefined" || cookieId == null) {
 
             $('#btnSave').on('click', function () {
-                var colectedTodayDate = $('#date').val().toString('MM/DD/YYYY');
-                var colectedArrivalTime = $('#inputTimein').val();
+                var colectedTodayDate = $('#date').val().toString('dd/mm/yyyy');
+                var collectedRemarks = $('#dropdownselect').val();
+                var collectedArrivalTime = ($('#timeinval').val() != "") ? $('#timeinval').val() : null;
                 var collectedDepartureTime = ($('#timeoutval').val() != "") ? $('#timeoutval').val() : null;
                 //var momentDate = moment(colectedTodayDate + colectedArrivalTime, 'YYYY-MM-DD HH:mm:ss');
-                var formatedArrivalTime = new Date(colectedTodayDate + ' ' + colectedArrivalTime);
+                var formatedArrivalTime = ($('#timeinval').val() != "") ? new Date(colectedTodayDate + ' ' + collectedArrivalTime) : null;
                 var formatedDepartureTime = ($('#timeoutval').val() != "") ? new Date(colectedTodayDate + ' ' + collectedDepartureTime) : null;
-                var webFormData = new WebFormData(colectedTodayDate, 'test', formatedArrivalTime, formatedDepartureTime)
+                var tasks = [];
+                $.each($("[name=taskInput]"), function () {
+                    if ($(this).val().trim()) { 
+                        tasks.push($(this).val().trim());
+                    }
+                });
+                var webFormData = new WebFormData(colectedTodayDate, collectedRemarks, formatedArrivalTime, formatedDepartureTime, tasks);
+                console.dir(webFormData);
                 $saveTaskHanlder = jQuery.ajax({
-                    url: '/Api/Task_Record/',
+                    url: '/Api/Day_Record/SaveNewDayRecordInformation',
                     method: 'POST',
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
                     cache: false,
+                    data: "'" + JSON.stringify(webFormData) + "'"
                 });
                 $getDayHandler.done(function (data, textStatus, jqXHR) {
-
-
-
-
-                });//End of Done
-
-
-
+                 });//End of Done
             });
-
-
         } else {
-            getTaskFunction(cookieId, table, editor);
-
-            //editor = new $.fn.dataTable.Editor({
-            //    ajax: {
-            //        url: '/Api/Task_Record',
-            //        dataSrc: ''
-            //    },
-            //    table: "#dataTable",
-            //    idSrc: 'id',
-            //    fields: [{
-            //        label: "DayRecordId:",
-            //        name: "DayRecordId"
-            //    }, {
-            //        label: "Description:",
-            //        name: "Description"
-            //    }
-            //    ]
-            //});
-            //var table = $('#dataTable').DataTable({
-            //    "bPaginate": false,
-            //    "bLengthChange": false,
-            //    "bFilter": false,
-            //    "bSort": false,
-            //    "bInfo": false,
-            //    "bAutoWidth": false,
-            //    "asStripClasses": null,
-            //    //--disable the sorting--
-            //    dom: 'rti',
-            //    ajax: {
-            //        url: '/Api/Task_Record',
-            //        dataSrc: ''
-            //    },
-            //    order: [[1, 'asc']],
-            //    columns: [
-            //        { data: "DayRecordId", "sWidth": "10%" },
-            //        { data: "Description", "sWidth": "80%" },
-            //        {
-            //            data: null,
-            //            "bSortable": false,
-            //            "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button>' }
-            //        }
-            //    ],
-            //    language: {
-            //        emptyTable: "No task was found, please create one.",
-            //    }
-            //});
-            $('#dataTable2').on('click', 'tbody td:not(:first-child, :last-child)', function (e) {
-                //console.log($('#dataTable2 tbody td:not(:first-child, :last-child)').closest('tr').find("td:eq(1)").html());
-                //console.log($('#dataTable2 tbody tr:nth-child(' + 1 + ')').find("td:eq(1)").html());
-                //console.log($('#dataTable2 tbody td:not(:first-child, :last-child) tr').find("td:eq(1)").html());
-                editor.inline(this);
-
-
-                //alert("You selected " + $(this).val());
-            });
-
-            $('#dataTable2 tbody').on('click', 'button.btn-danger', function (e) {
-                console.log("button 1 is click");
-            });
-
+            //Update day record method
         }
-
-
-        // Activate an inline edit on click of a table cell
-
-
-
-
     });
 
     function getCookie(name) {
@@ -381,11 +265,12 @@
         var strTime = hours + ':' + minutes + ' ' + ampm;
         return strTime;
     }
-    function WebFormData(inTodayDate, inRemarks, inTimein, inTimeOut) {
+    function WebFormData(inTodayDate, inRemarks, inTimein, inTimeOut, tasks) {
         this.Date = inTodayDate;
         this.Remarks = inRemarks;
         this.ArrivalTime = inTimein;
         this.DepartureTime = inTimeOut;
+        this.Tasks = tasks
 
     }
     function getTaskFunction(cookieId, finalTable) {

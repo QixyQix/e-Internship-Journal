@@ -618,15 +618,13 @@
                 allowInputToggle: true,
                 format: 'LT'
             });
-            var date_input = $('input[name="date"]'); //our date input has the name "date"
+            var date_input = $('input[name=date]'); //our date input has the name "date"
             var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
-            var dateoptions = {
-                format: 'mm/dd/yyyy',
-                container: container,
+            date_input.datepicker({
+                format: 'dd/mm/yyyy',
                 todayHighlight: true,
-                autoclose: true,
-            };
-            date_input.datepicker(dateoptions);
+                autoclose: true
+            });
             //------end date script-----
             // check if this day has an event before
 
