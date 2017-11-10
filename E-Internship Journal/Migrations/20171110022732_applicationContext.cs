@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace E_Internship_Journal.Migrations
 {
-    public partial class applicationContextNew : Migration
+    public partial class applicationContext : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -460,12 +460,12 @@ namespace E_Internship_Journal.Migrations
                 {
                     DayId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ArrivalTime = table.Column<DateTime>(nullable: false),
-                    CompanyOff = table.Column<bool>(type: "bit", nullable: true, defaultValue: false),
+                    ArrivalTime = table.Column<DateTime>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false),
-                    DepartureTime = table.Column<DateTime>(nullable: false),
-                    MC = table.Column<bool>(type: "bit", nullable: true, defaultValue: false),
+                    DepartureTime = table.Column<DateTime>(nullable: true),
+                    IsPresent = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     MonthRecordId = table.Column<int>(type: "int", nullable: false),
+                    Remakrs = table.Column<string>(type: "VARCHAR(MAX)", nullable: false, defaultValue: ""),
                     WeekNo = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -516,15 +516,15 @@ namespace E_Internship_Journal.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "Batch_BatchName_UniqueConstraint",
-                table: "Batches",
-                column: "BatchName",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Batches_CourseId",
                 table: "Batches",
                 column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "Batch_BatchNameCourseId_UniqueConstraint",
+                table: "Batches",
+                columns: new[] { "BatchName", "CourseId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Competencies_CourseId",

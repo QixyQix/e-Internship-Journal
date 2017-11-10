@@ -572,28 +572,21 @@ namespace E_Internship_Journal.Data
             .IsRequired(true);
 
             modelBuilder.Entity<Day_Record>()
-            .Property(day_Records => day_Records.MC)
-            .HasColumnName("MC")
-            .HasColumnType("bit")
-            .HasDefaultValue(false)
-            .IsRequired(false);
-
-            modelBuilder.Entity<Day_Record>()
-            .Property(day_Records => day_Records.CompanyOff)
-            .HasColumnName("CompanyOff")
-            .HasColumnType("bit")
-            .HasDefaultValue(false)
-            .IsRequired(false);
+            .Property(day_Records => day_Records.Remarks)
+            .HasColumnName("Remakrs")
+            .HasColumnType("VARCHAR(MAX)")
+            .HasDefaultValue("")
+            .IsRequired(true);
 
             modelBuilder.Entity<Day_Record>()
             .Property(day_Records => day_Records.ArrivalTime)
             .HasColumnName("ArrivalTime")
-            .IsRequired();
+            .IsRequired(false);
 
             modelBuilder.Entity<Day_Record>()
             .Property(day_Records => day_Records.DepartureTime)
             .HasColumnName("DepartureTime")
-            .IsRequired();
+            .IsRequired(false);
 
             modelBuilder.Entity<Day_Record>()
             .Property(day_Records => day_Records.WeekNo)

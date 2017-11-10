@@ -47,7 +47,7 @@ namespace E_Internship_Journal.API
                     ArrivalTime = oneDayRecord.ArrivalTime,
                     DepartureTime = oneDayRecord.DepartureTime,
                     WeekNo = oneDayRecord.WeekNo,
-                    MC = oneDayRecord.MC,
+                    Remarks = oneDayRecord.Remarks,
                     MonthRecordId = oneDayRecord.MonthRecordId,
 
                     TaskDescription = oneDayRecord.Tasks.Select(eachItem => eachItem.Description).ToList<string>()
@@ -81,7 +81,7 @@ namespace E_Internship_Journal.API
                         ArrivalTime = foundOneDay.ArrivalTime,
                         DepartureTime = foundOneDay.DepartureTime,
                         WeekNo = foundOneDay.WeekNo,
-                        MC = foundOneDay.MC
+                        Remarks = foundOneDay.Remarks
                     };//end of creation of the response object
                     return new JsonResult(response);
                 }
@@ -129,9 +129,8 @@ namespace E_Internship_Journal.API
                     {
                         ArrivalTime = day_RecordNewInput.Description.Value,
                         DepartureTime = day_RecordNewInput.DayRecordId.Value,
-                        CompanyOff = day_RecordNewInput.CompanyOff.Value,
                         Date = day_RecordNewInput.Date.Value,
-                        MC = day_RecordNewInput.MC.Value,
+                        Remarks = day_RecordNewInput.Remarks.Value,
                         WeekNo = day_RecordNewInput.WeekNo.Value,
 
                     };
@@ -185,23 +184,31 @@ namespace E_Internship_Journal.API
             {
                 var day_RecordNewInput = JsonConvert.DeserializeObject<dynamic>(value);
 
-                int internshipRecordId = day_RecordNewInput.InternshipRecordId.Value;
+                //int internshipRecordId = day_RecordNewInput.InternshipRecordId.Value;
 
                 //Get the student's internship record
-                var internshipRecord = _context.Internship_Records.Include(ir => ir.UserBatch.Batch)
-                    .Include(ir => ir.MonthRecords.Select(mn => mn.DayRecords))
-                    .SingleOrDefault(ir => ir.InternshipRecordId == internshipRecordId);
+                var internshipRecord = _context.Internship_Records
+                    .Include(ir => ir.UserBatch.Batch)
+                    .Where(ir => DateTime.Now >= ir.UserBatch.Batch.StartDate && DateTime.Now <= ir.UserBatch.Batch.EndDate)
+                    .Where(ir => ir.UserBatch.User.Id.Equals(_userManager.GetUserId(User)))
+                    .Include(ir => ir.MonthRecords)
+                    .ThenInclude(mn => mn.DayRecords)
+                    .Single();
 
-                //Check if the internship record belongs to the user
-                if (!(internshipRecord.UserBatch.UserId.Equals(_userManager.GetUserId(User))))
-                {
-                    return BadRequest();
+                ////Check if the internship record belongs to the user
+                //if (!(internshipRecord.UserBatch.UserId.Equals(_userManager.GetUserId(User))))
+                //{
+                //    return BadRequest();
+                //}
+
+                if (internshipRecord == null) {
+                    return NotFound();
                 }
 
-                DateTime date = DateTime.ParseExact(day_RecordNewInput.Date.Value, "d/M/yyyy", CultureInfo.InvariantCulture);
+                DateTime date = DateTime.ParseExact(day_RecordNewInput.Date.Value, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 DateTime startDate = internshipRecord.UserBatch.Batch.StartDate;
 
-                var noDaysFromStartDate = Int32.Parse((date - startDate).TotalDays.ToString());
+                var noDaysFromStartDate = (date - startDate).Days;
 
                 Month_Record monthRecord = null;
 
@@ -236,42 +243,57 @@ namespace E_Internship_Journal.API
                     _context.Month_Records.Add(monthRecord);
                 }
 
-                //TODO VALIDATION FOR ATTENDANCE
-                string[] timeValArray = day_RecordNewInput.ArrivalTime.Value.ToString().Replace(" ", "").Split(':');
-                DateTime timeIn = date.AddHours(Int32.Parse(timeValArray[0])).AddMinutes(Int32.Parse(timeValArray[1]));
-                timeValArray = day_RecordNewInput.DepartureTime.Value.ToString().Replace(" ", "").Split(':');
-                DateTime timeOut = date.AddHours(Int32.Parse(timeValArray[0])).AddMinutes(Int32.Parse(timeValArray[1]));
-                var mc = bool.Parse(day_RecordNewInput.MC.Value);
-                var companyOff = bool.Parse(day_RecordNewInput.CompanyOff.Value);
+                string arrivalTimeStr = day_RecordNewInput.ArrivalTime.Value.ToString();
+                string departTimeStr = day_RecordNewInput.DepartureTime.Value.ToString();
+                var timeIn = new DateTime();
+                var timeOut = new DateTime();
+                bool isPresent = false;
+                string remarks = day_RecordNewInput.Remarks.Value.ToString().Trim();
+                if (!string.IsNullOrEmpty(arrivalTimeStr) && string.IsNullOrWhiteSpace(remarks))
+                {
+                    timeIn = DateTime.Parse(arrivalTimeStr);
+                    timeOut = DateTime.Parse(departTimeStr);
+                    isPresent = true;
+                }
+                else
+                {
+                    return BadRequest("Time In and Time Out must not have any values if absent");
+                }
+                
                 var taskRecords = day_RecordNewInput.Tasks;
+
 
                 //Calculate the weekno
 
-                int weekNo = (Int32.Parse((date - startDate).TotalDays.ToString()) / 7) + 1;
+                int weekNo = (Int32.Parse(date.Subtract(startDate).Days.ToString()) / 7) + 1;
 
                 var newDayRecord = new Day_Record
                 {
                     Date = date,
-                    ArrivalTime = timeIn,
-                    DepartureTime = timeOut,
-                    CompanyOff = companyOff,
-                    MC = mc,
+                    IsPresent = isPresent,
+                    Remarks = remarks,
                     WeekNo = weekNo,
                     Month = monthRecord
                 };
 
-                List<Task_Record> tasks = new List<Task_Record>();
-                for (int i = 0; i < taskRecords.Count; i++)
-                {
-                    var taskRecord = new Task_Record
+                if (isPresent) {
+                    newDayRecord.ArrivalTime = timeIn;
+                    newDayRecord.DepartureTime = timeOut;
+                    newDayRecord.Remarks = "";
+
+                    List<Task_Record> tasks = new List<Task_Record>();
+                    for (int i = 0; i < taskRecords.Count; i++)
                     {
-                        Description = taskRecords[i].Value
-                    };
+                        var taskRecord = new Task_Record
+                        {
+                            Description = taskRecords[i].Value
+                        };
 
-                    tasks.Add(taskRecord);
+                        tasks.Add(taskRecord);
+                    }
+
+                    newDayRecord.Tasks = tasks;
                 }
-
-                newDayRecord.Tasks = tasks;
 
                 _context.Day_Records.Add(newDayRecord);
                 await _context.SaveChangesAsync();

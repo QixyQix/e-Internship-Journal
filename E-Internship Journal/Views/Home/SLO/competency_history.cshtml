@@ -1,0 +1,130 @@
+﻿
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="~/Home/edit_competency">Competency Checklist</a>
+        </li>
+        <li class="breadcrumb-item active">Competency History</li>
+    </ol>
+    <div class="card" style="border-width:0px;">
+        <div class="card-body">
+            <div class="form-group">
+                <div class="pull-right">
+                    <div class="form-inline">
+                        <div class="pull-right">
+                            <select class="form-control`" id="exampleSelect1">
+                                <option>AY16/17S2</option>
+                                <option>AY16/17S1</option>
+                                <option>AY16/16S2</option>
+                                <option>AY16/16S1</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Example DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-table"></i> Competency History
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Edited by</th>
+                            <th>View</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                12/01/2011
+                            </td>
+                            <td>
+                                Teo Seok Ling
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-default"><i class="fa fa-eye"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                12/06/2011
+                            </td>
+                            <td>
+                                Leong Fong Sow
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-default"><i class="fa fa-eye"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+
+    <!--end with attendance taking-->
+    <div class="card-body">
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                    Back
+                </button>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+
+<script>
+    var editor;
+    $(document).ready(function () {
+        var editor;
+        var table = $('#dataTable').DataTable({
+            "scrollY": '250px',
+            "scrollCollapse": true,
+            "paging": false,
+            "bPaginate": false,
+            "bLengthChange": false,
+            "bFilter": false,
+            "bSort": false,
+            "bInfo": false,
+            "bAutoWidth": false,
+            "asStripClasses": null,
+            //--disable the sorting--
+            dom: 'rti',
+            ajax: {
+                url: '/Api/Task_Record',
+                dataSrc: ''
+            },
+            order: [[1, 'asc']],
+            columns: [
+                { data: "Description" },
+                { data: "Description" },
+                {
+                    data: null,
+                    "bSortable": false,
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-default"><i class="fa fa-eye"></i></button>' }
+                }
+            ],
+            language: {
+                emptyTable: "No competency checklist was found, please create one.",
+            }
+        });
+
+        $('#dataTable tbody').on('click', 'button.btn-default', function (e) {
+            //Url.Action("someaction", "somecontroller", new { id = "123" })
+            window.location.href = "view_competency";
+        });
+    });
+</script>

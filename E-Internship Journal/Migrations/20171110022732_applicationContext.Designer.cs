@@ -8,8 +8,8 @@ using E_Internship_Journal.Data;
 namespace E_Internship_Journal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20171102144108_applicationContextNew")]
-    partial class applicationContextNew
+    [Migration("20171110022732_applicationContext")]
+    partial class applicationContext
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -101,11 +101,11 @@ namespace E_Internship_Journal.Migrations
                     b.HasKey("BatchId")
                         .HasName("PrimaryKey_BatchId");
 
-                    b.HasIndex("BatchName")
-                        .IsUnique()
-                        .HasName("Batch_BatchName_UniqueConstraint");
-
                     b.HasIndex("CourseId");
+
+                    b.HasIndex("BatchName", "CourseId")
+                        .IsUnique()
+                        .HasName("Batch_BatchNameCourseId_UniqueConstraint");
 
                     b.ToTable("Batches");
                 });
@@ -227,30 +227,31 @@ namespace E_Internship_Journal.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("ArrivalTime")
+                    b.Property<DateTime?>("ArrivalTime")
                         .HasColumnName("ArrivalTime");
-
-                    b.Property<bool?>("CompanyOff")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("CompanyOff")
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
 
                     b.Property<DateTime>("Date")
                         .HasColumnName("Date");
 
-                    b.Property<DateTime>("DepartureTime")
+                    b.Property<DateTime?>("DepartureTime")
                         .HasColumnName("DepartureTime");
 
-                    b.Property<bool?>("MC")
+                    b.Property<bool>("IsPresent")
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("MC")
+                        .HasColumnName("IsPresent")
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
                     b.Property<int>("MonthRecordId")
                         .HasColumnName("MonthRecordId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Remarks")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("Remakrs")
+                        .HasColumnType("VARCHAR(MAX)")
+                        .HasDefaultValue("");
 
                     b.Property<int>("WeekNo")
                         .HasColumnName("WeekNo")
