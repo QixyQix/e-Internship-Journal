@@ -229,7 +229,22 @@
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
                     cache: false,
-                    data: "'" + JSON.stringify(webFormData) + "'"
+                    data: "'" + JSON.stringify(webFormData) + "'",
+                    success: function (data) {
+                        swal({
+                            type: 'success',
+                            title: 'Your work has been saved',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    },
+                    error: function (data) {
+                        swal(
+                            'Oops...',
+                            'Something went wrong!',
+                            'error'
+                        )
+                    }
                 });
                 $getDayHandler.done(function (data, textStatus, jqXHR) {
                  });//End of Done
