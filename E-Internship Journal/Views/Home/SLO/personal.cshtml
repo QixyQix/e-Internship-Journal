@@ -1,0 +1,54 @@
+﻿<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item active">Personal Particulars</li>
+    </ol>
+    <!-- Example DataTables Card-->
+    <div class="card">
+        <div class="card-header">
+            <i class="fa fa-pencil"></i> Personal Particulars
+        </div>
+        <div class="card-body">
+                <div class="form-group">
+                    <label class="control-label" for="name">
+                        Name:
+                    </label>
+                    <input type='text' class="form-control" id="name" readonly/>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="contact">
+                        Contact:
+                    </label>
+                    <input type='text' class="form-control" id="contact" />
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="email">
+                        Email:
+                    </label>
+                    <input type='text' class="form-control" id="email" />
+                </div>
+        </div>
+    </div>
+</div>
+<div class="card-body">
+    <div class="form-group">
+        <div class="col-12">
+            <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                Back
+            </button>
+            <button class="btn btn-primary pull-right" name="submit" type="submit">
+                Update Details
+            </button>
+        </div>
+    </div>
+</div>
+<br />
+<script>
+    $('#promptreset').on('click', function (e) {
+        $('#resetModal').modal('show');
+        console.log("hi")
+    });
+</script>

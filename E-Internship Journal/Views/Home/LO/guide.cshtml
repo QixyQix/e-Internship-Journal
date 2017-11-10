@@ -1,0 +1,86 @@
+﻿<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item active">Guidelines</li>
+    </ol>
+    <!-- Example DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-table"></i> Guidelines
+        </div>
+
+        <button class="accordion">1. Who should I turn to if i face issues in my internship</button>
+        <div class="card-body guide">
+            <br />
+            <p>The Liaison Officer is your first point of contact if you need any assistance on internship matters.
+It is important that you obtain the after-office hours contact number of your Liason Officer in case of emergency. If you encounter any issues relating to your internship, please contact your Liason Officer immediately. Alternatively, you may contact the Department of Industry Services at 6870-6020 or isupport@sp.edu.sg.</p>
+        </div>
+
+        <button class="accordion">2. What is the role of Liaison Officer?</button>
+        <div class="card-body guide">
+            <br />
+            <p>
+                The Liaison Officer is the main coordinator between SP and the company during the internship duration. He is also your first point of contact if you need any assistance on internship matters.<br />
+                Your Liaison Officer will arrange for your visit(s) to your work site to check on your progress, gather feedback from the Company Supervisor on your performance or progress, ensure that the training plan is relevant and supports the defined learning outcomes of the internship program.
+            </p>
+        </div>
+
+        <button class="accordion"> 3. What are the tasks that I need to do for internship?</button>
+        <div class="card-body guide">
+            <br />
+            <p>In order to make this internship beneficial to you, you are required to complete the tasks as instructed here.</p>
+            <p>
+                Before Internship:
+                <ul>
+                    <li>Attend the Pre-Internship Briefing to understand the guidelines for internship</li>
+                    <li>Complete the Pre-Internship Questionnaire, if applicable</li>
+                    <li>Meet your Liaison Officier once you have received your internship details as he may have specific instruction for you</li>
+                    <li>Write an introductory letter to the company. In your letter, you should highlight your positive qualities, education background, work experience, co-curricular activities and other achievements</li>
+                </ul><br />
+                During Internship:
+                <ul>
+                    <li>Update the Internship Journal on a regular basis, as advised by your school</li>
+                    <li>Submit the Internship Journal to your Company Supervisor so that he can assess you on a regular basis</li>
+                    <li>Ensure that your Company Supervisor signs and stamps on your attendance Sheet every month</li>
+                    <li>Give a 'Thank You' card or note to your company in the last week of internship</li>
+                    <li>Complete the Student Feedback Form in the last week of internship</li>
+                    <li>Sign your Attendance Sheet in the Internship Journal, attach all your Medical Certificates and other supporting documents for leave on the last day of internship</li>
+                </ul><br />
+                After Internship:
+                <ul>
+                    <li>Submit your Internship Journal to your Liaison Officer for grading within 1 week after the completion of internship</li>
+                    <li>Attend Post-Internship Briefing, if applicable.</li>
+                </ul>
+            </p>
+        </div>
+    </div>
+</div>
+<div class="card-body">
+    <div class="form-group">
+        <div class="col-12">
+            <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                Back
+            </button>
+        </div>
+    </div>
+</div>
+<br />
+<script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+        acc[i].onclick = function () {
+            this.classList.toggle("active");
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        }
+    }
+</script>
