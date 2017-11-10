@@ -1,18 +1,24 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
 <div class="container-fluid">
-    <!-- Breadcrumbs-->
+    <!-- Breadcrumbs -->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
             <a href="~/Home/Index">Homepage</a>
         </li>
         <li class="breadcrumb-item">
-            <a href="~/Home/attendance_summary">Attendance Summary</a>
+            <a href="~/Home/Student_Journal">Student Journal</a>
         </li>
-        <li class="breadcrumb-item active">Attendance History</li>
+        <li class="breadcrumb-item active">Daily Task</li>
     </ol>
     <div class="card" style="border-width:0px;">
         <div class="card-body">
             <div class="form-group">
+                <div class="pull-left">
+                    <label>Student Name:&nbsp</label><label>Amelia Goh</label>
+                </div>
                 <div class="pull-right">
                     <select class="form-control`" id="exampleSelect1">
                         <option>Week 1</option>
@@ -38,7 +44,7 @@
                             <th>Time in</th>
                             <th>Time Out</th>
                             <th>Remarks</th>
-                            <th>Comment</th>
+                            <th>Edit</th>
                         </tr>
                     </thead>
                     @*<tfoot>
@@ -64,10 +70,6 @@
         </div>
         <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
     </div>
-
-    <!--end with attendance taking-->
-
-
     <div class="card mb-3">
         <div class="card-header">
             <i class="fa fa-table"></i> Attendance Overall
@@ -112,10 +114,11 @@
         </div>
         <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
     </div>
+    <!--end with attendance taking-->
     <div class="card-body">
         <div class="form-group">
             <div class="col-12">
-                <button class="btn btn-default" onclick="window.history.go(-1); return false">
+                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
                     Back
                 </button>
             </div>
@@ -123,46 +126,7 @@
     </div>
     <br />
 </div>
+<!-- /.container-fluid -->
+<!-- /.content-wrapper -->
 <script>
-    var editor;
-    $(document).ready(function () {
-        var table = $('#dataTable').DataTable({
-            "scrollY": '250px',
-            "scrollCollapse": true,
-            "paging": false,
-            //--disable the sorting--
-            dom: 'rtp',
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
-            },
-            columns: [
-                { data: "DayRecordId" },
-                { data: "Description" },
-                { data: "Description" },
-                { data: "Description" },
-                {
-                    data: null,
-                    "bSortable": false,
-                    "mRender": function (o) { return '<input id="comments" readonly>' }
-                }
-            ],
-            language: {
-                emptyTable: "No task was found, please create one.",
-            }
-        });
-
-        // Activate an inline edit on click of a table cell
-        $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
-            console.log("button 1 is click");
-        });
-
-        $('#addattendance').on('click', function (e) {
-            $('#attendanceModal').modal('show');
-        });
-
-        $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
-            $('#editattendanceModal').modal('show');
-        });
-    });
 </script>

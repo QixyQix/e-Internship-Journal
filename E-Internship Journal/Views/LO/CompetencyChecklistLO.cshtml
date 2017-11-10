@@ -4,26 +4,23 @@
         <li class="breadcrumb-item">
             <a href="~/Home/Index">Homepage</a>
         </li>
-        <li class="breadcrumb-item">
-            <a href="~/Home/competency_checklist">Competency Checklist</a>
-        </li>
-        <li class="breadcrumb-item active">Competency History</li>
+        <li class="breadcrumb-item active">Competency Checklist</li>
     </ol>
-    <div class="card" style="border-width:0px;">
-        <div class="card-body">
-            <div class="form-group">
-                <div class="pull-right">
-                    <select class="form-control`" id="exampleSelect1">
-                        <option>Week 1</option>
-                        <option>Week 2</option>
-                        <option>Week 3</option>
-                        <option>Week 4</option>
-                    </select>
-                </div>
-            </div>
+
+    <div class="card-head">
+        <div class="form-inline pull-right">
+            <select class="form-control" id="selectweek">
+                <option>Week 1 to Week 4</option>
+                <option>Week 5 to Week 8</option>
+                <option>Week 9 to Week 12</option>
+                <option>Week 13 to Week 16</option>
+            </select>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12 pull-left">
+            <label>Student Name:&nbsp</label><a href="#">Amelia Goh</a>
         </div>
     </div>
-    <div class="card mb-3">
+    <div class="card-body">
         <div class="card-header">
             <i class="fa fa-table"></i> Competency Checklist
         </div>
@@ -69,7 +66,7 @@
                                     Assist project team for project requirements gathering and analysis
                                 </li>
                                 <li>
-                                    Assist in gathering of user requirements, which can be any activity such as design of questionnaire, logistics planning
+                                    Assisst in gathering of user requirements, which can be any activity such as design of questionnaire, logistics planning
                                 </li>
                                 <li>
                                     Identify and document an application problem or symptoms from users(when there is reported software bug)
@@ -183,16 +180,15 @@
         @*<div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>*@
     </div>
 </div>
-    <div class="card-body">
-        <div class="form-group">
-            <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
-                    Back
-                </button>
-            </div>
+<div class="card-body">
+    <div class="form-group">
+        <div class="col-12">
+            <button class="btn btn-default" onclick="window.history.go(-1); return false">
+                Back
+            </button>
         </div>
     </div>
-&nbsp;
+</div>
+
 <script>
-    $("div input").attr("disabled", "disabled");
 </script>

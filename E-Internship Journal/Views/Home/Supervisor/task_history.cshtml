@@ -1,0 +1,75 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+    <div class="container-fluid">
+        <!-- Breadcrumbs -->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="~/Home/Index">Homepage</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="~/Home/Student_Journal">Student Journal</a>
+            </li>
+            <li class="breadcrumb-item active">Daily Task</li>
+        </ol>
+        <div class="card" style="border-width:0px;">
+            <div class="card-body">
+                <div class="form-group">
+                    <div class="pull-left">
+                        <label>Student Name:&nbsp</label><label>Amelia Goh</label>
+                    </div>
+                    <div class="pull-right">
+                        <select class="form-control`" id="exampleSelect1">
+                            <option>Week 1</option>
+                            <option>Week 2</option>
+                            <option>Week 3</option>
+                            <option>Week 4</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Example DataTables Card-->
+        <div class="card mb-3">
+            <div class="card-header">
+                <i class="fa fa-table"></i> Attendance Taking
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Description</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>I love to Slack</td>
+                                <td><button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+        </div>
+        <!--end with attendance taking-->
+        <div class="card-body">
+            <div class="form-group">
+                <div class="col-12">
+                    <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+        <br />
+    </div>
+    <!-- /.container-fluid -->
+<!-- /.content-wrapper -->
+<script>
+</script>

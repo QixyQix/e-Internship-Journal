@@ -366,7 +366,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addccModalLabel">Create Competency</h5>
+                    <h5 class="modal-title" id="addccModalLabel">Add Competency</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -385,8 +385,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="submit">Submit</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="submit">Submit</button>
                     <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
                 </div>
             </div>
@@ -417,8 +417,66 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"  data-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-primary" id="submit">Submit</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Manage Student Modal -->
+    <div class="modal fade" id="updateManageStudentModal" tabindex="-1" role="dialog" aria-labelledby="updateManageStudentModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateManageStudentModalLabel">Edit Student</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <form>
+                            <div class="form-group">
+                                <label class="control-label" for="studentID">Student ID:</label>                                                              
+                                <div class="col-sm-6">
+                                    <input class="form-control" id="studentID" type="text" value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="name">Name:</label>
+                                <div class="col-sm-6">
+                                    <input class="form-control" id="name" type="text" value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="project">Project:</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" id="project">
+                                        <option>Parliament</option>
+                                        <option>CAAS</option>
+                                        <option>MDA</option>
+                                        <option>WIS</option>
+                                    </select>
+                                </div>
+                            </div> 
+                            <div class="form-group">
+                                <label class="control-label" for="liaisonOfficer">Liaison Officer:</label>                                                              
+                                <div class="col-sm-6">
+                                    <select class="form-control" id="liaisonOfficer">
+                                        <option>Mr Vincent Goh</option>
+                                        <option>Ms Leong Fong Sow</option>
+                                        <option>Mr Lim De Yang</option>
+                                        <option>Dr Leong</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="submit">Submit</button>
                     <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
                 </div>
             </div>
