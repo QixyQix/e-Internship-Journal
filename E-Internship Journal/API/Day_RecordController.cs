@@ -249,7 +249,7 @@ namespace E_Internship_Journal.API
                 var timeOut = new DateTime();
                 bool isPresent = false;
                 string remarks = day_RecordNewInput.Remarks.Value.ToString().Trim();
-                if (!(string.IsNullOrEmpty(arrivalTimeStr) || string.IsNullOrEmpty(departTimeStr)) && string.IsNullOrWhiteSpace(remarks))
+                if (!string.IsNullOrEmpty(arrivalTimeStr) && string.IsNullOrWhiteSpace(remarks))
                 {
                     timeIn = DateTime.Parse(arrivalTimeStr);
                     timeOut = DateTime.Parse(departTimeStr);
