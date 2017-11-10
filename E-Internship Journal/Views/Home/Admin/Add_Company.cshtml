@@ -26,6 +26,24 @@
                             <input class="form-control" id="companyAddress" type="text" value="">
                         </div>
                     </div>
+                    <div class="form-inline">
+                        <label class="col-sm-2 control-label">Contact Person Name:</label>
+                        <div class="col-sm-5">
+                            <input class="form-control" id="contactName" type="text" value="">
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        <label class="col-sm-2 control-label">Contact Person Email:</label>
+                        <div class="col-sm-5">
+                            <input class="form-control" id="contactEmail" type="text" value="">
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        <label class="col-sm-2 control-label">Contact Person Number:</label>
+                        <div class="col-sm-5">
+                            <input class="form-control" id="contactNumber" type="text" value="">
+                        </div>
+                    </div>
                 </form>
             </div>
 
@@ -50,6 +68,10 @@
 
         var collectedCompanyName = $('#comapnyName').val();
         var collectedCompanyAddress = $('#companyAddress').val();
+        var collectedContactName = $('#contactName').val();
+        var collectedContactEmail = $('#contactEmail').val();
+        var collectedContactNumber = $('#contactNumber').val();
+
 
         var webFormData = new WebFormData(collectedCompanyName, collectedCompanyAddress);
         var webFormDatainString = JSON.stringify(webFormData);

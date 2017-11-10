@@ -180,6 +180,21 @@ namespace E_Internship_Journal.Data
                 .HasColumnName("CompanyAddress")
                 .HasColumnType("VARCHAR(MAX)")
                 .IsRequired();
+            modelBuilder.Entity<Company>()
+             .Property(companies => companies.ContactName)
+             .HasColumnName("ContactName")
+             .HasColumnType("VARCHAR(50)")
+             .IsRequired();
+            modelBuilder.Entity<Company>()
+             .Property(companies => companies.ContactEmail)
+             .HasColumnName("ContactEmail")
+             .HasColumnType("VARCHAR(100)")
+             .IsRequired(false);
+            modelBuilder.Entity<Company>()
+             .Property(companies => companies.ContactNumber)
+             .HasColumnName("ContactNumber")
+             .HasColumnType("VARCHAR(15)")
+             .IsRequired(false);
             //----------- Defining Company Entity - End --------------
 
             //----------- Defining Project Entity - Start --------------

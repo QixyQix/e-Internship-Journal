@@ -96,7 +96,7 @@ namespace E_Internship_Journal.Data
             db.SaveChanges();
 
             //Create Company
-            var companyObject = new Company { CompanyName = "Some Weird Company", CompanyAddress = "BLK999# 03-03 HELL STREET SINGAPORE 666666" };
+            var companyObject = new Company { CompanyName = "Some Weird Company", CompanyAddress = "BLK999# 03-03 HELL STREET SINGAPORE 666666" , ContactName = "SWEE CHEE HENG" , ContactEmail = "CHEEHENG@mailinator.com" , ContactNumber="92401234"};
             db.Companies.Add(companyObject);
             db.SaveChanges();
 

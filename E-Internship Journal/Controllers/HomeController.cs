@@ -306,10 +306,10 @@ namespace E_Internship_Journal.Controllers
         {
             return View("~/Views/Home/Admin/Add_Company.cshtml");
         }
-        //public IActionResult EditCompany()
-        //{
-        //    return View("~/Views/Home/LO/touchpoint.cshtml");
-        //}
+        public IActionResult EditCompany()
+        {
+            return View("~/Views/Home/LO/touchpoint.cshtml");
+        }
 
         [Authorize(Roles = "ADMIN")]
         public IActionResult ViewUser()
