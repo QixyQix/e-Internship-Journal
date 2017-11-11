@@ -152,6 +152,10 @@ namespace E_Internship_Journal.Controllers
             {
                 return View("~/Views/Home/Student/competency_history.cshtml");
             }
+            else if (User.IsInRole("SLO"))
+            {
+                return View("~/Views/Home/SLO/competency_history.cshtml");
+            }
             else /*if(User.IsInRole("STUDENT"))*/
             {
                 return View("~/Views/Home/LO/competency_history.cshtml");
@@ -236,6 +240,20 @@ namespace E_Internship_Journal.Controllers
         public IActionResult Touchpoint()
         {
             return View("~/Views/Home/LO/touchpoint.cshtml");
+        }
+
+        //Student
+        public IActionResult Mentoring()
+        {
+            return View("~/Views/Home/Student/mentoring.cshtml");
+        }
+        public IActionResult Mentoring_History()
+        {
+            return View("~/Views/Home/Student/mentoring_history.cshtml");
+        }
+        public IActionResult Internship_Survey()
+        {
+            return View("~/Views/Home/Student/internship_survey.cshtml");
         }
 
         //SLO
