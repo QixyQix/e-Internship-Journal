@@ -41,6 +41,8 @@
                 <table class="table table-bordered" id="dataTable" cellspacing="0">
                     <thead>
                         <tr>
+                            <th>Header</th>
+                            <th>Title</th>
                             <th>Description</th>
                             <th>DeletedBy</th>
                             <th>DeletedAt</th>
@@ -52,7 +54,12 @@
                     <tbody>
                         <tr>
                             <td>
+                                Technical Development
+                            </td>
+                            <td>
                                 1. Describe and explain respectively domain knowledge
+                            </td>
+                            <td>
                                 <ul>
                                     <li>
                                         Understand existing business operations
@@ -65,6 +72,10 @@
                                     </li>
                                 </ul>
                             </td>
+                            <td>Teo Seok Ling</td>
+                            <td>-</td>
+                            <td>Teo Seok Ling</td>
+                            <td>12/11/2017</td>
                             <td>
                                 <button class="btn btn-primary" id="updatecc"><i class="fa fa-pencil-square"></i></button>
                                     <button class="btn btn-danger" id="delete"><i class="fa fa-trash"></i></button>
@@ -104,6 +115,18 @@
 
                 <div class="container">
                     <form>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Header</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" id="header" type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Title</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" id="title" type="text" value="">
+                            </div>
+                        </div>
                         <div class="form-group ">
                             <label class="control-label" for="description">
                                 Description
@@ -135,6 +158,18 @@
 
                 <div class="container">
                     <form>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Header</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" id="header" type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Title</label>
+                            <div class="col-sm-8">
+                                <input class="form-control" id="title" type="text" value="">
+                            </div>
+                        </div>
                         <div class="form-group ">
                             <label class="control-label" for="description">
                                 Description
@@ -158,24 +193,24 @@
 
         $("[name='my-checkbox']").bootstrapSwitch();
         var table = $('#dataTable').DataTable({
-            "scrollY": '250px',
-            "scrollCollapse": true,
-            "paging": false,
-            "bPaginate": false,
+            "paging": true,
+            "bPaginate": true,
             "bLengthChange": false,
             "bFilter": false,
             "bSort": false,
-            "bInfo": false,
+            "bInfo": true,
             "bAutoWidth": false,
             "asStripClasses": null,
             //--disable the sorting--
-            dom: 'rti',
+            dom: 'rtip',
             ajax: {
                 url: '/Api/Task_Record',
                 dataSrc: ''
             },
             order: [[1, 'asc']],
             columns: [
+                { data: "Description" },
+                { data: "Description" },
                 { data: "Description" },
                 { data: "Description" },
                 { data: "Description" },

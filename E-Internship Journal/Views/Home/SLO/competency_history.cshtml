@@ -91,18 +91,16 @@
     $(document).ready(function () {
         var editor;
         var table = $('#dataTable').DataTable({
-            "scrollY": '250px',
-            "scrollCollapse": true,
-            "paging": false,
-            "bPaginate": false,
+            "paging": true,
+            "bPaginate": true,
             "bLengthChange": false,
             "bFilter": false,
             "bSort": false,
-            "bInfo": false,
+            "bInfo": true,
             "bAutoWidth": false,
             "asStripClasses": null,
             //--disable the sorting--
-            dom: 'rti',
+            dom: 'rtip',
             ajax: {
                 url: '/Api/Task_Record',
                 dataSrc: ''
