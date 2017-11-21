@@ -2,40 +2,37 @@
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
-            <a href="#">Dashboard</a>
+            <a href="~/home/index">Homepage</a>
         </li>
-        <li class="breadcrumb-item active">Add Batch</li>
+        <li class="breadcrumb-item">
+            <a href="~/home/viewuser">Users</a>
+        </li>
+        <li class="breadcrumb-item active">Create User</li>
     </ol>
     <!-- Example DataTables Card-->
     <div class="card mb-3">
         <div class="card-header">
-            <i class="fa fa-table"></i> Add Batch
+            <i class="fa fa-table"></i> Create User
         </div>
 
         <div>
             <form class="form-group">
                 <div class="form-inline">
                     <label class="col-md-2 control-label">Role:</label>
-                    <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split col-md-2 control-label" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Student<span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Student</a>
-                        <a class="dropdown-item" href="#">Supervisor</a>
-                        <a class="dropdown-item" href="#">LO</a>
-                        <a class="dropdown-item" href="#">SLO</a>
-                    </div>
+                    <select id="example-getting-started" multiple="multiple">
+                        <option value="student">Student</option>
+                        <option value="supervisor">Supervisor</option>
+                        <option value="lo">LO</option>
+                        <option value="slo">SLO</option>
+                    </select>
                 </div>
                 <div class="form-inline">
-                    <label class="col-md-2 control-label">Course:</label>
-                    <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split col-md-2 control-label" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        DIT<span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">DIT</a>
-                        <a class="dropdown-item" href="#">DIBT</a>
-                        <a class="dropdown-item" href="#">DISM</a>
-                        <a class="dropdown-item" href="#">DDA</a>
+                    <label class="col-md-2 control-label">Batch:</label>
+                    <div class='input-group' id='findbatch'>
+                        <input type='text' class="form-control" id="batch" readonly />
+                        <div class="input-group-addon" onclick="findBatchModal()">
+                            <i class="fa fa-search"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="form-inline">
@@ -57,27 +54,86 @@
                     </div>
                 </div>
                 <div class="form-inline">
-                    <label class="col-sm-2 control-label">Company:</label>
-                    <div class="col-sm-5">
-                        <input class="form-control" id="company" type="text" value="">
-                    </div>
-                </div>
-                <div class="form-inline">
-                    <label class="col-sm-2 control-label">Project:</label>
-                    <div class="col-sm-5">
-                        <input class="form-control" id="project" type="text" value="">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-5 form-inline">
+                        <label class="radio-inline">
+                            <input type="radio" name="optradio"> Activate
+                        </label>
+                        &nbsp;
+                        <label class="radio-inline">
+                            <input type="radio" name="optradio"> Deactivate
+                        </label>
                     </div>
                 </div>
             </form>
         </div>
-
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+    <div class="card-body">
         <div class="form-group">
-            <label class="control-label col-md-3"></label>
-            <div class="btn pull-right">
-                <button class="btn btn-primary" name="submit" type="submit">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                    Back
+                </button>
+                <button class="btn btn-primary pull-right" name="submit" type="submit">
                     Save
                 </button>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Batch Modal -->
+<div class="modal fade" id="batchModal" tabindex="-1" role="dialog" aria-labelledby="batchModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="batchModalLabel">Batch Assigned</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="col-12">
+                    <form>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input class="form-control" placeholder="Search...">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-search">
+                                    </i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="5" id="task">AY16/17 S2\\\n AY16/17 S1</textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-12">
+                                <div class="form-inline">
+                                    <label>Selected: &nbsp;</label>
+                                    <input class="form-control" value="AY16/17 S1" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
+                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function findBatchModal() {
+        $('#batchModal').modal('show');
+        //http://www.dyn-web.com/tutorials/forms/select/multi-selected.php
+        //please take a look at this for reference
+    }
+    $(document).ready(function () {
+        $('#example-getting-started').multiselect();
+    });
+</script>

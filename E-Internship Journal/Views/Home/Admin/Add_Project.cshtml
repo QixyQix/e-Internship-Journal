@@ -4,6 +4,9 @@
         <li class="breadcrumb-item">
             <a href="~/Home/Index">Homepage</a>
         </li>
+        <li class="breadcrumb-item">
+            <a href="~/Home/ViewProject">Project</a>
+        </li>
         <li class="breadcrumb-item active">Create Project</li>
     </ol>
     <!-- Example DataTables Card-->
@@ -14,28 +17,37 @@
         <div>
             <form class="form-group">
                 <div class="form-inline">
-                    <label class="col-md-2 control-label">Project name:</label>
-                    <div class="col-sm-5">
-                        <input class="form-control" id="projname" type="text">
+                    <label class="col-md-2 control-label">Project Name:</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" id="projectName" type="text" value="">
                     </div>
                 </div>
                 <div class="form-inline">
-                    <label class="col-sm-2 control-label">Supervisor:</label>
-                    <select class="form-control`" id="exampleSelect1">
-                        <option>Johnny</option>
-                        <option>Vincent</option>
-                        <option>Daniel</option>
-                        <option>Joe</option>
-                    </select>
+                    <label class="col-md-2 control-label">Company:</label>
+                    <div class='input-group' id='findcompany'>
+                        <input type='text' class="form-control" id="course" readonly />
+                        <div class="input-group-addon" onclick="findCompanyModal()">
+                            <i class="fa fa-search"></i>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-inline">
-                    <label class="col-sm-2 control-label">Company:</label>
-                    <select class="form-control`" id="exampleSelect2">
-                        <option>Convertium</option>
-                        <option>Accenture</option>
-                        <option>NCS</option>
-                        <option>GovTech</option>
-                    </select>
+                    <label class="col-md-2 control-label">Supervisor's Name:</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" id="supervisorName" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-md-2 control-label">Email:</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" id="email" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-md-2 control-label">Mobile No.:</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" id="mobileNo" type="text" value="">
+                    </div>
                 </div>
             </form>
         </div>

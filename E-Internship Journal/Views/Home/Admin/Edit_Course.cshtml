@@ -4,6 +4,9 @@
         <li class="breadcrumb-item">
             <a href="~/Home/Index">Homepage</a>
         </li>
+        <li class="breadcrumb-item">
+            <a href="~/Home/ViewCourse">Course</a>
+        </li>
         <li class="breadcrumb-item active">Edit Course</li>
     </ol>
     <!-- Example DataTables Card-->
@@ -43,88 +46,3 @@
     </div>
     <br />
 </div>
-@*<script>
-        $(document).ready(function () {
-
-            var editor = new $.fn.dataTable.Editor(table);
-
-            //var t = $('#dataTable').DataTable();
-            var counter = 1;
-
-            var table = $('#dataTable').DataTable({
-                ajax: {
-                    url: '/Api/Task_Record',
-                    dataSrc: ''
-                },
-                "bPaginate": false,
-                "bLengthChange": false,
-                "bFilter": false,
-                "bSort": false,
-                "bInfo": false,
-                "bAutoWidth": false,
-                "asStripClasses": null,
-                //--disable the sorting--
-                dom: 'lrt',
-                "aoColumns": [
-                    { "mData": "DayRecordId", "sWidth": "10%" },
-                    { "mData": "Description", "sTitle": "Description", "sWidth": "80%" },
-                    {
-                        "mData": null,
-                        "bSortable": false,
-                        "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button>' }
-                    }
-                ],
-                language: {
-                    emptyTable: "No task was found, please create one.",
-                }
-            });
-            $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
-                console.log("button 1 is click");
-            });
-        });
-    </script>*@
-<script>
-    var editor;
-    $(document).ready(function () {
-        var table = $('#dataTable').DataTable({
-            "scrollY": '250px',
-            "scrollCollapse": true,
-            "paging": false,
-            "bPaginate": false,
-            "bLengthChange": false,
-            "bFilter": false,
-            "bSort": false,
-            "bInfo": false,
-            "bAutoWidth": false,
-            "asStripClasses": null,
-            //--disable the sorting--
-            dom: 'rti',
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
-            },
-            order: [[1, 'asc']],
-            columns: [
-                { data: "DayRecordId" },
-                { data: "Description" },
-                {
-                    data: null,
-                    "sWidth": "10%",
-                    "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
-                }
-            ],
-            language: {
-                emptyTable: "No task was found, please create one.",
-            }
-        });
-
-        $('#addtp').on('click', function (e) {
-            $('#addtpModal').modal('show');
-        });
-        
-        $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
-            $('#updatetpModal').modal('show');
-        });
-    });
-</script>

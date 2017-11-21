@@ -2,7 +2,10 @@
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
-            <a href="#">Dashboard</a>
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="~/Home/ViewBatch">Batch</a>
         </li>
         <li class="breadcrumb-item active">Edit Batch</li>
     </ol>
@@ -11,6 +14,7 @@
         <div class="card-header">
             <i class="fa fa-table"></i> Edit Batch
         </div>
+
         <div>
             <form class="form-group">
                 <div class="form-inline">
@@ -20,90 +24,164 @@
                     </div>
                 </div>
                 <div class="form-inline">
-                    <label class="col-md-2 control-label">Batch Description:</label>
-                    <div class="col-sm-3">
-                        <input class="form-control" id="batchDescription" type="text" value="">
+                    <label class="col-md-2 control-label">Course Name:</label>
+                    <div class='input-group' id='findcourse'>
+                        <input type='text' class="form-control" id="course" readonly />
+                        <div class="input-group-addon" onclick="findCourseModal()">
+                            <i class="fa fa-search"></i>
+                        </div>
                     </div>
-                </div>
-                <div class="form-inline">
-                    <label class="col-md-2 control-label">Course Assigned:</label>
-                    <input class="form-control" id="courseAssigned" type="text" value="" readonly>
-                    <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ui class="dropdown-menu" id="dropCourse">
-                        @*<a class="dropdown-item" href="#">DIT</a>
-                            <a class="dropdown-item" href="#">DBIT</a>
-                            <a class="dropdown-item" href="#">DISM</a>
-                            <a class="dropdown-item" href="#">DDA</a>*@
-                    </ui>
                 </div>
                 <div class="form-inline">
                     <label class="col-md-2 control-label">SLO Assigned:</label>
-                    <input class="form-control" id="assignedSlo" type="text" value="" readonly>
-                    <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ui class="dropdown-menu" id="dropSLO">
-                        @*<a class="dropdown-item" href="#">Ms Teo Seok Lin</a>
-                            <a class="dropdown-item" href="#">Mr Tan Yao Tian</a>
-                            <a class="dropdown-item" href="#">Ms Goh Ling Ling</a>
-                            <a class="dropdown-item" href="#">Mr Ong Lai</a>*@
-                    </ui>
-                </div>
-            </form>
-            <form class="form-group">
-                <div class="form-inline">
-                    <label class="col-sm-2 control-label" for="date">
-                        Start Date
-                        <span class="asteriskField">
-                            *
-                        </span>
-                    </label>
-                    <div class="input-group col-sm-2">
-                        <input class="form-control startDate" id="date" name="date" placeholder="DD/MM/YYYY" type="text">
-                        <div class="input-group-addon">
-                            <i class="fa fa-calendar">
-                            </i>
+                    <div class='input-group' id='findslo'>
+                        <input type='text' class="form-control" id="course" readonly />
+                        <div class="input-group-addon" onclick="findSLOAssignedModal()">
+                            <i class="fa fa-search"></i>
                         </div>
                     </div>
                 </div>
                 <div class="form-inline">
-                    <label class="col-sm-2 control-label" for="date">
-                        End Date
-                        <span class="asteriskField">
-                            *
-                        </span>
+                    <label class="control-label col-sm-2" for="startdate">
+                        Start Date:
                     </label>
-                    <div class="input-group col-sm-2">
-                        <input class="form-control endDate" id="date" name="date" placeholder="DD/MM/YYYY" type="text">
+                    <div class="input-group">
                         <div class="input-group-addon">
                             <i class="fa fa-calendar">
                             </i>
                         </div>
+                        <input class="form-control" id="startdate" name="date" placeholder="MM/DD/YYYY" type="text">
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="control-label col-sm-2" for="enddate">
+                        End Date:
+                    </label>
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-calendar">
+                            </i>
+                        </div>
+                        <input class="form-control" id="enddate" name="date" placeholder="MM/DD/YYYY" type="text">
                     </div>
                 </div>
             </form>
         </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+    <div class="card-body">
         <div class="form-group">
-            <label class="control-label col-md-3"></label>
-            <div class="btn pull-right">
-                <button class="btn btn-secondary" name="delete" type="button">
-                    Delete
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                    Back
                 </button>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label col-md-3"></label>
-            <div class="btn pull-right">
-                <button class="btn btn-primary" name="submit" type="submit" id="btnSave">
-                    Save
+                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                    Update
                 </button>
             </div>
         </div>
     </div>
 </div>
+<!-- Course Modal -->
+<div class="modal fade" id="courseModal" tabindex="-1" role="dialog" aria-labelledby="courseModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="courseModalLabel">Course Name</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="col-12">
+                    <form>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input class="form-control" placeholder="Search...">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-search">
+                                    </i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="5" id="task">AY16/17 S2\\\n AY16/17 S1</textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-12">
+                                <div class="form-inline">
+                                    <label>Selected: &nbsp;</label>
+                                    <input class="form-control" value="AY16/17 S1" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
+                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLO Modal -->
+<div class="modal fade" id="sloModal" tabindex="-1" role="dialog" aria-labelledby="sloModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sloModalLabel">SLO Assigned</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="col-12">
+                    <form>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input class="form-control" placeholder="Search...">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-search">
+                                    </i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="5" id="task">AY16/17 S2\\\n AY16/17 S1</textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-12">
+                                <div class="form-inline">
+                                    <label>Selected: &nbsp;</label>
+                                    <input class="form-control" value="AY16/17 S1" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
+                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+            </div>
+        </div>
+    </div>
+</div>
 <script>
+    function findCourseModal() {
+        $('#courseModal').modal('show');
+        //http://www.dyn-web.com/tutorials/forms/select/multi-selected.php
+        //please take a look at this for reference
+    }
+    function findSLOAssignedModal() {
+        $('#sloModal').modal('show');
+        //http://www.dyn-web.com/tutorials/forms/select/multi-selected.php
+        //please take a look at this for reference
+    }
     var g_batchId = getBatchIdFromAddressBar();
     getDropDown();
     $('#btnSave').on('click', function () {
@@ -188,7 +266,7 @@
                 $('#assignedSlo').attr('value', $(this).attr('value'));
             });
 
-            
+
         }); // End of .Done Handler
 
     }

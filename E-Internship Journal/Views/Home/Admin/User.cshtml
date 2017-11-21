@@ -2,7 +2,7 @@
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
-            <a href="#">Dashboard</a>
+            <a href="~/home/index">Homepage</a>
         </li>
         <li class="breadcrumb-item active">Users</li>
     </ol>
@@ -13,157 +13,685 @@
         </div>
         <div class="card-body">
             <div class="form-inline">
-                <div class="btn-group pull-left">
-                    <label class="form-text">Filter by Role:</label>
-                    @*<button type="button" class="btn btn-outline-secondary">October 2017</button>*@
-                    <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Student <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Student</a>
-                        <a class="dropdown-item" href="#">Supervisor</a>
-                        <a class="dropdown-item" href="#">LO</a>
-                        <a class="dropdown-item" href="#">SLO</a>
+                <div class="col-12">
+                    <div class="col-md-8 col-sm-8 col-xs-12 pull-left">
+                        <button class="col-md-3 col-sm-3 col-xs-12 btn btn-default" onclick="popCSV()" id="bulkadd">
+                            Bulk Add
+                        </button>
+                        &nbsp;
+                        <button class="col-md-3 col-sm-3 col-xs-12 btn btn-danger" onclick="popbulkdel()" id="bulkdel">
+                            Bulk Delete
+                        </button>
+                        &nbsp;
+                        <button class="col-md-3 col-sm-3 col-xs-12 btn btn-primary" onclick="popbulkdeact()" id="bulkdeact">
+                            Bulk Deactivate
+                        </button>
+                        &nbsp;
                     </div>
+                    <div class="col-md-4 col-sm-4 col-xs-12 pull-right">
+                        <button class="col-8 btn btn-primary pull-right" id="adduser" onclick="location.href='@Url.Action("createuser", "Home")'">
+                            Add User
+                        </button>
+                    </div>
+                    &nbsp;
                 </div>
             </div>
-            <div class="btn-group pull-right">
-                <input type="button" class="btn btn-primary" value="Add User" id="adduserButton" />
+            <div class="col-12">
+                <div class="form-text pull-left">
+                    <h3>Activated Accounts</h3>
+                </div>
             </div>
-            <div class="form-text pull-left">
-            <u>Activated Accounts</u>
-            </div>
-
             <div class="table-responsive">
-                <table class="table table-bordered" cellspacing="0">
+                <table class="table table-bordered" id="act_dataTable" cellspacing="0">
                     <thead>
                         <tr>
+                            <th><input name="select_all" value="1" type="checkbox"></th>
                             <th>Name</th>
-                            <th>Company</th>
-                            <th>Project</th>
+                            <th>Mobile No</th>
+                            <th>Email</th>
+                            <th>Batch Name</th>
                             <th>Role</th>
                             <th>Action</th>
+                        </tr>
+                        <tr id="filterrow">
+                            <th></th>
+                            <th>Name</th>
+                            <th>Mobile No</th>
+                            <th>Email</th>
+                            <th>Batch Name</th>
+                            <th>Role</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
+                            <td></td>
                             <td>Cho Qi Xiang</td>
                             <td>Websparks Pte Ltd</td>
                             <td>Spade</td>
                             <td>Student</td>
-                            <td>
-                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
-                                <a href="/mypath"<i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Klein Ong</td>
-                            <td>TripleDots Technology</td>
-                            <td>Parliament</td>
                             <td>Student</td>
                             <td>
                                 <a href="/mypath"><i class="fa fa-pencil"></i></a>
-                                <a href="/mypath"<i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Amelia Goh</td>
-                            <td>RapidCloud</td>
-                            <td>WIS</td>
-                            <td>Student</td>
-                            <td>
-                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
-                                <a href="/mypath"<i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>JiaWei Loo</td>
-                            <td>Aventure Pte Ltd</td>
-                            <td>CAAS</td>
-                            <td>Student</td>
-                            <td>
-                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
-                                <a href="/mypath"<i class="fa fa-trash"></i></a>
+                                <a href="/mypath"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                     </tbody>
+                    @*<tbody>
+                            <tr>
+                                <td>Cho Qi Xiang</td>
+                                <td>Websparks Pte Ltd</td>
+                                <td>Spade</td>
+                                <td>Student</td>
+                                <td>
+                                    <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                    <a href="/mypath"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Klein Ong</td>
+                                <td>TripleDots Technology</td>
+                                <td>Parliament</td>
+                                <td>Student</td>
+                                <td>
+                                    <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                    <a href="/mypath"<i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Amelia Goh</td>
+                                <td>RapidCloud</td>
+                                <td>WIS</td>
+                                <td>Student</td>
+                                <td>
+                                    <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                    <a href="/mypath"<i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>JiaWei Loo</td>
+                                <td>Aventure Pte Ltd</td>
+                                <td>CAAS</td>
+                                <td>Student</td>
+                                <td>
+                                    <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                    <a href="/mypath"<i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>*@
                 </table>
             </div>
+            <hr />
             <div class="form-inline">
-                <div class="btn-group pull-left">
-                    <label class="form-text">Filter by Role:</label>
-                    <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Student <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Student</a>
-                        <a class="dropdown-item" href="#">Supervisor</a>
-                        <a class="dropdown-item" href="#">LO</a>
-                        <a class="dropdown-item" href="#">SLO</a>
+                <div class="col-12">
+                    <div class="col-md-8 col-sm-8 col-xs-12 pull-left">
+                        <button class="col-md-3 col-sm-3 col-xs-12 btn btn-danger" onclick="popdeactbulkdel()" id="bulkdeactdel">
+                            Bulk Delete
+                        </button>
+                        &nbsp;
+                        <button class="col-md-3 col-sm-3 col-xs-12 btn btn-primary" onclick="popdeactbulkact()" id="bulkdeactact">
+                            Bulk Activate
+                        </button>
+                        &nbsp;
                     </div>
                 </div>
             </div>
-            <div class="form-text pull-left">
-                <u>Deactivated Accounts</u>
+            <div class="col-12">
+                <div class="form-text pull-left">
+                    <h3>Deactivated Accounts</h3>
+                </div>
             </div>
-
             <div class="table-responsive">
-                <table class="table table-bordered" cellspacing="0">
+                <table class="table table-bordered" id="deact_dataTable" cellspacing="0">
                     <thead>
                         <tr>
+                            <th><input name="select_all" value="1" type="checkbox"></th>
                             <th>Name</th>
-                            <th>Company</th>
-                            <th>Project</th>
+                            <th>Mobile No</th>
+                            <th>Email</th>
+                            <th>Batch Name</th>
                             <th>Role</th>
                             <th>Action</th>
+                        </tr>
+                        <tr id="filterrow">
+                            <th></th>
+                            <th>Name</th>
+                            <th>Mobile No</th>
+                            <th>Email</th>
+                            <th>Batch Name</th>
+                            <th>Role</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Tan Li Meng</td>
-                            <td>KPMG</td>
-                            <td>KARP</td>
+                            <td></td>
+                            <td>Cho Qi Xiang</td>
+                            <td>Websparks Pte Ltd</td>
+                            <td>Spade</td>
+                            <td>Student</td>
                             <td>Student</td>
                             <td>
                                 <a href="/mypath"><i class="fa fa-pencil"></i></a>
-                                <a href="/mypath"<i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Maggie Lim</td>
-                            <td>TripleDots Technology</td>
-                            <td>Ryde</td>
-                            <td>Student</td>
-                            <td>
-                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
-                                <a href="/mypath"<i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Susan Goh</td>
-                            <td>IBM</td>
-                            <td>Account</td>
-                            <td>Student</td>
-                            <td>
-                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
-                                <a href="/mypath"<i class="fa fa-trash"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Benjamin Sim</td>
-                            <td>CISCO</td>
-                            <td>Security Management</td>
-                            <td>Student</td>
-                            <td>
-                                <a href="/mypath"><i class="fa fa-pencil"></i></a>
-                                <a href="/mypath"<i class="fa fa-trash"></i></a>
+                                <a href="/mypath"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                     </tbody>
+                    @*<tbody>
+                             <tr>
+                                    <td>Tan Li Meng</td>
+                                    <td>KPMG</td>
+                                    <td>KARP</td>
+                                    <td>Student</td>
+                                    <td>
+                                        <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                        <a href="/mypath"<i class="fa fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Maggie Lim</td>
+                                    <td>TripleDots Technology</td>
+                                    <td>Ryde</td>
+                                    <td>Student</td>
+                                    <td>
+                                        <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                        <a href="/mypath"<i class="fa fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Susan Goh</td>
+                                    <td>IBM</td>
+                                    <td>Account</td>
+                                    <td>Student</td>
+                                    <td>
+                                        <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                        <a href="/mypath"<i class="fa fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Benjamin Sim</td>
+                                    <td>CISCO</td>
+                                    <td>Security Management</td>
+                                    <td>Student</td>
+                                    <td>
+                                        <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                        <a href="/mypath"<i class="fa fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                        </tbody>*@
                 </table>
             </div>
         </div>
         <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
     </div>
 </div>
+<script>
+    //
+    // Updates "Select all" control in a data table
+    //
+    function updateDataTableSelectAllCtrl(table) {
+        var $table = table.table().node();
+        var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+        var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+        var chkbox_select_all = $('thead input[name="select_all"]', $table).get(0);
 
+        // If none of the checkboxes are checked
+        if ($chkbox_checked.length === 0) {
+            chkbox_select_all.checked = false;
+            if ('indeterminate' in chkbox_select_all) {
+                chkbox_select_all.indeterminate = false;
+            }
+
+            // If all of the checkboxes are checked
+        } else if ($chkbox_checked.length === $chkbox_all.length) {
+            chkbox_select_all.checked = true;
+            if ('indeterminate' in chkbox_select_all) {
+                chkbox_select_all.indeterminate = false;
+            }
+
+            // If some of the checkboxes are checked
+        } else {
+            chkbox_select_all.checked = true;
+            if ('indeterminate' in chkbox_select_all) {
+                chkbox_select_all.indeterminate = true;
+            }
+        }
+    }
+
+    function hideFilter1() {
+        $('#act_dataTable thead tr#filterrow').toggle();
+    }
+    function hideFilter2() {
+        $('#deact_dataTable thead tr#filterrow').toggle();
+    }
+
+    function popCSV() {
+        $('#uploadcsvModal').modal('show');
+    }
+    function popbulkdel() {
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (result) {
+            if (result.value) {
+                swal(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                )
+            }
+            }).catch(swal.noop);
+    }
+
+    function popbulkdeact() {
+        swal({
+            title: 'Are you sure?',
+            text: "Selected record will be deactivate!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, deactivate it!'
+        }).then(function (result) {
+            if (result.value) {
+                swal(
+                    'Deactivate!',
+                    'Your file has been deactivated.',
+                    'success'
+                )
+            }
+        }).catch(swal.noop);
+    }
+
+    function popdeactbulkdel() {
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (result) {
+            if (result.value) {
+                swal(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                )
+            }
+        }).catch(swal.noop);
+    }
+
+    function popdeactbulkact() {
+        swal({
+            title: 'Are you sure?',
+            text: "Selected record will be activate!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, activate it!'
+        }).then(function (result) {
+            if (result.value) {
+                swal(
+                    'Activated!',
+                    'Your file has been activated.',
+                    'success'
+                )
+            }
+        }).catch(swal.noop);
+    }
+
+    function stopPropagation(evt) {
+        if (evt.stopPropagation !== undefined) {
+            evt.stopPropagation();
+        } else {
+            evt.cancelBubble = true;
+        }
+    }
+    $(document).ready(function () {
+        // Array holding selected row IDs
+        var rows_selected = [];
+        var table = $('#act_dataTable').DataTable({
+            bSortable: false,
+            //'fnDrawCallback': function (oSettings) {
+            //    $('.dataTables_filter').(function () {
+            //        $(this).append('<button class="btn btn-default mr-xs pull-right" type="button">Button');
+            //    });
+            //},
+            dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+            ajax: {
+                url: '/Api/Task_Record',
+                dataSrc: ''
+            },
+            columnDefs: [{
+                'targets': 0,
+                'searchable': false,
+                'orderable': false,
+                'width': '1%',
+                'className': 'dt-body-center',
+                'render': function (data, type, full, meta) {
+                    return '<input type="checkbox">';
+                }
+            }],
+            select: {
+                style: 'os',
+                selector: 'td:first-child'
+            },
+            order: [[1, 'asc']],
+            'rowCallback': function (row, data, dataIndex) {
+                // Get row ID
+                var rowId = data[0];
+
+                // If row ID is in the list of selected row IDs
+                if ($.inArray(rowId, rows_selected) !== -1) {
+                    $(row).find('input[type="checkbox"]').prop('checked', true);
+                    $(row).addClass('selected');
+                }
+            },
+            columns: [
+                { data: null },
+                { data: "DayRecordId" },
+                { data: "DayRecordId" },
+                { data: "Description" },
+                { data: "Description" },
+                { data: "Description" },
+                {
+                    data: null,
+                    "bSortable": false,
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
+                }
+            ],
+            language: {
+                emptyTable: "No User was found, please create one.",
+            },
+            initComplete: function () {
+                $("div.toolbar")
+                    .html('<div class="col-sm-4"><button class="btn btn-xs btn-default" onclick="hideFilter1()">Filter</button></div>');
+                $("div.toolbar").parent().children().addClass("pull-right");
+                hideFilter1();
+            }
+        });
+
+        // Handle click on checkbox
+        $('#act_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
+            var $row = $(this).closest('tr');
+
+            // Get row data
+            var data = table.row($row).data();
+
+            // Get row ID
+            var rowId = data[0];
+
+            // Determine whether row ID is in the list of selected row IDs
+            var index = $.inArray(rowId, rows_selected);
+
+            // If checkbox is checked and row ID is not in list of selected row IDs
+            if (this.checked && index === -1) {
+                rows_selected.push(rowId);
+
+                // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
+            } else if (!this.checked && index !== -1) {
+                rows_selected.splice(index, 1);
+            }
+
+            if (this.checked) {
+                $row.addClass('selected');
+            } else {
+                $row.removeClass('selected');
+            }
+
+            // Update state of "Select all" control
+            updateDataTableSelectAllCtrl(table);
+
+            // Prevent click event from propagating to parent
+            e.stopPropagation();
+        });
+
+        // Handle click on table cells with checkboxes
+        $('#act_dataTable').on('click', 'tbody td, thead th:first-child', function (e) {
+            $(this).parent().find('input[type="checkbox"]').trigger('click');
+        });
+
+        // Handle click on "Select all" control
+        $('thead input[name="select_all"]', table.table().container()).on('click', function (e) {
+            if (this.checked) {
+                $('#act_dataTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
+            } else {
+                $('#act_dataTable tbody input[type="checkbox"]:checked').trigger('click');
+            }
+
+            // Prevent click event from propagating to parent
+            e.stopPropagation();
+        });
+
+        // Handle table draw event
+        table.on('draw', function () {
+            // Update state of "Select all" control
+            updateDataTableSelectAllCtrl(table);
+        });
+
+        //handle custom search
+        // Setup - add a text input to each footer cell
+        $('#act_dataTable thead tr#filterrow th').each(function () {
+            if ($('#act_dataTable thead tr#filterrow th').eq($(this).index()).text() != 0) {
+                var title = $('#act_dataTable thead th').eq($(this).index()).text();
+                $(this).html('<input type="text" onclick="stopPropagation(event);" placeholder="Search ' + title + '" />');
+            }
+        });
+        // Apply the filter
+        $("#act_dataTable thead input").on('keyup change', function () {
+            if ($(this).attr('type') == "text") {
+                table
+                    .column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+            }
+        });
+        //end of handle custom search
+
+        //deact_dataTable
+        var table2 = $('#deact_dataTable').DataTable({
+            bSortable: false,
+            dom: "<'row'<'col-sm-12'<f><'toolbar2'>>><'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+            ajax: {
+                url: '/Api/Task_Record',
+                dataSrc: ''
+            },
+            columnDefs: [{
+                'targets': 0,
+                'searchable': false,
+                'orderable': false,
+                'width': '1%',
+                'className': 'dt-body-center',
+                'render': function (data, type, full, meta) {
+                    return '<input type="checkbox">';
+                }
+            }],
+            select: {
+                style: 'os',
+                selector: 'td:first-child'
+            },
+            order: [[1, 'asc']],
+            'rowCallback': function (row, data, dataIndex) {
+                // Get row ID
+                var rowId = data[0];
+
+                // If row ID is in the list of selected row IDs
+                if ($.inArray(rowId, rows_selected) !== -1) {
+                    $(row).find('input[type="checkbox"]').prop('checked', true);
+                    $(row).addClass('selected');
+                }
+            },
+            columns: [
+                { data: null },
+                { data: "DayRecordId" },
+                { data: "DayRecordId" },
+                { data: "Description" },
+                { data: "Description" },
+                { data: "Description" },
+                {
+                    data: null,
+                    "bSortable": false,
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
+                }
+            ],
+            language: {
+                emptyTable: "No User was found, please create one.",
+            },
+            initComplete: function () {
+                $("div.toolbar2")
+                    .html('<div class="col-sm-4"><button class="btn btn-xs btn-default" onclick="hideFilter2()">Filter</button></div>');
+                $("div.toolbar2").parent().children().addClass("pull-right");
+                hideFilter2();
+            }
+        });
+
+        // Handle click on checkbox
+        $('#deact_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
+            var $row2 = $(this).closest('tr');
+
+            // Get row data
+            var data2 = table2.row($row2).data();
+
+            // Get row ID
+            var rowId2 = data2[0];
+
+            // Determine whether row ID is in the list of selected row IDs
+            var index2 = $.inArray(rowId2, rows_selected);
+
+            // If checkbox is checked and row ID is not in list of selected row IDs
+            if (this.checked && index2 === -1) {
+                rows_selected.push(rowId2);
+
+                // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
+            } else if (!this.checked && index2 !== -1) {
+                rows_selected.splice(index2, 1);
+            }
+
+            if (this.checked) {
+                $row2.addClass('selected');
+            } else {
+                $row2.removeClass('selected');
+            }
+
+            // Update state of "Select all" control
+            updateDataTableSelectAllCtrl(table2);
+
+            // Prevent click event from propagating to parent
+            e.stopPropagation();
+        });
+
+        // Handle click on table cells with checkboxes
+        $('#deact_dataTable').on('click', 'tbody td, thead th:first-child', function (e) {
+            $(this).parent().find('input[type="checkbox"]').trigger('click');
+        });
+
+        // Handle click on "Select all" control
+        $('thead input[name="select_all"]', table2.table().container()).on('click', function (e) {
+            if (this.checked) {
+                $('#deact_dataTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
+            } else {
+                $('#deact_dataTable tbody input[type="checkbox"]:checked').trigger('click');
+            }
+
+            // Prevent click event from propagating to parent
+            e.stopPropagation();
+        });
+
+        // Handle table draw event
+        table2.on('draw', function () {
+            // Update state of "Select all" control
+            updateDataTableSelectAllCtrl(table2);
+        });
+
+        //handle custom search
+        // Setup - add a text input to each footer cell
+        $('#deact_dataTable thead tr#filterrow th').each(function () {
+            if ($('#deact_dataTable thead tr#filterrow th').eq($(this).index()).text() != 0) {
+                var title = $('#deact_dataTable thead th').eq($(this).index()).text();
+                $(this).html('<input type="text" onclick="stopPropagation(event);" placeholder="Search ' + title + '" />');
+            }
+        });
+        // Apply the filter
+        $("#deact_dataTable thead input").on('keyup change', function () {
+            if ($(this).attr('type') == "text") {
+                table2
+                    .column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+            }
+        });
+        //end of handle custom search
+
+        //end of deact
+
+        //// Handle form submission event
+        //$('#frm-example').on('submit', function (e) {
+        //    var form = this;
+
+        //    // Iterate over all selected checkboxes
+        //    $.each(rows_selected, function (index, rowId) {
+        //        // Create a hidden element
+        //        $(form).append(
+        //            $('<input>')
+        //                .attr('type', 'hidden')
+        //                .attr('name', 'id[]')
+        //                .val(rowId)
+        //        );
+        //    });
+        //});
+        $('#act_dataTable tbody').on('click', 'button.btn-primary', function (e) {
+            location.href = 'EditUser';
+        });
+        $('#act_dataTable tbody').on('click', 'button.btn-danger', function (e) {
+            swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then(function (result) {
+                if (result.value) {
+                    swal(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                }
+            }).catch(swal.noop);
+        });
+        $('#deact_dataTable tbody').on('click', 'button.btn-primary', function (e) {
+            location.href = 'EditUser';
+        });
+        $('#deact_dataTable tbody').on('click', 'button.btn-danger', function (e) {
+            swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then(function (result) {
+                if (result.value) {
+                    swal(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                }
+            }).catch(swal.noop);
+        });
+    });
+</script>
