@@ -19,7 +19,7 @@ namespace E_Internship_Journal.Controllers
         {
             return View();
         }
-        public IActionResult ManageStudent()
+        public IActionResult Manage_Student()
         {
             return View();
         }

@@ -28,6 +28,7 @@ namespace E_Internship_Journal.Models
 
         public List<Day_Record> DayRecords { get; set; }
         public List<Competency_Checked> CompetencyCheckeds { get; set; }
+        public List<Task_Record> TaskRecords { get; set; }
 
     }
 }

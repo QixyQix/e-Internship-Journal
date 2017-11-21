@@ -59,7 +59,7 @@ namespace E_Internship_Journal.Data
             await userManager.CreateAsync(adminUser);
             await userManager.AddToRoleAsync(adminUser, "ADMIN");
             //Student
-            var studentUser = new ApplicationUser { UserName = "STUDENT@TEST.COM", FullName = "James Bond", Email = "STUDENT@TEST.COM", Course=courseObject, IsEnabled = true };
+            var studentUser = new ApplicationUser { UserName = "STUDENT@TEST.COM", FullName = "James Bond", Email = "STUDENT@TEST.COM", /*Course=courseObject,*/ IsEnabled = true };
             ph = new PasswordHasher<ApplicationUser>();
             studentUser.PasswordHash = ph.HashPassword(studentUser, "P@ssw0rd"); //More complex password
             await userManager.CreateAsync(studentUser);
@@ -77,7 +77,7 @@ namespace E_Internship_Journal.Data
             await userManager.CreateAsync(LOUser);
             await userManager.AddToRoleAsync(LOUser, "LO");
             //SLO
-            var SLOUser = new ApplicationUser { UserName = "SLO@TEST.COM", FullName = "Teo Seok Ling", Email = "SLO@TEST.COM", Course = courseObject, IsEnabled = true };
+            var SLOUser = new ApplicationUser { UserName = "SLO@TEST.COM", FullName = "Teo Seok Ling", Email = "SLO@TEST.COM", /*Course = courseObject, */ IsEnabled = true };
             ph = new PasswordHasher<ApplicationUser>();
             SLOUser.PasswordHash = ph.HashPassword(SLOUser, "P@ssw0rd"); //More complex password
             await userManager.CreateAsync(SLOUser);
@@ -96,7 +96,7 @@ namespace E_Internship_Journal.Data
             db.SaveChanges();
 
             //Create Company
-            var companyObject = new Company { CompanyName = "Some Weird Company", CompanyAddress = "BLK999# 03-03 HELL STREET SINGAPORE 666666" };
+            var companyObject = new Company { CompanyName = "Some Weird Company", CompanyAddress = "BLK999# 03-03 HELL STREET SINGAPORE 666666", ContactPersonName = "Company Owner Name", ContactPersonNumber = "99999999", ContactPersonEmail = "CEO@COMPANY.COM", ContactPersonFax = "88888888" };
             db.Companies.Add(companyObject);
             db.SaveChanges();
 
@@ -108,6 +108,10 @@ namespace E_Internship_Journal.Data
             //Create UserBatch
             var userBatchObject = new UserBatch { Batch = batchObject, User = studentUser };
             db.UserBatches.Add(userBatchObject);
+
+            userBatchObject = new UserBatch { Batch = batchObject, User = SLOUser };
+            db.UserBatches.Add(userBatchObject);
+
             db.SaveChanges();
 
             //Create Internship Journal
@@ -119,14 +123,12 @@ namespace E_Internship_Journal.Data
             db.Month_Records.Add(monthObject);
             db.SaveChanges();
 
-            var dayObject = new Day_Record { MonthRecordId = monthObject.MonthId, Date = DateTime.ParseExact("05/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), ArrivalTime = DateTime.Parse("9:00:00 AM"), DepartureTime = DateTime.Parse("9:00:00 AM"), WeekNo = 1, IsPresent = true };
+            var dayObject = new Day_Record { Month = monthObject, Date = DateTime.ParseExact("05/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), ArrivalTime = DateTime.Parse("9:00:00 AM"), DepartureTime = DateTime.Parse("9:00:00 AM"), WeekNo = 1, IsPresent = true };
             db.Day_Records.Add(dayObject);
             db.SaveChanges();
 
-            var taskObject = new Task_Record { DayRecordId = dayObject.DayId, Description = "I love slacking all day" };
+            var taskObject = new Task_Record { MonthRecord = monthObject ,Date = DateTime.ParseExact("05/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "I love slacking all day" };
             db.Tasks.Add(taskObject);
-            db.SaveChanges();
-            //Save changes
             db.SaveChanges();
         }
     }

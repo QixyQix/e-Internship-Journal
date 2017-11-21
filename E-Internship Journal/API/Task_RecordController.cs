@@ -22,90 +22,90 @@ namespace E_Internship_Journal.API
             _context = context;
         }
 
-        // GET: api/Task_Record
-        [HttpGet]
-        public IActionResult GetTasks()
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            List<object> task_Record_List = new List<object>();
-            var task_Records = _context.Tasks
-                .Include(eachTaskEntity =>eachTaskEntity.DayRecord)
+        //// GET: api/Task_Record
+        //[HttpGet]
+        //public IActionResult GetTasks()
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //    List<object> task_Record_List = new List<object>();
+        //    var task_Records = _context.Tasks
+        //        .Include(eachTaskEntity =>eachTaskEntity.DayRecord)
 
-            .AsNoTracking();
-            foreach (var oneTaskRecord in task_Records)
-            {
-                //   List<int> categoryIdList = new List<int>();
-                task_Record_List.Add(new
-                {
-                    oneTaskRecord.TaskRecordId,
-                    oneTaskRecord.DayRecordId,
-                    oneTaskRecord.Description,
+        //    .AsNoTracking();
+        //    foreach (var oneTaskRecord in task_Records)
+        //    {
+        //        //   List<int> categoryIdList = new List<int>();
+        //        task_Record_List.Add(new
+        //        {
+        //            oneTaskRecord.TaskRecordId,
+        //            oneTaskRecord.DayRecordId,
+        //            oneTaskRecord.Description,
 
-                   // oneTaskRecord.DayRecord.Date
-                });
-            }
+        //           // oneTaskRecord.DayRecord.Date
+        //        });
+        //    }
 
-            return new JsonResult(task_Record_List);
-        }
+        //    return new JsonResult(task_Record_List);
+        //}
 
         // GET: api/Task_Record/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetTask_Record(int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            if (Task_RecordExists(id))
-            {
-                try
-                {
-                    List<object> TaskList = new List<object>();
-                    var foundTasks = _context.Tasks
-                        .Where(eachTaskEntity => eachTaskEntity.DayRecordId == id)
-                        .Include(eachTaskENtity => eachTaskENtity.DayRecord)
-                        .AsNoTracking();
-                    foreach (var oneTask in foundTasks)
-                    {
-                        TaskList.Add(new
-                        {
-                            DayRecordId = oneTask.DayRecordId,
-                            TaskRecordId = oneTask.TaskRecordId,
-                            Description = oneTask.Description,
-                            Date = oneTask.DayRecord.Date,
-                            ArrivalTime = oneTask.DayRecord.ArrivalTime,
-                            DepartureTime = oneTask.DayRecord.DepartureTime
-                            //WeekNo = oneTask.DayRecord.WeekNo
+        //[HttpGet("{id}")]
+        //public async Task<IActionResult> GetTask_Record(int id)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //    if (Task_RecordExists(id))
+        //    {
+        //        try
+        //        {
+        //            List<object> TaskList = new List<object>();
+        //            var foundTasks = _context.Tasks
+        //                .Where(eachTaskEntity => eachTaskEntity.DayRecordId == id)
+        //                .Include(eachTaskENtity => eachTaskENtity.DayRecord)
+        //                .AsNoTracking();
+        //            foreach (var oneTask in foundTasks)
+        //            {
+        //                TaskList.Add(new
+        //                {
+        //                    DayRecordId = oneTask.DayRecordId,
+        //                    TaskRecordId = oneTask.TaskRecordId,
+        //                    Description = oneTask.Description,
+        //                    Date = oneTask.DayRecord.Date,
+        //                    ArrivalTime = oneTask.DayRecord.ArrivalTime,
+        //                    DepartureTime = oneTask.DayRecord.DepartureTime
+        //                    //WeekNo = oneTask.DayRecord.WeekNo
 
-                        });
+        //                });
 
-                    };//end of creation of the response object
-                    return new JsonResult(TaskList);
-                }
-                catch (Exception exceptionObject)
-                {
-                    //Create a fail message anonymous object
-                    //This anonymous object only has one Message property 
-                    //which contains a simple string message
-                    object httpFailRequestResultMessage =
-                    new { Message = "Unable to obtain brand information." };
-                    //Return a bad http response message to the client
-                    return BadRequest(httpFailRequestResultMessage);
-                }
-            }
-            else
-            {
-                object httpFailRequestResultMessage =
-                new { Message = "Unable to obtain brand information." };
-                //Return a bad http response message to the client
-                return BadRequest(httpFailRequestResultMessage);
+        //            };//end of creation of the response object
+        //            return new JsonResult(TaskList);
+        //        }
+        //        catch (Exception exceptionObject)
+        //        {
+        //            //Create a fail message anonymous object
+        //            //This anonymous object only has one Message property 
+        //            //which contains a simple string message
+        //            object httpFailRequestResultMessage =
+        //            new { Message = "Unable to obtain brand information." };
+        //            //Return a bad http response message to the client
+        //            return BadRequest(httpFailRequestResultMessage);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        object httpFailRequestResultMessage =
+        //        new { Message = "Unable to obtain brand information." };
+        //        //Return a bad http response message to the client
+        //        return BadRequest(httpFailRequestResultMessage);
 
 
-            }//End of Get(id) Web API method
-        }
+        //    }//End of Get(id) Web API method
+        //}
 
         // PUT: api/Task_Record/5
         [HttpPut("{id}")]
@@ -121,13 +121,13 @@ namespace E_Internship_Journal.API
                 try
                 {
                     var foundOneTask = _context.Tasks
-                        .Where(eachTaskEntity => eachTaskEntity.DayRecordId == id)
+                        .Where(eachTaskEntity => eachTaskEntity.MonthRecordId == id)
                         .Single();
 
                     Task_Record newTask_Record = new Task_Record
                     {
                         Description = task_RecordNewInput.Description.Value,
-                        DayRecordId = task_RecordNewInput.DayRecordId.Value,
+                        MonthRecordId = task_RecordNewInput.MonthRecord.Value,
 
                     };
                     _context.Tasks.Update(newTask_Record);
@@ -165,7 +165,7 @@ namespace E_Internship_Journal.API
             }//End of Get(id) Web API method
         }
 
-        // POST: api/Task_Record
+        //POST: api/Task_Record
         [HttpPost("SaveNewTaskRecordInformation")]
         public async Task<IActionResult> SaveNewTaskRecordInformation([FromBody] string value)
         {
@@ -181,7 +181,7 @@ namespace E_Internship_Journal.API
                 Task_Record newTask_Record = new Task_Record
                 {
                     Description = task_RecordNewInput.Description.Value,
-                    DayRecordId = task_RecordNewInput.DayRecordId.Value,
+                    MonthRecordId = task_RecordNewInput.MonthRecord.Value,
 
                 };
 

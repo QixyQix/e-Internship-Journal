@@ -17,7 +17,5 @@ namespace E_Internship_Journal.Models
 
         public Month_Record Month { get; set; }
         public int MonthRecordId { get; set; }
-
-        public List<Task_Record> Tasks { get; set; }
     }
 }

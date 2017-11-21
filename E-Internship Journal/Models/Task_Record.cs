@@ -9,8 +9,10 @@ namespace E_Internship_Journal.Models
     {
         public int TaskRecordId { get; set; }
         public string Description { get; set; }
+        public DateTime Date { get; set; }
+        public int WeekNo { get; set; }
 
-        public Day_Record DayRecord { get; set; }
-        public int DayRecordId { get; set; }
+        public Month_Record MonthRecord { get; set; }
+        public int MonthRecordId { get; set; }
     }
 }
