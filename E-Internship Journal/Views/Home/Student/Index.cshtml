@@ -115,4 +115,18 @@
     <!-- /.container-fluid -->
 <!-- /.content-wrapper -->
 <script>
+    $.ajax({
+        url: '/Api/Internship_Record/getCurrentInternshipRecord',
+        method: 'GET',
+        dataType: 'json',
+        cache: false,
+        success: function (data) { 
+            console.dir(data);
+            document.cookie = "InternshipRecordId = " + data.InternshipRecordId + ";";
+        },
+        fail: function (data) { 
+            alert(data.Message);
+        }
+    });
+
 </script>

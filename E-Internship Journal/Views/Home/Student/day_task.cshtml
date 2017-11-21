@@ -1,4 +1,13 @@
-﻿<div class="container-fluid">
+﻿<style>
+    .textbox {
+        width: 100%;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+</style>
+
+<div class="container-fluid">
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -34,8 +43,7 @@
                             <th width="5%">&nbsp;</th>
                         </tr>
                     </thead>
-                    <tbody>
-                    </tbody>
+                    <tbody></tbody>
                 </table>
                 <button class="btn btn-primary form-control" id="addTaskBtn">
                     <i class="fa fa-plus"></i> Add Task
@@ -46,16 +54,16 @@
     </div>
 </div>
 <div class="card-body">
-        <div class="form-group">
-            <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
-                    Back
-                </button>
-                <button class="btn btn-primary pull-right" name="submit" id="btnSave" type="submit">
-                    Save
-                </button>
-            </div>
+    <div class="form-group">
+        <div class="col-12">
+            <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                Back
+            </button>
+            <button class="btn btn-primary pull-right" name="submit" id="btnSave" type="submit">
+                Save
+            </button>
         </div>
+    </div>
     <br />
 </div>
 <script>
@@ -69,40 +77,68 @@
         //var dc = document.cookie;
         //getCookie(dc);
         var cookieDate = getCookie("date");
-        var cookieId = getCookie("id");
+        //var cookieId = getCookie("id");
+        var internshipRecordId = getCookie("InternshipRecordId");
 
-        $('#addTaskBtn').on('click', function () 
-        {
-            $('#dataTable2').append('<tr><td> <textarea name="taskInput" class="form-control" style="width: 100%; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;"></textarea></td ><td><button class="btn btn-sm btn-danger" onClick="$(this).closest(\'tr\').remove();"><i class="fa fa-times"></i></button></td></tr >');
+        console.dir(moment(cookieDate).format("DD-MM-YYYY"));
+        console.dir(cookieDate);
+
+        $.ajax({
+            url: '/Api/Task_Record/getTasksForDay/' + internshipRecordId + "/" + moment(cookieDate).format("DD-MM-YYYY"),
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                console.dir(data);
+                for (i = 0; i < data.length; i++) {
+                    var onetask = data[i];
+                    table.append('<tr><td> <input type="text" name="taskInputId" value="' + onetask.Id + '" hidden/><textarea name="taskInput" class="form-control textbox">' + onetask.Description + '</textarea></td ><td><button class="btn btn-sm btn-danger" onClick="removeTask($(this), ' + onetask.Id + ')"><i class="fa fa-times"></i></button></td></tr >');
+                }
+            }
         });
 
-        
+
+        $('#addTaskBtn').on('click', function () {
+            table.append('<tr><td> <input type="text" name="taskInputId" value="" hidden/><textarea name="taskInput" class="form-control textbox"></textarea></td ><td><button class="btn btn-sm btn-danger" onClick="removeTask($(this), \'\')"><i class="fa fa-times"></i></button></td></tr >');
+        });
 
         if (cookieDate != null || cookieDate != undefined) {
             $('#date').val(moment(new Date(cookieDate)).format("DD/MM/YYYY"));
-
         }
-        if (cookieId == "undefined" || cookieId == null) {
+        if (new Date(cookieDate).toDateString() != "Invalid Date") {
 
             $('#btnSave').on('click', function () {
-                var colectedTodayDate = $('#date').val().toString('dd/mm/yyyy');
-                var collectedRemarks = $('#dropdownselect').val();
-                var collectedArrivalTime = ($('#timeinval').val() != "") ? $('#timeinval').val() : null;
-                var collectedDepartureTime = ($('#timeoutval').val() != "") ? $('#timeoutval').val() : null;
-                //var momentDate = moment(colectedTodayDate + colectedArrivalTime, 'YYYY-MM-DD HH:mm:ss');
-                var formatedArrivalTime = ($('#timeinval').val() != "") ? new Date(colectedTodayDate + ' ' + collectedArrivalTime) : null;
-                var formatedDepartureTime = ($('#timeoutval').val() != "") ? new Date(colectedTodayDate + ' ' + collectedDepartureTime) : null;
+                var collectedTodayDate = $('#date').val().toString('dd/mm/yyyy');
+                var taskIds = [];
                 var tasks = [];
+                var taskObjs = [];
+
                 $.each($("[name=taskInput]"), function () {
-                    if ($(this).val().trim()) { 
+                    if ($(this).val().trim()) {
                         tasks.push($(this).val().trim());
                     }
                 });
-                var webFormData = new WebFormData(colectedTodayDate, collectedRemarks, formatedArrivalTime, formatedDepartureTime, tasks);
+                $.each($("[name=taskInputId]"), function () {
+                    if ($(this).val().trim()) {
+                        taskIds.push($(this).val().trim());
+                    }
+                });
+
+                for (i = 0; i < tasks.length; i++) {
+                    if (i < taskIds.length) {
+                        taskObjs.push(new TaskDataObject(taskIds[i], tasks[i]));
+                    } else {
+                        taskObjs.push(new TaskDataObject("", tasks[i]));
+                    }
+                }
+
+                var webFormData = new WebFormData(internshipRecordId, collectedTodayDate, taskObjs);
                 console.dir(webFormData);
-                $saveTaskHanlder = jQuery.ajax({
-                    url: '/Api/Day_Record/SaveNewDayRecordInformation',
-                    method: 'POST',
+                console.dir(JSON.stringify(webFormData));
+
+                $.ajax({
+                    url: '/Api/Task_Record/updateTasksForDay',
+                    method: 'PUT',
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
                     cache: false,
@@ -110,24 +146,70 @@
                     success: function (data) {
                         swal({
                             type: 'success',
-                            title: 'Your work has been saved',
-                        })
+                            title: 'You did it!',
+                            text: data.Message
+                        }).then(
+                            function () {
+                                window.location.reload();
+                            });
                     },
                     error: function (data) {
-                        swal(
-                            'Oops...',
-                            'Something went wrong!',
-                            'error'
-                        )
+                        swal({
+                            type: 'error',
+                            title: 'Oops!',
+                            text: data.Message
+                        });
                     }
                 });
-                $getDayHandler.done(function (data, textStatus, jqXHR) {
-                 });//End of Done
             });
         } else {
-            //Update day record method
+            swal({
+                type: 'error',
+                title: 'Oops!',
+                text: 'Invalid Date Input!'
+            });
         }
     });
+
+    function removeTask(object, id) {
+        if (id != '') {
+            swal({
+                title: 'Are you sure you want this task deleted?',
+                text: "This cannot be undone!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Delete'
+            }).then(function () {
+                $.ajax({
+                    url: '/Api/Task_Record/' + id,
+                    method: 'DELETE',
+                    dataType: 'json',
+                    cache: false,
+                    success: function (data) {
+                        swal({
+                            type: 'success',
+                            title: 'Deleted!',
+                            text: 'It is now gone.. forever.'
+                        }).then(function () {
+                            object.closest('tr').remove();
+                            window.location.reload();
+                        });
+                    },
+                    fail: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Oops!',
+                            text: data.Message
+                        });
+                    }
+                });
+            })
+        } else {
+            object.closest('tr').remove();
+        }
+
+    }
 
     function getCookie(name) {
         var dc = document.cookie;
@@ -155,130 +237,14 @@
         var strTime = hours + ':' + minutes + ' ' + ampm;
         return strTime;
     }
-    function WebFormData(inTodayDate, inRemarks, inTimein, inTimeOut, tasks) {
-        this.Date = inTodayDate;
-        this.Remarks = inRemarks;
-        this.ArrivalTime = inTimein;
-        this.DepartureTime = inTimeOut;
-        this.Tasks = tasks
-
+    function WebFormData(inInternshipRecordId, inDate, inTaskObjs) {
+        this.InternshipRecordId = inInternshipRecordId;
+        this.Date = inDate;
+        this.Tasks = inTaskObjs;
     }
-    function getTaskFunction(cookieId, finalTable) {
-        var aa;
-        $getDayHandler = jQuery.ajax({
-            url: '/Api/Task_Record/' + cookieId,
-            method: 'GET',
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            cache: false,
-        });
-        $getDayHandler.done(function (data, textStatus, jqXHR) {
-            // window.$brandPhotoInputElement.fileinput('upload');
-            // data.Message;
-            //return data;
-            var oneArrivalTime = data[0].ArrivalTime;
 
-            var formattedArrivalTime = formatAMPM(new Date(oneArrivalTime));
-
-            $('#inputTimein').val(formattedArrivalTime);
-            $('#inputTimein').attr('readonly', true);
-            if (data[0].DepartureTime != null || "undefined") {
-                var oneDepartureTime = data[0].DepartureTime;
-                var formattedDepartureTime = formatAMPM(new Date(oneDepartureTime));
-                $('#timeoutval').val(formattedDepartureTime);
-                $('#timeoutval').attr('readonly', true);
-            }
-
-            //var time = oneArrivalTime.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-            //for (i = 0; i < data.length; i++) {
-            //    var
-
-            //}
-            editor = new $.fn.dataTable.Editor({
-
-                //data: data,
-                table: finalTable,
-                idSrc: 'TaskRecordId',
-                fields: [{
-                    label: "Description:",
-                    name: "Description"
-                }
-                ]
-            });
-            finalTable = finalTable.DataTable({
-                //finalTable({
-                "bPaginate": false,
-                "bLengthChange": false,
-                "bFilter": false,
-                "bSort": false,
-                "bInfo": false,
-                "bAutoWidth": false,
-                "asStripClasses": null,
-                //--disable the sorting--
-                dom: 'rti',
-                data: data,
-                order: [[1, 'asc']],
-                columns: [
-                    { data: "DayRecordId", "sWidth": "10%" },
-                    { data: "Description", "sWidth": "80%" },
-                    {
-                        "data": "TaskRecordId",
-                        "bSortable": false,
-                        "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn" value="' + o + '"><i class="fa fa-times"></i></button>' }
-                    }
-                ],
-                language: {
-                    emptyTable: "No task was found, please create one.",
-                }
-            });// End of DataTable
-            $('#dataTable2').on('focusout', 'tbody td:not(:first-child, :last-child)', function (e) {
-                //console.dir("test");
-                //console.dir(editor.field('Description').val());
-                //var changed = editor.field('Description').val();
-                //var $tr = $(this).closest('tr');
-                //var $column = $(this).closest('tr td');
-                //var myRow = $("#dataTable2 tr").index($tr);
-                //var myColumn = $("#dataTable2 td").index($column);
-                //var qqqww = document.getElementById("dataTable2").rows[1].cells[1];
-                //var qqwqeqwe = aa.row(myRow - 1);
-                ////var myData = $tr.attr('data-myData')
-                //console.log(myRow, myColumn);
-                ////aa.row(0).columns(1).val();
-
-                //var data = aa.row(myRow-1).data();
-                //var row = $(aa.row(myRow - 1).node());
-                //var qwewqeqwe = $(this).text();
-                //data.Description = changed;
-                //aa.row(row).data(data).draw();
-                //console.dir($(e +'tbody tr:nth-child(' + myRow + ')').find("td:eq(1)").html())
-                //$('#dataTable2 tbody tr:nth-child(' + myRow + ')').find("td:eq(1)").text(changed);
-                //var qqq = finalTable.row(0).columns(1)
-                //qqq.data(changed).draw();
-            })
-            //editor.field('Description').input().on('change', function (e, d) {
-            //    //var ww = d.editorSet();
-            //    // var qq = d;
-            //    if (d && d.editorSet) return;
-            //    //console.dir($(this).val());
-            //    // alert("You selected " + $(this).val());
-            //    var changed = $(this).val();
-            //    //var ww = this.s.editRow;
-            //   // var www = $(this).row.data();
-            //    //var idx = finalTable
-            //     //   .row()
-            //    //  .index();
-            //    finalTable.row(0).columns(1).data(changed).draw();
-            //    finalTable.rows().iterator('row', function (context, index) {
-            //        //var changed2 = $(this).val();
-            //       // var iqwe = editor.field('Description');
-            //        var wqq = editor.field('Description').val();
-            //        var data = this.row(index).data();
-            //        var row = $(this.row(index).node());
-            //        data.Description = changed;
-            //        //data[0] = 'new data';
-            //       // finalTable.row(0).data(data).draw();
-            //    });
-            //});
-        });// End of Done Function
+    function TaskDataObject(inTaskId, inTaskDescription) {
+        this.Id = inTaskId;
+        this.Description = inTaskDescription;
     }
 </script>

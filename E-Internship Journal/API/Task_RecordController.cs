@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using E_Internship_Journal.Data;
 using E_Internship_Journal.Models;
 using Newtonsoft.Json;
+using System.Globalization;
+using Microsoft.AspNetCore.Identity;
 
 namespace E_Internship_Journal.API
 {
@@ -16,10 +18,12 @@ namespace E_Internship_Journal.API
     public class Task_RecordController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public Task_RecordController(ApplicationDbContext context)
+        public Task_RecordController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         //// GET: api/Task_Record
@@ -50,6 +54,125 @@ namespace E_Internship_Journal.API
 
         //    return new JsonResult(task_Record_List);
         //}
+
+        //GET: api/Task_Record/getTaskRecordsUnderInternRecord
+        [HttpGet("getTaskRecordsUnderInternRecord/{id}")]
+        public async Task<IActionResult> getTaskRecordsUnderInternRecord(int id)
+        {
+            List<object> taskRecordObjs = new List<object>();
+
+            var taskRecords = _context.Tasks.Include(tr => tr.MonthRecord)
+                .ThenInclude(tr => tr.InternshipRecord)
+                .Where(tr => tr.MonthRecord.InternshipRecord.InternshipRecordId == id)
+                .ToList();
+
+            foreach (var task in taskRecords)
+            {
+                taskRecordObjs.Add(new
+                {
+                    Date = task.Date,
+                    Description = task.Description
+                });
+            }
+
+            return new JsonResult(taskRecordObjs);
+        }
+
+        [HttpGet("getTasksForDay/{internrecordId}/{date}")]
+        public async Task<IActionResult> getTasksForDay(int internrecordId, string date)
+        {
+            DateTime dateDT = DateTime.ParseExact(date, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+
+            var tasks = _context.Tasks.Include(tr => tr.MonthRecord)
+                .ThenInclude(mr => mr.InternshipRecord)
+                .ThenInclude(ir => ir.UserBatch)
+                .Where(tr => tr.Date == dateDT && tr.MonthRecord.InternshipRecord.UserBatch.UserId.Equals(_userManager.GetUserId(User)))
+                .ToList();
+
+            List<object> tasksList = new List<object>();
+
+            foreach (var task in tasks)
+            {
+                tasksList.Add(new
+                {
+                    Id = task.TaskRecordId,
+                    Description = task.Description
+                });
+            }
+
+            return new JsonResult(tasksList);
+        }
+
+        //PUT: Update Tasks for day
+        [HttpPut("updateTasksForDay")]
+        public IActionResult updateTasksForDay([FromBody] string value)
+        {
+
+            var taskInput = JsonConvert.DeserializeObject<dynamic>(value);
+
+            int internshipRecordId = Int32.Parse(taskInput.InternshipRecordId.Value);
+
+            Internship_Record internshipRecord = _context.Internship_Records.Where(ir => ir.InternshipRecordId == internshipRecordId)
+                .Include(ir => ir.UserBatch)
+                .ThenInclude(ub => ub.Batch)
+                .Include(ir => ir.MonthRecords)
+                .ThenInclude(mr => mr.TaskRecords)
+                .Where(ir => ir.UserBatch.UserId.Equals(_userManager.GetUserId(User)))
+                .Single();
+
+            if (internshipRecord == null)
+            {
+                return BadRequest(new { Message = "This internship record does not belong to you." });
+            }
+            DateTime date = DateTime.ParseExact(taskInput.Date.Value, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+            //Calculate number of weeks
+            var weekNo = Int32.Parse((date.Subtract(internshipRecord.UserBatch.Batch.StartDate).Days / 7).ToString()) + 1;
+            //Calculate month
+            var monthNo = Int32.Parse((weekNo / 4).ToString()) + 1;
+
+            Month_Record monthRecord;
+
+            //No month record yet
+            if (monthNo > internshipRecord.MonthRecords.Count)
+            {
+                monthRecord = new Month_Record { InternshipRecord = internshipRecord };
+                _context.Add(monthRecord);
+            }
+            else //Month record already exists
+            {
+                monthRecord = internshipRecord.MonthRecords[monthNo - 1];
+            }
+
+            var taskObjs = taskInput.Tasks;
+            foreach (var task in taskObjs)
+            {
+                string taskId = "" + task.Id.Value;
+                if (string.IsNullOrWhiteSpace(taskId))
+                { //No Id, task doesnt exist yet
+                    Task_Record newTask = new Task_Record
+                    {
+                        Date = date,
+                        Description = task.Description.Value,
+                        MonthRecord = monthRecord
+                    };
+
+                    _context.Tasks.Add(newTask);
+                }
+                else //Update the task
+                {
+                    int taskIdInt = Int32.Parse(taskId);
+                    Task_Record taskToUpdate = _context.Tasks.Find(taskIdInt);
+                    taskToUpdate.Date = date;
+                    taskToUpdate.Description = task.Description.Value;
+                    taskToUpdate.MonthRecord = monthRecord;
+                    _context.Update(taskToUpdate);
+                }
+            }
+            _context.SaveChanges();
+
+            return new OkObjectResult(new { Message = "Records saved successfully!" });
+        }
 
         // GET: api/Task_Record/5
         //[HttpGet("{id}")]
@@ -213,16 +336,29 @@ namespace E_Internship_Journal.API
                 return BadRequest(ModelState);
             }
 
-            var task_Record = await _context.Tasks.SingleOrDefaultAsync(m => m.TaskRecordId == id);
-            if (task_Record == null)
+            var taskRecord = await _context.Tasks
+                .Include(task => task.MonthRecord)
+                .ThenInclude(mr => mr.InternshipRecord)
+                .ThenInclude(ir => ir.UserBatch)
+                .SingleOrDefaultAsync(m => m.TaskRecordId == id);
+
+            if (taskRecord == null)
             {
-                return NotFound();
+                return NotFound(new { Message = "Task record does not exist!" });
+            }
+            else if (taskRecord.MonthRecord.InternshipRecord.UserBatch.UserId.Equals(_userManager.GetUserId(User)))
+            {
+                _context.Tasks.Remove(taskRecord);
+            }
+            else
+            {
+                return BadRequest(new { Message = "This task record does not belong to you!" });
             }
 
-            _context.Tasks.Remove(task_Record);
+
             await _context.SaveChangesAsync();
 
-            return Ok(task_Record);
+            return new OkObjectResult(new { Message = "Task record is deleted!" });
         }
 
         private bool Task_RecordExists(int id)

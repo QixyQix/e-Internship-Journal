@@ -109,7 +109,7 @@ namespace E_Internship_Journal.Data
             var userBatchObject = new UserBatch { Batch = batchObject, User = studentUser };
             db.UserBatches.Add(userBatchObject);
 
-            userBatchObject = new UserBatch { Batch = batchObject, User = SLOUser };
+            var userSLOUserBatchObject = new UserBatch { Batch = batchObject, User = SLOUser };
             db.UserBatches.Add(userBatchObject);
 
             db.SaveChanges();

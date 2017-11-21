@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using E_Internship_Journal.Data;
 using E_Internship_Journal.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Internship_Journal.API
 {
@@ -15,10 +17,12 @@ namespace E_Internship_Journal.API
     public class Internship_RecordController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public Internship_RecordController(ApplicationDbContext context)
+        public Internship_RecordController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: api/Internship_Record
@@ -45,6 +49,29 @@ namespace E_Internship_Journal.API
             }
 
             return Ok(internship_Record);
+        }
+
+        [HttpGet("getCurrentInternshipRecord")]
+        [Authorize(Roles ="STUDENT")]
+        public async Task<IActionResult> getCurrentInternshipRecord() {
+
+            var userId = _userManager.GetUserId(User);
+
+            Internship_Record internshipRecord = _context.Internship_Records
+                .Include(ir => ir.UserBatch)
+                .ThenInclude(ub => ub.Batch)
+                .Where(ir => ir.UserBatch.UserId.Equals(userId) && ir.UserBatch.Batch.StartDate <= DateTime.Now && ir.UserBatch.Batch.EndDate >= DateTime.Now)
+                .Single();
+
+            var internshiprecordId = internshipRecord.InternshipRecordId;
+
+            if (internshipRecord == null)
+            {
+                return NotFound(new { Message = "No internship record found" });
+            }
+            else {
+                return new JsonResult(new { InternshipRecordId = internshipRecord.InternshipRecordId });
+            }
         }
 
         // PUT: api/Internship_Record/5
