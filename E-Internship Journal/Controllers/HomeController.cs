@@ -200,6 +200,23 @@ namespace E_Internship_Journal.Controllers
             }
         }
 
+
+        public IActionResult Mentoring_History()
+        {
+            if (User.IsInRole("SUPERVISOR"))
+            {
+                return View("~/Views/Home/Supervisor/mentoring_history.cshtml");
+            }
+            else if (User.IsInRole("LO"))
+            {
+                return View("~/Views/Home/LO/mentoring_history.cshtml");
+            }
+            else
+            {
+                return View("~/Views/Home/Student/mentoring_history.cshtml");
+            }
+        }
+
         public IActionResult Student_Info()
         {
             if (User.IsInRole("SUPERVISOR"))
@@ -236,10 +253,29 @@ namespace E_Internship_Journal.Controllers
             }
         }
 
+
+        public IActionResult Internship_Survey()
+        {
+            if (User.IsInRole("LO"))
+            {
+                return View("~/Views/Home/LO/internship_survey.cshtml");
+            }
+            else
+            {
+                return View("~/Views/Home/Student/internship_survey.cshtml");
+            }
+        }
+
+        //Supervisor
+
         //LO
         public IActionResult Touchpoint()
         {
             return View("~/Views/Home/LO/touchpoint.cshtml");
+        }
+        public IActionResult Final_Grading()
+        {
+            return View("~/Views/Home/LO/final_grading.cshtml");
         }
 
         //Student
@@ -247,13 +283,9 @@ namespace E_Internship_Journal.Controllers
         {
             return View("~/Views/Home/Student/mentoring.cshtml");
         }
-        public IActionResult Mentoring_History()
+        public IActionResult Lock_Day_Task()
         {
-            return View("~/Views/Home/Student/mentoring_history.cshtml");
-        }
-        public IActionResult Internship_Survey()
-        {
-            return View("~/Views/Home/Student/internship_survey.cshtml");
+            return View("~/Views/Home/Student/lock_day_task.cshtml");
         }
 
         //SLO

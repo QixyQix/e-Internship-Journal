@@ -4,18 +4,30 @@
         <li class="breadcrumb-item">
             <a href="~/Home/Index">Homepage</a>
         </li>
+        <li class="breadcrumb-item">
+            <a href="~/Home/Student_Journal">Student Journal</a>
+        </li>
         <li class="breadcrumb-item active">Touchpoint</li>
     </ol>
-    <!-- Example DataTables Card-->
+    <div class="card" style="border-width:0px;">
+        <div class="card-body">
+            <div class="form-group">
+                <div class="pull-left">
+                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
+                        <option>Amelia Goh</option>
+                        <option>Cho Qi Xiang</option>
+                        <option>Tan Chia Wei</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card mb-3">
         <div class="card-header">
             <i class="fa fa-pencil"></i> Touchpoint
         </div>
         <div class="card-body">
             <div class="form-group">
-                <div class="col-md-6 col-sm-6 col-xs-12 pull-left">
-                    <label>Student Name:&nbsp</label><a href="#">Amelia Goh</a>
-                </div>
                 <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
                     <button class="btn btn-secondary form-control" id="addtp">
                         Add
@@ -217,16 +229,17 @@
     var editor;
     $(document).ready(function () {
         var table = $('#dataTable').DataTable({
-            "paging": true,
-            "bPaginate": true,
-            "bLengthChange": false,
-            "bFilter": false,
-            "bSort": false,
-            "bInfo": true,
-            "bAutoWidth": false,
-            "asStripClasses": null,
-            //--disable the sorting--
-            dom: 'rtip',
+            //"paging": true,
+            //"bPaginate": true,
+            //"bLengthChange": false,
+            //"bFilter": false,
+            //"bSort": false,
+            //"bInfo": true,
+            //"bAutoWidth": false,
+            //"asStripClasses": null,
+            ////--disable the sorting--
+            dom: "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
             ajax: {
                 url: '/Api/Task_Record',
                 dataSrc: ''

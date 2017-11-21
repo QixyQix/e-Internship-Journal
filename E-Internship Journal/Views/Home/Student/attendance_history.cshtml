@@ -13,8 +13,15 @@
     <div class="card" style="border-width:0px;">
         <div class="card-body">
             <div class="form-group">
-                <div class="pull-right">
-                    <select class="form-control`" id="exampleSelect1">
+                <div class="pull-left">
+                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
+                        <option>Amelia Goh</option>
+                        <option>Cho Qi Xiang</option>
+                        <option>Tan Chia Wei</option>
+                    </select>
+                </div>
+                <div class="col-xs-12 pull-right">
+                    <select class="form-control" id="exampleSelect1">
                         <option>Week 1</option>
                         <option>Week 2</option>
                         <option>Week 3</option>
@@ -41,15 +48,6 @@
                             <th>Comment</th>
                         </tr>
                     </thead>
-                    @*<tfoot>
-                            <tr>
-                                <th>Date</th>
-                                <th>Time in</th>
-                                <th>Time Out</th>
-                                <th>Remarks</th>
-                                <th>Edit</th>
-                            </tr>
-                        </tfoot>*@
                     <tbody>
                         <tr>
                             <td>2011/04/27</td>
@@ -123,15 +121,35 @@
     </div>
     <br />
 </div>
+    <!-- comment Modal -->
+<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="attendanceModalLabel">11 October 2017</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="container">
+                    <form>
+                        <div class="form-group ">
+                            <label>Comment:</label>
+                            <textarea class="form-control" rows="5" id="task" readonly>Went to meeting, and prepared meeting report.</textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
-    var editor;
     $(document).ready(function () {
         var table = $('#dataTable').DataTable({
-            "scrollY": '250px',
-            "scrollCollapse": true,
-            "paging": false,
-            //--disable the sorting--
-            dom: 'rtp',
+            dom: "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
             ajax: {
                 url: '/Api/Task_Record',
                 dataSrc: ''
@@ -144,25 +162,17 @@
                 {
                     data: null,
                     "bSortable": false,
-                    "mRender": function (o) { return '<input id="comments" readonly>' }
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary">View</button>' } //note under condition if no comments was given the column would be blank
                 }
             ],
             language: {
-                emptyTable: "No task was found, please create one.",
+                emptyTable: "No Attendance was found, please create one.",
             }
         });
 
         // Activate an inline edit on click of a table cell
-        $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
-            console.log("button 1 is click");
-        });
-
-        $('#addattendance').on('click', function (e) {
-            $('#attendanceModal').modal('show');
-        });
-
         $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
-            $('#editattendanceModal').modal('show');
+            $('#commentModal').modal('show');
         });
     });
 </script>

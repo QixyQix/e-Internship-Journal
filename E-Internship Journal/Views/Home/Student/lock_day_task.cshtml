@@ -1,40 +1,25 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-<div class="container-fluid">
-    <!-- Breadcrumbs -->
+﻿<div class="container-fluid">
+    <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
             <a href="~/Home/Index">Homepage</a>
         </li>
-        <li class="breadcrumb-item">
-            <a href="~/Home/Student_Journal">Student Journal</a>
-        </li>
-        <li class="breadcrumb-item active">Daily Task</li>
+        <li class="breadcrumb-item active">View Task</li>
     </ol>
-    <div class="card" style="border-width:0px;">
-        <div class="card-body">
-            <div class="form-group">
-                <div class="pull-left">
-                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
-                        <option>Amelia Goh</option>
-                        <option>Cho Qi Xiang</option>
-                        <option>Tan Chia Wei</option>
-                    </select>
+    <div class="card-body">
+        <div class="form-inline">
+            <label class="control-label requiredField" for="date">
+                Date:&nbsp;
+            </label>
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <i class="fa fa-calendar">
+                    </i>
                 </div>
-                <div class="col-xs-4 pull-right">
-                    <select class="form-control" id="exampleSelect1">
-                        <option>Week 1</option>
-                        <option>Week 2</option>
-                        <option>Week 3</option>
-                        <option>Week 4</option>
-                    </select>
-                </div>
+                <input class="form-control" id="date" name="date" placeholder="DD/MM/YYYY" type="text">
             </div>
         </div>
     </div>
-    <!-- Example DataTables Card-->
     <div class="card mb-3">
         <div class="card-header">
             <i class="fa fa-table"></i> Attendance Taking
@@ -51,10 +36,10 @@
                     </thead>
                     <tbody>
                         @*<tr>
-                            <td>1</td>
-                            <td>I love to Slack</td>
-                            <td><input type='text' class="form-control" id="remarks" /></td>
-                        </tr>*@
+                                <td>1</td>
+                                <td>I love to Slack</td>
+                                <td><input type='text' class="form-control" id="remarks" /></td>
+                            </tr>*@
                     </tbody>
                 </table>
             </div>
@@ -74,7 +59,7 @@
     <br />
 </div>
 
-    <!-- comment Modal -->
+<!-- comment Modal -->
 <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="attendanceModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

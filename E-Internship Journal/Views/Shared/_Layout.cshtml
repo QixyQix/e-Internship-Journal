@@ -26,6 +26,7 @@
     <link href="~/lib/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet" />
     <link href="~/lib/sweetalert2/dist/sweetalert2.css" rel="stylesheet" />
     <link href="~/lib/bootstrap-switch/dist/css/bootstrap-switch.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap-multiselect/dist/css/bootstrap-multiselect.css" rel="stylesheet" />
     <!-- Bootstrap core JavaScript -->
     <script src="~/js/jquery/jquery.js"></script>
     <script src="~/js/calendar/moment.min.js"></script>
@@ -37,6 +38,7 @@
     <script src="~/js/datatables/jquery.dataTables.js"></script>
     <script src="~/js/datatables/dataTables.bootstrap4.js"></script>
     <script src="~/lib/sweetalert2/dist/sweetalert2.js"></script>
+    <script src="~/lib/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
 </head>
 <body class="fixed-nav sticky-footer bg-dark sidenav-toggled" id="page-top">
 
@@ -118,7 +120,16 @@
                             </span>
                         </a>
                     </li>
-                }else if (User.IsInRole("SUPERVISOR"))
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Mentoring">
+                        <a class="nav-link" href="~/Home/Mentoring">
+                            <i class="fa fa-fw fa-eye"></i>
+                            <span class="nav-link-text">
+                                Mentoring Session
+                            </span>
+                        </a>
+                    </li>
+                }
+                else if (User.IsInRole("SUPERVISOR"))
                 {
 
 
@@ -402,7 +413,6 @@
     <script src="~/js/datatables/dataTables.select.js"></script>
     <script src="~/js/datetimepicker/bootstrap-datepicker.js"></script>
     <script src="~/lib/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
-    <script src="~/js/datatables/dataTables.editor.js"></script>
     <script src="~/lib/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
     <script>
         $(document).ready(function () {

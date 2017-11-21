@@ -5,14 +5,31 @@
         <li class="breadcrumb-item">
             <a href="~/Home/Index">Homepage</a>
         </li>
-        <li class="breadcrumb-item active">Mentor Session</li>
+        <li class="breadcrumb-item">
+            <a href="~/Home/Student_Journal">Student Journal</a>
+        </li>
+        <li class="breadcrumb-item active">Mentor Session History</li>
     </ol>
     <div class="card" style="border-width:0px;">
         <div class="card-body">
             <div class="form-group">
-                <div class="col-xs-12 pull-right">
+                <div class="pull-left">
+                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
+                        <option>Amelia Goh</option>
+                        <option>Cho Qi Xiang</option>
+                        <option>Tan Chia Wei</option>
+                    </select>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
                     <div class="form-inline">
-                        <input type="button" value="View History" class="btn btn-default" onclick="location.href='@Url.Action("mentoring_history", "Home" )'" />
+                        <label for="exampleFormControlSelect1">Session #</label>
+                        <select class="form-control" id="exampleFormControlSelect1">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -27,8 +44,8 @@
             <div class="col-12">
                 <div class="col-6 pull-left">
                     <div class="form-group">
-                        <label for="exampleFormControlSelect1">Session #</label>
-                        <select class="form-control" id="exampleFormControlSelect1">
+                        <label for="exampleFormControlSelect1">Mentoring Session #</label>
+                        <select class="form-control" id="exampleFormControlSelect1" disabled>
                             <option>1</option>
                             <option>2</option>
                             <option>3</option>
@@ -45,7 +62,7 @@
                                 <i class="fa fa-calendar">
                                 </i>
                             </div>
-                            <input class="form-control" id="date" name="date" placeholder="DD/MM/YYYY" type="text">
+                            <input class="form-control" id="date" name="date" placeholder="DD/MM/YYYY" type="text" readonly>
                         </div>
                     </div>
                     <div class="form-group">
@@ -57,7 +74,7 @@
                                 <i class="fa fa-clock-o"></i>
                             </div>
 
-                            <input type='text' class="form-control" />
+                            <input type='text' class="form-control" id="timeinval" readonly/>
                         </div>
                     </div>
                 </div>
@@ -70,7 +87,7 @@
                                 <div class="input-group-addon">
                                     <i class="fa fa-clock-o"></i>
                                 </div>
-                                <input type='text' class="form-control" id="timeoutval" />
+                                <input type='text' class="form-control" id="timeoutval" readonly />
                             </div>
                         </div>
                     </div>
@@ -86,7 +103,7 @@
             <div class="col-12">
                 <div class="form-group">
                     <label class="control-label" for="comment">Please note down what you have learnt from the mentoring session. The areas of learning may include, but not limited to, an overview of the company structure, nature of business and work requirements; jobs prospects and career paths within the industry; or work experience of your mentor in the industry</label>
-                    <textarea class="form-control" rows="5" id="comment"></textarea>
+                    <textarea class="form-control" rows="5" id="comment" readonly></textarea>
                 </div>
             </div>
         </div>
@@ -100,9 +117,6 @@
                 <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
                     Back
                 </button>
-                <button class="btn btn-primary pull-right" name="submit" type="submit">
-                    Save
-                </button>
             </div>
         </div>
     </div>
@@ -110,4 +124,6 @@
 </div>
 
 <script>
+    $(document).ready(function () {
+    });
 </script>

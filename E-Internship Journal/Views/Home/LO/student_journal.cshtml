@@ -14,7 +14,17 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="pull-left">
-                    <label>Student Name:&nbsp</label><label>Amelia Goh</label>
+                    <label>Student ID:&nbsp</label>P1530247
+                </div>
+            </div>
+            <br />
+            <div class="form-group">
+                <div class="pull-left form-inline">
+                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
+                        <option>Amelia Goh</option>
+                        <option>Cho Qi Xiang</option>
+                        <option>Tan Chia Wei</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -72,12 +82,12 @@
             <div class="col-sm-4">
                 <div class="card text-center">
                     <div class="card-header">
-                        <i class="fa fa-info fa-5x"></i>
+                        <i class="fa fa-eye fa-5x"></i>
                     </div>
                     <div class="card-body">
-                        <h2>Guideline</h2>
+                        <h2>Mentoring</h2>
                         @*<p>View Daily <strong>Tasks</strong></p>*@
-                        <a href="~/Home/guide" class="btn btn-primary">View Guidelines</a>
+                        <a href="~/Home/mentoring_history" class="btn btn-primary">Mentoring History</a>
                     </div>
                 </div>
             </div>
@@ -114,6 +124,18 @@
                         <h2>Touch point</h2>
                         @*<p>View Daily <strong>Tasks</strong></p>*@
                         <a href="~/Home/touchpoint" class="btn btn-primary">Manage Touch Point</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card text-center">
+                    <div class="card-header">
+                        <i class="fa fa-clipboard fa-5x"></i>
+                    </div>
+                    <div class="card-body">
+                        <h2>Survey</h2>
+                        @*<p>View Daily <strong>Tasks</strong></p>*@
+                        <a href="~/Home/internship_survey" class="btn btn-primary">Internship Survey</a>
                     </div>
                 </div>
             </div>

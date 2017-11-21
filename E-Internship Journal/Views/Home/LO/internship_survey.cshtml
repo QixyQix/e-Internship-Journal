@@ -4,9 +4,25 @@
         <li class="breadcrumb-item">
             <a href="~/Home/Index">Homepage</a>
         </li>
+        <li class="breadcrumb-item">
+            <a href="~/Home/Student_Journal">Student Journal</a>
+        </li>
         <li class="breadcrumb-item active">Internship Survey</li>
     </ol>
-    <div class="card">
+    <div class="card" style="border-width:0px;">
+        <div class="card-body">
+            <div class="form-group">
+                <div class="pull-left">
+                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
+                        <option>Amelia Goh</option>
+                        <option>Cho Qi Xiang</option>
+                        <option>Tan Chia Wei</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card" id="survey">
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs" role="tablist">
                 <li class="nav-item">
@@ -98,11 +114,6 @@
             <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
                 Back
             </button>
-            <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
-                <button class="btn btn-primary pull-right" name="submit" id="submit">
-                    Submit
-                </button>
-            </div>
         </div>
     </div>
 </div>
@@ -179,6 +190,7 @@
         //$('#addattendance').on('click', function (e) {
         //    $('#attendanceModal').modal('show');
         //});
-        $("#tablecompetency input").attr("disabled", "disabled"); //disable input for table competency
+        $("#survey div.card-body select").attr("disabled", "disabled"); //disable dropdown
+        $("#survey div.card-body textarea").attr("readonly", "true"); //disable textarea
     });
 </script>

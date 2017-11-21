@@ -10,16 +10,20 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="pull-left">
-                    <label>Student Name:&nbsp</label><label>Amelia Goh</label>
-                </div>
-                <div class="pull-right">
-                    <select class="form-control`" id="exampleSelect1">
-                        <option>Week 1</option>
-                        <option>Week 2</option>
-                        <option>Week 3</option>
-                        <option>Week 4</option>
+                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
+                        <option>Amelia Goh</option>
+                        <option>Cho Qi Xiang</option>
+                        <option>Tan Chia Wei</option>
                     </select>
                 </div>
+                @*<div class="col-md-2 col-sm-2 col-xs-12 pull-right">
+                        <select class="form-control" id="exampleSelect1">
+                            <option>Week 1 - 4</option>
+                            <option>Week 4 - 8</option>
+                            <option>Week 8 - 12</option>
+                            <option>Week 12 - 16</option>
+                        </select>
+                    </div>*@
             </div>
         </div>
     </div>
@@ -39,6 +43,9 @@
                     <a class="nav-link" href="#competency" role="tab" data-toggle="tab">Competency Checklist</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="#mentoring" role="tab" data-toggle="tab">Mentoring</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="#grading" role="tab" data-toggle="tab">Grading</a>
                 </li>
             </ul>
@@ -54,18 +61,9 @@
                                     <th>Time in</th>
                                     <th>Time Out</th>
                                     <th>Remarks</th>
-                                    <th>Comments</th>
+                                    <th width="5%">Comments</th>
                                 </tr>
                             </thead>
-                            @*<tfoot>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Time in</th>
-                                        <th>Time Out</th>
-                                        <th>Remarks</th>
-                                        <th>Edit</th>
-                                    </tr>
-                                </tfoot>*@
                             <tbody>
                                 <tr>
                                     <td>2011/04/27</td>
@@ -83,7 +81,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" cellspacing="0">
+                        <table class="table table-bordered" id="dataTableAttendanceOverall" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>Public Holidays</th>
@@ -168,6 +166,17 @@
                             <textarea class="form-control" rows="5" id="hardskill3" readonly></textarea>
                         </div>
                     </div>
+                    <br />
+                    <div>
+                        <h5>Feedback</h5>
+                    </div>
+                    <hr>
+                    <div class="col-md-10 col-sm-10 col-xs-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-3 requiredField" for="reflectionfeedback">Overall Comments:</label>
+                            <textarea class="form-control" rows="5" id="reflectionfeedback"></textarea>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div role="tabpanel" class="tab-pane fade" id="task">
@@ -176,9 +185,9 @@
                         <table class="table table-bordered" id="dataTable_task" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>DayRecordId</th>
-                                    <th>Description</th>
-                                    <th>remark</th>
+                                    <th width="10%">Date</th>
+                                    <th>Task Recorded</th>
+                                    <th width="5%">Remarks</th>
                                 </tr>
                             </thead>
                         </table>
@@ -339,6 +348,72 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+            <div id="mentoring" class="tab-pane fade">
+                <div class="container">
+                    <br />
+                    <div class="text-left">
+                        <h5>Mentoring Detail</h5>
+                    </div>
+                    <hr />
+                    <div class="col-12">
+                        <div class="col-6 pull-left">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Mentoring Session #</label>
+                                <select class="form-control" id="exampleFormControlSelect1" disabled>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="date">
+                                    Date of Session
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar">
+                                        </i>
+                                    </div>
+                                    <input class="form-control" id="date" name="date" placeholder="DD/MM/YYYY" type="text" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="timein">
+                                    Time started
+                                </label>
+                                <div class='input-group date' id='timein'>
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </div>
+
+                                    <input type='text' class="form-control" id="timeinval" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 pull-right">
+                            <div class="form-group">
+                                <label class="control-label" for="timeout">
+                                    Time ended
+                                </label>
+                                <div class='input-group date' id='timeout'>
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </div>
+                                    <input type='text' class="form-control" id="timeoutval" readonly />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="control-label" for="comment">Please note down what you have learnt from the mentoring session. The areas of learning may include, but not limited to, an overview of the company structure, nature of business and work requirements; jobs prospects and career paths within the industry; or work experience of your mentor in the industry</label>
+                            <textarea class="form-control" rows="5" id="comment" readonly></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -517,11 +592,9 @@
 
 
                         <div class="col-md-10 col-sm-10 col-xs-12">
-                            <div class="form-group ">
-                                <div class="form-group">
-                                    <label class="control-label col-sm-3 requiredField" for="overallComment">Overall Comments:</label>
-                                    <textarea class="form-control" rows="5" id="overallComment"></textarea>
-                                </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3 requiredField" for="overallComment">Overall Comments:</label>
+                                <textarea class="form-control" rows="5" id="overallComment"></textarea>
                             </div>
                         </div>
                     </div>
@@ -538,27 +611,43 @@
                 Back
             </button>
             <div class="pull-right">
-                <button class="btn btn-default pull-left" name="submit" id="reject">
-                    Reject
-                </button>
-                &nbsp;
                 <button class="btn btn-primary pull-right" name="submit" id="submit">
-                    Approve
+                    Submit
                 </button>
             </div>
         </div>
     </div>
 </div>
 &nbsp;
+<!-- comment Modal -->
+<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="attendanceModalLabel">11 October 2017</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="container">
+                    <form>
+                        <div class="form-group ">
+                            <label>Comment:</label>
+                            <textarea class="form-control" rows="5" id="task" readonly>Went to meeting, and prepared meeting report.</textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
-    var editor;
     $(document).ready(function () {
         var attendancetable = $('#dataTable_attendance').DataTable({
-            "scrollY": '250px',
-            "scrollCollapse": true,
-            "paging": false,
-            //--disable the sorting--
-            dom: 'rtp',
+            dom: "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
             ajax: {
                 url: '/Api/Task_Record',
                 dataSrc: ''
@@ -571,53 +660,37 @@
                 {
                     data: null,
                     "bSortable": false,
-                    "mRender": function (o) { return '<input id="comments">' }
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>' }
                 }
             ]
         });
+        $('#dataTable_attendance tbody').on('click', 'button.btn-primary', function (e) {
+            $('#commentModal').modal('show');
+        });
+        //end of attendance script
 
         var tasktable = $('#dataTable_task').DataTable({
-            "bPaginate": true,
-            "bLengthChange": false,
-            "bFilter": false,
-            "bSort": false,
-            "bInfo": false,
-            "bAutoWidth": false,
-            "asStripClasses": null,
-            pageLength: 5,
-            //--disable the sorting--
-            dom: 'rtip',
+            dom: "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
             ajax: {
                 url: '/Api/Task_Record',
                 dataSrc: ''
             },
-            order: [[1, 'asc']],
             columns: [
-                { data: "DayRecordId", "sTitle": "Date", "sWidth": "10%" },
-                { data: "Description", "sTitle": "Task Recorded", "sWidth": "80%" },
+                { data: "DayRecordId" },
+                { data: "Description" },
                 {
                     data: null,
-                    "sTitle": "Remarks",
                     "bSortable": false,
-                    "mRender": function (o) { return '<input id="remarks">' }
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>' }
                 }
             ],
             language: {
-                emptyTable: "No task was found, please create one.",
+                emptyTable: "No Task was found, please create one.",
             }
         });
-
-        var tasktable = $('#dataTable').DataTable({
-            "bPaginate": true,
-            "bLengthChange": false,
-            "bFilter": false,
-            "bSort": false,
-            "bInfo": false,
-            "bAutoWidth": false,
-            "asStripClasses": null,
-            pageLength: 5,
-            //--disable the sorting--
-            dom: 'rtip'
+        $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
+            $('#commentModal').modal('show');
         });
 
         //$('#addattendance').on('click', function (e) {
