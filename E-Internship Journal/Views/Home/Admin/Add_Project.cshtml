@@ -1,0 +1,140 @@
+﻿<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item active">Create Project</li>
+    </ol>
+    <!-- Example DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-table"></i> Create Project
+        </div>
+        <div>
+            <form class="form-group">
+                <div class="form-inline">
+                    <label class="col-md-2 control-label">Project name:</label>
+                    <div class="col-sm-5">
+                        <input class="form-control" id="projname" type="text">
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-sm-2 control-label">Supervisor:</label>
+                    <select class="form-control`" id="exampleSelect1">
+                        <option>Johnny</option>
+                        <option>Vincent</option>
+                        <option>Daniel</option>
+                        <option>Joe</option>
+                    </select>
+                </div>
+                <div class="form-inline">
+                    <label class="col-sm-2 control-label">Company:</label>
+                    <select class="form-control`" id="exampleSelect2">
+                        <option>Convertium</option>
+                        <option>Accenture</option>
+                        <option>NCS</option>
+                        <option>GovTech</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                    Back
+                </button>
+                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+@*<script>
+        $(document).ready(function () {
+
+            var editor = new $.fn.dataTable.Editor(table);
+
+            //var t = $('#dataTable').DataTable();
+            var counter = 1;
+
+            var table = $('#dataTable').DataTable({
+                ajax: {
+                    url: '/Api/Task_Record',
+                    dataSrc: ''
+                },
+                "bPaginate": false,
+                "bLengthChange": false,
+                "bFilter": false,
+                "bSort": false,
+                "bInfo": false,
+                "bAutoWidth": false,
+                "asStripClasses": null,
+                //--disable the sorting--
+                dom: 'lrt',
+                "aoColumns": [
+                    { "mData": "DayRecordId", "sWidth": "10%" },
+                    { "mData": "Description", "sTitle": "Description", "sWidth": "80%" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button>' }
+                    }
+                ],
+                language: {
+                    emptyTable: "No task was found, please create one.",
+                }
+            });
+            $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
+                console.log("button 1 is click");
+            });
+        });
+    </script>*@
+<script>
+    var editor;
+    $(document).ready(function () {
+        var table = $('#dataTable').DataTable({
+            "paging": true,
+            "bPaginate": true,
+            "bLengthChange": false,
+            "bFilter": false,
+            "bSort": false,
+            "bInfo": true,
+            "bAutoWidth": false,
+            "asStripClasses": null,
+            //--disable the sorting--
+            dom: 'rtip',
+            ajax: {
+                url: '/Api/Task_Record',
+                dataSrc: ''
+            },
+            order: [[1, 'asc']],
+            columns: [
+                { data: "DayRecordId" },
+                { data: "Description" },
+                {
+                    data: null,
+                    "sWidth": "10%",
+                    "bSortable": false,
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
+                }
+            ],
+            language: {
+                emptyTable: "No task was found, please create one.",
+            }
+        });
+
+        $('#addtp').on('click', function (e) {
+            $('#addtpModal').modal('show');
+        });
+        
+        $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
+            $('#updatetpModal').modal('show');
+        });
+    });
+</script>

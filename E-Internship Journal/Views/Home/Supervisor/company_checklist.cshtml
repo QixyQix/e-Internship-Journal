@@ -13,7 +13,11 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="pull-left">
-                    <label>Student Name:&nbsp</label><label>Amelia Goh</label>
+                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
+                        <option>Amelia Goh</option>
+                        <option>Cho Qi Xiang</option>
+                        <option>Tan Chia Wei</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -141,8 +145,10 @@
                 <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
                     Back
                 </button>
-                &nbsp;
+                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                    Save
+                </button>
             </div>
         </div>
     </div>
-    <!--end with attendance taking-->
+    &nbsp;

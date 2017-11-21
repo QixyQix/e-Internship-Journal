@@ -1,0 +1,85 @@
+﻿<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item active">Create Course</li>
+    </ol>
+    <!-- Example DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-table"></i> Create Course
+        </div>
+        <div>
+            <form class="form-group">
+                <div class="form-inline">
+                    <label class="col-md-2 control-label">Course code:</label>
+                    <div class="col-sm-5">
+                        <input class="form-control" id="coursecode" type="text">
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-sm-2 control-label">Course name:</label>
+                    <div class="col-sm-5">
+                        <input class="form-control" id="coursename" type="text">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                    Back
+                </button>
+                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+@*<script>
+        $(document).ready(function () {
+
+            var editor = new $.fn.dataTable.Editor(table);
+
+            //var t = $('#dataTable').DataTable();
+            var counter = 1;
+
+            var table = $('#dataTable').DataTable({
+                ajax: {
+                    url: '/Api/Task_Record',
+                    dataSrc: ''
+                },
+                "bPaginate": false,
+                "bLengthChange": false,
+                "bFilter": false,
+                "bSort": false,
+                "bInfo": false,
+                "bAutoWidth": false,
+                "asStripClasses": null,
+                //--disable the sorting--
+                dom: 'lrt',
+                "aoColumns": [
+                    { "mData": "DayRecordId", "sWidth": "10%" },
+                    { "mData": "Description", "sTitle": "Description", "sWidth": "80%" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button>' }
+                    }
+                ],
+                language: {
+                    emptyTable: "No task was found, please create one.",
+                }
+            });
+            $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
+                console.log("button 1 is click");
+            });
+        });
+    </script>*@

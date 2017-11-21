@@ -10,10 +10,8 @@
     <div class="card" style="border-width:0px;">
         <div class="card-body">
             <div class="form-group">
-                <div class="pull-right">
-                    <div class="form-inline">
+                <div class="col-xs-12 pull-right">
                         <input type="button" value="View History" class="btn btn-default" onclick="location.href='@Url.Action("attendance_history", "Home" )'" />
-                    </div>
                 </div>
             </div>
         </div>
@@ -74,9 +72,6 @@
             <div class="col-12">
                 <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
                     Back
-                </button>
-                <button class="btn btn-primary pull-right" name="submit" type="submit">
-                    Send to Review
                 </button>
             </div>
         </div>
@@ -146,12 +141,17 @@
                                 <option>Company Off-Day</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label class="control-label" for="specify">
+                                if others, please specify:
+                            </label>
+                            <input type='text' class="form-control" id="specify" />
+                        </div>
                     </form>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="submit">Submit</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
             </div>
         </div>
@@ -220,12 +220,17 @@
                                 <option>Company Off-Day</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label class="control-label" for="specify">
+                                if others, please specify:
+                            </label>
+                            <input type='text' class="form-control" id="specify" />
+                        </div>
                     </form>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="submit">Submit</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
             </div>
         </div>
@@ -236,11 +241,8 @@
     var editor;
     $(document).ready(function () {
         var table = $('#dataTable').DataTable({
-            "scrollY": '250px',
-            "scrollCollapse": true,
-            "paging": false,
-            //--disable the sorting--
-            dom: 'rtp',
+            dom: "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
             ajax: {
                 url: '/Api/Task_Record',
                 dataSrc: ''
@@ -257,7 +259,7 @@
                 }
             ],
             language: {
-                emptyTable: "No task was found, please create one.",
+                emptyTable: "No Attendance was found, please create one.",
             }
         });
 

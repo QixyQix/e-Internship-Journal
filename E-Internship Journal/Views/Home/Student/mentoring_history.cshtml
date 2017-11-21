@@ -1,0 +1,122 @@
+﻿
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="~/Home/Mentoring">Mentor Session</a>
+        </li>
+        <li class="breadcrumb-item active">Mentor Session History</li>
+    </ol>
+    <div class="card" style="border-width:0px;">
+        <div class="card-body">
+            <div class="form-group">
+                <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
+                    <div class="form-inline">
+                        <label for="exampleFormControlSelect1">Session #</label>
+                        <select class="form-control" id="exampleFormControlSelect1">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Example DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-table"></i> Mentoring Details
+        </div>
+        <div class="card-body">
+            <div class="col-12">
+                <div class="col-6 pull-left">
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Mentoring Session #</label>
+                        <select class="form-control" id="exampleFormControlSelect1" disabled>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="date">
+                            Date of Session
+                        </label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar">
+                                </i>
+                            </div>
+                            <input class="form-control" id="date" name="date" placeholder="DD/MM/YYYY" type="text" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="timein">
+                            Time started
+                        </label>
+                        <div class='input-group date' id='timein'>
+                            <div class="input-group-addon">
+                                <i class="fa fa-clock-o"></i>
+                            </div>
+
+                            <input type='text' class="form-control" id="timeinval" readonly/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 pull-right">
+                        <div class="form-group">
+                            <label class="control-label" for="timeout">
+                                Time ended
+                            </label>
+                            <div class='input-group date' id='timeout'>
+                                <div class="input-group-addon">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                                <input type='text' class="form-control" id="timeoutval" readonly />
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-table"></i> Reflection
+        </div>
+        <div class="card-body">
+            <div class="col-12">
+                <div class="form-group">
+                    <label class="control-label" for="comment">Please note down what you have learnt from the mentoring session. The areas of learning may include, but not limited to, an overview of the company structure, nature of business and work requirements; jobs prospects and career paths within the industry; or work experience of your mentor in the industry</label>
+                    <textarea class="form-control" rows="5" id="comment" readonly></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+
+    <!--end with attendance taking-->
+    <div class="card-body">
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                    Back
+                </button>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+
+<script>
+    $(document).ready(function () {
+    });
+</script>

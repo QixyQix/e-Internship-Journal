@@ -103,7 +103,6 @@
                 <!--end with attendance taking-->
             </div>
         </div>
-    </div>
     <div class="card-body">
         <div class="form-group">
             <div class="col-12">
@@ -118,22 +117,21 @@
     </div>
     <br />
 </div>
+
 <script>
     var editor;
     $(document).ready(function () {
         var table = $('#dataTable').DataTable({
-            "scrollY": '250px',
-            "scrollCollapse": true,
-            "paging": false,
-            "bPaginate": false,
+            "paging": true,
+            "bPaginate": true,
             "bLengthChange": false,
             "bFilter": false,
             "bSort": false,
-            "bInfo": false,
+            "bInfo": true,
             "bAutoWidth": false,
             "asStripClasses": null,
             //--disable the sorting--
-            dom: 'rti',
+            dom: 'rtip',
             ajax: {
                 url: '/Api/Task_Record',
                 dataSrc: ''
@@ -163,6 +161,10 @@
 
         $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
             $('#updateManageStudentModal').modal('show');
+        });
+
+        $('#uploadcsv').on('click', function (e) {
+            $('#uploadcsvModal').modal('show');
         });
     });
 </script>

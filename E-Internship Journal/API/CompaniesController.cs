@@ -65,7 +65,9 @@ namespace E_Internship_Journal.API
 
                 foundOneCompany.CompanyName = companyNewInput.CompanyName.Value;
                 foundOneCompany.CompanyAddress = companyNewInput.CompanyAddress.Value;
-
+                foundOneCompany.ContactName = companyNewInput.ContactName.Value;
+                foundOneCompany.ContactEmail = companyNewInput.ContactEmail.Value;
+                foundOneCompany.ContactNumber = companyNewInput.ContactNumber.Value;
                 await _context.SaveChangesAsync();
             }
             else
@@ -92,7 +94,10 @@ namespace E_Internship_Journal.API
                 Company newCompany = new Company
                 {
                     CompanyName = companyNewInput.CompanyName.Value,
-                    CompanyAddress = companyNewInput.CompanyAddress.Value
+                    CompanyAddress = companyNewInput.CompanyAddress.Value,
+                    ContactName = companyNewInput.ContactName.Value,
+                    ContactEmail = companyNewInput.ContactEmail.Value,
+                    ContactNumber = companyNewInput.ContactNumber.Value
                 };
                 _context.Companies.Add(newCompany);
                 await _context.SaveChangesAsync();
@@ -108,8 +113,7 @@ namespace E_Internship_Journal.API
                 Message = "Saved Course into database"
             };
 
-            OkObjectResult httpOkResult =
-new OkObjectResult(successRequestResultMessage);
+            OkObjectResult httpOkResult = new OkObjectResult(successRequestResultMessage);
             return httpOkResult;
         }
 
