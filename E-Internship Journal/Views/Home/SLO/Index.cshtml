@@ -1,88 +1,70 @@
-﻿<div class="container-fluid">
-    <!-- Breadcrumbs-->
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs -->
     <ol class="breadcrumb">
         @*<li class="breadcrumb-item">
-            <a href="#">Homepage</a>
-        </li>*@
+                <a href="#">Internship Programme</a>
+            </li>*@
         <li class="breadcrumb-item active">Homepage</li>
     </ol>
-    <!-- Example DataTables Card-->
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fa fa-table"></i> Batch Information
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Batch Name</th>
-                            <th>Diploma Name</th>
-                            <th>Competency Checklist</th>
-                            <th>Manage Students</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>AY16/17S2</td>
-                            <td>Diploma in Information Technology</td>
-                            <td>
-                                <div class="text-center">
-                                    <a href="~/Home/Edit_Competency" style="color:black;"><i class="fa fa-check-square"></i></a>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="text-center">
-                                    <a href="~/Home/Manage_Student" style="color:black;"><i class="fa fa-user-plus"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>AY16/17S2</td>
-                            <td>Diploma in Business Information Technology</td>
-                            <td>
-                                <div class="text-center">
-                                    <a href="~/Home/Edit_Competency" style="color:black;"><i class="fa fa-check-square"></i></a>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="text-center">
-                                    <a href="~/Home/Manage_Student" style="color:black;"><i class="fa fa-user-plus"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>AY16/17S2</td>
-                            <td>Diploma in Security Management</td>
-                            <td>
-                                <div class="text-center">
-                                    <a href="~/Home/Edit_Competency" style="color:black;"><i class="fa fa-check-square"></i></a>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="text-center">
-                                    <a href="~/Home/Manage_Student" style="color:black;"><i class="fa fa-user-plus"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>AY16/17S2</td>
-                            <td>Diploma in Digital Animation</td>
-                            <td>
-                                <div class="text-center">
-                                    <a href="~/Home/Edit_Competency" style="color:black;"><i class="fa fa-check-square"></i></a>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="text-center">
-                                    <a href="~/Home/Manage_Student" style="color:black;"><i class="fa fa-user-plus"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="card text-center">
+                    <div class="card-header">
+                        <i class="fa fa-users fa-5x"></i>
+                    </div>
+                    <div class="card-body">
+                        <h2>Batch</h2>
+                        @*<p>View Daily <strong>Tasks</strong></p>*@
+                        <a href="~/Home/Manage_Batch" class="btn btn-primary">Manage Batch</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card text-center">
+                    <div class="card-header">
+                        <i class="fa fa-check-square fa-5x"></i>
+                    </div>
+                    <div class="card-body">
+                        <h2>Competency</h2>
+                        @*<p>View Daily <strong>Tasks</strong></p>*@
+                        <a href="~/Home/Manage_Competency" class="btn btn-primary">Manage Competency</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card text-center">
+                    <div class="card-header">
+                        <i class="fa fa-building fa-5x"></i>
+                    </div>
+                    <div class="card-body">
+                        <h2>Company</h2>
+                        @*<p>View Daily <strong>Tasks</strong></p>*@
+                        <a href="~/Home/Manage_Company" class="btn btn-primary">Manage Company</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card text-center">
+                    <div class="card-header">
+                        <i class="fa fa-briefcase fa-5x"></i>
+                    </div>
+                    <div class="card-body">
+                        <h2>Project</h2>
+                        @*<p>View Daily <strong>Tasks</strong></p>*@
+                        <a href="~/Home/Manage_Project" class="btn btn-primary">Manage Project</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <!--end with attendance taking-->
+    <br>
 </div>
+<!-- /.container-fluid -->
+<!-- /.content-wrapper -->
+<script>
+</script>

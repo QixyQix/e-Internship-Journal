@@ -4,27 +4,12 @@
         <li class="breadcrumb-item">
             <a href="~/Home/Index">Homepage</a>
         </li>
-        <li class="breadcrumb-item">
-            <a href="~/Home/Manage_Batch">Manage Batch</a>
-        </li>
-        <li class="breadcrumb-item active">Manage Students</li>
+        <li class="breadcrumb-item active">Manage Company</li>
     </ol>
-    <div class="card" style="border-width:0px;">
-        <div class="card-body">
-            <div class="form-group">
-                <div class="pull-left">
-                    <label>Batch Name:&nbsp</label><select class="form-control" id="selectstudent">
-                        <option>AY16/17 S1-DIT</option>
-                        <option>AY16/17 S2-EEE</option>
-                        <option>AY15/16 S1-DBIT</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Example DataTables Card-->
     <div class="card mb-3">
         <div class="card-header">
-            <i class="fa fa-table"></i> Manage Students
+            <i class="fa fa-table"></i> Manage Company
         </div>
         <div class="card-body">
             <div class="form-inline">
@@ -40,84 +25,83 @@
                         &nbsp;
                     </div>
                     <div class="col-md-4 col-sm-4 col-xs-12 pull-right">
-                        <button class="col-8 btn btn-primary pull-right" id="addstudent" onclick="location.href='@Url.Action("add_student", "Home")'">
-                            Add Student
+                        <button class="col-8 btn btn-primary pull-right" id="addcompany" onclick="location.href='@Url.Action("add_company", "Home")'">
+                            Add Company
                         </button>
                     </div>
                     &nbsp;
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table table-bordered" id="student_dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="company_dataTable" cellspacing="0">
                     <thead>
                         <tr>
                             <th width="5%"><input name="select_all" value="1" type="checkbox" /></th>
-                            <th>Student ID</th>
-                            <th>Student Name</th>
-                            <th>Mobile No</th>
+                            <th>Company Name</th>
+                            <th>Address</th>
+                            <th>Contact Person</th>
                             <th>Email Address</th>
-                            <th>Liason Officer</th>
-                            <th>Project</th>
-                            <th>Company</th>
-                            <th>Designation</th>
-                            <th>Allowance</th>
+                            <th>Mobile No.</th>
+                            <th>Fax</th>
                             <th width="10%">Action</th>
                         </tr>
                         <tr id="filterrow">
                             <th></th>
-                            <th>Student ID</th>
-                            <th>Student Name</th>
-                            <th>Mobile No</th>
+                            <th>Company Name</th>
+                            <th>Address</th>
+                            <th>Contact Person</th>
                             <th>Email Address</th>
-                            <th>Liason Officer</th>
-                            <th>Project</th>
-                            <th>Company</th>
-                            <th>Designation</th>
-                            <th>Allowance</th>
+                            <th>Mobile No.</th>
+                            <th>Fax</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td></td>
-                            <td>P1551321</td>
-                            <td>Catelyn Tan</td>
-                            <td>ctlyn@gmail.com</td>
-                            <td>Vincent Chan</td>
-                            <td>Parliament</td>
-                            <td>Webspark Pte Ltd</td>
-                            <td>Web Designer</td>
-                            <td>600</td>
-                            <td></td>
+                            <td>Websparks Pte Ltd</td>
+                            <td>52 Horne Rd</td>
+                            <td>Websparks Pte Ltd</td>
+                            <td>52 Horne Rd</td>
+                            <td>Websparks Pte Ltd</td>
+                            <td>52 Horne Rd</td>
+                            <td><a href="/mypath"><i class="fa fa-pencil"></i></a></td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td>P1584512</td>
-                            <td>Emily Teo</td>
-                            <td>EmilyTeo97@hotmail.com</td>
-                            <td>David Loo</td>
-                            <td>CAAS</td>
-                            <td>Rapid Cloud Pte Ltd</td>
-                            <td>SEO analyze</td>
-                            <td>600</td>
-                            <td></td>
+                            <td>TripleDots Technology</td>
+                            <td>73 Ayer Rajar</td>
+                            <td>TripleDots Technology</td>
+                            <td>73 Ayer Rajar</td>
+                            <td>TripleDots Technology</td>
+                            <td>73 Ayer Rajar</td>
+                            <td><a href="/mypath"><i class="fa fa-pencil"></i></a></td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td>P1581324</td>
-                            <td>Jemma Sarah</td>
-                            <td>Jemmaisfun@hotmail.com</td>
-                            <td>Ally Tan</td>
-                            <td>WIS</td>
+                            <td>RapidCloud</td>
+                            <td>RedHill Rd 14</td>
+                            <td>RapidCloud</td>
+                            <td>RedHill Rd 14</td>
+                            <td>RapidCloud</td>
+                            <td>RedHill Rd 14</td>
+                            <td><a href="/mypath"><i class="fa fa-pencil"></i></a></td>
+                        </tr>
+                        <tr>
+                            <td></td>
                             <td>Aventure Pte Ltd</td>
-                            <td>Backend Coder</td>
-                            <td>750</td>
-                            <td></td>
+                            <td>Commonwealth</td>
+                            <td>Aventure Pte Ltd</td>
+                            <td>Commonwealth</td>
+                            <td>Aventure Pte Ltd</td>
+                            <td>Commonwealth</td>
+                            <td><a href="/mypath"><i class="fa fa-pencil"></i></a></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
     </div>
     <div class="card-body">
         <div class="form-group">
@@ -129,9 +113,8 @@
         </div>
     </div>
     &nbsp;
-</div>
-
-<script>
+    </div>
+    <script>
     //
     // Updates "Select all" control in a data table
     //
@@ -165,7 +148,7 @@
     }
 
     function hideFilter1() {
-        $('#student_dataTable thead tr#filterrow').toggle();
+        $('#company_dataTable thead tr#filterrow').toggle();
     }
 
     function popCSV() {
@@ -201,7 +184,7 @@
     $(document).ready(function () {
         // Array holding selected row IDs
         var rows_selected = [];
-        var table = $('#student_dataTable').DataTable({
+        var table = $('#company_dataTable').DataTable({
             bSortable: false,
             //'fnDrawCallback': function (oSettings) {
             //    $('.dataTables_filter').(function () {
@@ -243,9 +226,6 @@
                 { data: null },
                 { data: "DayRecordId" },
                 { data: "DayRecordId" },
-                { data: "DayRecordId" },
-                { data: "Description" },
-                { data: "Description" },
                 { data: "Description" },
                 { data: "Description" },
                 { data: "Description" },
@@ -257,7 +237,7 @@
                 }
             ],
             language: {
-                emptyTable: "No Batch was found, please create one.",
+                emptyTable: "No Company was found, please create one.",
             },
             initComplete: function () {
                 $("div.toolbar")
@@ -268,7 +248,7 @@
         });
 
         // Handle click on checkbox
-        $('#student_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
+        $('#company_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
             var $row = $(this).closest('tr');
 
             // Get row data
@@ -303,16 +283,16 @@
         });
 
         // Handle click on table cells with checkboxes
-        $('#student_dataTable').on('click', 'tbody td, thead th:first-child', function (e) {
+        $('#company_dataTable').on('click', 'tbody td, thead th:first-child', function (e) {
             $(this).parent().find('input[type="checkbox"]').trigger('click');
         });
 
         // Handle click on "Select all" control
         $('thead input[name="select_all"]', table.table().container()).on('click', function (e) {
             if (this.checked) {
-                $('#student_dataTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
+                $('#company_dataTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
             } else {
-                $('#student_dataTable tbody input[type="checkbox"]:checked').trigger('click');
+                $('#company_dataTable tbody input[type="checkbox"]:checked').trigger('click');
             }
 
             // Prevent click event from propagating to parent
@@ -327,14 +307,14 @@
 
         //handle custom search
         // Setup - add a text input to each footer cell
-        $('#student_dataTable thead tr#filterrow th').each(function () {
-            if ($('#student_dataTable thead tr#filterrow th').eq($(this).index()).text() != 0) {
-                var title = $('#student_dataTable thead th').eq($(this).index()).text();
+        $('#company_dataTable thead tr#filterrow th').each(function () {
+            if ($('#company_dataTable thead tr#filterrow th').eq($(this).index()).text() != 0) {
+                var title = $('#company_dataTable thead th').eq($(this).index()).text();
                 $(this).html('<input type="text" onclick="stopPropagation(event);" placeholder="Search ' + title + '" />');
             }
         });
         // Apply the filter
-        $("#student_dataTable thead input").on('keyup change', function () {
+        $("#company_dataTable thead input").on('keyup change', function () {
             if ($(this).attr('type') == "text") {
                 table
                     .column($(this).parent().index() + ':visible')
@@ -359,10 +339,10 @@
         //        );
         //    });
         //});
-        $('#student_dataTable tbody').on('click', 'button.btn-primary', function (e) {
-            location.href = 'edit_student';
+        $('#company_dataTable tbody').on('click', 'button.btn-primary', function (e) {
+            location.href = 'edit_company';
         });
-        $('#student_dataTable tbody').on('click', 'button.btn-danger', function (e) {
+        $('#company_dataTable tbody').on('click', 'button.btn-danger', function (e) {
             swal({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -382,4 +362,47 @@
             }).catch(swal.noop);
         });
     });
-</script>
+    </script>
+@*<script>
+
+    $getCompanyHandler = jQuery.ajax({
+
+        url: '/API/Companies/',
+        method: 'get',
+        dataType: 'json',
+        cache: false
+
+    });
+    $getCompanyHandler.done(function (data, textStatus, jqXHR) {
+        //var test = data;
+
+        $tableBodyElement = $('#companyTableBody');
+        for (i = 0; i < data.length; i++) {
+
+            company = data[i];
+
+            companyId = company.CompanyId;
+            companyName = company.CompanyName;
+            companyAddress = company.CompanyAddress;
+
+            //courseName = batch.CourseName[0].CourseName;
+
+            $rowElement = $('<tr></tr>');
+            $cellElement = $('<td></td>', { text: companyName });
+            $rowElement.append($cellElement);
+
+            $cellElement = $('<td></td>', { text: companyAddress });
+            $rowElement.append($cellElement);
+           
+
+            $pencilElement = $('<i></i>').attr('class', 'fa fa-pencil');
+            $ahrefElement = $('<a></a>').attr('href', '~/../EditCompany/' + companyId);
+            $ahrefElement.append($pencilElement);
+            $cellElement = $('<td></td>');
+            $cellElement.append($ahrefElement);
+            $rowElement.append($cellElement);
+            
+            $tableBodyElement.append($rowElement);
+        }
+    });
+</script>*@
