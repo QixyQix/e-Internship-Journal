@@ -84,72 +84,44 @@
     }
 </style>
 <script>
-    loadProductData();
+    var internshipRecordId = getCookie("InternshipRecordId");
+
+    console.log("InternshipRecordId:" + internshipRecordId);
+
+    //Get Tasks
+    $.ajax({
+        url: '/Api/Task_Record/getTaskRecordsUnderInternRecord/' + internshipRecordId,
+        method: 'GET',
+        dataType: 'json',
+        cache: false,
+        success: function (data) { 
+            loadTasksData(data);
+        }
+    });
+
+    function loadTasksData(data) {
+        console.dir(data);
+
+        for (i = 0; i < data.length; i++) { 
+            var task = data[i];
+
+            var source = {
+                events: [
+                    {
+                        id: task.Date,
+                        title: task.Description,
+                        start: new Date(task.Date).toDateString(),
+                        end: new Date(task.Date).toDateString()
+                    }
+                ]
+            }
+            $('#calendar').fullCalendar('addEventSource', source);
+        }
+    }
+
     var dayRecordId;
     var todayDate;
-    /* $('#calendar').fullCalendar({
 
-     });*/
-    function loadProductData() {
-        //Note: jQuery.ajax(..) is also often written is $.ajax(..)
-        $loadProductDataHandler = jQuery.ajax({
-            url: '/Api/Day_Record',
-            method: 'GET',
-            dataType: 'json',
-            cache: false,
-        })
-        $loadProductDataHandler.done(function (data, textStatus, jqXHR) {
-
-            for (e = 0; e < data.length; e++) {
-
-                var eachDay = data[e];
-                var source;
-
-                for (i = 0; i < eachDay.TaskDescription.length; i++) {
-                    var source = {
-                        events: [
-                            {
-                                id: eachDay.DayId,
-                                title: eachDay.TaskDescription[i],//End of function
-
-                                //start: '2017-11-10',
-                                start: new Date(eachDay.Date).toDateString(),
-                                end: new Date(eachDay.Date).toDateString()
-                                //end: '2017-11-10'
-                            }
-                        ]
-                    }
-                    $('#calendar').fullCalendar('addEventSource', source);
-                }
-
-                //var source = {
-                //    events: [
-                //        {
-                //            title: data.forEach(function (eachData) {
-                //                for (i = 0; i < eachData.TaskDescription.length; i++) {
-                //                    return eachData.TaskDescription[i];
-
-                //                }
-
-                //            }),//End of function
-
-                //            start: '2017-11-10',
-                //            end: '2017-11-10'
-                //        }
-                //    ]
-                //}
-                // $('#calendar').fullCalendar('addEventSource', source);
-            }//End of For Loop
-
-
-
-
-
-        }//end of JavaScript anonymous function
-
-        )//end of the done() method;
-
-    }//end of loadProductData();
     $('#btnManage').on('click', function () {
         var cookies = document.cookie.split(";");
 
@@ -219,72 +191,69 @@
             //$("#divMessage").dialog("open");
 
         },
-        events: [
-            {
-                title: 'All Day Event',
-                start: '2017-11-01'
-            },
-            {
-                title: 'Long Event',
-                start: '2017-11-07',
-                end: '2017-11-10'
-            },
-            {
-                id: 999,
-                title: 'Repeating Event',
-                start: '2017-11-09',
-                end: '2017-11-09'
-            },
-            {
-                id: 999,
-                title: 'Repeating Event',
-                start: '2017-11-16',
-                end: '2017-11-16'
-            },
-            {
-                title: 'Conference',
-                start: '2017-11-11',
-                end: '2017-11-13'
-            },
-            {
-                title: 'Meeting',
-                start: '2017-11-12',
-                end: '2017-11-12'
-            },
-            {
-                title: 'Lunch',
-                start: '2017-11-12',
-                end: '2017-11-12'
-            },
-            {
-                title: 'Meeting',
-                start: '2017-11-12',
-                end: '2017-11-12'
-            },
-            {
-                title: 'Happy Hour',
-                start: '2017-11-12',
-                end: '2017-11-12'
-            },
-            {
-                title: 'Dinner',
-                start: '2017-11-12',
-                end: '2017-11-12'
-            },
-            {
-                title: 'Birthday Party',
-                start: '2017-11-13T07:00:00'
-            },
-            {
-                title: 'Click for Google',
-                url: 'http://google.com/',
-                start: '2017-11-28'
-            }
-        ],
+        //events: [
+        //    {
+        //        title: 'All Day Event',
+        //        start: '2017-11-01'
+        //    },
+        //    {
+        //        title: 'Long Event',
+        //        start: '2017-11-07',
+        //        end: '2017-11-10'
+        //    },
+        //    {
+        //        id: 999,
+        //        title: 'Repeating Event',
+        //        start: '2017-11-09',
+        //        end: '2017-11-09'
+        //    },
+        //    {
+        //        id: 999,
+        //        title: 'Repeating Event',
+        //        start: '2017-11-16',
+        //        end: '2017-11-16'
+        //    },
+        //    {
+        //        title: 'Conference',
+        //        start: '2017-11-11',
+        //        end: '2017-11-13'
+        //    },
+        //    {
+        //        title: 'Meeting',
+        //        start: '2017-11-12',
+        //        end: '2017-11-12'
+        //    },
+        //    {
+        //        title: 'Lunch',
+        //        start: '2017-11-12',
+        //        end: '2017-11-12'
+        //    },
+        //    {
+        //        title: 'Meeting',
+        //        start: '2017-11-12',
+        //        end: '2017-11-12'
+        //    },
+        //    {
+        //        title: 'Happy Hour',
+        //        start: '2017-11-12',
+        //        end: '2017-11-12'
+        //    },
+        //    {
+        //        title: 'Dinner',
+        //        start: '2017-11-12',
+        //        end: '2017-11-12'
+        //    },
+        //    {
+        //        title: 'Birthday Party',
+        //        start: '2017-11-13T07:00:00'
+        //    },
+        //    {
+        //        title: 'Click for Google',
+        //        url: 'http://google.com/',
+        //        start: '2017-11-28'
+        //    }
+        //],
         dayClick: function (date, allDay, jsEvent, view) {
-            //var ww = date;
-            //alert('Clicked on: ' + date.format());
-
             var www = $('#eventModalLabel');
             //$('#eventModalLabel').text(date.format('DD MMMM YYYY'));
             // $('#eventModal').modal('show');
@@ -305,33 +274,49 @@
             //alert('Current view: ' + view.name);
             // change the day's background color just for fun
             //$(this).css('background-color', 'red');
-        },
-        eventClick: function (calEvent, event, element) {
-            alert('Event: ' + calEvent.title);
-            //var task;
-            //task = prompt("Please re-enter task", event.title);
-            //event.title = task;
-            //$('#calendar').fullCalendar('updateEvent', event);
-
-            //var info;
-            //event.title = "CLICKED!";
-
-            // $('#calendar').fullCalendar('updateEvent', event);
-
-            //if (event.title == null || event.title == "") {
-            //    info == "";
-            //    task = prompt("Please enter task", "");
-            //    event.title = task;
-            //} else {
-            //    task = prompt("Please re-enter task", event.title);
-            //    event.title = task;
-            //    $('#calendar').fullCalendar('updateEvent', event);
-            //}
         }
+        //eventClick: function (calEvent, event, element) {
+        //    alert('Event: ' + calEvent.title);
+        //    //var task;
+        //    //task = prompt("Please re-enter task", event.title);
+        //    //event.title = task;
+        //    //$('#calendar').fullCalendar('updateEvent', event);
+
+        //    //var info;
+        //    //event.title = "CLICKED!";
+
+        //    // $('#calendar').fullCalendar('updateEvent', event);
+
+        //    //if (event.title == null || event.title == "") {
+        //    //    info == "";
+        //    //    task = prompt("Please enter task", "");
+        //    //    event.title = task;
+        //    //} else {
+        //    //    task = prompt("Please re-enter task", event.title);
+        //    //    event.title = task;
+        //    //    $('#calendar').fullCalendar('updateEvent', event);
+        //    //}
+        //}
         //dayClick: function () {
         //    alert('a day has been clicked!'); //for clicking
         //}
     });
-            //------end date script-----
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
 
 </script>

@@ -27,147 +27,141 @@ namespace E_Internship_Journal.API
             _context = context;
         }
 
-        // GET: api/Day_Record
-        [HttpGet]
-        public IActionResult GetDay_Records()
-        {
-            List<object> Day_Records_List = new List<object>();
-            var Day_Records = _context.Day_Records
-                .Include(eachDay => eachDay.Month)
-                .Include(eachDay => eachDay.Tasks)
-            .AsNoTracking();
+        //// GET: api/Day_Record
+        //[HttpGet]
+        //public IActionResult GetDay_Records()
+        //{
+        //    List<object> Day_Records_List = new List<object>();
+        //    var Day_Records = _context.Day_Records
+        //        .Include(eachDay => eachDay.Month)
+        //        .Include(eachDay => eachDay.Tasks)
+        //    .AsNoTracking();
 
-            foreach (var oneDayRecord in Day_Records)
-            {
-                //   List<int> categoryIdList = new List<int>();
-                Day_Records_List.Add(new
-                {
-                    DayId = oneDayRecord.DayId,
-                    Date = oneDayRecord.Date,
-                    ArrivalTime = oneDayRecord.ArrivalTime,
-                    DepartureTime = oneDayRecord.DepartureTime,
-                    WeekNo = oneDayRecord.WeekNo,
-                    Remarks = oneDayRecord.Remarks,
-                    MonthRecordId = oneDayRecord.MonthRecordId,
+        //    foreach (var oneDayRecord in Day_Records)
+        //    {
+        //        //   List<int> categoryIdList = new List<int>();
+        //        Day_Records_List.Add(new
+        //        {
+        //            DayId = oneDayRecord.DayId,
+        //            Date = oneDayRecord.Date,
+        //            ArrivalTime = oneDayRecord.ArrivalTime,
+        //            DepartureTime = oneDayRecord.DepartureTime,
+        //            WeekNo = oneDayRecord.WeekNo,
+        //            Remarks = oneDayRecord.Remarks,
+        //            MonthRecordId = oneDayRecord.MonthRecordId,
 
-                    TaskDescription = oneDayRecord.Tasks.Select(eachItem => eachItem.Description).ToList<string>()
+        //            TaskDescription = oneDayRecord.Tasks.Select(eachItem => eachItem.Description).ToList<string>()
 
-                });
-            }
+        //        });
+        //    }
 
-            return new JsonResult(Day_Records_List);
-        }
+        //    return new JsonResult(Day_Records_List);
+        //}
 
-        // GET: api/Day_Record/5
-        [HttpGet("{id}")]
-        public IActionResult GetDay_Record(int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            if (Day_RecordExists(id))
-            {
-                try
-                {
-                    var foundOneDay = _context.Day_Records
-                        .Where(eachDayEntity => eachDayEntity.DayId == id)
-                        .Include(eachDayEntity => eachDayEntity)
-                        .Single();
-                    var response = new
-                    {
-                        DayId = foundOneDay.DayId,
-                        Date = foundOneDay.Date,
-                        ArrivalTime = foundOneDay.ArrivalTime,
-                        DepartureTime = foundOneDay.DepartureTime,
-                        WeekNo = foundOneDay.WeekNo,
-                        Remarks = foundOneDay.Remarks
-                    };//end of creation of the response object
-                    return new JsonResult(response);
-                }
-                catch (Exception exceptionObject)
-                {
-                    //Create a fail message anonymous object
-                    //This anonymous object only has one Message property 
-                    //which contains a simple string message
-                    object httpFailRequestResultMessage =
-                    new { Message = "Unable to obtain brand information." };
-                    //Return a bad http response message to the client
-                    return BadRequest(httpFailRequestResultMessage);
-                }
-            }
-            else
-            {
-                object httpFailRequestResultMessage =
-                new { Message = "Unable to obtain brand information." };
-                //Return a bad http response message to the client
-                return BadRequest(httpFailRequestResultMessage);
+        //// GET: api/Day_Record/5
+        //[HttpGet("{date}")]
+        //public IActionResult GetDay_Record(string date)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
+        //    Day_Record day = getUserDayRecord(date);
+        //    if (day != null)
+        //    {
+        //        var dayId = day.DayId;
+        //        var dayDate = day.Date;
+        //        var arrivalTime = day.ArrivalTime;
+        //        var departureTime = day.DepartureTime;
+        //        var remarks = day.Remarks;
+        //        var tasks = new List<object>();
 
-            }//End of Get(id) Web API method
-        }
+        //        foreach (var task in day.Tasks) {
+        //            tasks.Add(new
+        //            {
+        //                Id = task.TaskRecordId,
+        //                Description = task.Description
+        //            });
+        //        }
 
-        // PUT: api/Day_Record/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutDay_Record(int id, [FromBody] string value)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //        var response = new
+        //        {
+        //            DayId = dayId,
+        //            Date = dayDate,
+        //            ArrivalTime = arrivalTime,
+        //            DepartureTime = departureTime,
+        //            Remarks = remarks,
+        //            Tasks = tasks,
+        //        };
+        //        return new JsonResult(response); 
+        //    }
+        //    else {
+        //        return BadRequest();
+        //    }
+        //}
 
-            if (Day_RecordExists(id))
-            {
-                var day_RecordNewInput = JsonConvert.DeserializeObject<dynamic>(value);
-                try
-                {
-                    var foundOneDay = _context.Day_Records
-                        .Where(eachDayEntity => eachDayEntity.DayId == id)
-                        .Single();
+        //// PUT: api/Day_Record/5
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutDay_Record(int id, [FromBody] string value)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-                    Day_Record newDay_Record = new Day_Record
-                    {
-                        ArrivalTime = day_RecordNewInput.Description.Value,
-                        DepartureTime = day_RecordNewInput.DayRecordId.Value,
-                        Date = day_RecordNewInput.Date.Value,
-                        Remarks = day_RecordNewInput.Remarks.Value,
-                        WeekNo = day_RecordNewInput.WeekNo.Value,
+        //    if (Day_RecordExists(id))
+        //    {
+        //        var day_RecordNewInput = JsonConvert.DeserializeObject<dynamic>(value);
+        //        try
+        //        {
+        //            var foundOneDay = _context.Day_Records
+        //                .Where(eachDayEntity => eachDayEntity.DayId == id)
+        //                .Single();
 
-                    };
-                    _context.Day_Records.Update(newDay_Record);
-                    await _context.SaveChangesAsync();
+        //            Day_Record newDay_Record = new Day_Record
+        //            {
+        //                ArrivalTime = day_RecordNewInput.Description.Value,
+        //                DepartureTime = day_RecordNewInput.DayRecordId.Value,
+        //                Date = day_RecordNewInput.Date.Value,
+        //                Remarks = day_RecordNewInput.Remarks.Value,
+        //                WeekNo = day_RecordNewInput.WeekNo.Value,
 
-                    var successRequestResultMessage = new
-                    {
-                        Message = "Updated Day Record into database"
-                    };
+        //            };
+        //            _context.Day_Records.Update(newDay_Record);
+        //            await _context.SaveChangesAsync();
 
-                    OkObjectResult httpOkResult =
-                    new OkObjectResult(successRequestResultMessage);
-                    return httpOkResult;
+        //            var successRequestResultMessage = new
+        //            {
+        //                Message = "Updated Day Record into database"
+        //            };
 
-                }
-                catch (Exception exceptionObject)
-                {
-                    //Create a fail message anonymous object
-                    //This anonymous object only has one Message property 
-                    //which contains a simple string message
-                    object httpFailRequestResultMessage =
-                    new { Message = exceptionObject };
-                    //Return a bad http response message to the client
-                    return BadRequest(httpFailRequestResultMessage);
-                }
-            }
-            else
-            {
-                object httpFailRequestResultMessage =
-                new { Message = "Day Record ID not found" };
-                //Return a bad http response message to the client
-                return BadRequest(httpFailRequestResultMessage);
+        //            OkObjectResult httpOkResult =
+        //            new OkObjectResult(successRequestResultMessage);
+        //            return httpOkResult;
+
+        //        }
+        //        catch (Exception exceptionObject)
+        //        {
+        //            //Create a fail message anonymous object
+        //            //This anonymous object only has one Message property 
+        //            //which contains a simple string message
+        //            object httpFailRequestResultMessage =
+        //            new { Message = exceptionObject };
+        //            //Return a bad http response message to the client
+        //            return BadRequest(httpFailRequestResultMessage);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        object httpFailRequestResultMessage =
+        //        new { Message = "Day Record ID not found" };
+        //        //Return a bad http response message to the client
+        //        return BadRequest(httpFailRequestResultMessage);
 
 
-            }//End of Get(id) Web API method
-        }
+        //    }//End of Get(id) Web API method
+        //}
 
         // POST: api/Day_Record
         [HttpPost("SaveNewDayRecordInformation")]
@@ -201,7 +195,8 @@ namespace E_Internship_Journal.API
                 //    return BadRequest();
                 //}
 
-                if (internshipRecord == null) {
+                if (internshipRecord == null)
+                {
                     return NotFound();
                 }
 
@@ -251,16 +246,16 @@ namespace E_Internship_Journal.API
                 string remarks = day_RecordNewInput.Remarks.Value.ToString().Trim();
                 if (!string.IsNullOrEmpty(arrivalTimeStr) && string.IsNullOrWhiteSpace(remarks))
                 {
-                    timeIn = DateTime.Parse(arrivalTimeStr);
-                    timeOut = DateTime.Parse(departTimeStr);
+                    timeIn = DateTime.Parse(arrivalTimeStr, CultureInfo.InvariantCulture);
+                    timeOut = DateTime.Parse(departTimeStr, CultureInfo.InvariantCulture);
                     isPresent = true;
                 }
                 else
                 {
                     return BadRequest("Time In and Time Out must not have any values if absent");
                 }
-                
-                var taskRecords = day_RecordNewInput.Tasks;
+
+                //var taskRecords = day_RecordNewInput.Tasks;
 
 
                 //Calculate the weekno
@@ -276,23 +271,24 @@ namespace E_Internship_Journal.API
                     Month = monthRecord
                 };
 
-                if (isPresent) {
+                if (isPresent)
+                {
                     newDayRecord.ArrivalTime = timeIn;
                     newDayRecord.DepartureTime = timeOut;
                     newDayRecord.Remarks = "";
 
-                    List<Task_Record> tasks = new List<Task_Record>();
-                    for (int i = 0; i < taskRecords.Count; i++)
-                    {
-                        var taskRecord = new Task_Record
-                        {
-                            Description = taskRecords[i].Value
-                        };
+                    //List<Task_Record> tasks = new List<Task_Record>();
+                    //for (int i = 0; i < taskRecords.Count; i++)
+                    //{
+                    //    var taskRecord = new Task_Record
+                    //    {
+                    //        Description = taskRecords[i].Value
+                    //    };
 
-                        tasks.Add(taskRecord);
-                    }
+                    //    tasks.Add(taskRecord);
+                    //}
 
-                    newDayRecord.Tasks = tasks;
+                    //newDayRecord.Tasks = tasks;
                 }
 
                 _context.Day_Records.Add(newDayRecord);
@@ -313,7 +309,7 @@ namespace E_Internship_Journal.API
             return httpOkResult;
         }
 
-        // DELETE: api/Day_Record/5
+        //DELETE: api/Day_Record/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDay_Record([FromRoute] int id)
         {
@@ -337,6 +333,24 @@ namespace E_Internship_Journal.API
         private bool Day_RecordExists(int id)
         {
             return _context.Day_Records.Any(e => e.DayId == id);
+        }
+
+        private Day_Record getUserDayRecord(string dateStr)
+        {
+
+            DateTime date = DateTime.ParseExact(dateStr, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+            Day_Record dayRecord = new Day_Record();
+
+            dayRecord = _context.Day_Records.Where(dr => dr.Date.Equals(date))
+                .Include(dr => dr.Month)
+                .ThenInclude(mn => mn.InternshipRecord)
+                .ThenInclude(ir => ir.UserBatch)
+                .ThenInclude(ub => ub.User)
+                .Where(dr => dr.Month.InternshipRecord.UserBatch.User.Id.Equals(_userManager.GetUserId(User)))
+                .AsNoTracking()
+                .Single();
+
+            return dayRecord;
         }
     }
 }

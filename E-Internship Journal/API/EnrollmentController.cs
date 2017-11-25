@@ -18,7 +18,7 @@ using Newtonsoft.Json;
 
 namespace E_Internship_Journal.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/enroll")]
     public class EnrollmentController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -30,9 +30,12 @@ namespace E_Internship_Journal.Controllers
 
         //POST: Enroll student into batch
         [HttpPost("EnrollStudent/{id}")]
-        [Authorize(Roles = "SLO")]
+        //[Authorize(Roles = "SLO")]
         public async Task<IActionResult> EnrollStudent(int id, List<IFormFile> files)
         {
+
+            List<string> messageList = new List<string>();
+            string alertType = "success";
 
             //Get the batch & course
             var thisBatch = _context.Batches
@@ -53,7 +56,7 @@ namespace E_Internship_Journal.Controllers
                     //Check if CSV file is in correct order
                     if (!heading.Equals("Student Name,Email,Contact No,Project,Company"))
                     {
-                        return BadRequest("CSV file does not follow correct format");
+                        return BadRequest(new { Message = "CSV file does not follow correct format" });
                     }
 
                     //Read the file
@@ -90,6 +93,10 @@ namespace E_Internship_Journal.Controllers
                                     };
                                     _context.UserBatches.Add(newUserBatch);
                                 }
+                                else {
+                                    messageList.Add(user.FullName + " is already enrolled in this batch.");
+                                    alertType = "warning";
+                                }
                             }
                             else
                             {
@@ -102,8 +109,8 @@ namespace E_Internship_Journal.Controllers
                                     UserName = oneStudentData[1],
                                     Email = oneStudentData[1],
                                     FullName = oneStudentData[0],
-                                    PhoneNumber = oneStudentData[2],
-                                    Course = thisBatch.Course
+                                    PhoneNumber = oneStudentData[2]
+                                    //Course = thisBatch.Course
                                 };
                                 PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
                                 newStudentUser.PasswordHash = ph.HashPassword(newStudentUser, generateRandomString(11));
@@ -146,7 +153,15 @@ namespace E_Internship_Journal.Controllers
                     }
                 }
             }
-            return Ok();
+
+            messageList.Add("All Records saved successfully!");
+            var responseObject = new
+            {
+                AlertType = alertType,
+                Messages = messageList
+            };
+
+            return new OkObjectResult(responseObject);
         }
 
         public string generateRandomString(int size)

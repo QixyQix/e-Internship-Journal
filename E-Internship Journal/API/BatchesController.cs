@@ -33,32 +33,110 @@ namespace E_Internship_Journal.API
 
         // GET: api/Batches
         [HttpGet]
-        [AllowAnonymous]
-        public JsonResult GetBatches()
+        [Authorize(Roles = "SLO")]
+        public async Task<IActionResult> GetBatches()
         {
-            List<object> batchList = new List<object>();
-            var batches = _context.Batches
-           .Include(eachBatchEntity => eachBatchEntity.Course).AsNoTracking();
-
-
-            foreach (var onebatch in batches)
+            try
             {
-                //   List<int> categoryIdList = new List<int>();
-                batchList.Add(new
+                List<object> batchList = new List<object>();
+
+                var userId = _userManager.GetUserId(User);
+
+                var userBatches = _context.UserBatches
+                    .Include(ub => ub.Batch)
+                    .ThenInclude(batch => batch.Course)
+                    .Include(ub => ub.User)
+                    .Where(ub => ub.User.Id.Equals(userId))
+                    .ToList();
+
+
+                foreach (var ub in userBatches)
                 {
-                    onebatch.BatchId,
-                    onebatch.BatchName,
-                    onebatch.Description,
-                    onebatch.StartDate,
-                    onebatch.EndDate
-                });
+                    if (await _userManager.IsInRoleAsync(ub.User, "SLO"))
+                    {
+                        batchList.Add(new
+                        {
+                            BatchId = ub.Batch.BatchId,
+                            BatchName = ub.Batch.BatchName,
+                            CourseId = ub.Batch.Course.CourseId,
+                            CourseName = ub.Batch.Course.CourseName,
+                            Desciption = ub.Batch.Description,
+                            StartDate = ub.Batch.StartDate,
+                            EndDate = ub.Batch.EndDate
+                        });
+                    }
+
+                }
+
+                return new JsonResult(batchList);
+            }
+            catch (Exception ex) {
+                return BadRequest(new { Message = ex.ToString() });
+            }
+            
+        }
+
+        [HttpGet("getBatchStudents/{id}")]
+        [Authorize(Roles = "SLO")]
+        public async Task<IActionResult> getBatchStudents(int id) {
+
+            var users = _context.UserBatches.Where(ub => ub.BatchId == id)
+                .Include(ub => ub.User)
+                .Include(ub => ub.InternshipRecord)
+                .ThenInclude(ir => ir.Project)
+                .Include(ub => ub.InternshipRecord)
+                .ThenInclude(ir => ir.LiaisonOfficer)
+                .ToList();
+
+            List<object> studentObjects = new List<object>();
+
+            foreach (var ub in users) {
+                if (await _userManager.IsInRoleAsync(ub.User, "STUDENT")) {
+                    string studentName = ub.User.FullName;
+                    string studentUserId = ub.User.Id;
+                    string studentEmail = ub.User.Email;
+
+                    if (ub.InternshipRecord != null)
+                    {
+                        string LOName = ub.InternshipRecord.LiaisonOfficer.FullName;
+                        string LOUserId = ub.InternshipRecord.LiaisonOfficer.Id;
+                        string LOEmail = ub.InternshipRecord.LiaisonOfficer.Email;
+                        int projectId = ub.InternshipRecord.ProjectId;
+                        string projectName = ub.InternshipRecord.Project.ProjectName;
+                        studentObjects.Add(new
+                        {
+                            StudentName = studentName,
+                            StudentUserId = studentUserId,
+                            StudentEmail = studentEmail,
+                            LOName = LOName,
+                            LOUserId = LOUserId,
+                            LOEmail = LOEmail,
+                            ProjectId = projectId,
+                            ProjectName = projectName
+                        });
+                    }
+                    else {
+                        studentObjects.Add(new
+                        {
+                            StudentName = studentName,
+                            StudentUserId = studentUserId,
+                            StudentEmail = studentEmail,
+                            LOName = "",
+                            LOUserId = "",
+                            LOEmail = "",
+                            ProjectId = "",
+                            ProjectName = ""
+                        });
+                    }
+                }
             }
 
-            return new JsonResult(batchList);
+            return new JsonResult(studentObjects);
         }
-        [HttpGet("getBatches")]
+
+        [HttpGet("getAllBatches")]
         [Authorize(Roles = "ADMIN")]
-        public async Task<JsonResult> getBatches()
+        public async Task<JsonResult> getAllBatches()
         {
             List<object> userBatchList = new List<object>();
             var userBatches = _context.UserBatches
@@ -86,8 +164,6 @@ namespace E_Internship_Journal.API
                             oneUserBatch.Batch.StartDate,
                             oneUserBatch.Batch.EndDate,
                             oneUserBatch.Batch.Course.CourseCode,
-                            //CourseName,
-                            //_context.Courses.Select(roleItem => new { CourseName = roleItem.CourseName }) },
                             oneUserBatch.User.FullName,
                             oneUserBatch.User.Email
 
@@ -167,19 +243,6 @@ namespace E_Internship_Journal.API
             {
                 try
                 {
-                    //var foundCourses = _context.Batches
-                    //.Where(eachCourse => eachCourse.CourseId == id)
-                    //.Include(eachCourse => eachCourse.Course).Single();
-                    //var response = new
-                    //{
-                    //    BatchId = foundCourses.BatchId,
-                    //    CourseId = foundCourses.CourseId,
-                    //    Description = foundCourses.Description,
-                    //    StartDate = foundCourses.StartDate,
-                    //    EndDate = foundCourses.EndDate,
-                    //    CourseName = foundCourses.Course.CourseName,
-                    //    CourseCode = foundCourses.Course.CourseCode
-                    //};//end of creation of the response object
                     List<object> userBatchList = new List<object>();
                     var userBatches = _context.UserBatches
                         .Where(eachUserBatchEntity => eachUserBatchEntity.BatchId == id)

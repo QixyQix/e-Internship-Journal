@@ -65,9 +65,9 @@ namespace E_Internship_Journal.API
 
                 foundOneCompany.CompanyName = companyNewInput.CompanyName.Value;
                 foundOneCompany.CompanyAddress = companyNewInput.CompanyAddress.Value;
-                foundOneCompany.ContactName = companyNewInput.ContactName.Value;
-                foundOneCompany.ContactEmail = companyNewInput.ContactEmail.Value;
-                foundOneCompany.ContactNumber = companyNewInput.ContactNumber.Value;
+                foundOneCompany.ContactPersonName = companyNewInput.ContactName.Value;
+                foundOneCompany.ContactPersonEmail = companyNewInput.ContactEmail.Value;
+                foundOneCompany.ContactPersonNumber = companyNewInput.ContactNumber.Value;
                 await _context.SaveChangesAsync();
             }
             else
@@ -95,9 +95,9 @@ namespace E_Internship_Journal.API
                 {
                     CompanyName = companyNewInput.CompanyName.Value,
                     CompanyAddress = companyNewInput.CompanyAddress.Value,
-                    ContactName = companyNewInput.ContactName.Value,
-                    ContactEmail = companyNewInput.ContactEmail.Value,
-                    ContactNumber = companyNewInput.ContactNumber.Value
+                    ContactPersonName = companyNewInput.ContactName.Value,
+                    ContactPersonEmail = companyNewInput.ContactEmail.Value,
+                    ContactPersonNumber = companyNewInput.ContactNumber.Value
                 };
                 _context.Companies.Add(newCompany);
                 await _context.SaveChangesAsync();

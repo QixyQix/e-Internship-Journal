@@ -163,7 +163,7 @@ namespace E_Internship_Journal.API
                 Task_Record newTask_Record = new Task_Record
                 {
                     Description = competencies_NewInput.Description.Value,
-                    DayRecordId = competencies_NewInput.DayRecordId.Value,
+                    //DayRecordId = competencies_NewInput.DayRecordId.Value,
 
                 };
 

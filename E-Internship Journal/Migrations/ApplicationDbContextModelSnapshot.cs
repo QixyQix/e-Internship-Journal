@@ -26,8 +26,6 @@ namespace E_Internship_Journal.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<int?>("CourseId");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
@@ -61,8 +59,6 @@ namespace E_Internship_Journal.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CourseId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -127,6 +123,26 @@ namespace E_Internship_Journal.Migrations
                         .HasColumnName("CompanyName")
                         .HasColumnType("VARCHAR(100)");
 
+                    b.Property<string>("ContactPersonEmail")
+                        .IsRequired()
+                        .HasColumnName("ContactPersonEmail")
+                        .HasColumnType("VARCHAR(MAX)");
+
+                    b.Property<string>("ContactPersonFax")
+                        .IsRequired()
+                        .HasColumnName("ContactPersonFax")
+                        .HasColumnType("VARCHAR(200)");
+
+                    b.Property<string>("ContactPersonName")
+                        .IsRequired()
+                        .HasColumnName("ContactPersonName")
+                        .HasColumnType("VARCHAR(200)");
+
+                    b.Property<string>("ContactPersonNumber")
+                        .IsRequired()
+                        .HasColumnName("ContactPersonNumber")
+                        .HasColumnType("VARCHAR(200)");
+
                     b.HasKey("CompanyId")
                         .HasName("PrimaryKey_CompanyId");
 
@@ -145,9 +161,23 @@ namespace E_Internship_Journal.Migrations
                         .HasColumnName("CourseId")
                         .HasColumnType("int");
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("CreatedBy")
+                        .HasColumnType("VARCHAR(MAX)");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnName("DeletedAt");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnName("Description")
+                        .HasColumnType("VARCHAR(MAX)");
+
+                    b.Property<DateTime?>("ModifiedAt")
+                        .HasColumnName("ModifiedAt");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnName("ModifiedBy")
                         .HasColumnType("VARCHAR(MAX)");
 
                     b.Property<string>("TitleDescription")
@@ -494,8 +524,6 @@ namespace E_Internship_Journal.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApplicationUserId");
-
                     b.Property<int>("CompanyID")
                         .HasColumnName("CompanyID")
                         .HasColumnType("int");
@@ -511,8 +539,6 @@ namespace E_Internship_Journal.Migrations
                     b.HasKey("ProjectId")
                         .HasName("PrimaryKey_ProjectId");
 
-                    b.HasIndex("ApplicationUserId");
-
                     b.HasIndex("CompanyID");
 
                     b.HasIndex("SupervisorId");
@@ -527,8 +553,6 @@ namespace E_Internship_Journal.Migrations
                         .HasColumnName("RegistrationPinId")
                         .HasColumnType("VARCHAR(100)");
 
-                    b.Property<string>("ApplicationUserId");
-
                     b.Property<string>("UserId")
                         .IsRequired();
 
@@ -540,8 +564,6 @@ namespace E_Internship_Journal.Migrations
 
                     b.HasKey("RegistrationPinId")
                         .HasName("PrimaryKey_RegistrationPinId");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("RegistrationPinId")
                         .IsUnique()
@@ -560,19 +582,23 @@ namespace E_Internship_Journal.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("DayRecordId")
-                        .HasColumnName("DayRecordId")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("Date");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnName("Description")
                         .HasColumnType("VARCHAR(MAX)");
 
+                    b.Property<int>("MonthRecordId")
+                        .HasColumnName("MonthRecordId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WeekNo");
+
                     b.HasKey("TaskRecordId")
                         .HasName("PrimaryKey_TaskRecordId");
 
-                    b.HasIndex("DayRecordId");
+                    b.HasIndex("MonthRecordId");
 
                     b.ToTable("Tasks");
                 });
@@ -610,8 +636,6 @@ namespace E_Internship_Journal.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApplicationUserId");
-
                     b.Property<int>("BatchId")
                         .HasColumnName("BatchId")
                         .HasColumnType("int");
@@ -621,8 +645,6 @@ namespace E_Internship_Journal.Migrations
 
                     b.HasKey("UserBatchId")
                         .HasName("PrimaryKey_UserBatchId");
-
-                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("BatchId");
 
@@ -738,13 +760,6 @@ namespace E_Internship_Journal.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("E_Internship_Journal.Models.ApplicationUser", b =>
-                {
-                    b.HasOne("E_Internship_Journal.Models.Course", "Course")
-                        .WithMany("User")
-                        .HasForeignKey("CourseId");
-                });
-
             modelBuilder.Entity("E_Internship_Journal.Models.Batch", b =>
                 {
                     b.HasOne("E_Internship_Journal.Models.Course", "Course")
@@ -783,7 +798,7 @@ namespace E_Internship_Journal.Migrations
             modelBuilder.Entity("E_Internship_Journal.Models.Internship_Record", b =>
                 {
                     b.HasOne("E_Internship_Journal.Models.ApplicationUser", "LiaisonOfficer")
-                        .WithMany()
+                        .WithMany("InternshipRecords")
                         .HasForeignKey("LiaisonOfficerId");
 
                     b.HasOne("E_Internship_Journal.Models.Project", "Project")
@@ -807,36 +822,28 @@ namespace E_Internship_Journal.Migrations
 
             modelBuilder.Entity("E_Internship_Journal.Models.Project", b =>
                 {
-                    b.HasOne("E_Internship_Journal.Models.ApplicationUser")
-                        .WithMany("Projects")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("E_Internship_Journal.Models.Company", "Company")
                         .WithMany("Projects")
                         .HasForeignKey("CompanyID")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("E_Internship_Journal.Models.ApplicationUser", "Supervisor")
-                        .WithMany()
+                        .WithMany("Projects")
                         .HasForeignKey("SupervisorId");
                 });
 
             modelBuilder.Entity("E_Internship_Journal.Models.RegistrationPin", b =>
                 {
-                    b.HasOne("E_Internship_Journal.Models.ApplicationUser")
-                        .WithMany("RegistrationPins")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("E_Internship_Journal.Models.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("RegistrationPins")
                         .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("E_Internship_Journal.Models.Task_Record", b =>
                 {
-                    b.HasOne("E_Internship_Journal.Models.Day_Record", "DayRecord")
-                        .WithMany("Tasks")
-                        .HasForeignKey("DayRecordId")
+                    b.HasOne("E_Internship_Journal.Models.Month_Record", "MonthRecord")
+                        .WithMany("TaskRecords")
+                        .HasForeignKey("MonthRecordId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -850,17 +857,12 @@ namespace E_Internship_Journal.Migrations
 
             modelBuilder.Entity("E_Internship_Journal.Models.UserBatch", b =>
                 {
-                    b.HasOne("E_Internship_Journal.Models.ApplicationUser")
-                        .WithMany("UserBatches")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("E_Internship_Journal.Models.Batch", "Batch")
                         .WithMany("UserBatches")
-                        .HasForeignKey("BatchId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("BatchId");
 
                     b.HasOne("E_Internship_Journal.Models.ApplicationUser", "User")
-                        .WithMany()
+                        .WithMany("UserBatches")
                         .HasForeignKey("UserId");
                 });
 
