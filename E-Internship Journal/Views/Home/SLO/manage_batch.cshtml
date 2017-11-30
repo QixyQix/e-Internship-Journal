@@ -1,0 +1,114 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs -->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item active">Manage Batch</li>
+    </ol>
+    <div class="container">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Batch Name</th>
+                        <th>Course Name</th>
+                        <th width="10%">Manage Students</th>
+                        <th width="10%">Grading</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>AY16/17 S2-DIT</td>
+                        <td>Diploma in Information Technology</td>
+                        <td>
+                            <div class="text-center">
+                                <a href="/home/Manage_Student"><i class="fa fa-fw fa-user-plus"></i></a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="text-center">
+                                <a href="/home/manage_grade"><i class="fa fa-fw fa-graduation-cap"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>AY16/17 S2-DBIT</td>
+                        <td>Diploma in Business Information Technology</td>
+                        <td>
+                            <div class="text-center">
+                                <a href="/home/Manage_Student"><i class="fa fa-fw fa-user-plus"></i></a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="text-center">
+                                <a href="/home/manage_grade"><i class="fa fa-fw fa-graduation-cap"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>AY16/17 S2-DISM</td>
+                        <td>Diploma in Infocomm Security Management</td>
+                        <td>
+                            <div class="text-center">
+                                <a href="/home/Manage_Student"><i class="fa fa-fw fa-user-plus"></i></a>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="text-center">
+                                <a href="/home/manage_grade"><i class="fa fa-fw fa-graduation-cap"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                    Back
+                </button>
+            </div>
+        </div>
+    </div>
+    &nbsp;
+    <!-- /.container-fluid -->
+</div>
+<!-- /.content-wrapper -->
+<script>
+    $(document).ready(function () {
+        var table = $('#dataTable').DataTable({
+            dom: 't',
+            ajax: {
+                url: '/Api/Task_Record',
+                dataSrc: ''
+            },
+            columns: [
+                { data: "DayRecordId" },
+                { data: "Description" },
+                {
+                    data: null,
+                    "bSortable": false,
+                    "mRender": function (o) { return '<a href="/home/manage_student" style="color:black;"><i class="fa fa-fw fa-user-plus""></i></a>' }
+                },
+                {
+                    data: null,
+                    "bSortable": false,
+                    "mRender": function (o) { return '<a href="/home/manage_grade" style="color:black;"><i class="fa fa-fw fa-graduation-cap"></i></a>' }
+                }
+            ],
+            language: {
+                emptyTable: "No Batch was found, please create one.",
+            }
+        });
+        //$('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
+        //    $('#commentModal').modal('show');
+        //});
+    });
+</script>

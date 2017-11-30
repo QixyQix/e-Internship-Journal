@@ -1,0 +1,199 @@
+﻿<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="~/Home/Manage_Student">Manage Student</a>
+        </li>
+        <li class="breadcrumb-item active">Create Student</li>
+    </ol>
+    <!-- Example DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-table"></i> Create Student
+        </div>
+
+        <div>
+            <form class="form-group">
+                <div class="form-inline">
+                    <label class="col-md-2 control-label">Student ID:</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" id="studentId" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-md-2 control-label">Student Name:</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" id="studentName" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-md-2 control-label">Mobile No:</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" id="mobileNo" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-md-2 control-label">Email Address:</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" id="email" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-md-2 control-label">Project:</label>
+                    <div class='input-group' id='findproject'>
+                        <input type='text' class="form-control" id="project" readonly />
+                        <div class="input-group-addon" onclick="findProjectModal()">
+                            <i class="fa fa-search"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-md-2 control-label">Liasion Officer:</label>
+                    <div class='input-group' id='findlo'>
+                        <input type='text' class="form-control" id="lo" readonly />
+                        <div class="input-group-addon" onclick="findLOModal()">
+                            <i class="fa fa-search"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-md-2 control-label">Allowance:</label>
+                    <div class="col-sm-3">
+                        <input class="form-control" id="allowance" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-md-2 control-label">Designation:</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" id="designation">
+                            <option>Web Designer</option>
+                            <option>SEO Analyze</option>
+                            <option>Backend Coder</option>
+                            <option>Frontend Coder</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                    Back
+                </button>
+                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Project Modal -->
+<div class="modal fade" id="projectModal" tabindex="-1" role="dialog" aria-labelledby="projectModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="projectModalLabel">Project Assigned</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="col-12">
+                    <form>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input class="form-control" placeholder="Search...">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-search">
+                                    </i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="5" id="task">Parliament</textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-12">
+                                <div class="form-inline">
+                                    <label>Selected: &nbsp;</label>
+                                    <input class="form-control" value="Parliament" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
+                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SLO Modal -->
+<div class="modal fade" id="loModal" tabindex="-1" role="dialog" aria-labelledby="loModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loModalLabel">LO Assigned</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="col-12">
+                    <form>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input class="form-control" placeholder="Search...">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-search">
+                                    </i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="5" id="task">Kish Choy</textarea>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-12">
+                                <div class="form-inline">
+                                    <label>Selected: &nbsp;</label>
+                                    <input class="form-control" value="Kish Choy" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
+                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function findProjectModal() {
+        $('#projectModal').modal('show');
+        //http://www.dyn-web.com/tutorials/forms/select/multi-selected.php
+        //please take a look at this for reference
+    }
+    function findLOModal() {
+        $('#loModal').modal('show');
+        //http://www.dyn-web.com/tutorials/forms/select/multi-selected.php
+        //please take a look at this for reference
+    }
+</script>

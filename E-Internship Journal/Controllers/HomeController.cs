@@ -88,6 +88,10 @@ namespace E_Internship_Journal.Controllers
             {
                 return View("~/Views/Home/Student/grading.cshtml");
             }
+            else if (User.IsInRole("SLO"))
+            {
+                return View("~/Views/Home/SLO/grading.cshtml");
+            }
             else /*if(User.IsInRole("STUDENT"))*/
             {
                 return View("~/Views/Home/LO/grading.cshtml");
@@ -300,6 +304,50 @@ namespace E_Internship_Journal.Controllers
         public IActionResult Manage_Student()
         {
             return View("~/Views/Home/SLO/manage_student.cshtml");
+        }
+        public IActionResult Manage_Batch()
+        {
+            return View("~/Views/Home/SLO/manage_batch.cshtml");
+        }
+        public IActionResult Manage_Grade()
+        {
+            return View("~/Views/Home/SLO/manage_grade.cshtml");
+        }
+        public IActionResult Manage_Company()
+        {
+            return View("~/Views/Home/SLO/manage_company.cshtml");
+        }
+        public IActionResult Manage_Project()
+        {
+            return View("~/Views/Home/SLO/manage_project.cshtml");
+        }
+        public IActionResult Edit_Project()
+        {
+            return View("~/Views/Home/SLO/edit_project.cshtml");
+        }
+        public IActionResult Add_Project()
+        {
+            return View("~/Views/Home/SLO/add_project.cshtml");
+        }
+        public IActionResult Edit_Company()
+        {
+            return View("~/Views/Home/SLO/edit_company.cshtml");
+        }
+        public IActionResult Add_Company()
+        {
+            return View("~/Views/Home/SLO/add_company.cshtml");
+        }
+        public IActionResult Edit_Grade()
+        {
+            return View("~/Views/Home/SLO/edit_grade.cshtml");
+        }
+        public IActionResult Add_Student()
+        {
+            return View("~/Views/Home/SLO/add_student.cshtml");
+        }
+        public IActionResult Edit_Student()
+        {
+            return View("~/Views/Home/SLO/edit_student.cshtml");
         }
 
         //Admin

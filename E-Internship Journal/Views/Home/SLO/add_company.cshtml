@@ -1,0 +1,106 @@
+﻿<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="~/Home/Manage_Company">Manage Company</a>
+        </li>
+        <li class="breadcrumb-item active">Create Company</li>
+    </ol>
+    <!-- Example DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-table"></i> Create Company
+        </div>
+
+        <div>
+            <form class="form-group">
+                <div class="form-inline">
+                    <label class="col-md-2 control-label">Company Name:</label>
+                    <div class="col-sm-5">
+                        <input class="form-control" id="comapnyName" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-sm-2 control-label">Company Address:</label>
+                    <div class="col-sm-5">
+                        <input class="form-control" id="companyAddress" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-sm-2 control-label">Contact Person Name:</label>
+                    <div class="col-sm-5">
+                        <input class="form-control" id="contactName" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-sm-2 control-label">Contact Person Email:</label>
+                    <div class="col-sm-5">
+                        <input class="form-control" id="contactEmail" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-sm-2 control-label">Contact Person Number:</label>
+                    <div class="col-sm-5">
+                        <input class="form-control" id="contactNumber" type="text" value="">
+                    </div>
+                </div>
+                <div class="form-inline">
+                    <label class="col-sm-2 control-label">Fax:</label>
+                    <div class="col-sm-5">
+                        <input class="form-control" id="contactfax" type="text" value="">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                    Back
+                </button>
+                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                    Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function WebFormData(inCompanyName, inCompanyAddress) {
+        this.CompanyName = inCompanyName;
+        this.CompanyAddress = inCompanyAddress;
+     
+
+    }
+    $('#btnSave').on('click', function () {
+
+        var collectedCompanyName = $('#comapnyName').val();
+        var collectedCompanyAddress = $('#companyAddress').val();
+        var collectedContactName = $('#contactName').val();
+        var collectedContactEmail = $('#contactEmail').val();
+        var collectedContactNumber = $('#contactNumber').val();
+
+
+        var webFormData = new WebFormData(collectedCompanyName, collectedCompanyAddress);
+        var webFormDatainString = JSON.stringify(webFormData);
+        $saveBatchHandler = jQuery.ajax({
+            url: '/API/Companies/SaveNewCompanyInformation/',
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: "'" + webFormDatainString + "'"
+
+        });
+        $saveBatchHandler.done(function (data, textStatus, jqXHR) {
+            console.dir("Success");
+
+        });//End .Done
+
+    });
+
+</script>
