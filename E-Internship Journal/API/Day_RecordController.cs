@@ -27,38 +27,68 @@ namespace E_Internship_Journal.API
             _context = context;
         }
 
-        //// GET: api/Day_Record
-        //[HttpGet]
-        //public IActionResult GetDay_Records()
-        //{
-        //    List<object> Day_Records_List = new List<object>();
-        //    var Day_Records = _context.Day_Records
-        //        .Include(eachDay => eachDay.Month)
-        //        .Include(eachDay => eachDay.Tasks)
-        //    .AsNoTracking();
+        // GET: api/Day_Record
+        [HttpGet("getInternshipDayRecords/{id}")]
+        public IActionResult GetDay_Records(int id)
+        {
+            List<object> Day_Records_List = new List<object>();
 
-        //    foreach (var oneDayRecord in Day_Records)
-        //    {
-        //        //   List<int> categoryIdList = new List<int>();
-        //        Day_Records_List.Add(new
-        //        {
-        //            DayId = oneDayRecord.DayId,
-        //            Date = oneDayRecord.Date,
-        //            ArrivalTime = oneDayRecord.ArrivalTime,
-        //            DepartureTime = oneDayRecord.DepartureTime,
-        //            WeekNo = oneDayRecord.WeekNo,
-        //            Remarks = oneDayRecord.Remarks,
-        //            MonthRecordId = oneDayRecord.MonthRecordId,
+            //var dayRecords = _context.Day_Records.Include(dr => dr.Month)
+            //    .ThenInclude(mr => mr.InternshipRecord)
+            //    .ThenInclude(ir => ir.UserBatch)
+            //    .ToList();
 
-        //            TaskDescription = oneDayRecord.Tasks.Select(eachItem => eachItem.Description).ToList<string>()
+            var internshipRecord = _context.Internship_Records
+                .Where(ir => ir.InternshipRecordId == id)
+                .Include(ir => ir.MonthRecords)
+                .ThenInclude(mr => mr.DayRecords)
+                .Include(ir => ir.UserBatch)
+                .SingleOrDefault();
 
-        //        });
-        //    }
+            //Latest month record
+            Month_Record monthRecord = internshipRecord.MonthRecords[internshipRecord.MonthRecords.Count - 1];
 
-        //    return new JsonResult(Day_Records_List);
-        //}
+            foreach (var dayRecord in monthRecord.DayRecords)
+            {
+                Day_Records_List.Add(new
+                {
+                    DayId = dayRecord.DayId,
+                    Date = dayRecord.Date,
+                    ArrivalTime = dayRecord.ArrivalTime,
+                    DepartureTime = dayRecord.DepartureTime,
+                    WeekNo = dayRecord.WeekNo,
+                    Remarks = dayRecord.Remarks,
+                    MonthRecordId = dayRecord.MonthRecordId
+                });
+            }
+            return new JsonResult(Day_Records_List);
+        }
 
-        //// GET: api/Day_Record/5
+        //GET: api/Day_Record/id
+        [HttpGet("{id}")]
+        public IActionResult GetDay_Record(int id) {
+            Day_Record dayRecord = _context.Day_Records.Find(id);
+
+            if (dayRecord != null)
+            {
+                var dayResultObj = new
+                {
+                    DayId = dayRecord.DayId,
+                    Date = dayRecord.Date,
+                    ArrivalTime = dayRecord.ArrivalTime,
+                    DepartureTime = dayRecord.DepartureTime,
+                    WeekNo = dayRecord.WeekNo,
+                    Remarks = dayRecord.Remarks,
+                    MonthRecordId = dayRecord.MonthRecordId
+                };
+                return new JsonResult(dayResultObj);
+            }
+            else {
+                return NotFound(new { Message = "Day record not found" });
+            }
+        }
+        
+        //// GET: api/Day_Record/09-11-2017
         //[HttpGet("{date}")]
         //public IActionResult GetDay_Record(string date)
         //{
@@ -75,15 +105,6 @@ namespace E_Internship_Journal.API
         //        var arrivalTime = day.ArrivalTime;
         //        var departureTime = day.DepartureTime;
         //        var remarks = day.Remarks;
-        //        var tasks = new List<object>();
-
-        //        foreach (var task in day.Tasks) {
-        //            tasks.Add(new
-        //            {
-        //                Id = task.TaskRecordId,
-        //                Description = task.Description
-        //            });
-        //        }
 
         //        var response = new
         //        {
@@ -91,12 +112,12 @@ namespace E_Internship_Journal.API
         //            Date = dayDate,
         //            ArrivalTime = arrivalTime,
         //            DepartureTime = departureTime,
-        //            Remarks = remarks,
-        //            Tasks = tasks,
+        //            Remarks = remarks
         //        };
-        //        return new JsonResult(response); 
+        //        return new JsonResult(response);
         //    }
-        //    else {
+        //    else
+        //    {
         //        return BadRequest();
         //    }
         //}
@@ -164,9 +185,9 @@ namespace E_Internship_Journal.API
         //}
 
         // POST: api/Day_Record
-        [HttpPost("SaveNewDayRecordInformation")]
+        [HttpPut("SaveUpdateDayRecord")]
         [AllowAnonymous]
-        public async Task<IActionResult> SaveNewDayRecordInformation([FromBody] string value)
+        public async Task<IActionResult> SaveUpdateDayRecord([FromBody] string value)
         {
             if (!ModelState.IsValid)
             {
@@ -178,8 +199,6 @@ namespace E_Internship_Journal.API
             {
                 var day_RecordNewInput = JsonConvert.DeserializeObject<dynamic>(value);
 
-                //int internshipRecordId = day_RecordNewInput.InternshipRecordId.Value;
-
                 //Get the student's internship record
                 var internshipRecord = _context.Internship_Records
                     .Include(ir => ir.UserBatch.Batch)
@@ -189,22 +208,20 @@ namespace E_Internship_Journal.API
                     .ThenInclude(mn => mn.DayRecords)
                     .Single();
 
-                ////Check if the internship record belongs to the user
-                //if (!(internshipRecord.UserBatch.UserId.Equals(_userManager.GetUserId(User))))
-                //{
-                //    return BadRequest();
-                //}
-
+                //Check if intern record exists
                 if (internshipRecord == null)
                 {
                     return NotFound();
                 }
-
-                DateTime date = DateTime.ParseExact(day_RecordNewInput.Date.Value, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                //Check if the internship record belongs to the user
+                if (!(internshipRecord.UserBatch.UserId.Equals(_userManager.GetUserId(User))))
+                {
+                    return BadRequest(new { Message = "Internship record does not belong to you"});
+                }
+                
+                DateTime date = DateTime.Parse(day_RecordNewInput.Date.Value, CultureInfo.InvariantCulture);
                 DateTime startDate = internshipRecord.UserBatch.Batch.StartDate;
-
                 var noDaysFromStartDate = (date - startDate).Days;
-
                 Month_Record monthRecord = null;
 
                 //If the internship record has month records
@@ -213,21 +230,27 @@ namespace E_Internship_Journal.API
                     //Check if the date already exists
                     foreach (var month in internshipRecord.MonthRecords)
                     {
-                        foreach (var dayRecord in month.DayRecords)
+                        foreach (var aDayRecord in month.DayRecords)
                         {
-                            if (dayRecord.Date.Equals(date))
+                            if (aDayRecord.Date.Equals(date) && !aDayRecord.DayId.ToString().Equals(day_RecordNewInput.Id.Value.ToString()))
                             {
-                                return BadRequest();
+                                return BadRequest(new { Message = "Day record for "+ date.ToString() +" already exists!"});
                             }
                         }
 
                     }
                 }
-                //Determine which month object
-                var monthNo = Int32.Parse((noDaysFromStartDate / 28).ToString());
+                //Calculate the weekno
+                int weekNo = (Int32.Parse(date.Subtract(startDate).Days.ToString()) / 7) + 1;
+                //Calculate month number
+                var monthNo = Int32.Parse((weekNo/4).ToString());
+
                 if (monthNo < internshipRecord.MonthRecords.Count)//If month number is less than the count (meaning it exists) 
                 {
                     monthRecord = internshipRecord.MonthRecords[monthNo];
+                    if (monthRecord.Approved == true) {
+                        return BadRequest(new { Message = "This month's records have already been approved and cannot be edited" });
+                    }
                 }
                 else//Else the month does not exist and create a new month record.
                 {
@@ -244,69 +267,75 @@ namespace E_Internship_Journal.API
                 var timeOut = new DateTime();
                 bool isPresent = false;
                 string remarks = day_RecordNewInput.Remarks.Value.ToString().Trim();
-                if (!string.IsNullOrEmpty(arrivalTimeStr) && string.IsNullOrWhiteSpace(remarks))
-                {
-                    timeIn = DateTime.Parse(arrivalTimeStr, CultureInfo.InvariantCulture);
-                    timeOut = DateTime.Parse(departTimeStr, CultureInfo.InvariantCulture);
-                    isPresent = true;
+
+                Day_Record dayRecord = null;
+
+                if (day_RecordNewInput.Id.Value.Equals("", StringComparison.OrdinalIgnoreCase))
+                {//No Id, create record
+                    dayRecord = new Day_Record
+                    {
+                        Date = date,
+                        WeekNo = weekNo,
+                        Month = monthRecord
+                    };
+                    _context.Day_Records.Add(dayRecord);
                 }
-                else
+                else {//Get the day record
+                    int dayId = Int32.Parse(day_RecordNewInput.Id.Value);
+                    dayRecord = _context.Day_Records
+                        .Include(dr => dr.Month)
+                        .ThenInclude(mr => mr.InternshipRecord)
+                        .ThenInclude(ir => ir.UserBatch)
+                        .Where(dr => dr.DayId == dayId)
+                        .Single();
+
+                    if (!dayRecord.Month.InternshipRecord.UserBatch.UserId.Equals(_userManager.GetUserId(User))) {
+                        return BadRequest(new { Message = "Day record does not belong to you" });
+                    }
+
+                    dayRecord.Date = date;
+                    dayRecord.WeekNo = weekNo;
+                    dayRecord.Month = monthRecord;
+                }
+                
+
+                if (remarks.Equals(""))
                 {
-                    return BadRequest("Time In and Time Out must not have any values if absent");
+                    try
+                    {
+                        timeIn = DateTime.ParseExact(arrivalTimeStr, "dd/MM/yyyy H:m:s", CultureInfo.InvariantCulture);
+                        timeOut = DateTime.ParseExact(departTimeStr, "dd/MM/yyyy H:m:s", CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception e) {
+                        return BadRequest(new { Message = "Incorrect timing" });
+                    }
+                    dayRecord.ArrivalTime = timeIn;
+                    dayRecord.DepartureTime = timeOut;
+                    dayRecord.IsPresent = true;
+                    dayRecord.Remarks = "";
+                }
+                else {
+                    dayRecord.ArrivalTime = null;
+                    dayRecord.DepartureTime = null;
+                    dayRecord.IsPresent = false;
+                    if (remarks.Equals("OTHERS"))
+                    {
+                        dayRecord.Remarks = day_RecordNewInput.Specify.Value;
+                    }
+                    else {
+                        dayRecord.Remarks = remarks;
+                    }
                 }
 
-                //var taskRecords = day_RecordNewInput.Tasks;
-
-
-                //Calculate the weekno
-
-                int weekNo = (Int32.Parse(date.Subtract(startDate).Days.ToString()) / 7) + 1;
-
-                var newDayRecord = new Day_Record
-                {
-                    Date = date,
-                    IsPresent = isPresent,
-                    Remarks = remarks,
-                    WeekNo = weekNo,
-                    Month = monthRecord
-                };
-
-                if (isPresent)
-                {
-                    newDayRecord.ArrivalTime = timeIn;
-                    newDayRecord.DepartureTime = timeOut;
-                    newDayRecord.Remarks = "";
-
-                    //List<Task_Record> tasks = new List<Task_Record>();
-                    //for (int i = 0; i < taskRecords.Count; i++)
-                    //{
-                    //    var taskRecord = new Task_Record
-                    //    {
-                    //        Description = taskRecords[i].Value
-                    //    };
-
-                    //    tasks.Add(taskRecord);
-                    //}
-
-                    //newDayRecord.Tasks = tasks;
-                }
-
-                _context.Day_Records.Add(newDayRecord);
                 await _context.SaveChangesAsync();
 
             }
             catch (Exception exceptionObject)
             {
-                customMessage = "Unable to save to database";
+                return BadRequest(new { Message = exceptionObject.ToString() });
             }
-            var successRequestResultMessage = new
-            {
-                Message = "Saved Day Record into database"
-            };
 
-            OkObjectResult httpOkResult =
-            new OkObjectResult(successRequestResultMessage);
-            return httpOkResult;
+            return new OkObjectResult(new { Message = "Saved day record successfully." });
         }
 
         //DELETE: api/Day_Record/5

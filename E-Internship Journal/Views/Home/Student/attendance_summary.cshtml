@@ -11,7 +11,7 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="col-xs-12 pull-right">
-                        <input type="button" value="View History" class="btn btn-default" onclick="location.href='@Url.Action("attendance_history", "Home" )'" />
+                    <input type="button" value="View History" class="btn btn-default" onclick="location.href='@Url.Action("attendance_history", "Home" )'" />
                 </div>
             </div>
         </div>
@@ -65,7 +65,6 @@
         </div>
         <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
     </div>
-
     <!--end with attendance taking-->
     <div class="card-body">
         <div class="form-group">
@@ -78,86 +77,82 @@
     </div>
     <br />
 </div>
-
-    <!-- Attendance Modal -->
-<div class="modal fade" id="attendanceModal" tabindex="-1" role="dialog" aria-labelledby="attendanceModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="attendanceModalLabel">Create Attendance</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <div class="container">
-                    <form>
-                        <div class="form-group">
-                            <label class="control-label requiredField" for="date">
-                                Date
-                                <span class="asteriskField">
-                                    *
-                                </span>
-                            </label>
-                            <div class="input-group">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-calendar">
-                                    </i>
+<!-- Attendance Modal -->
+@*<div class="modal fade" id="attendanceModal" tabindex="-1" role="dialog" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="attendanceModalLabel">Create Attendance</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <form>
+                            <div class="form-group">
+                                <label class="control-label requiredField" for="date">
+                                    Date
+                                    <span class="asteriskField">
+                                        *
+                                    </span>
+                                </label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar">
+                                        </i>
+                                    </div>
+                                    <input class="form-control" id="date" name="date" placeholder="DD/MM/YYYY" type="text">
                                 </div>
-                                <input class="form-control" id="date" name="date" placeholder="DD/MM/YYYY" type="text">
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label requiredField" for="timein">
-                                Time in
-                            </label>
-                            <div class='input-group date' id='timein'>
-                                <div class="input-group-addon">
-                                    <i class="fa fa-clock-o"></i>
+                            <div class="form-group">
+                                <label class="control-label requiredField" for="timein">
+                                    Time in
+                                </label>
+                                <div class='input-group date' id='timein'>
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </div>
+                                    <input type='text' class="form-control" />
                                 </div>
-
-                                <input type='text' class="form-control" />
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label requiredField" for="timeout">
-                                Time out
-                            </label>
-                            <div class='input-group date' id='timeout'>
-                                <div class="input-group-addon">
-                                    <i class="fa fa-clock-o"></i>
+                            <div class="form-group">
+                                <label class="control-label requiredField" for="timeout">
+                                    Time out
+                                </label>
+                                <div class='input-group date' id='timeout'>
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-clock-o"></i>
+                                    </div>
+                                    <input type='text' class="form-control" id="timeout" />
                                 </div>
-                                <input type='text' class="form-control" id="timeoutval" />
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleFormControlSelect1">Remarks</label>
-                            <select class="form-control" id="exampleFormControlSelect1">
-                                <option>-</option>
-                                <option>MC</option>
-                                <option>Holiday</option>
-                                <option>LOA</option>
-                                <option>Company Off-Day</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label" for="specify">
-                                if others, please specify:
-                            </label>
-                            <input type='text' class="form-control" id="specify" />
-                        </div>
-                    </form>
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Remarks</label>
+                                <select class="form-control" id="exampleFormControlSelect1">
+                                    <option>-</option>
+                                    <option>MC</option>
+                                    <option>Holiday</option>
+                                    <option>LOA</option>
+                                    <option>Company Off-Day</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="specify">
+                                    if others, please specify:
+                                </label>
+                                <input type='text' class="form-control" id="specify" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="submit">Submit</button>
+                    <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="submit">Submit</button>
-                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
-            </div>
         </div>
-    </div>
-</div>
-
+    </div>*@
 <!-- Edit Modal -->
 <div class="modal fade" id="editattendanceModal" tabindex="-1" role="dialog" aria-labelledby="editattendanceModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -169,9 +164,9 @@
                 </button>
             </div>
             <div class="modal-body">
-
                 <div class="container">
                     <form>
+                        <input id="dayidval" type="text" hidden disabled />
                         <div class="form-group">
                             <label class="control-label requiredField" for="date">
                                 Date
@@ -184,10 +179,10 @@
                                     <i class="fa fa-calendar">
                                     </i>
                                 </div>
-                                <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
+                                <input class="form-control" id="dateval" name="date" placeholder="MM/DD/YYYY" type="text">
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="timeincontainer">
                             <label class="control-label requiredField" for="timein">
                                 Time in
                             </label>
@@ -195,11 +190,10 @@
                                 <div class="input-group-addon">
                                     <i class="fa fa-clock-o"></i>
                                 </div>
-
-                                <input type='text' class="form-control" />
+                                <input type='text' class="form-control" id="timeinval" />
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="timeoutcontainer">
                             <label class="control-label requiredField" for="timeout">
                                 Time out
                             </label>
@@ -211,16 +205,16 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="exampleFormControlSelect1">Remarks</label>
-                            <select class="form-control" id="exampleFormControlSelect1">
-                                <option>-</option>
-                                <option>MC</option>
-                                <option>Holiday</option>
-                                <option>LOA</option>
-                                <option>Company Off-Day</option>
+                            <label for="remarks">Remarks</label>
+                            <select class="form-control" id="remarks">
+                                <option value="">Present</option>
+                                <option value="MC">MC</option>
+                                <option value="LOA">Leave Of Absence</option>
+                                <option value="COMPANY OFF">Company Off-Day</option>
+                                <option value="OTHERS">Others</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="specifygroup">
                             <label class="control-label" for="specify">
                                 if others, please specify:
                             </label>
@@ -236,26 +230,37 @@
         </div>
     </div>
 </div>
-
 <script>
     var editor;
+    var internshipId = getCookie("InternshipRecordId");
+    var dayRecords = [];
+
     $(document).ready(function () {
         var table = $('#dataTable').DataTable({
             dom: "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
             ajax: {
-                url: '/Api/Task_Record',
+                url: '/Api/Day_Record/getInternshipDayRecords/' + internshipId,
                 dataSrc: ''
             },
             columns: [
-                { data: "DayRecordId" },
-                { data: "Description" },
-                { data: "Description" },
-                { data: "Description" },
                 {
-                    data: null,
-                    "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
+                    data: "Date",
+                    mRender: function (o) { return moment(o).format("DD/MM/YYYY"); }
+                },
+                {
+                    data: "ArrivalTime",
+                    mRender: function (o) { return moment(o).format("hh:mm A"); }
+                },
+                {
+                    data: "DepartureTime",
+                    mRender: function (o) { return moment(o).format("hh:mm A"); }
+                },
+                { data: "Remarks" },
+                {
+                    data: "DayId",
+                    bSortable: false,
+                    mRender: function (o) { return '<button class="btn btn-sm btn-primary" value="' + o + '"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn" value="' + o + '"><i class="fa fa-trash"></i></button>' }
                 }
             ],
             language: {
@@ -263,17 +268,149 @@
             }
         });
 
-        // Activate an inline edit on click of a table cell
         $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
             console.log("button 1 is click");
         });
 
         $('#addattendance').on('click', function (e) {
-            $('#attendanceModal').modal('show');
+            $('#editattendanceModal').modal('show');
+            $('#dayidval').val("");
+            $('#dateval').val(moment(new Date()).format("DD/MM/YYYY"));
+            $('#timeinval').val("");
+            $('#timeoutval').val("");
+            $('#specifygroup').hide();
+            $('#remarks').val("");
         });
 
         $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
-            $('#editattendanceModal').modal('show');
+            console.log($(this).val());
+            $.ajax({
+                url: '/API/Day_Record/' + $(this).val(),
+                method: 'GET',
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    console.dir(data);
+                    $('#dayidval').val(data.DayId);
+                    $('#editattendanceModal').modal('show');
+                    $('#dateval').val(moment(new Date(data.Date)).format('DD/MM/YYYY'));
+                    $('#timeinval').val(moment(new Date(data.ArrivalTime)).format('hh:mm A'));
+                    $('#timeoutval').val(moment(new Date(data.DepartureTime)).format('hh:mm A'));
+                    if (data.Remarks != "" && data.Remarks != "MC" && data.Remarks != "LOA" && data.Remarks != "COMPANY OFF") {//OTHERS
+                        $('#remarks').val("OTHERS");
+                        $('#specifygroup').show();
+                        $('#specify').val(data.Remarks);
+                    } else { //Not others
+                        $('#specifygroup').hide();
+                        $('#remarks').val(data.Remarks);
+                    }
+                }
+            })
         });
     });
+
+    $('#submit').on('click', function () {
+        var collectedId = $('#dayidval').val();
+        var collectedDate = moment($('#dateval').val(), ["DD/MM/YYYY"]).toDate().toDateString();
+        var collectedArrivalTime = ($('#timeinval').val() != "") ? moment($('#dateval').val() + ' ' + $('#timeinval').val(), ["DD/MM/YYYY h:mm A"]).toDate() : null;
+        var collectedDepartureTime = ($('#timeoutval').val() != "") ? moment($('#dateval').val() + ' ' + $('#timeoutval').val(), ["DD/MM/YYYY h:mm A"]).toDate() : null;
+        var collectedRemarks = $('#remarks').val();
+        var collectedSpecify = $('#specify').val();
+
+        var webFormData = new WebFormData(collectedId, collectedDate, formatDateTime(collectedArrivalTime), formatDateTime(collectedDepartureTime), collectedRemarks, collectedSpecify);
+
+        console.dir(webFormData);
+
+        $.ajax({
+            url: '/API/Day_Record/SaveUpdateDayRecord',
+            method: 'PUT',
+            contentType: "application/json",
+            cache: false,
+            data: "'" + JSON.stringify(webFormData) + "'",
+            success: function (data) {
+                swal({
+                    type: 'success',
+                    title: 'Saved',
+                    text: data.Message
+                }).then(
+                    function () {
+                        window.location.reload();
+                    });
+            },
+            error: function (data) {
+                swal({
+                    type: 'error',
+                    title: 'Error',
+                    text: data.Message
+                });
+            }
+        })
+    });
+
+    $('#remarks').on('change', function () {
+        var remark = $(this).val();
+        if (remark == '') { //PRESENT
+            $('#timeincontainer').show();
+            $('#timeoutcontainer').show();
+            $('#specifygroup').hide();
+        } else {// NOT PRESENT
+            $('#timeincontainer').hide();
+            $('#timeoutcontainer').hide();
+            if (remark == 'OTHERS') {//OTHERS
+                $('#specifygroup').show();
+            } else {
+                $('#specifygroup').hide(); //NOT OTHERS
+            }
+        }
+    });
+
+    $('#timeinval').datetimepicker({
+        allowInputToggle: true,
+        format: 'LT'
+    });
+
+    $('#timeoutval').datetimepicker({
+        allowInputToggle: true,
+        format: 'LT'
+    });
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+    function WebFormData(inId, inDate, inTimein, inTimeOut, inRemarks, inSpecify) {
+        this.Id = inId;
+        this.Date = inDate;
+        this.ArrivalTime = inTimein;
+        this.DepartureTime = inTimeOut;
+        this.Remarks = inRemarks;
+        this.Specify = inSpecify;
+    }
+
+    function formatDateTime(inDate) { 
+        var date = inDate;
+        var day = date.getDate();       // yields date
+        var month = date.getMonth() + 1;    // yields month (add one as '.getMonth()' is zero indexed)
+        var year = date.getFullYear();  // yields year
+        var hour = date.getHours();     // yields hours 
+        var minute = date.getMinutes(); // yields minutes
+        var second = date.getSeconds(); // yields seconds
+
+        // After this construct a string with the above results as below
+        var time = day + "/" + month + "/" + year + " " + hour + ':' + minute + ':' + second; 
+        return time;
+    }
 </script>
