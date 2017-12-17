@@ -123,21 +123,21 @@
     var todayDate;
 
     $('#btnManage').on('click', function () {
-        var cookies = document.cookie.split(";");
+        //var cookies = document.cookie.split(";");
 
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i];
-            var eqPos = cookie.indexOf("=");
-            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-            document.cookie = name + "=;path=/" + ";expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        }
-        var id = dayRecordId;
+        //for (var i = 0; i < cookies.length; i++) {
+        //    var cookie = cookies[i];
+        //    var eqPos = cookie.indexOf("=");
+        //    var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        //    document.cookie = name + "=;path=/" + ";expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        //}
+        //var id = dayRecordId;
         var exdate = new Date();
         var expiredays = 1;
         exdate.setHours(exdate.getHours() + 4);
         exdate.setDate(exdate.getDate());
         //document.cookie = "id" + "=" + id + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
-        document.cookie = "id" + "=" + id + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+        //document.cookie = "id" + "=" + id + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
         document.cookie = "date" + "=" + todayDate + ";path=/" + ((exdate == null) ? "" : ";expires=" + exdate.toGMTString());
 
     });

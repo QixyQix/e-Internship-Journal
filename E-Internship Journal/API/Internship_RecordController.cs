@@ -52,8 +52,9 @@ namespace E_Internship_Journal.API
         }
 
         [HttpGet("getCurrentInternshipRecord")]
-        [Authorize(Roles ="STUDENT")]
-        public async Task<IActionResult> getCurrentInternshipRecord() {
+        [Authorize(Roles = "STUDENT")]
+        public async Task<IActionResult> getCurrentInternshipRecord()
+        {
 
             var userId = _userManager.GetUserId(User);
 
@@ -69,7 +70,8 @@ namespace E_Internship_Journal.API
             {
                 return NotFound(new { Message = "No internship record found" });
             }
-            else {
+            else
+            {
                 return new JsonResult(new { InternshipRecordId = internshipRecord.InternshipRecordId });
             }
         }
@@ -144,6 +146,39 @@ namespace E_Internship_Journal.API
 
             return Ok(internship_Record);
         }
+        // GET: api/Internship_Record/5
+        [HttpGet("Lo_GetStudentInternship_Record")]
+        public IActionResult Lo_GetStudentInternship_Record()
+        {
+
+            var internship_Record = _context.Internship_Records.Include(ir => ir.UserBatch).ThenInclude(ub => ub.User)
+                //.Where(ir =>ir.UserBatch.User.Id == ir.UserBatch.UserId)
+                .Where(m => m.LiaisonOfficerId == _userManager.GetUserId(User));
+
+            //var studentBatch = _context.ApplicationUsers.SingleOrDefault(d => d.Id ==
+            //(_context.UserBatches.Where(m => m.UserBatchId == internship_Record.UserBatchId)).Select(a=>a.UserId).ToString());
+
+
+            if (internship_Record == null)
+            {
+                return NotFound();
+            }
+            List<object> studentList = new List<object>();
+            foreach (var ir in internship_Record)
+            {
+                studentList.Add(new
+                {
+                    StudentId = ir.UserBatch.User.Email,
+                    StudentName = ir.UserBatch.User.FullName,
+                    StudentJournal = ir.InternshipRecordId,
+
+
+                });
+            }
+
+            return new JsonResult(studentList);
+        }
+
 
         private bool Internship_RecordExists(int id)
         {

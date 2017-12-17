@@ -97,7 +97,8 @@ namespace E_Internship_Journal.API
                     CompanyAddress = companyNewInput.CompanyAddress.Value,
                     ContactPersonName = companyNewInput.ContactName.Value,
                     ContactPersonEmail = companyNewInput.ContactEmail.Value,
-                    ContactPersonNumber = companyNewInput.ContactNumber.Value
+                    ContactPersonNumber = companyNewInput.ContactNumber.Value,
+                    ContactPersonFax = ""
                 };
                 _context.Companies.Add(newCompany);
                 await _context.SaveChangesAsync();

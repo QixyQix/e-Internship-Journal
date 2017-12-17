@@ -24,7 +24,7 @@
                     </select>
                 </div>
                 <div class="col-xs-12 pull-right">
-                    <select class="form-control" id="exampleSelect1">
+                    <select class="form-control" id="selectWeek">
                         <option>Week 1</option>
                         <option>Week 2</option>
                         <option>Week 3</option>
@@ -90,7 +90,7 @@
                     <form>
                         <div class="form-group ">
                             <label>Comment:</label>
-                            <textarea class="form-control" rows="5" id="task" readonly>Went to meeting, and prepared meeting report.</textarea>
+                            <textarea class="form-control" rows="5" id="review" readonly>Went to meeting, and prepared meeting report.</textarea>
                         </div>
                     </form>
                 </div>
@@ -101,29 +101,112 @@
 <!-- /.container-fluid -->
 <!-- /.content-wrapper -->
 <script>
+    var g_getLocalStorage;
+    //var g_table;
     $(document).ready(function () {
-        var table = $('#dataTable').DataTable({
-            dom: "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
-            },
-            columns: [
-                { data: "DayRecordId" },
-                { data: "Description" },
-                {
-                    data: null,
-                    "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary">View</button>' } //note under condition if no remarks was given the column would be blank
-                }
-            ],
-            language: {
-                emptyTable: "No Task was found, please create one.",
+        var cookies = document.cookie.split("; ");
+
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var eqPos = cookie.indexOf("=");
+            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            //console.dir(getCookie(name));
+            var cookievalue = getCookie(name);
+
+            if (name != "selectedStudent") {
+                $studentInputElement = $('#selectstudent');
+                $optionElement = $('<option>').text(name).attr('value', cookievalue);
+                $studentInputElement.append($optionElement);
+
+            } else {
+                $('#selectstudent').val(cookievalue);
+
             }
-        });
+
+        }
+
+        var g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+
+        loadTaskData(g_getLocalStorage);
         $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
             $('#commentModal').modal('show');
+            //var review = sessionStorage.getItem($(this).val()) == null ? "No Remarks" : sessionStorage.getItem($(this).val());
+            $('#review').text(sessionStorage.getItem($(this).val()) == null ? "No Remarks" : sessionStorage.getItem($(this).val()));
         });
-    });
+
+        $('#selectstudent').on('change', function (e) {
+            console.dir('test');
+            //console.dir(table);
+            setCookie();
+            g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+            loadTaskData(g_getLocalStorage);
+            
+        });
+    });//End of Document Ready function
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+    function setCookie() {
+        var inName = "selectedStudent";
+        var inValue = $('#selectstudent').val();
+        //setCookie("selectedStudent", ("#selectstudent").val());
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };
+    function loadTaskData(inLocalStorage) {
+        $.ajax({
+            url: '/Api/Task_Record/getTaskRecordsUnderInternRecord/' + inLocalStorage,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                for (i = 0; i < data.length; i++) {
+                    if (data[i].Remarks != null) {
+                        sessionStorage.setItem(data[i].TaskRecordId, data[i].Remarks);
+                    }
+                }//End of for loop
+                var g_table = $('#dataTable').DataTable({
+                    dom: "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+                    destroy: true,
+                    data: data,
+                    columns: [
+                        {
+                            data: "Date",
+                            "mRender": function (o) { return moment(o).format("DD/MM/YYYY") }
+                        },
+                        { data: "Description" },
+                        {
+                            //data: "TaskRecordId",
+                            "bSortable": false,
+                            "mRender": function (data, type, row) {
+                                return '<button class="btn btn-sm btn-primary" value="' + row.TaskRecordId + '">View</button>'
+                            } //note under condition if no remarks was given the column would be blank
+                        }
+                    ],
+                    language: {
+                        emptyTable: "No Task was found, please create one.",
+                    }
+                });//End of DataTable
+            }//End of success
+        });
+    }
+
 </script>

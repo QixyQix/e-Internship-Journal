@@ -13,6 +13,7 @@ using System.IO;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System.Text;
+using System.Globalization;
 
 namespace E_Internship_Journal.API
 {
@@ -46,7 +47,7 @@ namespace E_Internship_Journal.API
                     .Include(ub => ub.Batch)
                     .ThenInclude(batch => batch.Course)
                     .Include(ub => ub.User)
-                    .Where(ub => ub.User.Id.Equals(userId))
+                    .Where(ub => ub.UserId.Equals(userId))
                     .ToList();
 
 
@@ -70,32 +71,37 @@ namespace E_Internship_Journal.API
 
                 return new JsonResult(batchList);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 return BadRequest(new { Message = ex.ToString() });
             }
-            
+
         }
 
         [HttpGet("getBatchStudents/{id}")]
         [Authorize(Roles = "SLO")]
-        public async Task<IActionResult> getBatchStudents(int id) {
+        public async Task<IActionResult> getBatchStudents(int id)
+        {
 
             var users = _context.UserBatches.Where(ub => ub.BatchId == id)
                 .Include(ub => ub.User)
                 .Include(ub => ub.InternshipRecord)
                 .ThenInclude(ir => ir.Project)
+                .ThenInclude(p => p.Company)
                 .Include(ub => ub.InternshipRecord)
                 .ThenInclude(ir => ir.LiaisonOfficer)
                 .ToList();
 
             List<object> studentObjects = new List<object>();
 
-            foreach (var ub in users) {
-                if (await _userManager.IsInRoleAsync(ub.User, "STUDENT")) {
+            foreach (var ub in users)
+            {
+                if (await _userManager.IsInRoleAsync(ub.User, "STUDENT"))
+                {
                     string studentName = ub.User.FullName;
                     string studentUserId = ub.User.Id;
                     string studentEmail = ub.User.Email;
-
+                    string studentPhonenumber = ub.User.PhoneNumber;
                     if (ub.InternshipRecord != null)
                     {
                         string LOName = ub.InternshipRecord.LiaisonOfficer.FullName;
@@ -103,29 +109,35 @@ namespace E_Internship_Journal.API
                         string LOEmail = ub.InternshipRecord.LiaisonOfficer.Email;
                         int projectId = ub.InternshipRecord.ProjectId;
                         string projectName = ub.InternshipRecord.Project.ProjectName;
+                        string companyName = ub.InternshipRecord.Project.Company.CompanyName;
                         studentObjects.Add(new
                         {
                             StudentName = studentName,
                             StudentUserId = studentUserId,
                             StudentEmail = studentEmail,
+                            StudentPhoneNumber = studentPhonenumber,
                             LOName = LOName,
                             LOUserId = LOUserId,
                             LOEmail = LOEmail,
                             ProjectId = projectId,
-                            ProjectName = projectName
+                            ProjectName = projectName,
+                            CompanyName = companyName
                         });
                     }
-                    else {
+                    else
+                    {
                         studentObjects.Add(new
                         {
                             StudentName = studentName,
                             StudentUserId = studentUserId,
                             StudentEmail = studentEmail,
+                            StudentPhoneNumber = studentPhonenumber,
                             LOName = "",
                             LOUserId = "",
                             LOEmail = "",
                             ProjectId = "",
-                            ProjectName = ""
+                            ProjectName = "",
+                            CompanyName = ""
                         });
                     }
                 }
@@ -139,59 +151,33 @@ namespace E_Internship_Journal.API
         public async Task<JsonResult> getAllBatches()
         {
             List<object> userBatchList = new List<object>();
-            var userBatches = _context.UserBatches
-            .Include(eachUserBatchEntity => eachUserBatchEntity.User)
-            .Include(eachUserBatchEntity => eachUserBatchEntity.Batch)
-            .Include(eachUserBatchEntity => eachUserBatchEntity.Batch.Course)
-            .AsNoTracking();
 
-            foreach (ApplicationUser eachUser in _userManager.Users)
+            var batches = _context.Batches.Include(eachBatchEntity => eachBatchEntity.Course).Include(eachUserBatchEntity => eachUserBatchEntity.UserBatches).AsNoTracking();
+
+            foreach (var eachBatch in batches)
             {
-                var roles = (await _userManager.GetRolesAsync(eachUser));
-                if (roles.Contains("SLO"))
+
+                List<object> UserList = new List<object>();
+
+                foreach (var eachUserBatch in eachBatch.UserBatches)
                 {
-                    userBatches = userBatches.Where(eachUserBatchEntity => eachUserBatchEntity.UserId == eachUser.Id);
-
-                    foreach (var oneUserBatch in userBatches)
+                    if ((await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(eachUserBatch.UserId))).Contains("SLO"))
                     {
-                        //var CourseName = _context.Courses.Select(courseItem => new { CourseName = courseItem.CourseName, CourseId = courseItem.CourseId }).Where(t => t.CourseId == oneUserBatch.Batch.CourseId);
-                        //   List<int> categoryIdList = new List<int>();
-                        userBatchList.Add(new
-                        {
-                            oneUserBatch.Batch.BatchId,
-                            oneUserBatch.Batch.BatchName,
-                            oneUserBatch.Batch.Description,
-                            oneUserBatch.Batch.StartDate,
-                            oneUserBatch.Batch.EndDate,
-                            oneUserBatch.Batch.Course.CourseCode,
-                            oneUserBatch.User.FullName,
-                            oneUserBatch.User.Email
-
-                        });
+                        var user = _context.Users.Where(eachUser => eachUser.Id.Equals(eachUserBatch.UserId)).Select(selection => selection.FullName).ToList<string>();
+                        UserList.Add(user);
                     }
                 }
+                userBatchList.Add(new
+                {
+                    eachBatch.BatchId,
+                    eachBatch.BatchName,
+                    eachBatch.StartDate,
+                    eachBatch.EndDate,
+                    eachBatch.Course.CourseCode,
+                    UserList,
+                });
+
             }
-
-            // var batches = _context.Batches
-            //.Include(eachBatchEntity => eachBatchEntity.Course)
-            //.Include(eachBatchEntity => eachBatchEntity.UserBatches)
-            //.AsNoTracking();
-
-
-            // foreach (var onebatch in batches)
-            // {
-
-            //     //   List<int> categoryIdList = new List<int>();
-            //     batchList.Add(new
-            //     {
-            //         onebatch.BatchId,
-            //         onebatch.BatchName,
-            //         onebatch.Description,
-            //         onebatch.StartDate,
-            //         onebatch.EndDate
-            //     });
-            // }
-
             return new JsonResult(userBatchList);
         }
         [HttpGet("GetUserCourseInformation")]
@@ -243,42 +229,39 @@ namespace E_Internship_Journal.API
             {
                 try
                 {
-                    List<object> userBatchList = new List<object>();
-                    var userBatches = _context.UserBatches
-                        .Where(eachUserBatchEntity => eachUserBatchEntity.BatchId == id)
-                    .Include(eachUserBatchEntity => eachUserBatchEntity.User)
-                    .Include(eacbProjectEntity => eacbProjectEntity.Batch)
-                    .Include(eacbProjectEntity => eacbProjectEntity.Batch.Course)
-                    .AsNoTracking();
+
                     var response = new Object();
-                    foreach (ApplicationUser eachUser in _userManager.Users)
+                    var batches = _context.Batches
+                        .Where(eachBatchEntity => eachBatchEntity.BatchId == id)
+                        .Include(eachCourseEntity => eachCourseEntity.Course)
+                        .Include(eachUserBatchEntity => eachUserBatchEntity.UserBatches)
+                        .AsNoTracking();
+
+                    foreach (var eachBatch in batches)
                     {
-                        var roles = (await _userManager.GetRolesAsync(eachUser));
-                        if (roles.Contains("SLO"))
+
+                        List<object> UserList = new List<object>();
+
+                        foreach (var eachUserBatch in eachBatch.UserBatches)
                         {
-                            userBatches = userBatches.Where(eachUserBatchEntity => eachUserBatchEntity.UserId == eachUser.Id);
-
-                            foreach (var oneUserBatch in userBatches)
+                            if ((await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(eachUserBatch.UserId))).Contains("SLO"))
                             {
-                                //var CourseName = _context.Courses.Select(courseItem => new { CourseName = courseItem.CourseName, CourseId = courseItem.CourseId }).Where(t => t.CourseId == oneUserBatch.Batch.CourseId);
-                                //   List<int> categoryIdList = new List<int>();
-                                response = new
-                                {
-                                    oneUserBatch.Batch.BatchId,
-                                    oneUserBatch.Batch.BatchName,
-                                    oneUserBatch.Batch.Description,
-                                    oneUserBatch.Batch.StartDate,
-                                    oneUserBatch.Batch.EndDate,
-                                    //CourseName,
-                                    oneUserBatch.Batch.Course.CourseId,
-                                    oneUserBatch.Batch.Course.CourseCode,
-                                    //_context.Courses.Select(roleItem => new { CourseName = roleItem.CourseName }) },
-                                    oneUserBatch.User.FullName,
-                                    oneUserBatch.User.Email
-                                };
-
+                                var user = _context.Users.Where(eachUser => eachUser.Id.Equals(eachUserBatch.UserId)).Select(selection => selection.Email).ToList<string>();
+                                UserList.Add(user);
                             }
                         }
+                        response = new
+                        {
+                            eachBatch.BatchId,
+                            eachBatch.BatchName,
+                            eachBatch.Description,
+                            eachBatch.StartDate,
+                            eachBatch.EndDate,
+                            eachBatch.Course.CourseId,
+                            eachBatch.Course.CourseCode,
+                            UserList,
+                        };
+
                     }
                     return new JsonResult(response);
                 }
@@ -288,7 +271,7 @@ namespace E_Internship_Journal.API
                     //This anonymous object only has one Message property 
                     //which contains a simple string message
                     object httpFailRequestResultMessage =
-                    new { Message = "Unable to obtain brand information." };
+                    new { Message = "Unable to obtain batch information." };
                     //Return a bad http response message to the client
                     return BadRequest(httpFailRequestResultMessage);
                 }
@@ -296,12 +279,13 @@ namespace E_Internship_Journal.API
             else
             {
                 object httpFailRequestResultMessage =
-                new { Message = "Unable to obtain brand information." };
+                new { Message = "Unable to obtain batch information." };
                 //Return a bad http response message to the client
                 return BadRequest(httpFailRequestResultMessage);
             }
 
         }//End of Get(id) Web API method
+
 
 
         // PUT: api/Batches/5
@@ -314,29 +298,51 @@ namespace E_Internship_Journal.API
             {
                 return BadRequest(ModelState);
             }
-            string customMessage = "";
+            object response = null;
             if (BatchExists(id))
             {
-                var batchNewInput = JsonConvert.DeserializeObject<dynamic>(value);
-                var foundOneBatch = _context.Batches.Find(id);
-                //var foundOneBatch = _context.Batches
-                //     .Where(eachBatch => eachBatch.BatchId == id)
-                //     .AsNoTracking()
-                //     .Single();
+                try
+                {
+                    var batchNewInput = JsonConvert.DeserializeObject<dynamic>(value);
+                    var foundUserBatch = _context.UserBatches.Where(eachUserBatch => eachUserBatch.BatchId == id).AsNoTracking();
+                    //var foundOneBatch = _context.Batches.Find(id);
+                    var foundOneBatch = _context.Batches.Where(batch => batch.BatchId == id).Include(userBatch => userBatch.UserBatches).SingleOrDefault();
+                    foreach (var eachUserBatch in foundOneBatch.UserBatches)
+                    {
+                        if ((await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(eachUserBatch.UserId))).Contains("SLO"))
+                        {
+                            _context.UserBatches.Remove(eachUserBatch);
+                        }
+                    }
+                    await _context.SaveChangesAsync();
 
-                var foundOneUserBatch = _context.UserBatches.Where(eachUserBatch => eachUserBatch.BatchId == id).AsNoTracking().Single();
-                foundOneBatch.BatchName = batchNewInput.BatchName.Value;
-                foundOneBatch.Description = batchNewInput.BatchDescription.Value;
-                foundOneBatch.StartDate = batchNewInput.StartDate.Value;
-                foundOneBatch.EndDate = batchNewInput.EndDate.Value;
-                foundOneBatch.CourseId = Convert.ToInt32(batchNewInput.CourseAssigned.Value.ToString());
-                foundOneUserBatch.UserId = (await _userManager.FindByEmailAsync(batchNewInput.SLOAssigned.Value)).Id;
+                    foundOneBatch.BatchName = batchNewInput.BatchName.Value;
+                    foundOneBatch.Description = batchNewInput.BatchDescription.Value;
+                    foundOneBatch.StartDate = DateTime.ParseExact(batchNewInput.StartDate.Value, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    foundOneBatch.EndDate = DateTime.ParseExact(batchNewInput.EndDate.Value, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    foundOneBatch.CourseId = Convert.ToInt32(batchNewInput.CourseAssigned.Value.ToString());
 
+                    var userList = batchNewInput.SLOAssigned;
+                    foreach (var eachSLO in userList)
+                    {
+                        UserBatch batchUser = new UserBatch
+                        {
+                            BatchId = foundOneBatch.BatchId,
+                            UserId = (await _userManager.FindByEmailAsync(eachSLO.Value)).Id
+                        };
+                        foundOneBatch.UserBatches.Add(batchUser);
+                    }
+                    await _context.SaveChangesAsync();
+                    response = new { Status = "success", Message = "Saved new user record." };
+                }
+                catch (Exception ex)
+                {
+                    object httpFailRequestResultMessage = new { Message = ex };
+                    //Return a bad http response message to the client
+                    return BadRequest(httpFailRequestResultMessage);
 
+                }
 
-                //_context.Batches.Update(foundOneBatch);
-                //_context.UserBatches.Update(foundOneUserBatch);
-                await _context.SaveChangesAsync();
             }
             else
             {
@@ -346,7 +352,7 @@ namespace E_Internship_Journal.API
                 return BadRequest(httpFailRequestResultMessage);
 
             }
-            return NoContent();
+            return new JsonResult(response);
         }
 
 
@@ -389,7 +395,7 @@ namespace E_Internship_Journal.API
             }
             var successRequestResultMessage = new
             {
-                Message = "Saved Course into database"
+                Message = "Saved Batches into database"
             };
 
             OkObjectResult httpOkResult =

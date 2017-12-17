@@ -71,7 +71,11 @@ namespace E_Internship_Journal.API
                 taskRecordObjs.Add(new
                 {
                     Date = task.Date,
-                    Description = task.Description
+                    Description = task.Description,
+                    TaskRecordId = task.TaskRecordId,
+                    TaskRemarks = task.Remarks,
+                    WeekNo = task.WeekNo
+
                 });
             }
 

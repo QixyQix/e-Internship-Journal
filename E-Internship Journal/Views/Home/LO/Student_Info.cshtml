@@ -15,32 +15,32 @@
             <form class="form-group">
                 <div class="form-inline">
                     <label class="col-md-2 control-label">Student Name:</label>
-                    <div class="col-sm-5">
+                    <div class="col-sm-5" id="name">
                         Amelia Goh
                     </div>
                 </div>
                 <div class="form-inline">
                     <label class="col-md-2 control-label">Course:</label>
-                    <div class="col-sm-5">
-                        <input class="form-control" id="course" type="text" value="DIT">
+                    <div class="col-sm-5" id="course">
+
                     </div>
                 </div>
                 <div class="form-inline">
                     <label class="col-sm-2 control-label">School:</label>
-                    <div class="col-sm-5">
-                        <input class="form-control" id="school" type="text" value="Singapore Polytechnic">
+                    <div class="col-sm-5" id="school">
+                        Singapore Polytechnc
                     </div>
                 </div>
                 <div class="form-inline">
                     <label class="col-sm-2 control-label">Mobile no:</label>
-                    <div class="col-sm-5">
-                        <input class="form-control" id="mobil" type="text" value="8889 3812">
+                    <div class="col-sm-5" id="mobile">
+
                     </div>
                 </div>
                 <div class="form-inline">
                     <label class="col-sm-2 control-label">Email Address:</label>
-                    <div class="col-sm-5">
-                        <input class="form-control" id="email" type="text" value="agjp@sp.edu.sg">
+                    <div class="col-sm-5" id="email">
+
                     </div>
                 </div>
             </form>
@@ -50,36 +50,31 @@
             <form class="form-group">
                 <div class="form-inline">
                     <label class="col-sm-2 control-label">Company:</label>
-                    <div class="col-sm-5">
-                        <input class="form-control" id="company" type="text" value="Websparks pte ltd">
+                    <div class="col-sm-5" id="company">
                     </div>
                 </div>
 
                 <div class="form-inline">
                     <label class="col-sm-2 control-label">Address:</label>
-                    <div class="col-sm-5">
-                        <input class="form-control" id="address" type="text" value="52 Horne Rd">
+                    <div class="col-sm-5" id="address">
                     </div>
                 </div>
 
                 <div class="form-inline">
                     <label class="col-sm-2 control-label">Supervisor:</label>
-                    <div class="col-sm-5">
-                        <input class="form-control" id="supervisor" type="text" value="Daryl Tan">
+                    <div class="col-sm-5" id="supervisor">
                     </div>
                 </div>
 
                 <div class="form-inline">
                     <label class="col-sm-2 control-label">Contact No:</label>
-                    <div class="col-sm-5">
-                        <input class="form-control" id="contactNo" type="text" value="87354353">
+                    <div class="col-sm-5" id="contactNo">
                     </div>
                 </div>
 
                 <div class="form-inline">
                     <label class="col-sm-2 control-label">Email Address:</label>
-                    <div class="col-sm-5">
-                        <input class="form-control" id="emailAddress" type="text" value="darylt@websparks.sg">
+                    <div class="col-sm-5" id="emailAddress">
                     </div>
                 </div>
             </form>
@@ -96,5 +91,55 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        var studentInfoId = getCookie("StudentInfo");
+
+        $.ajax({
+            url: '/Api/Accounts/GetStudentInfo/' + studentInfoId,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                console.dir(data);
+                studentInfo = data;
+
+                $('#name').text(studentInfo.FullName);
+                $('#email').text(studentInfo.Email);
+                $('#course').text(studentInfo.CourseCode);
+                $('#company').text(studentInfo.CompanyName);
+                $('#address').text(studentInfo.CompanyAddress);
+                $('#supervisor').text(studentInfo.SupervisorName);
+                $('#emailAddress').text(studentInfo.SupervisorEmail);
+
+                if (studentInfo.MobileNo != null) {
+                    $('#mobile').text(studentInfo.MobileNo);
+                }
+                if (studentInfo.SupervisorNumber != null) {
+                    $('#contactNo').text(studentInfo.SupervisorNumber);
+
+                }
+
+            }
+        });
 
 
+        function getCookie(name) {
+            var dc = document.cookie;
+            var prefix = name + "=";
+            var begin = dc.indexOf("; " + prefix);
+            if (begin == -1) {
+                begin = dc.indexOf(prefix);
+                if (begin != 0) return null;
+            } else {
+                begin += 2;
+            }
+            var end = document.cookie.indexOf(";", begin);
+            if (end == -1) {
+                end = dc.length;
+            }
+            return unescape(dc.substring(begin + prefix.length, end));
+        }
+    });
+
+</script>

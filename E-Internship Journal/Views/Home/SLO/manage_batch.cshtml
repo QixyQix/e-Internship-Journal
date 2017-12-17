@@ -86,16 +86,16 @@
         var table = $('#dataTable').DataTable({
             dom: 't',
             ajax: {
-                url: '/Api/Task_Record',
+                url: '/Api/Batches/',
                 dataSrc: ''
             },
             columns: [
-                { data: "DayRecordId" },
-                { data: "Description" },
+                { data: "BatchName" },
+                { data: "CourseName" },
                 {
                     data: null,
                     "bSortable": false,
-                    "mRender": function (o) { return '<a href="/home/manage_student" style="color:black;"><i class="fa fa-fw fa-user-plus""></i></a>' }
+                    "mRender": function (data, type, dataToSet) { return '<a href="/home/manage_student" id="manageBatch" style="color:black;" onClick="manageBatch(\'' + dataToSet.BatchName + '\' , \'' + dataToSet.BatchId + '\')"><i class="fa fa-fw fa-user-plus""></i></a>' }
                 },
                 {
                     data: null,
@@ -111,4 +111,23 @@
         //    $('#commentModal').modal('show');
         //});
     });
+
+    function manageBatch(inName, inId) {
+        //removeCookie();
+        //$.each($('table tbody tr td.StudentId'), function (index) {
+            //setCookie($(this).closest('td').next('td').text(), $(this).text());
+        //});
+        $.each($('table tbody tr td #manageBatch'), function (index) {
+            sessionStorage.setItem(inName, inId);
+            //console.log(Object.keys(sessionStorage));
+            //console.dir('test');
+           // sessionStorage.setItem($(this).closest('td').prev('td').prev('td').prev('td').text(), $(this).attr('value'));
+        });
+        //$.each($('table tbody tr td.StudentName'), function (index) {
+        //    console.dir($(this).text());
+
+        //});
+        //ssetCookie("selectedStudent", inId);
+
+    };
 </script>

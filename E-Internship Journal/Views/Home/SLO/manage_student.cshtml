@@ -13,11 +13,7 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="pull-left">
-                    <label>Batch Name:&nbsp</label><select class="form-control" id="selectstudent">
-                        <option>AY16/17 S1-DIT</option>
-                        <option>AY16/17 S2-EEE</option>
-                        <option>AY15/16 S1-DBIT</option>
-                    </select>
+                    <label>Batch Name:&nbsp</label><select class="form-control" id="selectBatch"></select>
                 </div>
             </div>
         </div>
@@ -199,6 +195,16 @@
         }
     }
     $(document).ready(function () {
+
+        for (i = 0; i < sessionStorage.length; i++) {
+            $batchInputElement = $('#selectBatch');
+            $optionElement = $('<option>').text(sessionStorage.key(i)).attr('value', sessionStorage.getItem(sessionStorage.key(i)));
+            //$optionElement = $('<option>').text(Object.keys(sessionStorage.key[i]));
+            $batchInputElement.append($optionElement);
+            // console.log(localStorage.getItem(localStorage.key(i)));
+        }
+        var selectedBatch = $('#selectBatch').val();
+
         // Array holding selected row IDs
         var rows_selected = [];
         var table = $('#student_dataTable').DataTable({
@@ -211,7 +217,7 @@
             dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
             ajax: {
-                url: '/Api/Task_Record',
+                url: '/Api/Batches/getBatchStudents/' + selectedBatch,
                 dataSrc: ''
             },
             columnDefs: [{
@@ -241,15 +247,15 @@
             },
             columns: [
                 { data: null },
-                { data: "DayRecordId" },
-                { data: "DayRecordId" },
-                { data: "DayRecordId" },
-                { data: "Description" },
-                { data: "Description" },
-                { data: "Description" },
-                { data: "Description" },
-                { data: "Description" },
-                { data: "Description" },
+                { data: "StudentEmail" },
+                { data: "StudentName" },
+                { data: "StudentPhoneNumber" },
+                { data: "StudentEmail" },
+                { data: "LOName" },
+                { data: "ProjectName" },
+                { data: "CompanyName" },
+                { data: null },
+                { data: null },
                 {
                     data: null,
                     "bSortable": false,
@@ -265,8 +271,50 @@
                 $("div.toolbar").parent().children().addClass("pull-right");
                 hideFilter1();
             }
-        });
+        });//End of DataTable
 
+        //Handle click for bulk add
+
+        $('#submitcsv').on('click', function (e) {
+            var fileUpload = $("#csv_upload").get(0);
+            var files = fileUpload.files;
+            var data = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                data.append(files[i].name, files[i]);
+            }
+            //                < form asp- action="EnrollStudent"
+            //            asp - route - id="1"
+            //            asp - controller="Enrollment"
+            //            method = "post"
+            //            enctype = "multipart/form-data" >
+            //                <input type="file" name="files" multiple />
+            //                <input type="submit" value="Upload Selected File" />
+            //</form >
+            //$('#csv_form').attr('action', "/api/enroll/EnrollStudent/" + selectedBatch);
+            $saveStudentHandler = jQuery.ajax({
+                method: 'post',
+                url: '/API/Enroll/EnrollStudent/' + selectedBatch,
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: data,
+            });
+            $saveStudentHandler.done(function (data, textStatus, jqXHR) {
+                //data.Message;
+                swal({
+                    type: data.AlertType,
+                    title: 'You did it!',
+                    html: data.Messages.join('<br>')
+                });
+            });
+            $saveStudentHandler.fail(function (data, textStatus, jqXHR) {
+                swal({
+                    type: 'error',
+                    title: 'Oops!',
+                    text: data.responseJSON.Message
+                });
+            });
+
+        });
         // Handle click on checkbox
         $('#student_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
             var $row = $(this).closest('tr');

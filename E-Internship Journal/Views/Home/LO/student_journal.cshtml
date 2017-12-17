@@ -14,13 +14,17 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="pull-left">
-                    <label>Student ID:&nbsp</label>P1530247
+                    <label>Student ID:&nbsp</label>
+                    <span id="studentId">
+                        P1530247
+                    </span>
                 </div>
             </div>
             <br />
             <div class="form-group">
                 <div class="pull-left form-inline">
-                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
+                    <label>Student Name:&nbsp</label>
+                    <select class="form-control" id="selectstudent">
                         <option>Amelia Goh</option>
                         <option>Cho Qi Xiang</option>
                         <option>Tan Chia Wei</option>
@@ -39,7 +43,7 @@
                     <div class="card-body">
                         <h2>Daily Tasks</h2>
                         @*<p>View Daily <strong>Tasks</strong></p>*@
-                        <a href="~/Home/Task_History" class="btn btn-primary">View Daily Tasks</a>
+                        <a href="~/Home/Task_History" class="btn btn-primary" onclick="setCookie()">View Daily Tasks</a>
                     </div>
                 </div>
             </div>
@@ -51,7 +55,7 @@
                     <div class="card-body">
                         <h2>Attendance</h2>
                         @*<p>View Daily <strong>Tasks</strong></p>*@
-                        <a href="~/Home/attendance_history" class="btn btn-primary">View Attendance</a>
+                        <a href="~/Home/attendance_history" class="btn btn-primary" onclick="setCookie()">View Attendance</a>
                     </div>
                 </div>
             </div>
@@ -63,7 +67,7 @@
                     <div class="card-body">
                         <h2>Competency</h2>
                         @*<p>View Daily <strong>Tasks</strong></p>*@
-                        <a href="~/Home/competency_history" class="btn btn-primary">Check Competency Checklist</a>
+                        <a href="~/Home/competency_history" class="btn btn-primary" onclick="setCookie()">Check Competency Checklist</a>
                     </div>
                 </div>
             </div>
@@ -75,7 +79,7 @@
                     <div class="card-body">
                         <h2>Reflection</h2>
                         @*<p>View Daily <strong>Tasks</strong></p>*@
-                        <a href="~/Home/reflection_history" class="btn btn-primary">View Monthly Reflection</a>
+                        <a href="~/Home/reflection_history" class="btn btn-primary" onclick="setCookie()">View Monthly Reflection</a>
                     </div>
                 </div>
             </div>
@@ -87,7 +91,7 @@
                     <div class="card-body">
                         <h2>Mentoring</h2>
                         @*<p>View Daily <strong>Tasks</strong></p>*@
-                        <a href="~/Home/mentoring_history" class="btn btn-primary">Mentoring History</a>
+                        <a href="~/Home/mentoring_history" class="btn btn-primary" onclick="setCookie()">Mentoring History</a>
                     </div>
                 </div>
             </div>
@@ -99,7 +103,7 @@
                     <div class="card-body">
                         <h2>Company</h2>
                         @*<p>View Daily <strong>Tasks</strong></p>*@
-                        <a href="~/Home/company_checklist" class="btn btn-primary">Check Company Checklist</a>
+                        <a href="~/Home/company_checklist" class="btn btn-primary" onclick="setCookie()">Check Company Checklist</a>
                     </div>
                 </div>
             </div>
@@ -111,7 +115,7 @@
                     <div class="card-body">
                         <h2>Grading</h2>
                         @*<p>View Daily <strong>Tasks</strong></p>*@
-                        <a href="~/Home/grading" class="btn btn-primary">Grading</a>
+                        <a href="~/Home/grading" class="btn btn-primary" onclick="setCookie()">Grading</a>
                     </div>
                 </div>
             </div>
@@ -123,7 +127,7 @@
                     <div class="card-body">
                         <h2>Touch point</h2>
                         @*<p>View Daily <strong>Tasks</strong></p>*@
-                        <a href="~/Home/touchpoint" class="btn btn-primary">Manage Touch Point</a>
+                        <a href="~/Home/touchpoint" class="btn btn-primary" onclick="setCookie()">Manage Touch Point</a>
                     </div>
                 </div>
             </div>
@@ -135,7 +139,7 @@
                     <div class="card-body">
                         <h2>Survey</h2>
                         @*<p>View Daily <strong>Tasks</strong></p>*@
-                        <a href="~/Home/internship_survey" class="btn btn-primary">Internship Survey</a>
+                        <a href="~/Home/internship_survey" class="btn btn-primary" onclick="setCookie()">Internship Survey</a>
                     </div>
                 </div>
             </div>
@@ -156,4 +160,61 @@
 <!-- /.container-fluid -->
 <!-- /.content-wrapper -->
 <script>
+    $(document).ready(function () {
+
+
+        var cookies = document.cookie.split("; ");
+
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var eqPos = cookie.indexOf("=");
+            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            //console.dir(getCookie(name));
+            var cookievalue = getCookie(name);
+
+            if (name != "selectedStudent") {
+                $studentInputElement = $('#selectstudent');
+                $optionElement = $('<option>').text(name).attr('value', cookievalue);
+                $studentInputElement.append($optionElement);
+
+            } else {
+                $('#selectstudent').val(cookievalue);
+                $('#studentId').text(cookievalue);
+
+            }
+
+        }
+        $('#selectstudent').on('change', function (e) {
+            console.dir('test');
+            $('#studentId').text($(this).val());
+        });
+
+    });
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+    function setCookie() {
+        var inName = "selectedStudent";
+        var inValue = $('#selectstudent').val();
+        //setCookie("selectedStudent", ("#selectstudent").val());
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };
 </script>

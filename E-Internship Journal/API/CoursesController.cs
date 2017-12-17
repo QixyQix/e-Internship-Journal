@@ -65,22 +65,30 @@ namespace E_Internship_Journal.API
 
         // GET: api/Courses/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCourse([FromRoute] int id)
+        public IActionResult GetCourse(int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var oneCourse = _context.Courses
-          .SingleOrDefaultAsync(item => item.CourseId == id);
+            //  var oneCourse = _context.Courses
+            //.SingleOrDefaultAsync(item => item.CourseId == id);
             // var course = await _context.Courses.SingleOrDefaultAsync(m => m.CourseId == id);
+            var oneCourse = _context.Courses.Where(item => item.CourseId == id).SingleOrDefault();
+
+            var response = new
+            {
+                oneCourse.CourseId,
+                oneCourse.CourseName,
+                oneCourse.CourseCode
+            };
 
             if (oneCourse == null)
             {
                 return NotFound();
             }
 
-            return Ok(oneCourse);
+            return new JsonResult(response);
         }
 
         [HttpPut("UpdateOneCourse/{id}")]
@@ -119,7 +127,7 @@ namespace E_Internship_Journal.API
             return NoContent();
         }
         // POST: api/Courses
-        [HttpPost]
+        [HttpPost("SaveNewCourseInformation")]
         //public async Task<IActionResult> SaveNewCourseInformation([FromBody] Course course)
         public async Task<IActionResult> SaveNewCourseInformation([FromBody] string value)
         {
@@ -143,7 +151,9 @@ namespace E_Internship_Journal.API
             }
             catch (Exception exceptionObject)
             {
-                customMessage = "Unable to save to database";
+                object httpFailRequestResultMessage = new { Message = exceptionObject };
+                //Return a bad http response message to the client
+                return BadRequest(httpFailRequestResultMessage);
             }
             var successRequestResultMessage = new
             {
@@ -302,7 +312,7 @@ new OkObjectResult(successRequestResultMessage);
         }
 
         // DELETE: api/Courses/5
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteCourse/{id}")]
         public async Task<IActionResult> DeleteCourse([FromRoute] int id)
         {
             if (!ModelState.IsValid)

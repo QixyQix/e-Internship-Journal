@@ -599,7 +599,7 @@ namespace E_Internship_Journal.Data
 
             modelBuilder.Entity<Day_Record>()
             .Property(day_Records => day_Records.Remarks)
-            .HasColumnName("Remakrs")
+            .HasColumnName("Remarks")
             .HasColumnType("VARCHAR(MAX)")
             .HasDefaultValue("")
             .IsRequired(true);
@@ -670,7 +670,12 @@ namespace E_Internship_Journal.Data
             .UseSqlServerIdentityColumn()
             .ValueGeneratedOnAdd()
             .IsRequired();
-
+            modelBuilder.Entity<Task_Record>()
+            .Property(task_Records => task_Records.Remarks)
+            .HasColumnName("Remarks")
+            .HasColumnType("VARCHAR(MAX)")
+            .HasDefaultValue("")
+            .IsRequired(true);
 
             modelBuilder.Entity<Task_Record>()
             .Property(task_Records => task_Records.Description)

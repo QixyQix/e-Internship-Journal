@@ -11,6 +11,7 @@ namespace E_Internship_Journal.Models
         public string Description { get; set; }
         public DateTime Date { get; set; }
         public int WeekNo { get; set; }
+        public string Remarks { get; set; }
 
         public Month_Record MonthRecord { get; set; }
         public int MonthRecordId { get; set; }

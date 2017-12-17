@@ -278,7 +278,7 @@ namespace E_Internship_Journal.Migrations
                     b.Property<string>("Remarks")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
-                        .HasColumnName("Remakrs")
+                        .HasColumnName("Remarks")
                         .HasColumnType("VARCHAR(MAX)")
                         .HasDefaultValue("");
 
@@ -592,6 +592,13 @@ namespace E_Internship_Journal.Migrations
                     b.Property<int>("MonthRecordId")
                         .HasColumnName("MonthRecordId")
                         .HasColumnType("int");
+
+                    b.Property<string>("Remarks")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("Remarks")
+                        .HasColumnType("VARCHAR(MAX)")
+                        .HasDefaultValue("");
 
                     b.Property<int>("WeekNo");
 

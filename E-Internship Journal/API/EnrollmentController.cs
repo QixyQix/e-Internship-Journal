@@ -31,12 +31,12 @@ namespace E_Internship_Journal.Controllers
         //POST: Enroll student into batch
         [HttpPost("EnrollStudent/{id}")]
         //[Authorize(Roles = "SLO")]
-        public async Task<IActionResult> EnrollStudent(int id, List<IFormFile> files)
+        public async Task<IActionResult> EnrollStudent(int id)
         {
 
             List<string> messageList = new List<string>();
             string alertType = "success";
-
+            var files = Request.Form.Files;
             //Get the batch & course
             var thisBatch = _context.Batches
                 .Where(batch => batch.BatchId == id)
@@ -93,7 +93,8 @@ namespace E_Internship_Journal.Controllers
                                     };
                                     _context.UserBatches.Add(newUserBatch);
                                 }
-                                else {
+                                else
+                                {
                                     messageList.Add(user.FullName + " is already enrolled in this batch.");
                                     alertType = "warning";
                                 }
@@ -131,7 +132,8 @@ namespace E_Internship_Journal.Controllers
                                 do
                                 {
                                     var registationPin = generateRandomString(50);
-                                    if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin))) {
+                                    if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
+                                    {
                                         //Create new registration pin
                                         var newRegistrationPin = new RegistrationPin
                                         {
@@ -181,7 +183,8 @@ namespace E_Internship_Journal.Controllers
 
         [HttpPut("MassAssignStudent/{id}")]
         [Authorize(Roles = "SLO")]
-        public async Task<IActionResult> MassAssignStudent(int id, [FromBody] string value) {
+        public async Task<IActionResult> MassAssignStudent(int id, [FromBody] string value)
+        {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -191,13 +194,15 @@ namespace E_Internship_Journal.Controllers
 
             var studentProjects = assignmentInput.studentProjects;
 
-            foreach (var pairing in studentProjects) {
+            foreach (var pairing in studentProjects)
+            {
 
                 string studentUserId = pairing.studentId.Value.ToString().Trim();
                 var projectIdInput = pairing.projectId.Value;
                 int projectId = 0;
 
-                if (string.IsNullOrEmpty(studentUserId) || !Int32.TryParse(projectIdInput, out projectId)) {
+                if (string.IsNullOrEmpty(studentUserId) || !Int32.TryParse(projectIdInput, out projectId))
+                {
                     return BadRequest();
                 }
 
@@ -206,7 +211,8 @@ namespace E_Internship_Journal.Controllers
                 //Find the project
                 var project = _context.Projects.Find(projectId);
 
-                if (userBatch == null || project == null) {
+                if (userBatch == null || project == null)
+                {
                     return BadRequest();
                 }
 

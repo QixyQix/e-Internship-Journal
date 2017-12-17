@@ -48,29 +48,50 @@ namespace E_Internship_Journal.API
             .AsNoTracking();
             foreach (var oneProject in projects)
             {
+                //var eachUser = _context.ApplicationUsers
+                //    .Where(userItem => userItem.Id == oneProject.SupervisorId);
+
                 //   List<int> categoryIdList = new List<int>();
                 projectList.Add(new
                 {
                     oneProject.ProjectId,
                     oneProject.ProjectName,
-                    oneProject.Supervisor.Email,
-                    oneProject.Company.CompanyName,
-                    oneProject.Company.CompanyAddress
+                    oneProject.Supervisor.FullName,
+                    oneProject.Company.CompanyName
                 });
             }
 
+
             return new JsonResult(projectList);
         }
+        [HttpGet("GetSupervisorCompany")]
+        public async Task<IActionResult> GetSupervisorCompany()
+        {
+            var company = _context.Companies.AsNoTracking();
+            var usersList = new List<Object>();
+            //var user = new Object();
+            foreach (ApplicationUser eachUser in _userManager.Users)
+            {
+                var roles = (await _userManager.GetRolesAsync(eachUser));
+                if (roles.Contains("SUPERVISOR"))
+                {
+                    usersList.Add(new
+                    {
+                        Name = eachUser.FullName,
+                        Email = eachUser.Email
 
+                    });//End of Add
+                }// End of If statement
+            }//End of foreach loop
+
+            var companyList = _context.Companies.Select(companyItem => new { CompanyId = companyItem.CompanyId, CompanyName = companyItem.CompanyName });
+
+            return new JsonResult(new { UserList = usersList, CompanyList = companyList });
+        }
         // GET: api/Projects/5
         [HttpGet("{id}")]
-        public IActionResult GetProject([FromRoute] int id)
+        public IActionResult GetProject(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (ProjectExists(id))
             {
                 try
@@ -81,11 +102,10 @@ namespace E_Internship_Journal.API
                     .Include(eacbProjectEntity => eacbProjectEntity.Company).Single();
                     var response = new
                     {
-                        ProjectId = foundProject.ProjectId,
                         ProjectName = foundProject.ProjectName,
+                        CompanyId = foundProject.Company.CompanyId,
                         CompanyName = foundProject.Company.CompanyName,
-                        CompanyAddress = foundProject.Company.CompanyAddress,
-                        FullName = foundProject.Supervisor.FullName
+                        Email = foundProject.Supervisor.Email
                     };//end of creation of the response object
                     return new JsonResult(response);
                 }
@@ -127,9 +147,8 @@ namespace E_Internship_Journal.API
                 var foundOneProject = _context.Projects.Find(id);
 
                 foundOneProject.ProjectName = projectNewInput.ProjectName.Value;
-                foundOneProject.CompanyID = projectNewInput.CompanyID.Value;
-                foundOneProject.SupervisorId = (await _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail.Value)).Id;
-                _context.Projects.Update(foundOneProject);
+                foundOneProject.CompanyID = Convert.ToInt32(projectNewInput.Company.Value);
+                foundOneProject.SupervisorId = (await _userManager.FindByEmailAsync(projectNewInput.Supervisor.Value)).Id;
                 await _context.SaveChangesAsync();
             }
             else
@@ -171,8 +190,8 @@ namespace E_Internship_Journal.API
                 Project newProject = new Project
                 {
                     ProjectName = projectNewInput.ProjectName.Value,
-                    CompanyID = projectNewInput.CompanyID.Value,
-                    SupervisorId = (await _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail.Value)).Id
+                    CompanyID = Convert.ToInt32(projectNewInput.Company.Value),
+                    SupervisorId = (await _userManager.FindByEmailAsync(projectNewInput.Supervisor.Value)).Id
                 };
                 // newProject.SupervisorId = _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail);
                 //var ttt = _userManager.GetUserId(_userManager.FindByEmailAsync(projectNewInput.SupervisorEmail));

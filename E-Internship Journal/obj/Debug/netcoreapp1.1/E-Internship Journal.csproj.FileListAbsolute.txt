@@ -55,3 +55,5 @@ D:\Downloads\Programs\Year 3\FYP\e-Internship-Journal\E-Internship Journal\bin\D
 D:\Downloads\Programs\Year 3\FYP\e-Internship-Journal\E-Internship Journal\bin\Debug\netcoreapp1.1\E-Internship Journal.pdb
 E:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\UserSecretsAssemblyInfo.cs
 E:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.csprojResolveAssemblyReference.cache
+E:\E-Internship Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.AssemblyInfoInputs.cache
+E:\e-Internship-Journal\E-Internship Journal\obj\Debug\netcoreapp1.1\E-Internship Journal.AssemblyInfoInputs.cache

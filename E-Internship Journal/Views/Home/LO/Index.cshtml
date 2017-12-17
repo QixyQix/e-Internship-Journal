@@ -105,39 +105,98 @@
         var table = $('#dataTable').DataTable({
             dom: 't',
             ajax: {
-                url: '/Api/Task_Record',
+                url: '/Api/Internship_Record/Lo_GetStudentInternship_Record',
                 dataSrc: ''
             },
             columns: [
-                { data: "DayRecordId" },
-                { data: "Description" },
                 {
-                    data: null,
+                    data: "StudentId",
+                    className: "StudentId"
+                },
+                {
+                    data: "StudentName",
+                    className: "StudentName"
+                },
+                {
+                    data: "StudentId",
                     "bSortable": false,
-                    "mRender": function (o) { return '<a href="/home/Student_Info" style="color:black;"><i class="fa fa-fw fa-info""></i></a>' } 
+                    "mRender": function (o) {
+                        return '<a href="/home/Student_Info" style="color:black;" id="studentInfo" value="' + o + '" onClick="studentInfo($(this))"><i class="fa fa-fw fa-info"></i></a>'
+                    }
+                },
+                {
+                    data: "StudentJournal",
+                    "bSortable": false,
+                    "mRender": function (data, type, dataToSet) {
+                        return '<a href="/home/student_journal" style="color:black;" id="studentJournal" value="' + data + '" onClick="studentJournal(\'' + dataToSet.StudentName + '\' , \'' + dataToSet.StudentId + '\')"><i class="fa fa-fw fa-file"></i></a>'
+                    }
                 },
                 {
                     data: null,
                     "bSortable": false,
-                    "mRender": function (o) { return '<a href="/home/student_journal" style="color:black;"><i class="fa fa-fw fa-file"></i></a>' } 
+                    "mRender": function (o) { return '<a href="/home/review" style="color:black;"><i class="fa fa-fw fa-exclamation-circle"></i></a>' }
                 },
                 {
                     data: null,
                     "bSortable": false,
-                    "mRender": function (o) { return '<a href="/home/review" style="color:black;"><i class="fa fa-fw fa-exclamation-circle"></i></a>' } 
-                },
-                {
-                    data: null,
-                    "bSortable": false,
-                    "mRender": function (o) { return '<a href="/home/final_grading" style="color:black;"><i class="fa fa-fw fa-graduation-cap"></i></a>' } 
+                    "mRender": function (o) { return '<a href="/home/final_grading" style="color:black;"><i class="fa fa-fw fa-graduation-cap"></i></a>' }
                 }
             ],
             language: {
-                emptyTable: "No Attendance was found, please create one.",
+                emptyTable: "No Student Journal was found, please try again by relogin.",
             }
         });
         $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
             $('#commentModal').modal('show');
         });
     });
+    function studentInfo(inValue) {
+        var studentValue = inValue.attr('value');
+        removeCookie();
+        setCookie("StudentInfo" , studentValue);
+    };
+    function studentJournal(inName , inId) {
+        removeCookie();
+        $.each($('table tbody tr td.StudentId'), function (index) {
+            //console.dir($(this).text());
+            //console.dir($(this).closest('td').next('td').text());
+            setCookie($(this).closest('td').next('td').text(), $(this).text());
+            //setCookie($('table tbody tr td.StudentName').text
+            //console.dir($(this).closest('td').next('td').next('td').next('td').next('a').attr('value'));
+            //localStorage.setItem($(this).closest('td').next('td').text(), $(this).closest('td').next('td').next('td').val());
+        });
+        $.each($('table tbody tr td #studentJournal'), function (index) {
+            //console.dir($(this).attr('value'));
+            //console.dir($(this).text());
+            //console.dir($(this).closest('td').prev('td').prev('td').text());
+            //console.dir($(this).closest('td').next('td').text());
+            //setCookie($(this).closest('td').next('td').text(), $(this).text());
+            //setCookie($('table tbody tr td.StudentName').text
+            //console.dir($(this).closest('td').next('td').next('td').next('td').next('a').attr('value'));
+            sessionStorage.setItem($(this).closest('td').prev('td').prev('td').prev('td').text(), $(this).attr('value'));
+        });
+        //$.each($('table tbody tr td.StudentName'), function (index) {
+        //    console.dir($(this).text());
+           
+        //});
+        setCookie("selectedStudent", inId);
+
+    };
+    function removeCookie() {
+        var cookies = document.cookie.split("; ");
+
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var eqPos = cookie.indexOf("=");
+            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            document.cookie = name + "=;path=/" + ";expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
+    }
+    function setCookie(inName, inValue) {
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };
 </script>

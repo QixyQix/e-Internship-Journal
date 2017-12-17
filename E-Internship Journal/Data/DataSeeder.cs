@@ -64,6 +64,12 @@ namespace E_Internship_Journal.Data
             studentUser.PasswordHash = ph.HashPassword(studentUser, "P@ssw0rd"); //More complex password
             await userManager.CreateAsync(studentUser);
             await userManager.AddToRoleAsync(studentUser, "STUDENT");
+
+            var studentUser2 = new ApplicationUser { UserName = "TestStudent@TEST.COM", FullName = "For Testing", Email = "TestStudent@TEST.COM", /*Course=courseObject,*/ IsEnabled = true };
+            ph = new PasswordHasher<ApplicationUser>();
+            studentUser2.PasswordHash = ph.HashPassword(studentUser2, "P@ssw0rd"); //More complex password
+            await userManager.CreateAsync(studentUser2);
+            await userManager.AddToRoleAsync(studentUser2, "STUDENT");
             //Supervisor
             var supervisorUser = new ApplicationUser { UserName = "SUPERVISOR@TEST.COM", FullName = "Santhosh Kumar", Email = "SUPERVISOR@TEST.COM", IsEnabled = true };
             ph = new PasswordHasher<ApplicationUser>();
@@ -87,7 +93,7 @@ namespace E_Internship_Journal.Data
 
             //Create Batch
             var batchObject = new Batch { BatchName = "AY1718S2", Description = "Academic Yeat 2017-2018 Semester 2",
-                StartDate = DateTime.ParseExact("30/10/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                StartDate = DateTime.ParseExact("30/08/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture),
                 EndDate = DateTime.ParseExact("30/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture),
                 Course = courseObject
             };
@@ -109,8 +115,14 @@ namespace E_Internship_Journal.Data
             var userBatchObject = new UserBatch { Batch = batchObject, User = studentUser };
             db.UserBatches.Add(userBatchObject);
 
+            db.SaveChanges();
             var userSLOUserBatchObject = new UserBatch { Batch = batchObject, User = SLOUser };
-            db.UserBatches.Add(userBatchObject);
+            db.UserBatches.Add(userSLOUserBatchObject);
+
+            db.SaveChanges();
+
+            var userBatchObject2 = new UserBatch { Batch = batchObject, User = studentUser2 };
+            db.UserBatches.Add(userBatchObject2);
 
             db.SaveChanges();
 
@@ -123,12 +135,29 @@ namespace E_Internship_Journal.Data
             db.Month_Records.Add(monthObject);
             db.SaveChanges();
 
-            var dayObject = new Day_Record { Month = monthObject, Date = DateTime.ParseExact("05/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), ArrivalTime = DateTime.Parse("9:00:00 AM"), DepartureTime = DateTime.Parse("9:00:00 AM"), WeekNo = 1, IsPresent = true };
+            var dayObject = new Day_Record { Month = monthObject, Date = DateTime.ParseExact("30/08/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), ArrivalTime = DateTime.Parse("9:00:00 AM"), DepartureTime = DateTime.Parse("9:00:00 AM"), WeekNo = 1, IsPresent = true };
             db.Day_Records.Add(dayObject);
             db.SaveChanges();
 
-            var taskObject = new Task_Record { MonthRecord = monthObject ,Date = DateTime.ParseExact("05/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "I love slacking all day" };
+            var taskObject = new Task_Record { MonthRecord = monthObject ,Date = DateTime.ParseExact("31/08/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "I enjoy working", WeekNo = 1 };
             db.Tasks.Add(taskObject);
+            db.SaveChanges();
+
+            //Create Internship Journal 2
+            var internshipObject2 = new Internship_Record { UserBatch = userBatchObject2, Project = projectObject, LiaisonOfficer = LOUser };
+            db.Internship_Records.Add(internshipObject2);
+            db.SaveChanges();
+
+            var monthObject2 = new Month_Record { InternshipRecordId = internshipObject.InternshipRecordId };
+            db.Month_Records.Add(monthObject2);
+            db.SaveChanges();
+
+            var dayObject2 = new Day_Record { Month = monthObject, Date = DateTime.ParseExact("25/09/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), ArrivalTime = DateTime.Parse("9:00:00 AM"), DepartureTime = DateTime.Parse("9:00:00 AM"), WeekNo = 5, IsPresent = true };
+            db.Day_Records.Add(dayObject2);
+            db.SaveChanges();
+
+            var taskObject2 = new Task_Record { MonthRecord = monthObject, Date = DateTime.ParseExact("25/09/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "It is a great day to eat out", WeekNo = 5 };
+            db.Tasks.Add(taskObject2);
             db.SaveChanges();
         }
     }

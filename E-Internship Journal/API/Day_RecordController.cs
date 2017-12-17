@@ -66,7 +66,8 @@ namespace E_Internship_Journal.API
 
         //GET: api/Day_Record/id
         [HttpGet("{id}")]
-        public IActionResult GetDay_Record(int id) {
+        public IActionResult GetDay_Record(int id)
+        {
             Day_Record dayRecord = _context.Day_Records.Find(id);
 
             if (dayRecord != null)
@@ -83,11 +84,12 @@ namespace E_Internship_Journal.API
                 };
                 return new JsonResult(dayResultObj);
             }
-            else {
+            else
+            {
                 return NotFound(new { Message = "Day record not found" });
             }
         }
-        
+
         //// GET: api/Day_Record/09-11-2017
         //[HttpGet("{date}")]
         //public IActionResult GetDay_Record(string date)
@@ -216,9 +218,9 @@ namespace E_Internship_Journal.API
                 //Check if the internship record belongs to the user
                 if (!(internshipRecord.UserBatch.UserId.Equals(_userManager.GetUserId(User))))
                 {
-                    return BadRequest(new { Message = "Internship record does not belong to you"});
+                    return BadRequest(new { Message = "Internship record does not belong to you" });
                 }
-                
+
                 DateTime date = DateTime.Parse(day_RecordNewInput.Date.Value, CultureInfo.InvariantCulture);
                 DateTime startDate = internshipRecord.UserBatch.Batch.StartDate;
                 var noDaysFromStartDate = (date - startDate).Days;
@@ -234,7 +236,7 @@ namespace E_Internship_Journal.API
                         {
                             if (aDayRecord.Date.Equals(date) && !aDayRecord.DayId.ToString().Equals(day_RecordNewInput.Id.Value.ToString()))
                             {
-                                return BadRequest(new { Message = "Day record for "+ date.ToString() +" already exists!"});
+                                return BadRequest(new { Message = "Day record for " + date.ToString() + " already exists!" });
                             }
                         }
 
@@ -243,12 +245,13 @@ namespace E_Internship_Journal.API
                 //Calculate the weekno
                 int weekNo = (Int32.Parse(date.Subtract(startDate).Days.ToString()) / 7) + 1;
                 //Calculate month number
-                var monthNo = Int32.Parse((weekNo/4).ToString());
+                var monthNo = Int32.Parse((weekNo / 4).ToString());
 
                 if (monthNo < internshipRecord.MonthRecords.Count)//If month number is less than the count (meaning it exists) 
                 {
                     monthRecord = internshipRecord.MonthRecords[monthNo];
-                    if (monthRecord.Approved == true) {
+                    if (monthRecord.Approved == true)
+                    {
                         return BadRequest(new { Message = "This month's records have already been approved and cannot be edited" });
                     }
                 }
@@ -280,7 +283,8 @@ namespace E_Internship_Journal.API
                     };
                     _context.Day_Records.Add(dayRecord);
                 }
-                else {//Get the day record
+                else
+                {//Get the day record
                     int dayId = Int32.Parse(day_RecordNewInput.Id.Value);
                     dayRecord = _context.Day_Records
                         .Include(dr => dr.Month)
@@ -289,7 +293,8 @@ namespace E_Internship_Journal.API
                         .Where(dr => dr.DayId == dayId)
                         .Single();
 
-                    if (!dayRecord.Month.InternshipRecord.UserBatch.UserId.Equals(_userManager.GetUserId(User))) {
+                    if (!dayRecord.Month.InternshipRecord.UserBatch.UserId.Equals(_userManager.GetUserId(User)))
+                    {
                         return BadRequest(new { Message = "Day record does not belong to you" });
                     }
 
@@ -297,16 +302,17 @@ namespace E_Internship_Journal.API
                     dayRecord.WeekNo = weekNo;
                     dayRecord.Month = monthRecord;
                 }
-                
+
 
                 if (remarks.Equals(""))
                 {
                     try
                     {
-                        timeIn = DateTime.ParseExact(arrivalTimeStr, "dd/MM/yyyy H:m:s", CultureInfo.InvariantCulture);
-                        timeOut = DateTime.ParseExact(departTimeStr, "dd/MM/yyyy H:m:s", CultureInfo.InvariantCulture);
+                        timeIn = DateTime.ParseExact(arrivalTimeStr, "d/M/yyyy H:m:s", CultureInfo.InvariantCulture);
+                        timeOut = DateTime.ParseExact(departTimeStr, "d/M/yyyy H:m:s", CultureInfo.InvariantCulture);
                     }
-                    catch (Exception e) {
+                    catch (Exception e)
+                    {
                         return BadRequest(new { Message = "Incorrect timing" });
                     }
                     dayRecord.ArrivalTime = timeIn;
@@ -314,7 +320,8 @@ namespace E_Internship_Journal.API
                     dayRecord.IsPresent = true;
                     dayRecord.Remarks = "";
                 }
-                else {
+                else
+                {
                     dayRecord.ArrivalTime = null;
                     dayRecord.DepartureTime = null;
                     dayRecord.IsPresent = false;
@@ -322,7 +329,8 @@ namespace E_Internship_Journal.API
                     {
                         dayRecord.Remarks = day_RecordNewInput.Specify.Value;
                     }
-                    else {
+                    else
+                    {
                         dayRecord.Remarks = remarks;
                     }
                 }

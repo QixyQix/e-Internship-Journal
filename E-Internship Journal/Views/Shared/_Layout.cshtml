@@ -290,7 +290,7 @@
                     <div class="container">
                         <form>
                             <div class="form-group">
-                                <label class="control-label" for="studentID">Student ID:</label>                                                              
+                                <label class="control-label" for="studentID">Student ID:</label>
                                 <div class="col-sm-6">
                                     <input class="form-control" id="studentID" type="text" value="">
                                 </div>
@@ -311,9 +311,9 @@
                                         <option>WIS</option>
                                     </select>
                                 </div>
-                            </div> 
+                            </div>
                             <div class="form-group">
-                                <label class="control-label" for="liaisonOfficer">Liaison Officer:</label>                                                              
+                                <label class="control-label" for="liaisonOfficer">Liaison Officer:</label>
                                 <div class="col-sm-6">
                                     <select class="form-control" id="liaisonOfficer">
                                         <option>Mr Vincent Goh</option>
@@ -347,16 +347,18 @@
                 <div class="modal-body">
 
                     <div class="container">
-                        <form>
+                        <form id="csv_form" method="post" enctype="multipart/form-data">
                             <div class="form-group">
-                                <input class="form-control" id="csv_upload" type="file">
+                                <input class="form-control" id="csv_upload" name="files" type="file">
+                                
                             </div>
+
                         </form>
+                        <div class="modal-footer">
+                            <input type="submit" class="btn btn-secondary" value="Submit" id="submitcsv" />
+                            <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+                        </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="submitcsv">Submit</button>
-                    <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
                 </div>
             </div>
         </div>

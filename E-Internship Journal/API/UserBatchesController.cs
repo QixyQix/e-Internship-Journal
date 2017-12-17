@@ -23,7 +23,7 @@ namespace E_Internship_Journal.API
         public UserBatchesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager)
         {
-             _userManager = userManager;
+            _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
         }
@@ -33,7 +33,7 @@ namespace E_Internship_Journal.API
         [AllowAnonymous]
         public IActionResult GetUserBatches()
         {
-              List<object> userBatchList = new List<object>();
+            List<object> userBatchList = new List<object>();
             var userBatches = _context.UserBatches
             .Include(eachUserBatchEntity => eachUserBatchEntity.User)
             .Include(eacbProjectEntity => eacbProjectEntity.Batch)
@@ -52,8 +52,8 @@ namespace E_Internship_Journal.API
                     oneUserBatch.Batch.EndDate,
                     CourseName,
                     //_context.Courses.Select(roleItem => new { CourseName = roleItem.CourseName }) },
-                oneUserBatch.User.FullName,
-                     oneUserBatch.User.Email
+                    oneUserBatch.User.FullName,
+                    oneUserBatch.User.Email
                 });
             }
 
@@ -116,7 +116,7 @@ namespace E_Internship_Journal.API
                 return BadRequest(ModelState);
             }
             string customMessage = "";
-           
+
             try
             {
 
