@@ -64,6 +64,40 @@ namespace E_Internship_Journal.API
             return new JsonResult(Day_Records_List);
         }
 
+        // GET: api/Day_Record
+        [Authorize(Roles = "LO")]
+        [HttpGet("getStudentDayRecords/{id}")]
+        public IActionResult LO_GetDay_Records(int id)
+        {
+            List<object> Day_Records_List = new List<object>();
+            var dayRecords = _context.Day_Records.Include(tr => tr.Month)
+                .ThenInclude(tr => tr.InternshipRecord)
+                .Where(tr => tr.Month.InternshipRecord.InternshipRecordId == id)
+                .ToList();
+            var internshipRecords = _context.Internship_Records.Include(ub => ub.UserBatch)
+                .ThenInclude(b => b.Batch)
+                .Where(tr => tr.InternshipRecordId == id).SingleOrDefault();
+            var startBatch = internshipRecords.UserBatch.Batch.StartDate;
+            var endBatch = internshipRecords.UserBatch.Batch.EndDate;
+            //To be continued
+            var totalDays = BusinessDaysUntil(startBatch, endBatch);
+            foreach (var dayRecord in dayRecords)
+            {
+                Day_Records_List.Add(new
+                {
+                    dayRecord.DayId,
+                    dayRecord.Date,
+                    dayRecord.ArrivalTime,
+                    dayRecord.DepartureTime,
+                    dayRecord.WeekNo,
+                    dayRecord.Remarks,
+                    dayRecord.MonthRecordId
+                });
+            }
+
+            return new JsonResult(Day_Records_List);
+        }
+
         //GET: api/Day_Record/id
         [HttpGet("{id}")]
         public IActionResult GetDay_Record(int id)
@@ -388,6 +422,52 @@ namespace E_Internship_Journal.API
                 .Single();
 
             return dayRecord;
+        }
+        private int BusinessDaysUntil(DateTime firstDay, DateTime lastDay, params DateTime[] bankHolidays)
+        {
+            //REFERENCE FROM https://stackoverflow.com/questions/1617049/calculate-the-number-of-business-days-between-two-dates
+            firstDay = firstDay.Date;
+            lastDay = lastDay.Date;
+            if (firstDay > lastDay)
+                throw new ArgumentException("Incorrect last day " + lastDay);
+
+            TimeSpan span = lastDay - firstDay;
+            int businessDays = span.Days + 1;
+            int fullWeekCount = businessDays / 7;
+            // find out if there are weekends during the time exceedng the full weeks
+            if (businessDays > fullWeekCount * 7)
+            {
+                // we are here to find out if there is a 1-day or 2-days weekend
+                // in the time interval remaining after subtracting the complete weeks
+                //int firstDayOfWeek = (int)firstDay.DayOfWeek;
+                //int lastDayOfWeek = (int)lastDay.DayOfWeek;
+                int firstDayOfWeek = firstDay.DayOfWeek == DayOfWeek.Sunday ? 7 : (int)firstDay.DayOfWeek;
+                int lastDayOfWeek = lastDay.DayOfWeek == DayOfWeek.Sunday ? 7 : (int)lastDay.DayOfWeek;
+                if (lastDayOfWeek < firstDayOfWeek)
+                    lastDayOfWeek += 7;
+                if (firstDayOfWeek <= 6)
+                {
+                    if (lastDayOfWeek >= 7)// Both Saturday and Sunday are in the remaining time interval
+                        businessDays -= 2;
+                    else if (lastDayOfWeek >= 6)// Only Saturday is in the remaining time interval
+                        businessDays -= 1;
+                }
+                else if (firstDayOfWeek <= 7 && lastDayOfWeek >= 7)// Only Sunday is in the remaining time interval
+                    businessDays -= 1;
+            }
+
+            // subtract the weekends during the full weeks in the interval
+            businessDays -= fullWeekCount + fullWeekCount;
+
+            // subtract the number of bank holidays during the time interval
+            //foreach (DateTime bankHoliday in bankHolidays)
+            //{
+            //    DateTime bh = bankHoliday.Date;
+            //    if (firstDay <= bh && bh <= lastDay)
+            //        --businessDays;
+            //}
+
+            return businessDays;
         }
     }
 }

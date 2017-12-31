@@ -13,10 +13,9 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="pull-left">
-                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
-                        <option>Amelia Goh</option>
-                        <option>Cho Qi Xiang</option>
-                        <option>Tan Chia Wei</option>
+                    <label>Student Name:&nbsp</label>
+                    <select class="form-control" id="selectstudent">
+
                     </select>
                 </div>
             </div>
@@ -185,81 +184,31 @@
         </div>
     </div>
 </div>
-@*<script>
-        $(document).ready(function () {
-
-            var editor = new $.fn.dataTable.Editor(table);
-
-            //var t = $('#dataTable').DataTable();
-            var counter = 1;
-
-            var table = $('#dataTable').DataTable({
-                ajax: {
-                    url: '/Api/Task_Record',
-                    dataSrc: ''
-                },
-                "bPaginate": false,
-                "bLengthChange": false,
-                "bFilter": false,
-                "bSort": false,
-                "bInfo": false,
-                "bAutoWidth": false,
-                "asStripClasses": null,
-                //--disable the sorting--
-                dom: 'lrt',
-                "aoColumns": [
-                    { "mData": "DayRecordId", "sWidth": "10%" },
-                    { "mData": "Description", "sTitle": "Description", "sWidth": "80%" },
-                    {
-                        "mData": null,
-                        "bSortable": false,
-                        "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button>' }
-                    }
-                ],
-                language: {
-                    emptyTable: "No task was found, please create one.",
-                }
-            });
-            $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
-                console.log("button 1 is click");
-            });
-        });
-    </script>*@
 <script>
     var editor;
     $(document).ready(function () {
-        var table = $('#dataTable').DataTable({
-            //"paging": true,
-            //"bPaginate": true,
-            //"bLengthChange": false,
-            //"bFilter": false,
-            //"bSort": false,
-            //"bInfo": true,
-            //"bAutoWidth": false,
-            //"asStripClasses": null,
-            ////--disable the sorting--
-            dom: "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
-            },
-            order: [[1, 'asc']],
-            columns: [
-                { data: "DayRecordId" },
-                { data: "DayRecordId", "sWidth": "10%" },
-                { data: "Description", "sWidth": "60%" },
-                {
-                    data: null,
-                    "sWidth": "10%",
-                    "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
-                }
-            ],
-            language: {
-                emptyTable: "No task was found, please create one.",
+        var cookies = document.cookie.split("; ");
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var eqPos = cookie.indexOf("=");
+            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            //console.dir(getCookie(name));
+            var cookievalue = getCookie(name);
+
+            if (name != "selectedStudent") {
+                $studentInputElement = $('#selectstudent');
+                $optionElement = $('<option>').text(name).attr('value', cookievalue);
+                $studentInputElement.append($optionElement);
+
+            } else {
+                $('#selectstudent').val(cookievalue);
+
             }
-        });
+
+        }
+        g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+        loadDataTable(g_getLocalStorage);
+        
 
         $('#addtp').on('click', function (e) {
             $('#addtpModal').modal('show');
@@ -268,5 +217,67 @@
         $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
             $('#updatetpModal').modal('show');
         });
-    });
+    });//End of Ready function
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }//End of getCookie Function
+    function setCookie() {
+        var inName = "selectedStudent";
+        var inValue = $('#selectstudent').val();
+        //setCookie("selectedStudent", ("#selectstudent").val());
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };//End of setCookie
+    function loadDataTable(inId) {
+        var g_table = $('#dataTable').DataTable({
+            dom: "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+            destroy: true,
+            ajax: {
+                url: '/Api/TouchPoint/getInternshipTouchPointRecords' + inId,
+                dataSrc: ''
+            },
+            order: [[1, 'asc']],
+            columns: [
+                {
+                    data: "Date",
+                    mRender: function (o) { return moment(o).format("DD/MM/YYYY") }
+                }, {
+                    data: "ArrivalTime",
+                    mRender: function (o) { return moment(o).format("H:m A") }
+
+                }, {
+                    data: "DepartureTime",
+                    mRender: function (o) { return moment(o).format("H:m A") }
+
+                }, {
+                    data: "Remarks"
+
+                }, {
+                    "sWidth": "10%",
+                    "bSortable": false,
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
+                }
+            ],
+            language: {
+                emptyTable: "No TouchPoint was found, please create one.",
+            }
+        });//End of DataTable
+    }// End of loadDataTable Function
 </script>

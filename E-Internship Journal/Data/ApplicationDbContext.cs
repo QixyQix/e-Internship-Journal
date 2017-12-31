@@ -27,6 +27,7 @@ namespace E_Internship_Journal.Data
         public DbSet<Day_Record> Day_Records { get; set; }
         public DbSet<Task_Record> Tasks { get; set; }
         public DbSet<RegistrationPin> RegistrationPins { get; set; }
+        public DbSet<TouchPoint_Record> TouchPointRecords { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -466,6 +467,10 @@ namespace E_Internship_Journal.Data
             .HasColumnType("int")
             .UseSqlServerIdentityColumn()
             .ValueGeneratedOnAdd()
+            .IsRequired();
+            modelBuilder.Entity<TouchPoint_Record>()
+            .Property(touchPoint_Records => touchPoint_Records.TouchPointDate)
+            .HasColumnName("TouchPointDate")
             .IsRequired();
             modelBuilder.Entity<TouchPoint_Record>()
             .Property(touchPoint_Records => touchPoint_Records.Comments)

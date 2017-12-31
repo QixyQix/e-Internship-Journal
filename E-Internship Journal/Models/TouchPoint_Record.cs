@@ -8,6 +8,7 @@ namespace E_Internship_Journal.Models
     public class TouchPoint_Record
     {
         public int TouchPointId { get; set; }
+        public DateTime TouchPointDate { get; set; }
         public string Comments { get; set; }
 
         public Internship_Record InternshipRecord { get; set; }

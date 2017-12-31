@@ -21,7 +21,7 @@
                     </select>
                 </div>
                 <div class="col-xs-12 pull-right">
-                    <select class="form-control" id="exampleSelect1">
+                    <select class="form-control" id="selectWeek">
                         <option>Week 1</option>
                         <option>Week 2</option>
                         <option>Week 3</option>
@@ -49,13 +49,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        @*<tr>
                             <td>2011/04/27</td>
                             <td>10:00</td>
                             <td>18:00</td>
                             <td>PH</td>
                             <td></td>
-                        </tr>
+                        </tr>*@
                     </tbody>
                 </table>
             </div>
@@ -102,7 +102,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">No. of working days:</label>
                         <div class="col-sm-10">
-                            <input class="form-control" id="totaldays" type="text" value="-" readonly>
+                            <input class="form-control" id="workingDays" type="text" value="-" readonly>
                         </div>
                     </div>
                 </form>
@@ -146,33 +146,190 @@
     </div>
 </div>
 <script>
+    var g_getLocalStorage;
+    var g_dayData;
     $(document).ready(function () {
-        var table = $('#dataTable').DataTable({
-            dom: "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
-            },
-            columns: [
-                { data: "DayRecordId" },
-                { data: "Description" },
-                { data: "Description" },
-                { data: "Description" },
-                {
-                    data: null,
-                    "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary">View</button>' } //note under condition if no comments was given the column would be blank
-                }
-            ],
-            language: {
-                emptyTable: "No Attendance was found, please create one.",
+        var cookies = document.cookie.split("; ");
+        var dayData;
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var eqPos = cookie.indexOf("=");
+            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            //console.dir(getCookie(name));
+            var cookievalue = getCookie(name);
+
+            if (name != "selectedStudent") {
+                $studentInputElement = $('#selectstudent');
+                $optionElement = $('<option>').text(name).attr('value', cookievalue);
+                $studentInputElement.append($optionElement);
+
+            } else {
+                $('#selectstudent').val(cookievalue);
+
             }
-        });
+
+        }
+        g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+        g_dayData = loadAttendanceData(g_getLocalStorage);
+        //g_taskData.then(function (data) {
+        //    loadDataTable(data);
+        //});
+        loadWeekOption(g_dayData)
+
+
+        //var table = $('#dataTable').DataTable({
+        //    dom: "<'row'<'col-sm-12'tr>>" +
+        //    "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+        //    ajax: {
+        //        url: '/Api/Task_Record',
+        //        dataSrc: ''
+        //    },
+        //    columns: [
+        //        { data: "DayRecordId" },
+        //        { data: "Description" },
+        //        { data: "Description" },
+        //        { data: "Description" },
+        //        {
+        //            data: null,
+        //            "bSortable": false,
+        //            "mRender": function (o) { return '<button class="btn btn-sm btn-primary">View</button>' } //note under condition if no comments was given the column would be blank
+        //        }
+        //    ],
+        //    language: {
+        //        emptyTable: "No Attendance was found, please create one.",
+        //    }
+        //});
 
         // Activate an inline edit on click of a table cell
         $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
             $('#commentModal').modal('show');
         });
-    });
+        $('#selectstudent').on('change', function (e) {
+            //console.dir('test');
+            setCookie();
+            g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+            g_dayData = loadAttendanceData(g_getLocalStorage);
+            loadWeekOption();
+        });
+        $('#selectWeek').on('change', function (e) {
+            //console.dir('testing');
+            g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+            selectedWeek();
+        });
+    });// End document ready function
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }//End of getCookie Function
+    function setCookie() {
+        var inName = "selectedStudent";
+        var inValue = $('#selectstudent').val();
+        //setCookie("selectedStudent", ("#selectstudent").val());
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };
+    function loadAttendanceData(inLocalStorage) {
+        return $.ajax({
+            url: '/Api/Day_Record/getStudentDayRecords/' + inLocalStorage,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+
+            }//End of success
+        });//End of Ajax
+    }//End of function LoadAttendanceData
+    function loadDataTable(data) {
+        var g_table = $('#dataTable').DataTable({
+            dom: "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+            destroy: true,
+            data: data,
+            columns: [
+                {
+                    data: "Date",
+                    mRender: function (o) { return moment(o).format("DD/MM/YYYY") }
+                },{
+                    data: "ArrivalTime",
+                    mRender: function (o) { return moment(o).format("H:m A") }
+                
+                },{
+                    data: "DepartureTime",
+                    mRender: function (o) { return moment(o).format("H:m A") }
+
+                }, {
+                    data: "Remarks"
+
+                }, {
+                    //data: "TaskRecordId",
+                    "bSortable": false,
+                    "mRender": function (data, type, row) {
+                        return '<button class="btn btn-sm btn-primary" value="' + row.TaskRecordId + '">View</button>'
+                    } //note under condition if no remarks was given the column would be blank
+                }
+            ],
+            language: {
+                emptyTable: "No Task was found, please create one.",
+            }
+        });//End of DataTable
+    }// End of loadDataTable Function
+    function loadWeekOption() {
+        var g_WeekNo = [];
+        $("#selectWeek option").remove();
+        g_dayData.then(function (data) {
+            var finalData = [];
+            for (i = 0; i < data.length; i++) {
+                if (g_WeekNo.includes(data[i].WeekNo)) {
+                    //Do nothing
+
+                } else {
+                    g_WeekNo.push(data[i].WeekNo);
+                }
+            };
+            while (g_WeekNo.length) {
+                var obj = {};
+                var tempWeekVal = (g_WeekNo.splice(0, 4)).sort(function (a, b) { return a - b });
+                var tempWeekText = "Week " + tempWeekVal[0] + " to Week " + tempWeekVal[tempWeekVal.length - 1];
+
+                //obj[tempWeekText] = tempWeekVal;
+                //qqq.push(obj);
+                $weekInputElement = $('#selectWeek');
+                $weekOptionElement = $('<option>').text(tempWeekText).attr('value', tempWeekVal);
+                $weekInputElement.append($weekOptionElement);
+
+            }
+            
+        });//End of Then function
+        selectedWeek();
+    }
+    function selectedWeek() {
+        g_dayData.then(function (data) {
+            var finalData = [];
+            var selectedWeek = $('#selectWeek').val().split(',').map(Number);
+            for (i = 0; i < data.length; i++) {
+                if (selectedWeek.includes(data[i].WeekNo)) {
+                    finalData.push(data[i]);
+
+                }
+            }//End of for loop
+            loadDataTable(finalData);
+        })
+    }
+
 </script>
