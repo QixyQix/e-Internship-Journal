@@ -74,6 +74,7 @@ namespace E_Internship_Journal.API
             {
                 return new JsonResult(new { InternshipRecordId = internshipRecord.InternshipRecordId });
             }
+
         }
 
         // PUT: api/Internship_Record/5
