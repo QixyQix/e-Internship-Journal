@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace E_Internship_Journal.API
 {
+    [Authorize]
     [Produces("application/json")]
     [Route("api/Internship_Record")]
     public class Internship_RecordController : Controller
