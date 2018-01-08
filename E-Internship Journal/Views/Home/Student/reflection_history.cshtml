@@ -13,12 +13,7 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="col-xs-12 pull-right">
-                    <select class="form-control" id="exampleSelect1">
-                        <option>Week 1 - 4</option>
-                        <option>Week 4 - 8</option>
-                        <option>Week 8 - 12</option>
-                        <option>Week 12 - 16</option>
-                    </select>
+                    <select class="form-control" id="selectMonthRecord"></select>
                 </div>
             </div>
         </div>
@@ -35,14 +30,14 @@
             </div>
             <div class="col-md-10 col-sm-10 col-xs-12">
                 <div class="form-group">
-                    <label class="control-label col-sm-8 requiredField" for="softskill1">(a) Areas you have done well.</label>
-                    <textarea class="form-control" rows="5" id="softskill1" readonly></textarea>
+                    <label class="control-label col-sm-8 requiredField" for="softskilldonewell">(a) Areas you have done well.</label>
+                    <textarea class="form-control" rows="5" id="softskilldonewell" readonly></textarea>
                 </div>
             </div>
             <div class="col-md-10 col-sm-10 col-xs-12">
                 <div class="form-group">
-                    <label class="control-label col-sm-8 requiredField" for="softskill2">(b) Areas you would like to improve.</label>
-                    <textarea class="form-control" rows="5" id="softskill2" readonly></textarea>
+                    <label class="control-label col-sm-8 requiredField" for="softskillimprove">(b) Areas you would like to improve.</label>
+                    <textarea class="form-control" rows="5" id="softskillimprove" readonly></textarea>
                 </div>
             </div>
             <br />
@@ -55,45 +50,103 @@
             </div>
             <div class="col-md-10 col-sm-10 col-xs-12">
                 <div class="form-group">
-                    <label class="control-label col-sm-8 requiredField" for="hardskill1">(a) How you have applied what you have learnt in school and workplace</label>
-                    <textarea class="form-control" rows="5" id="hardskill1" readonly></textarea>
+                    <label class="control-label col-sm-8 requiredField" for="hardskillapply">(a) How you have applied what you have learnt in school and workplace</label>
+                    <textarea class="form-control" rows="5" id="hardskillapply" readonly></textarea>
                 </div>
             </div>
             <div class="col-md-10 col-sm-10 col-xs-12">
                 <div class="form-group">
-                    <label class="control-label col-sm-8 requiredField" for="hardskill2">(b) Areas you have done well.</label>
-                    <textarea class="form-control" rows="5" id="hardskill2" readonly></textarea>
+                    <label class="control-label col-sm-8 requiredField" for="hardskilldonewell">(b) Areas you have done well.</label>
+                    <textarea class="form-control" rows="5" id="hardskilldonewell" readonly></textarea>
                 </div>
             </div>
             <div class="col-md-10 col-sm-10 col-xs-12">
                 <div class="form-group ">
-                    <label class="control-label col-sm-8 requiredField" for="hardskill3">(c) Areas you would like to improve.</label>
-                    <textarea class="form-control" rows="5" id="hardskill3" readonly></textarea>
+                    <label class="control-label col-sm-8 requiredField" for="hardskillimprove">(c) Areas you would like to improve.</label>
+                    <textarea class="form-control" rows="5" id="hardskillimprove" readonly></textarea>
                 </div>
             </div>
             @*<br />
-            <div>
-                <h5>Feedback</h5>
-            </div>
-            <hr>
-            <div class="col-md-10 col-sm-10 col-xs-12">
-                <div class="form-group ">
-                    <div class="form-group">
-                        <label class="control-label col-sm-3" for="feedback">Reflection Feedback:</label>
-                        <textarea class="form-control" rows="5" id="feedback" readonly></textarea>
-                    </div>
+                <div>
+                    <h5>Feedback</h5>
                 </div>
-            </div>*@
+                <hr>
+                <div class="col-md-10 col-sm-10 col-xs-12">
+                    <div class="form-group ">
+                        <div class="form-group">
+                            <label class="control-label col-sm-3" for="feedback">Reflection Feedback:</label>
+                            <textarea class="form-control" rows="5" id="feedback" readonly></textarea>
+                        </div>
+                    </div>
+                </div>*@
         </div>
     </div>
-        <div class="card-body">
-             <div class="form-group">
-                    <div class="col-12">
-                        <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
-                            Back
-                        </button>
-                    </div>
-                </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                    Back
+                </button>
+            </div>
         </div>
+    </div>
     <br />
 </div>
+<script>
+    var internshipRecordId = getCookie("InternshipRecordId");
+    var monthRecords;
+
+    if (internshipRecordId != null) {
+        $.ajax({
+            url: '/api/month_record/InternshipMonthRecords/' + internshipRecordId,
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                console.dir(data);
+                monthRecords = data;
+                if (data.length > 0) { 
+                    var selectedMonth = monthRecords[0];
+                    $('#softskilldonewell').val(selectedMonth.SoftSkillsCompetencyDoneWell);
+                    $('#softskillimprove').val(selectedMonth.SoftSkillsCompetencyImprove);
+                    $('#hardskillapply').val(selectedMonth.TechnicalCompetencyApplied);
+                    $('#hardskilldonewell').val(selectedMonth.TechnicalCompetencyDoneWell);
+                    $('#hardskillimprove').val(selectedMonth.TechnicalCompetencyImprove);
+                }
+                for (i = 0; i < data.length; i++) {
+                    var selectMonthRecord
+                    var newOption = $('<option>').text('Month ' + (i + 1)).val(i);
+                    $('#selectMonthRecord').append(newOption);
+                }
+            }
+        });
+    }
+
+
+    $('#selectMonthRecord').change(function () {
+        var selectedMonth = monthRecords[$(this).val()];
+        $('#softskilldonewell').val(selectedMonth.SoftSkillsCompetencyDoneWell);
+        $('#softskillimprove').val(selectedMonth.SoftSkillsCompetencyImprove);
+        $('#hardskillapply').val(selectedMonth.TechnicalCompetencyApplied);
+        $('#hardskilldonewell').val(selectedMonth.TechnicalCompetencyDoneWell);
+        $('#hardskillimprove').val(selectedMonth.TechnicalCompetencyImprove);
+    });
+
+
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+</script>

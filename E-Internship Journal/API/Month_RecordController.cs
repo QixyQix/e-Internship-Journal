@@ -27,14 +27,50 @@ namespace E_Internship_Journal.API
         }
 
         // GET: api/values
-        [HttpGet]
-        public IEnumerable<string> Get()
+        [HttpGet("InternshipMonthRecords/{id}")]
+        public IActionResult GetInternshipMonthRecords(int id)
         {
-            return new string[] { "value1", "value2" };
+            var internshipRecord = _context.Internship_Records
+                .Where(ir => ir.InternshipRecordId == id)
+                .Include(ir => ir.MonthRecords)
+                .SingleOrDefault();
+
+            if (internshipRecord == null)
+            {
+                return NotFound();
+            }
+
+            List<object> monthRecordObjList = new List<object>();
+
+            foreach (var monthRecord in internshipRecord.MonthRecords)
+            {
+                monthRecordObjList.Add(new
+                {
+                    MonthId = monthRecord.MonthId,
+                    Approved = monthRecord.Approved,
+                    SoftSkillsCompetencyDoneWell = monthRecord.SoftSkillsCompetencyDoneWell,
+                    SoftSkillsCompetencyImprove = monthRecord.SoftSkillsCompetencyImprove,
+                    TechnicalCompetencyApplied = monthRecord.TechnicalCompetencyApplied,
+                    TechnicalCompetencyDoneWell = monthRecord.TechnicalCompetencyDoneWell,
+                    TechnicalCompetencyImprove = monthRecord.TechnicalCompetencyImprove,
+                    MentorSessionDateTimeStart = monthRecord.MentorSessionDateTimeStart,
+                    MentorSessionDateTimeEnd = monthRecord.MentorSessionDateTimeEnd,
+                    MentorSessionReflection = monthRecord.MentorSessionReflection,
+                    CommunicationGrading = monthRecord.CommunicationGrading,
+                    TechnicalGrading = monthRecord.TechnicalGrading,
+                    IndependenceGrading = monthRecord.IndependenceGrading,
+                    PerformanceGrading = monthRecord.PerformanceGrading,
+                    OverallGrading = monthRecord.OverallGrading,
+                    OverallFeedback = monthRecord.OverallFeedback
+                });
+            }
+
+            return new OkObjectResult(monthRecordObjList);
         }
 
         // GET Latest month record
         [HttpGet("Latest")]
+        [Authorize(Roles = "STUDENT")]
         public IActionResult LatestMonthRecord()
         {
             //Get the student's internship record
@@ -46,7 +82,8 @@ namespace E_Internship_Journal.API
                 .ThenInclude(mn => mn.DayRecords)
                 .SingleOrDefault();
 
-            if (internshipRecord == null) {
+            if (internshipRecord == null)
+            {
                 return NotFound();
             }
 
@@ -112,7 +149,8 @@ namespace E_Internship_Journal.API
             {
                 return BadRequest(new { Message = "This month record does not belong to you!" });
             }
-            else if (monthRecord.Approved == true) {
+            else if (monthRecord.Approved == true)
+            {
                 return BadRequest(new { Message = "This month record can no longer be edited!" });
             }
 
@@ -127,7 +165,7 @@ namespace E_Internship_Journal.API
 
             _context.SaveChanges();
 
-            return new OkObjectResult(new { Message = "Month Record Updated Successfully!"});
+            return new OkObjectResult(new { Message = "Month Record Updated Successfully!" });
         }
 
         // DELETE api/values/5
