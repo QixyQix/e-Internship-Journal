@@ -24,34 +24,34 @@
             <div role="tabpanel" class="tab-pane active" id="one">
                 <div class="card-body">
                     <div class="col-12">
-                            <label class="control-label" for="q1">Has the internship been useful or relevant to you?</label>
-                            <select class="form-control col-md-2 col-sm-2 col-xs-12 pull-right" id="q1">
-                                <option>Yes</option>
-                                <option>No</option>
-                            </select>
-                    </div>
-                    <br />
-                    <div class="col-12">
-                        <label class="control-label" for="q2">Has the internship improved your understanding of your subjects of study?</label>
-                        <select class="form-control col-md-2 col-sm-2 col-xs-12 pull-right" id="q2">
-                            <option>Yes</option>
-                            <option>No</option>
+                        <label class="control-label" for="FeedbackUseful">Has the internship been useful or relevant to you?</label>
+                        <select class="form-control col-md-2 col-sm-2 col-xs-12 pull-right" id="FeedbackUseful">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
                         </select>
                     </div>
                     <br />
                     <div class="col-12">
-                        <label class="control-label" for="q3">Has the internship provided you with experiences about working life, human relationship skills etc.?</label>
-                        <select class="form-control col-md-2 col-sm-2 col-xs-12 pull-right" id="q3">
-                            <option>Yes</option>
-                            <option>No</option>
+                        <label class="control-label" for="FeedbackImproved">Has the internship improved your understanding of your subjects of study?</label>
+                        <select class="form-control col-md-2 col-sm-2 col-xs-12 pull-right" id="FeedbackImproved">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
                         </select>
                     </div>
                     <br />
                     <div class="col-12">
-                        <label class="control-label" for="q4">Would you recommend this establishment for future internship?</label>
-                        <select class="form-control col-md-2 col-sm-2 col-xs-12 pull-right" id="q4">
-                            <option>Yes</option>
-                            <option>No</option>
+                        <label class="control-label" for="FeedbackExperiences">Has the internship provided you with experiences about working life, human relationship skills etc.?</label>
+                        <select class="form-control col-md-2 col-sm-2 col-xs-12 pull-right" id="FeedbackExperiences">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                    <br />
+                    <div class="col-12">
+                        <label class="control-label" for="FeedbackRecommend">Would you recommend this establishment for future internship?</label>
+                        <select class="form-control col-md-2 col-sm-2 col-xs-12 pull-right" id="FeedbackRecommend">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
                         </select>
                     </div>
                     <br />
@@ -60,14 +60,14 @@
             <div role="tabpanel" class="tab-pane fade" id="two">
                 <div class="card-body">
                     <div class="col-12">
-                        <label class="control-label" for="q5">What did you enjoy most about this internship?</label>
-                        <textarea class="form-control" rows="5" id="q5" maxlength="300"></textarea>
+                        <label class="control-label" for="FeedbackEnjoy">What did you enjoy most about this internship?</label>
+                        <textarea class="form-control" rows="5" id="FeedbackEnjoy" maxlength="300"></textarea>
                         <small id="maxchars" class="form-text text-muted pull-right">300 maximum characters</small>
                     </div>
                     <br />
                     <div class="col-12">
-                        <label class="control-label" for="q6">What did you enjoy least about this internship?</label>
-                        <textarea class="form-control" rows="5" id="q6" maxlength="300"></textarea>
+                        <label class="control-label" for="FeedbackLeastEnjoy">What did you enjoy least about this internship?</label>
+                        <textarea class="form-control" rows="5" id="FeedbackLeastEnjoy" maxlength="300"></textarea>
                         <small id="maxchars" class="form-text text-muted pull-right">300 maximum characters</small>
                     </div>
                     <br />
@@ -76,14 +76,14 @@
             <div role="tabpanel" class="tab-pane fade" id="three">
                 <div class="card-body">
                     <div class="col-12">
-                        <label class="control-label" for="q5">What is your biggest takeaway from this internship</label>
-                        <textarea class="form-control" rows="5" id="q5" maxlength="300"></textarea>
+                        <label class="control-label" for="FeedbackTakeaway">What is your biggest takeaway from this internship</label>
+                        <textarea class="form-control" rows="5" id="FeedbackTakeaway" maxlength="300"></textarea>
                         <small id="maxchars" class="form-text text-muted pull-right">300 maximum characters</small>
                     </div>
                     <br />
                     <div class="col-12">
-                        <label class="control-label" for="q6">Will you pursue a career in this industry? Why yes or why not?</label>
-                        <textarea class="form-control" rows="5" id="q6" maxlength="300"></textarea>
+                        <label class="control-label" for="FeedbackCareer">Will you pursue a career in this industry? Why yes or why not?</label>
+                        <textarea class="form-control" rows="5" id="FeedbackCareer" maxlength="300"></textarea>
                         <small id="maxchars" class="form-text text-muted pull-right">300 maximum characters</small>
                     </div>
                     <br />
@@ -108,77 +108,99 @@
 </div>
 &nbsp;
 <script>
-    $(document).ready(function () {
-        var attendancetable = $('#dataTable_attendance').DataTable({
-            "scrollY": '250px',
-            "scrollCollapse": true,
-            "paging": false,
-            //--disable the sorting--
-            dom: 'rtp',
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
-            },
-            columns: [
-                { data: "DayRecordId" },
-                { data: "Description" },
-                { data: "Description" },
-                { data: "Description" },
-                {
-                    data: null,
-                    "bSortable": false,
-                    "mRender": function (o) { return '<input id="comments">' }
-                }
-            ]
-        });
+    var internshipRecordId = getCookie("InternshipRecordId");
 
-        var tasktable = $('#dataTable_task').DataTable({
-            "bPaginate": true,
-            "bLengthChange": false,
-            "bFilter": false,
-            "bSort": false,
-            "bInfo": false,
-            "bAutoWidth": false,
-            "asStripClasses": null,
-            pageLength: 5,
-            //--disable the sorting--
-            dom: 'rtip',
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
-            },
-            order: [[1, 'asc']],
-            columns: [
-                { data: "DayRecordId", "sTitle": "Date", "sWidth": "10%" },
-                { data: "Description", "sTitle": "Task Recorded", "sWidth": "80%" },
-                {
-                    data: null,
-                    "sTitle": "Remarks",
-                    "bSortable": false,
-                    "mRender": function (o) { return '<input id="remarks">' }
-                }
-            ],
-            language: {
-                emptyTable: "No task was found, please create one.",
+    if (internshipRecordId != null) {
+        $.ajax({
+            url: '/api/Internship_Record/' + internshipRecordId,
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                console.dir(data);
+                $('#FeedbackUseful').val('' + data.FeedbackUseful);
+                $('#FeedbackImproved').val('' + data.FeedbackImproved);
+                $('#FeedbackExperiences').val('' + data.FeedbackExperiences);
+                $('#FeedbackRecommend').val('' + data.FeedbackRecommend);
+
+                $('#FeedbackEnjoy').val('' + data.FeedbackEnjoy);
+                $('#FeedbackLeastEnjoy').val('' + data.FeedbackLeastEnjoy);
+                $('#FeedbackTakeaway').val('' + data.FeedbackTakeaway);
+                $('#FeedbackCareer').val('' + data.FeedbackCareer);
             }
         });
+    }
 
-        var tasktable = $('#dataTable').DataTable({
-            "bPaginate": true,
-            "bLengthChange": false,
-            "bFilter": false,
-            "bSort": false,
-            "bInfo": false,
-            "bAutoWidth": false,
-            "asStripClasses": null,
-            pageLength: 5,
-            //--disable the sorting--
-            dom: 'rtip'
-        });
+    $('#submit').click(function () {
+        if (internshipRecordId != null) {
+            var FeedbackUseful = $('#FeedbackUseful').val().toString();
+            var FeedbackImproved = $('#FeedbackImproved').val().toString();
+            var FeedbackExperiences = $('#FeedbackExperiences').val().toString();
+            var FeedbackRecommend = $('#FeedbackRecommend').val().toString();
 
-        //$('#addattendance').on('click', function (e) {
-        //    $('#attendanceModal').modal('show');
-        //});
-        $("#tablecompetency input").attr("disabled", "disabled"); //disable input for table competency
+            var FeedbackEnjoy = "" + $('#FeedbackEnjoy').val().toString();
+            var FeedbackLeastEnjoy = "" + $('#FeedbackLeastEnjoy').val().toString();
+            var FeedbackTakeaway = "" + $('#FeedbackTakeaway').val().toString();
+            var FeedbackCareer = "" + $('#FeedbackCareer').val().toString();
+
+            var webFormData = new WebFormData(FeedbackUseful, FeedbackImproved, FeedbackExperiences, FeedbackRecommend, FeedbackEnjoy, FeedbackLeastEnjoy, FeedbackTakeaway, FeedbackCareer);
+            console.dir(webFormData);
+
+            $.ajax({
+                url: '/api/Internship_Record/updateInternshipSurvey/' + internshipRecordId,
+                method: 'PUT',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                cache: false,
+                data: "'" + JSON.stringify(webFormData) + "'",
+                success: function (data) {
+                    swal({
+                        type: 'success',
+                        title: 'Saved!',
+                        text: data.Message
+                    }).then(
+                        function () {
+                            window.location.reload();
+                        });
+                },
+                error: function (data) {
+                    swal({
+                        type: 'error',
+                        title: 'Error',
+                        text: data.Message
+                    });
+                }
+            });
+        }
+
     });
+
+
+    function WebFormData(FeedbackUseful, FeedbackImproved, FeedbackExperiences, FeedbackRecommend, FeedbackEnjoy, FeedbackLeastEnjoy, FeedbackTakeaway, FeedbackCareer) {
+        this.FeedbackUseful = FeedbackUseful;
+        this.FeedbackImproved = FeedbackImproved;
+        this.FeedbackExperiences = FeedbackExperiences;
+        this.FeedbackRecommend = FeedbackRecommend;
+
+        this.FeedbackEnjoy = FeedbackEnjoy;
+        this.FeedbackLeastEnjoy = FeedbackLeastEnjoy;
+        this.FeedbackTakeaway = FeedbackTakeaway;
+        this.FeedbackCareer = FeedbackCareer;
+    }
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
 </script>

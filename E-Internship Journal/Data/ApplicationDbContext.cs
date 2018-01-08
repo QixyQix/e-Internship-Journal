@@ -428,6 +428,18 @@ namespace E_Internship_Journal.Data
             .HasColumnType("VARCHAR(100)")
             .HasDefaultValue("");
 
+            modelBuilder.Entity<Internship_Record>()
+            .Property(Internship_Records => Internship_Records.FeedbackTakeaway)
+            .HasColumnName("FeedbackTakeaway")
+            .HasColumnType("VARCHAR(100)")
+            .HasDefaultValue("");
+
+            modelBuilder.Entity<Internship_Record>()
+            .Property(Internship_Records => Internship_Records.FeedbackCareer)
+            .HasColumnName("FeedbackCareer")
+            .HasColumnType("VARCHAR(100)")
+            .HasDefaultValue("");
+
             /*  modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.LiaisonOfficeId)
             .HasColumnName("LiaisonOfficeId")

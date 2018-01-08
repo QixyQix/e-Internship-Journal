@@ -9,6 +9,7 @@ using E_Internship_Journal.Data;
 using E_Internship_Journal.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json;
 
 namespace E_Internship_Journal.API
 {
@@ -76,6 +77,44 @@ namespace E_Internship_Journal.API
                 return new JsonResult(new { InternshipRecordId = internshipRecord.InternshipRecordId });
             }
 
+        }
+
+        [HttpPut("updateInternshipSurvey/{id}")]
+        [Authorize(Roles = "STUDENT")]
+        public IActionResult updateInternshipSurvey(int id, [FromBody] String value) {
+            var internshipRecord = _context.Internship_Records
+                .Include(ir => ir.UserBatch)
+                .ThenInclude(ir => ir.Batch)
+                .Where(ir => ir.InternshipRecordId == id && _userManager.GetUserId(User).Equals(ir.UserBatch.User.Id))
+                .SingleOrDefault();
+
+            if (internshipRecord == null) {
+                return NotFound();
+            }
+
+            var surveyInput = JsonConvert.DeserializeObject<dynamic>(value);
+
+            try
+            {
+                internshipRecord.FeedbackUseful = Boolean.Parse(surveyInput.FeedbackUseful.Value);
+                internshipRecord.FeedbackImproved = Boolean.Parse(surveyInput.FeedbackImproved.Value);
+                internshipRecord.FeedbackExperiences = Boolean.Parse(surveyInput.FeedbackExperiences.Value);
+                internshipRecord.FeedbackRecommend = Boolean.Parse(surveyInput.FeedbackRecommend.Value);
+
+                internshipRecord.FeedbackEnjoy = surveyInput.FeedbackEnjoy.Value;
+                internshipRecord.FeedbackLeastEnjoy = surveyInput.FeedbackLeastEnjoy.Value;
+                internshipRecord.FeedbackTakeaway = surveyInput.FeedbackTakeaway.Value;
+                internshipRecord.FeedbackCareer = surveyInput.FeedbackCareer.Value;
+
+                _context.SaveChanges();
+            }
+            catch (Exception e) {
+                return BadRequest(new { Message = e.Message.ToString() });
+            }
+
+
+
+            return new OkObjectResult(new { Message = "Survey updated successfully!" });
         }
 
         // PUT: api/Internship_Record/5
