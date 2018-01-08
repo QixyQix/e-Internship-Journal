@@ -428,6 +428,18 @@ namespace E_Internship_Journal.Data
             .HasColumnType("VARCHAR(100)")
             .HasDefaultValue("");
 
+            modelBuilder.Entity<Internship_Record>()
+            .Property(Internship_Records => Internship_Records.FeedbackTakeaway)
+            .HasColumnName("FeedbackTakeaway")
+            .HasColumnType("VARCHAR(100)")
+            .HasDefaultValue("");
+
+            modelBuilder.Entity<Internship_Record>()
+            .Property(Internship_Records => Internship_Records.FeedbackCareer)
+            .HasColumnName("FeedbackCareer")
+            .HasColumnType("VARCHAR(100)")
+            .HasDefaultValue("");
+
             /*  modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.LiaisonOfficeId)
             .HasColumnName("LiaisonOfficeId")
@@ -506,14 +518,32 @@ namespace E_Internship_Journal.Data
             .IsRequired(false);
 
             modelBuilder.Entity<Month_Record>()
-            .Property(month_Records => month_Records.SoftSkillsCompetency)
-            .HasColumnName("SoftSkillsCompetency")
+            .Property(month_Records => month_Records.SoftSkillsCompetencyDoneWell)
+            .HasColumnName("SoftSkillsCompetencyDoneWell")
             .HasColumnType("VARCHAR(MAX)")
             .IsRequired(false);
 
             modelBuilder.Entity<Month_Record>()
-            .Property(month_Records => month_Records.TechnicalCompetency)
-            .HasColumnName("TechnicalCompetency")
+            .Property(month_Records => month_Records.SoftSkillsCompetencyImprove)
+            .HasColumnName("SoftSkillsCompetencyImprove")
+            .HasColumnType("VARCHAR(MAX)")
+            .IsRequired(false);
+
+            modelBuilder.Entity<Month_Record>()
+            .Property(month_Records => month_Records.TechnicalCompetencyApplied)
+            .HasColumnName("TechnicalCompetencyApplied")
+            .HasColumnType("VARCHAR(MAX)")
+            .IsRequired(false);
+
+            modelBuilder.Entity<Month_Record>()
+            .Property(month_Records => month_Records.TechnicalCompetencyDoneWell)
+            .HasColumnName("TechnicalCompetencyDoneWell")
+            .HasColumnType("VARCHAR(MAX)")
+            .IsRequired(false);
+
+            modelBuilder.Entity<Month_Record>()
+            .Property(month_Records => month_Records.TechnicalCompetencyImprove)
+            .HasColumnName("TechnicalCompetencyImprove")
             .HasColumnType("VARCHAR(MAX)")
             .IsRequired(false);
 

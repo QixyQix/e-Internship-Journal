@@ -31,6 +31,8 @@ namespace E_Internship_Journal.Models
         public Boolean FeedbackRecommend { get; set; }
         public string FeedbackEnjoy { get; set; }
         public string FeedbackLeastEnjoy { get; set; }
+        public string FeedbackTakeaway { get; set; }
+        public string FeedbackCareer { get; set; }
 
         public ApplicationUser LiaisonOfficer { get; set; }
        public string LiaisonOfficerId { get; set; }

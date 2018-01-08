@@ -47,13 +47,13 @@
                     <div class="col-md-10 col-sm-10 col-xs-12">
                         <div class="form-group">
                             <label class="control-label col-sm-8 requiredField" for="softskill1">(a) Areas you have done well.</label>
-                            <textarea class="form-control" rows="5" id="softskill1"></textarea>
+                            <textarea class="form-control" rows="5" id="softskilldonewell"></textarea>
                         </div>
                     </div>
                     <div class="col-md-10 col-sm-10 col-xs-12">
                         <div class="form-group">
                             <label class="control-label col-sm-8 requiredField" for="softskill2">(b) Areas you would like to improve.</label>
-                            <textarea class="form-control" rows="5" id="softskill2"></textarea>
+                            <textarea class="form-control" rows="5" id="softskillimprove"></textarea>
                         </div>
                     </div>
                 </div>
@@ -65,30 +65,28 @@
                         <h5>In terms of workplace knowledge, communication and interpersonal skills, reflect on:</h5>
                     </div>
                     <hr />
-
                     <div class="container text-left">
                         <div class="col-md-10 col-sm-10 col-xs-12">
                             <div class="form-group">
                                 <label class="control-label col-sm-8 requiredField" for="hardskill1">(a) How you have applied what you have learnt in school and workplace</label>
-                                <textarea class="form-control" rows="5" id="hardskill1"></textarea>
+                                <textarea class="form-control" rows="5" id="hardskillapply"></textarea>
                             </div>
                         </div>
                         <div class="col-md-10 col-sm-10 col-xs-12">
                             <div class="form-group">
                                 <label class="control-label col-sm-8 requiredField" for="hardskill2">(b) Areas you have done well.</label>
-                                <textarea class="form-control" rows="5" id="hardskill2"></textarea>
+                                <textarea class="form-control" rows="5" id="hardskilldonewell"></textarea>
                             </div>
                         </div>
                         <div class="col-md-10 col-sm-10 col-xs-12">
                             <div class="form-group ">
-                                <label class="control-label col-sm-8 requiredField" for="hardskill3">(c) Areas you would like to improve.</label>
-                                <textarea class="form-control" rows="5" id="hardskill3"></textarea>
+                                <label class="control-label col-sm-8 requiredField" for="hardskillimprove">(c) Areas you would like to improve.</label>
+                                <textarea class="form-control" rows="5" id="hardskillimprove"></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
     <div class="card-body">
@@ -97,7 +95,7 @@
                 <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
                     Back
                 </button>
-                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                <button class="btn btn-primary pull-right" name="submit" type="submit" id="btnSaveReflection">
                     Save
                 </button>
             </div>
@@ -105,3 +103,69 @@
     </div>
     <br />
 </div>
+<script>
+
+    var monthRecordId = null;
+
+    $.ajax({
+        url: '/api/month_record/Latest',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            console.dir(data);
+            $('#softskilldonewell').val(data.SoftSkillsCompetencyDoneWell);
+            $('#softskillimprove').val(data.SoftSkillsCompetencyImprove);
+            $('#hardskillapply').val(data.TechnicalCompetencyApplied);
+            $('#hardskilldonewell').val(data.TechnicalCompetencyDoneWell);
+            $('#hardskillimprove').val(data.TechnicalCompetencyImprove);
+            monthRecordId = data.MonthId;
+        }
+    });
+
+    $('#btnSaveReflection').click(function () {
+        if (monthRecordId != null) {
+            var softskilldonewell = "" + $('#softskilldonewell').val();
+            var softskillimprove = "" + $('#softskillimprove').val();
+            var hardskillapply = "" + $('#hardskillapply').val();
+            var hardskilldonewell = "" + $('#hardskilldonewell').val();
+            var hardskillimprove = "" + $('#hardskillimprove').val();
+
+            var webFormData = new WebFormData(softskilldonewell, softskillimprove, hardskillapply, hardskilldonewell, hardskillimprove);
+            console.dir(webFormData);
+
+            $.ajax({
+                url: '/api/month_record/UpdateReflection/' + monthRecordId,
+                method: 'PUT',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                cache: false,
+                data: "'" + JSON.stringify(webFormData) + "'",
+                success: function (data) {
+                    swal({
+                        type: 'success',
+                        title: 'Saved!',
+                        text: data.Message
+                    }).then(
+                        function () {
+                            window.location.reload();
+                        });
+                },
+                error: function (data) {
+                    swal({
+                        type: 'error',
+                        title: 'Error',
+                        text: data.Message
+                    });
+                }
+            });
+        }
+    })
+
+    function WebFormData(SoftSkillsCompetencyDoneWell, SoftSkillsCompetencyImprove, TechnicalCompetencyApplied, TechnicalCompetencyDoneWell, TechnicalCompetencyImprove) {
+        this.SoftSkillsCompetencyDoneWell = SoftSkillsCompetencyDoneWell;
+        this.SoftSkillsCompetencyImprove = SoftSkillsCompetencyImprove;
+        this.TechnicalCompetencyApplied = TechnicalCompetencyApplied;
+        this.TechnicalCompetencyDoneWell = TechnicalCompetencyDoneWell;
+        this.TechnicalCompetencyImprove = TechnicalCompetencyImprove;
+    }
+</script>

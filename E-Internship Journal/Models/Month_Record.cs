@@ -9,8 +9,11 @@ namespace E_Internship_Journal.Models
     {
         public int MonthId { get; set; }
         public Boolean? Approved { get; set; }
-        public string SoftSkillsCompetency { get; set; }
-        public string TechnicalCompetency { get; set; }
+        public string SoftSkillsCompetencyDoneWell { get; set; }
+        public string SoftSkillsCompetencyImprove { get; set; }
+        public string TechnicalCompetencyApplied { get; set; }
+        public string TechnicalCompetencyDoneWell { get; set; }
+        public string TechnicalCompetencyImprove { get; set; }
 
         public DateTime? MentorSessionDateTimeStart { get; set; }
         public DateTime? MentorSessionDateTimeEnd { get; set; }
