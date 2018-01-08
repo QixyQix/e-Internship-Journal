@@ -23,8 +23,7 @@
         </div>
     </div>
 </div>
-
-  <!-- View Lock Event Modal -->
+<!-- View Lock Event Modal -->
 <div class="modal fade" id="eventlockModal" tabindex="-1" role="dialog" aria-labelledby="eventlockModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -77,6 +76,7 @@
     &nbsp;
 </div>
 <style>
+
     #calendar {
         max-width: 900px;
         padding: 1em;
@@ -94,7 +94,7 @@
         method: 'GET',
         dataType: 'json',
         cache: false,
-        success: function (data) { 
+        success: function (data) {
             loadTasksData(data);
         }
     });
@@ -102,7 +102,7 @@
     function loadTasksData(data) {
         console.dir(data);
 
-        for (i = 0; i < data.length; i++) { 
+        for (i = 0; i < data.length; i++) {
             var task = data[i];
 
             var source = {
@@ -123,21 +123,21 @@
     var todayDate;
 
     $('#btnManage').on('click', function () {
-        //var cookies = document.cookie.split(";");
+        var cookies = document.cookie.split(";");
 
-        //for (var i = 0; i < cookies.length; i++) {
-        //    var cookie = cookies[i];
-        //    var eqPos = cookie.indexOf("=");
-        //    var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        //    document.cookie = name + "=;path=/" + ";expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        //}
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var eqPos = cookie.indexOf("=");
+            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            document.cookie = name + "=;path=/" + ";expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
         //var id = dayRecordId;
         var exdate = new Date();
         var expiredays = 1;
         exdate.setHours(exdate.getHours() + 4);
         exdate.setDate(exdate.getDate());
         //document.cookie = "id" + "=" + id + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
-        //document.cookie = "id" + "=" + id + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+        document.cookie = "InternshipRecordId" + "=" + internshipRecordId + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
         document.cookie = "date" + "=" + todayDate + ";path=/" + ((exdate == null) ? "" : ";expires=" + exdate.toGMTString());
 
     });
@@ -173,7 +173,7 @@
                 for (i = 0; i < selectedDate.length; i++) {
                     dayRecordId = selectedDate[i].id;
                     $('#task').append(selectedDate[i].title + "&#13;&#10;");
-                    
+
                 }
 
                 todayDate = (date.format('MM/DD/YYYY'));

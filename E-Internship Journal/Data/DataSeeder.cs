@@ -12,7 +12,8 @@ namespace E_Internship_Journal.Data
 {
     public static class DataSeeder
     {
-        public static async void SeedData(ApplicationDbContext db) {
+        public static async void SeedData(ApplicationDbContext db)
+        {
             //if db is not exist ,it will create database .but ,do nothing .
             db.Database.EnsureCreated();
 
@@ -45,7 +46,7 @@ namespace E_Internship_Journal.Data
             db.SaveChanges();
 
             //Create Competency
-            var competencyObject = new Competency { Description = "Able to code using Java/CSS/HTML", TitleDescription="Able to code", Course = courseObject};
+            var competencyObject = new Competency { Description = "Able to code using Java/CSS/HTML", TitleDescription = "Able to code", Course = courseObject };
             db.Competencies.Add(competencyObject);
             db.SaveChanges();
 
@@ -53,7 +54,7 @@ namespace E_Internship_Journal.Data
             var userStore = new UserStore<ApplicationUser>(db);
             var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
             //Admin
-            var adminUser = new ApplicationUser { UserName = "ADMIN@TEST.COM", FullName = "Mr Administrator", Email = "ADMIN@TEST.COM", IsEnabled = true};
+            var adminUser = new ApplicationUser { UserName = "ADMIN@TEST.COM", FullName = "Mr Administrator", Email = "ADMIN@TEST.COM", IsEnabled = true };
             PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
             adminUser.PasswordHash = ph.HashPassword(adminUser, "P@ssw0rd"); //More complex password
             await userManager.CreateAsync(adminUser);
@@ -102,12 +103,12 @@ namespace E_Internship_Journal.Data
             db.SaveChanges();
 
             //Create Company
-            var companyObject = new Company { CompanyName = "Some Weird Company", CompanyAddress = "BLK999# 03-03 HELL STREET SINGAPORE 666666", ContactPersonName = "Company Owner Name", ContactPersonNumber = "99999999", ContactPersonEmail = "CEO@COMPANY.COM", ContactPersonFax = "88888888" };
+            var companyObject = new Company { CompanyName = "Some Weird Company", CompanyAddress = "BLK999# 03-03 PUNGGOL STREET SINGAPORE 666666", ContactPersonName = "Company Owner Name", ContactPersonNumber = "91239240", ContactPersonEmail = "CEO@COMPANY.COM", ContactPersonFax = "85001000" };
             db.Companies.Add(companyObject);
             db.SaveChanges();
 
             //Create Project
-            var projectObject = new Project { ProjectName = "Online awesome website management system", Company=companyObject, Supervisor=supervisorUser};
+            var projectObject = new Project { ProjectName = "Online awesome website management system", Company = companyObject, Supervisor = supervisorUser };
             db.Projects.Add(projectObject);
             db.SaveChanges();
 
@@ -135,30 +136,30 @@ namespace E_Internship_Journal.Data
             db.Month_Records.Add(monthObject);
             db.SaveChanges();
 
-            var dayObject = new Day_Record { Month = monthObject, Date = DateTime.ParseExact("30/08/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), ArrivalTime = DateTime.Parse("9:00:00 AM"), DepartureTime = DateTime.Parse("9:00:00 AM"), WeekNo = 1, IsPresent = true };
+            var dayObject = new Day_Record { Month = monthObject, Date = DateTime.ParseExact("01/01/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), ArrivalTime = DateTime.Parse("9:00:00 AM"), DepartureTime = DateTime.Parse("6:00:00 PM"), WeekNo = 1, IsPresent = true };
             db.Day_Records.Add(dayObject);
             db.SaveChanges();
 
-            var taskObject = new Task_Record { MonthRecord = monthObject ,Date = DateTime.ParseExact("31/08/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "I enjoy working", WeekNo = 1 };
+            var taskObject = new Task_Record { MonthRecord = monthObject, Date = DateTime.ParseExact("02/01/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "I enjoy working", WeekNo = 1 };
             db.Tasks.Add(taskObject);
             db.SaveChanges();
 
             //Create Internship Journal 2
-            var internshipObject2 = new Internship_Record { UserBatch = userBatchObject2, Project = projectObject, LiaisonOfficer = LOUser };
-            db.Internship_Records.Add(internshipObject2);
-            db.SaveChanges();
+            //var internshipObject2 = new Internship_Record { UserBatch = userBatchObject2, Project = projectObject, LiaisonOfficer = LOUser };
+            //db.Internship_Records.Add(internshipObject2);
+            //db.SaveChanges();
 
-            var monthObject2 = new Month_Record { InternshipRecordId = internshipObject.InternshipRecordId };
-            db.Month_Records.Add(monthObject2);
-            db.SaveChanges();
+            //var monthObject2 = new Month_Record { InternshipRecordId = internshipObject.InternshipRecordId };
+            //db.Month_Records.Add(monthObject2);
+            //db.SaveChanges();
 
-            var dayObject2 = new Day_Record { Month = monthObject, Date = DateTime.ParseExact("25/09/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), ArrivalTime = DateTime.Parse("9:00:00 AM"), DepartureTime = DateTime.Parse("9:00:00 AM"), WeekNo = 5, IsPresent = true };
-            db.Day_Records.Add(dayObject2);
-            db.SaveChanges();
+            //var dayObject2 = new Day_Record { Month = monthObject, Date = DateTime.ParseExact("28/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), ArrivalTime = DateTime.Parse("9:00:00 AM"), DepartureTime = DateTime.Parse("6:00:00 PM"), WeekNo = 1, IsPresent = true };
+            //db.Day_Records.Add(dayObject2);
+            //db.SaveChanges();
 
-            var taskObject2 = new Task_Record { MonthRecord = monthObject, Date = DateTime.ParseExact("25/09/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "It is a great day to eat out", WeekNo = 5 };
-            db.Tasks.Add(taskObject2);
-            db.SaveChanges();
+            //var taskObject2 = new Task_Record { MonthRecord = monthObject, Date = DateTime.ParseExact("28/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "It is a great day to eat out", WeekNo = 1 };
+            //db.Tasks.Add(taskObject2);
+            //db.SaveChanges();
         }
     }
 }

@@ -158,27 +158,11 @@
     function studentJournal(inName , inId) {
         removeCookie();
         $.each($('table tbody tr td.StudentId'), function (index) {
-            //console.dir($(this).text());
-            //console.dir($(this).closest('td').next('td').text());
             setCookie($(this).closest('td').next('td').text(), $(this).text());
-            //setCookie($('table tbody tr td.StudentName').text
-            //console.dir($(this).closest('td').next('td').next('td').next('td').next('a').attr('value'));
-            //localStorage.setItem($(this).closest('td').next('td').text(), $(this).closest('td').next('td').next('td').val());
         });
         $.each($('table tbody tr td #studentJournal'), function (index) {
-            //console.dir($(this).attr('value'));
-            //console.dir($(this).text());
-            //console.dir($(this).closest('td').prev('td').prev('td').text());
-            //console.dir($(this).closest('td').next('td').text());
-            //setCookie($(this).closest('td').next('td').text(), $(this).text());
-            //setCookie($('table tbody tr td.StudentName').text
-            //console.dir($(this).closest('td').next('td').next('td').next('td').next('a').attr('value'));
             sessionStorage.setItem($(this).closest('td').prev('td').prev('td').prev('td').text(), $(this).attr('value'));
         });
-        //$.each($('table tbody tr td.StudentName'), function (index) {
-        //    console.dir($(this).text());
-           
-        //});
         setCookie("selectedStudent", inId);
 
     };

@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using E_Internship_Journal.Data;
 using E_Internship_Journal.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ namespace E_Internship_Journal.API
 {
     [Produces("application/json")]
     [Route("api/TouchPoint")]
+    [Authorize]
     public class TouchPointController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -48,15 +50,19 @@ namespace E_Internship_Journal.API
             }
             return new JsonResult(TouchPoint_Records_List);
         }
-        [HttpPost]
-        public async Task<IActionResult> SaveTouchPointRecordAsync([FromBody] string value)
+        [HttpPost("SaveTouchPointRecord/{id}")]
+        public async Task<IActionResult> SaveTouchPointRecordAsync(int id,[FromBody] string value)
         {
             var touchPointNewInput = JsonConvert.DeserializeObject<dynamic>(value);
             try
             {
-                DateTime date = DateTime.Parse(touchPointNewInput.TouchPointDate.Value, CultureInfo.InvariantCulture);
+                DateTime date = touchPointNewInput.TouchPointDate.Value.ToLocalTime();
+                //DateTime date = DateTime.ParseExact(touchPointNewInput.TouchPointDate.Value, "d/M/yyyy H:m:s", CultureInfo.InvariantCulture);
+
+                //DateTime date = DateTime.Parse(touchPointNewInput.TouchPointDate.Value, CultureInfo.InvariantCulture);
                 TouchPoint_Record newTouchPoint = new TouchPoint_Record
                 {
+                    InternshipRecordId = id,
                     TouchPointDate = date,
                     Comments = touchPointNewInput.Comments
                 };
@@ -75,6 +81,40 @@ namespace E_Internship_Journal.API
             {
                 return BadRequest(new { Message = exceptionObject.Message });
             }
+
+        }//End of Post
+
+        [HttpPut("UpdateTouchPointRecord/{id}")]
+        public async Task<IActionResult> UpdateTouchPointRecordAsync(int id, [FromBody] string value)
+        {
+            var touchPointNewInput = JsonConvert.DeserializeObject<dynamic>(value);
+            var touchPointRecord = _context.TouchPointRecords
+                .Include(ir => ir.InternshipRecord)
+                .Where(ir => ir.InternshipRecord.InternshipRecordId == id).SingleOrDefault();
+            try
+            {
+                DateTime date = touchPointNewInput.TouchPointDate.Value.ToLocalTime();
+                TouchPoint_Record newTouchPoint = new TouchPoint_Record
+                {
+                    TouchPointDate = date,
+                    Comments = touchPointNewInput.Comments
+                };
+                _context.TouchPointRecords.Update(newTouchPoint);
+
+                var successRequestResultMessage = new
+                {
+                    Message = "Saved TouchPoint into database"
+                };
+                OkObjectResult httpOkResult =
+                new OkObjectResult(successRequestResultMessage);
+                return httpOkResult;
+            }
+            catch(Exception exceptionObject)
+            {
+                return BadRequest(new {  exceptionObject.Message });
+            }
+
+
 
         }
 

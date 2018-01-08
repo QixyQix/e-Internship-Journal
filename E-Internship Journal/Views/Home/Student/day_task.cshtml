@@ -146,7 +146,7 @@
                     success: function (data) {
                         swal({
                             type: 'success',
-                            title: 'You did it!',
+                            title: 'Saved!',
                             text: data.Message
                         }).then(
                             function () {
@@ -156,7 +156,7 @@
                     error: function (data) {
                         swal({
                             type: 'error',
-                            title: 'Oops!',
+                            title: 'Error',
                             text: data.Message
                         });
                     }

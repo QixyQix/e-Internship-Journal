@@ -42,6 +42,7 @@
                             <th>Date</th>
                             <th>Time</th>
                             <th>Comment</th>
+                            <th>Remarks</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -87,7 +88,7 @@
                                     <i class="fa fa-calendar">
                                     </i>
                                 </div>
-                                <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
+                                <input class="form-control" id="newDate" name="date" placeholder="MM/DD/YYYY" type="text" required>
                             </div>
                         </div>
                         <div class="form-group">
@@ -102,20 +103,20 @@
                                     <i class="fa fa-clock-o"></i>
                                 </div>
 
-                                <input type='text' class="form-control" />
+                                <input type='text' class="form-control" id="newTimeIn" required/>
                             </div>
                         </div>
                         <div class="form-group ">
                             <label class="control-label" for="comment">
                                 Comment
                             </label>
-                            <textarea class="form-control" rows="5" id="comment"></textarea>
+                            <textarea class="form-control" rows="5" id="newComment"></textarea>
                         </div>
                     </form>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="submit">Create</button>
+                <button type="button" class="btn btn-primary" id="btnCreate">Create</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
             </div>
@@ -149,7 +150,7 @@
                                     <i class="fa fa-calendar">
                                     </i>
                                 </div>
-                                <input class="form-control" id="date" name="date" placeholder="MM/DD/YYYY" type="text">
+                                <input class="form-control" id="editDate" name="date" placeholder="MM/DD/YYYY" type="text">
                             </div>
                         </div>
                         <div class="form-group">
@@ -164,20 +165,20 @@
                                     <i class="fa fa-clock-o"></i>
                                 </div>
 
-                                <input type='text' class="form-control" />
+                                <input type='text' class="form-control" id="editTimeIn"/>
                             </div>
                         </div>
                         <div class="form-group ">
                             <label class="control-label" for="comment">
                                 Comment
                             </label>
-                            <textarea class="form-control" rows="5" id="comment"></textarea>
+                            <textarea class="form-control" rows="5" id="editComment"></textarea>
                         </div>
                     </form>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="submit">Update</button>
+                <button type="button" class="btn btn-primary" id="btnUpdate">Update</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                 <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
             </div>
@@ -216,7 +217,104 @@
         
         $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
             $('#updatetpModal').modal('show');
+            $('#editDate').val
+            $('#editTimeIn').val
+            $('#editComment').val
+            $('#btnUpdate').val($(this).val());
         });
+        $('#btnCreate').on('click', function (e) {
+            if ($('#newDate').val() == null || $('#newTimeIn').val() == null) {
+                
+                swal({
+                    type: 'error',
+                    title: 'Oops!',
+                    //html: data.Messages.join('<br>')
+                    text: 'Please Fill All Required Field!'
+                });
+
+            }//end of If statement
+            else {
+                var collectedDate = moment($('#newDate').val() + ' ' + $('#newTimeIn').val(), ["DD/MM/YYYY h:mm A"]).toDate();
+                var collectedComments = $('#newComment').val();
+                var webFormData = new WebFormData(collectedDate, collectedComments);
+                console.dir(webFormData);
+                $.ajax({
+                    url: '/Api/TouchPoint/SaveTouchPointRecord/' + g_getLocalStorage,
+                    method: 'POST',
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    cache: false,
+                    data: "'" + JSON.stringify(webFormData) + "'",
+                    success: function (data) {
+                        swal({
+                            type: 'success',
+                            title: 'Saved!',
+                            text: data.Message
+                        }).then(
+                            function () {
+                                window.location.reload();
+                            });
+                    },//End of success
+                    error: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            text: data.Message
+                        });
+                    }//End of error
+
+
+                });//End of ajax call
+            }//End of Else statement
+        
+        })//End of btnCreate on Click Function
+        $('#btnUpdate').on('click', function (e) {
+            if ($('#editDate').val() == null || $('#editTimeIn').val() == null) {
+
+                swal({
+                    type: 'error',
+                    title: 'Oops!',
+                    //html: data.Messages.join('<br>')
+                    text: 'Please Fill All Required Field!'
+                });
+
+            }//end of If statement
+            else {
+                var collectedDate = moment($('#editDate').val() + ' ' + $('#editTimeIn').val(), ["DD/MM/YYYY h:mm A"]).toDate();
+                var collectedComments = $('#editComment').val();
+                var webFormData = new WebFormData(collectedDate, collectedComments);
+                console.dir(webFormData);
+                $.ajax({
+                    url: '/Api/TouchPoint/UpdateTouchPointRecord/' +  $(this).val(),
+                    method: 'POST',
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    cache: false,
+                    data: "'" + JSON.stringify(webFormData) + "'",
+                    success: function (data) {
+                        swal({
+                            type: 'success',
+                            title: 'Saved!',
+                            text: data.Message
+                        }).then(
+                            function () {
+                                window.location.reload();
+                            });
+                    },//End of success
+                    error: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            text: data.Message
+                        });
+                    }//End of error
+                });//End of ajax call
+            }//End of Else statement
+
+
+        })//End of btnUpdate on Click Function
+        
+
     });//End of Ready function
     function getCookie(name) {
         var dc = document.cookie;
@@ -244,19 +342,23 @@
         exdate.setDate(exdate.getDate());
         document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
     };//End of setCookie
+    function WebFormData(inDate , inComments) {
+        this.TouchPointDate = inDate;
+        this.Comments = inComments;
+    }
     function loadDataTable(inId) {
         var g_table = $('#dataTable').DataTable({
             dom: "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
             destroy: true,
             ajax: {
-                url: '/Api/TouchPoint/getInternshipTouchPointRecords' + inId,
+                url: '/Api/TouchPoint/getInternshipTouchPointRecords/' + inId,
                 dataSrc: ''
             },
             order: [[1, 'asc']],
             columns: [
                 {
-                    data: "Date",
+                    data: "TouchPointDate",
                     mRender: function (o) { return moment(o).format("DD/MM/YYYY") }
                 }, {
                     data: "ArrivalTime",
@@ -267,12 +369,13 @@
                     mRender: function (o) { return moment(o).format("H:m A") }
 
                 }, {
-                    data: "Remarks"
+                    data: "Comments"
 
                 }, {
+                    data: "TouchPointId",
                     "sWidth": "10%",
                     "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary" value="' + o + '"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn" value="' + o + '"><i class="fa fa-trash"></i></button>' }
                 }
             ],
             language: {
