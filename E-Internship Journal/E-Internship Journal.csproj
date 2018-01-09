@@ -36,7 +36,6 @@
 
   <ItemGroup>
     <Folder Include="API\" />
-    <Folder Include="Views\Courses\NewFolder\" />
   </ItemGroup>
 
 </Project>

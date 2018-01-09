@@ -14,9 +14,7 @@
             <div class="form-group">
                 <div class="pull-left">
                     <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
-                        <option>Amelia Goh</option>
-                        <option>Cho Qi Xiang</option>
-                        <option>Tan Chia Wei</option>
+
                     </select>
                 </div>
             </div>
@@ -120,77 +118,82 @@
 &nbsp;
 <script>
     $(document).ready(function () {
-        var attendancetable = $('#dataTable_attendance').DataTable({
-            "scrollY": '250px',
-            "scrollCollapse": true,
-            "paging": false,
-            //--disable the sorting--
-            dom: 'rtp',
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
-            },
-            columns: [
-                { data: "DayRecordId" },
-                { data: "Description" },
-                { data: "Description" },
-                { data: "Description" },
-                {
-                    data: null,
-                    "bSortable": false,
-                    "mRender": function (o) { return '<input id="comments">' }
-                }
-            ]
-        });
+        var cookies = document.cookie.split("; ");
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var eqPos = cookie.indexOf("=");
+            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            //console.dir(getCookie(name));
+            var cookievalue = getCookie(name);
 
-        var tasktable = $('#dataTable_task').DataTable({
-            "bPaginate": true,
-            "bLengthChange": false,
-            "bFilter": false,
-            "bSort": false,
-            "bInfo": false,
-            "bAutoWidth": false,
-            "asStripClasses": null,
-            pageLength: 5,
-            //--disable the sorting--
-            dom: 'rtip',
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
-            },
-            order: [[1, 'asc']],
-            columns: [
-                { data: "DayRecordId", "sTitle": "Date", "sWidth": "10%" },
-                { data: "Description", "sTitle": "Task Recorded", "sWidth": "80%" },
-                {
-                    data: null,
-                    "sTitle": "Remarks",
-                    "bSortable": false,
-                    "mRender": function (o) { return '<input id="remarks">' }
-                }
-            ],
-            language: {
-                emptyTable: "No task was found, please create one.",
+            if (name != "selectedStudent") {
+                $studentInputElement = $('#selectstudent');
+                $optionElement = $('<option>').text(name).attr('value', cookievalue);
+                $studentInputElement.append($optionElement);
+
+            } else {
+                $('#selectstudent').val(cookievalue);
+
             }
-        });
 
-        var tasktable = $('#dataTable').DataTable({
-            "bPaginate": true,
-            "bLengthChange": false,
-            "bFilter": false,
-            "bSort": false,
-            "bInfo": false,
-            "bAutoWidth": false,
-            "asStripClasses": null,
-            pageLength: 5,
-            //--disable the sorting--
-            dom: 'rtip'
-        });
+        }//End of for loop
+        g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+        getStudentSurvey(g_getLocalStorage);
 
-        //$('#addattendance').on('click', function (e) {
-        //    $('#attendanceModal').modal('show');
-        //});
         $("#survey div.card-body select").attr("disabled", "disabled"); //disable dropdown
         $("#survey div.card-body textarea").attr("readonly", "true"); //disable textarea
-    });
+    });//End of document ready function
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }//End of getCookie Function
+    function setCookie() {
+        var inName = "selectedStudent";
+        var inValue = $('#selectstudent').val();
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };//End of setCookie
+
+    function getStudentSurvey(inStudentId) {
+        $.ajax({
+            url: '/api/Internship_Record/viewInternshipSurvey/' + inStudentId,
+            method: 'GET',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+            success: function (data) {
+                data.FeedbackUseful ? $('#q1').val('Yes') : $('#q1').val('No')
+                data.FeedbackImproved ? $('#q2').val('Yes') : $('#q2').val('No')
+                data.FeedbackExperiences ? $('#q3').val('Yes') : $('#q3').val('No')
+                data.FeedbackRecommend ? $('#q4').val('Yes') : $('#q4').val('No')
+                $('#q5').val(data.FeedbackEnjoy);
+                $('#q6').val(data.FeedbackLeastEnjoy);
+                $('#q7').val(data.FeedbackTakeaway);
+                $('#q7').val(data.FeedbackCareer);
+            },//End of success
+            error: function (data) {
+                swal({
+                    type: 'error',
+                    title: 'Error',
+                    text: data.Message
+                });
+            }//End of error
+        });//End of ajax call
+    }
 </script>

@@ -103,7 +103,7 @@ namespace E_Internship_Journal.API
                 DateTime date = touchPointNewInput.TouchPointDate.Value.ToLocalTime();
                 touchPointRecord.TouchPointDate = date;
                 touchPointRecord.Comments = touchPointNewInput.Comments;
-                _context.TouchPointRecords.Update(touchPointRecord);
+
                 _context.SaveChanges();
                 var successRequestResultMessage = new
                 {
