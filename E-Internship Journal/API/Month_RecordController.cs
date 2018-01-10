@@ -9,6 +9,7 @@ using E_Internship_Journal.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
+using System.Globalization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -126,6 +127,59 @@ namespace E_Internship_Journal.API
 
         }
 
+        [HttpPut("UpdateMentorSession/{id}")]
+        [Authorize(Roles = "STUDENT")]
+        public IActionResult UpdateMentorSession(int id, [FromBody] string value) {
+            Month_Record monthRecord = _context.Month_Records
+                .Include(mr => mr.InternshipRecord)
+                .ThenInclude(ir => ir.UserBatch)
+                .ThenInclude(ub => ub.Batch)
+                .Include(mr => mr.InternshipRecord)
+                .ThenInclude(ir => ir.UserBatch)
+                .ThenInclude(ub => ub.User)
+                .Where(mr => mr.InternshipRecord.UserBatch.Batch.StartDate < DateTime.Now && mr.InternshipRecord.UserBatch.Batch.EndDate > DateTime.Now && mr.MonthId == id)
+                .SingleOrDefault();
+
+            if (monthRecord == null)
+            {
+                return BadRequest(new { Message = "This month record is not editable or does not exist." });
+            }
+            else if (!monthRecord.InternshipRecord.UserBatch.User.Id.Equals(_userManager.GetUserId(User)))
+            {
+                return BadRequest(new { Message = "This month record does not belong to you!" });
+            }
+            else if (monthRecord.Approved == true)
+            {
+                return BadRequest(new { Message = "This month's records have already been approved and cannot be edited" });
+            }
+
+            var reflectionInput = JsonConvert.DeserializeObject<dynamic>(value);
+
+            string arrivalTimeStr = reflectionInput.MentorSessionDateTimeStart.Value.ToString();
+            string departTimeStr = reflectionInput.MentorSessionDateTimeEnd.Value.ToString();
+            string reflectionStr = reflectionInput.MentorSessionReflection.Value.ToString();
+            var timestart = new DateTime();
+            var timeend = new DateTime();
+
+            try
+            {
+                timestart = DateTime.ParseExact(arrivalTimeStr, "d/M/yyyy H:m:s", CultureInfo.InvariantCulture);
+                timeend = DateTime.ParseExact(departTimeStr, "d/M/yyyy H:m:s", CultureInfo.InvariantCulture);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { Message = "Incorrect timing" });
+            }
+
+            monthRecord.MentorSessionDateTimeStart = timestart;
+            monthRecord.MentorSessionDateTimeEnd = timeend;
+            monthRecord.MentorSessionReflection = reflectionStr;
+
+            _context.SaveChanges();
+
+            return new OkObjectResult(new { Message = "Month Record Updated Successfully!" });
+        }
+
         // PUT api/values/5
         [HttpPut("UpdateReflection/{id}")]
         [Authorize(Roles = "STUDENT")]
@@ -143,7 +197,7 @@ namespace E_Internship_Journal.API
 
             if (monthRecord == null)
             {
-                return NotFound();
+                return BadRequest(new { Message = "This month record is not editable or does not exist." });
             }
             else if (!monthRecord.InternshipRecord.UserBatch.User.Id.Equals(_userManager.GetUserId(User)))
             {
@@ -151,7 +205,7 @@ namespace E_Internship_Journal.API
             }
             else if (monthRecord.Approved == true)
             {
-                return BadRequest(new { Message = "This month record can no longer be edited!" });
+                return BadRequest(new { Message = "This month's records have already been approved and cannot be edited" });
             }
 
             var reflectionInput = JsonConvert.DeserializeObject<dynamic>(value);
