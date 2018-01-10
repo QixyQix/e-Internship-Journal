@@ -1,48 +1,45 @@
 ﻿<div class="container-fluid">
-    <!-- Breadcrumbs-->
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a href="~/Home/Index">Homepage</a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="~/Home/ViewCourse">Course</a>
-        </li>
-        <li class="breadcrumb-item active">Edit Course</li>
-    </ol>
     <!-- Example DataTables Card-->
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fa fa-table"></i> Edit Course
-        </div>
-        <div>
-            <form class="form-group">
-                <div class="form-inline">
-                    <label class="col-md-2 control-label">Course code:</label>
-                    <div class="col-sm-5">
-                        <input class="form-control" id="coursecode" type="text">
-                    </div>
+    <section id="contact">
+        <div class="container">
+            <h2 class="text-center text-uppercase text-secondary mb-0">Edit Course</h2>
+            <hr />
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
+                    <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
+                    <form name="sentMessage" id="contactForm" novalidate="novalidate">
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Course Code</label>
+                                <input class="form-control" id="coursecode" type="text" placeholder="Course Code" required="required" data-validation-required-message="Please enter course code.">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Course Name</label>
+                                <input class="form-control" id="coursename" type="text" placeholder="Course Name" required="required" data-validation-required-message="Please enter course name.">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <br>
+                        <div id="success"></div>
+                        <div class="form-group">
+                            <div class="col-12">
+                                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                                    Back
+                                </button>
+                                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                                    Update
+                                </button>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                    </form>
                 </div>
-                <div class="form-inline">
-                    <label class="col-sm-2 control-label">Course name:</label>
-                    <div class="col-sm-5">
-                        <input class="form-control" id="coursename" type="text">
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-    </div>
-    <div class="card-body">
-        <div class="form-group">
-            <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
-                    Back
-                </button>
-                <button class="btn btn-primary pull-right" name="submit" type="submit">
-                    Update
-                </button>
             </div>
         </div>
-    </div>
-    <br />
+    </section>
 </div>

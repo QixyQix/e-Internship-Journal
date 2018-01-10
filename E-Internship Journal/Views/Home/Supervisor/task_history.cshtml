@@ -24,6 +24,7 @@
                     </select>
                 </div>
                 <div class="col-xs-4 pull-right">
+                    <label>View By:&nbsp</label>
                     <select class="form-control" id="exampleSelect1">
                         <option>Week 1</option>
                         <option>Week 2</option>
@@ -51,15 +52,15 @@
                     </thead>
                     <tbody>
                         @*<tr>
-                            <td>1</td>
-                            <td>I love to Slack</td>
-                            <td><input type='text' class="form-control" id="remarks" /></td>
-                        </tr>*@
+                                <td>1</td>
+                                <td>I love to Slack</td>
+                                <td><input type='text' class="form-control" id="remarks" /></td>
+                            </tr>*@
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+        <div class="card-footer"></div>
     </div>
     <!--end with attendance taking-->
     <div class="card-body">
@@ -74,7 +75,7 @@
     <br />
 </div>
 
-    <!-- comment Modal -->
+<!-- comment Modal -->
 <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="attendanceModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -90,7 +91,7 @@
                     <form>
                         <div class="form-group ">
                             <label>Comment:</label>
-                            <textarea class="form-control" rows="5" id="task" readonly>Went to meeting, and prepared meeting report.</textarea>
+                            <textarea class="form-control" rows="5" id="commentTask" readonly>Went to meeting, and prepared meeting report.</textarea>
                         </div>
                     </form>
                 </div>
