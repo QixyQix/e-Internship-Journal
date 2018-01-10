@@ -121,7 +121,7 @@ namespace E_Internship_Journal.API
         }
         [HttpGet("viewInternshipSurvey/{id}")]
         [Authorize(Roles = "LO")]
-        public IActionResult viewInternshipSurvey(int id, [FromBody] String value)
+        public IActionResult ViewInternshipSurvey(int id)
         {
             var internshipRecord = _context.Internship_Records
                 .Where(ir => ir.InternshipRecordId == id).SingleOrDefault();
@@ -150,7 +150,44 @@ namespace E_Internship_Journal.API
                 return BadRequest(new { Message = exceptionObject.Message });
             }
 
-        }
+        }//End of viewInternshipSurvey method
+
+        [HttpGet("ViewCompanyChecklist/{id}")]
+        [Authorize(Roles = "LO")]
+        public IActionResult ViewCompanyChecklist(int id)
+        {
+            var internshipRecord = _context.Internship_Records
+                .Where(ir => ir.InternshipRecordId == id).SingleOrDefault();
+            if (internshipRecord == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                var response = new
+                {
+                    internshipRecord.CompanyCheck1a,
+                    internshipRecord.CompanyCheck1b,
+                    internshipRecord.CompanyCheck2a,
+                    internshipRecord.CompanyCheck2b,
+                    internshipRecord.CompanyCheck2c,
+                    internshipRecord.CompanyCheck2d,
+                    internshipRecord.CompanyCheck2e,
+                    internshipRecord.CompanyCheck2f,
+                    internshipRecord.CompanyCheck3a,
+                    internshipRecord.CompanyCheck3b,
+                    internshipRecord.CompanyCheck3c
+
+                };
+                return new JsonResult(response);
+            }
+            catch (Exception exceptionObject)
+            {
+                return BadRequest(new { Message = exceptionObject.Message });
+            }
+
+        }//End of viewCompanyChecklist method
+
         // PUT: api/Internship_Record/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutInternship_Record([FromRoute] int id, [FromBody] Internship_Record internship_Record)

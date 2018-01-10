@@ -14,9 +14,6 @@
             <div class="form-group">
                 <div class="pull-left">
                     <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
-                        <option>Amelia Goh</option>
-                        <option>Cho Qi Xiang</option>
-                        <option>Tan Chia Wei</option>
                     </select>
                 </div>
             </div>
@@ -153,4 +150,91 @@
     <!--end with attendance taking-->
     <script>
         $("div input").attr("disabled", "disabled");
+
+        $(document).ready(function () {
+            var cookies = document.cookie.split("; ");
+
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i];
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                //console.dir(getCookie(name));
+                var cookievalue = getCookie(name);
+
+                if (name != "selectedStudent") {
+                    $studentInputElement = $('#selectstudent');
+                    $optionElement = $('<option>').text(name).attr('value', cookievalue);
+                    $studentInputElement.append($optionElement);
+
+                } else {
+                    $('#selectstudent').val(cookievalue);
+                    $('#studentId').text(cookievalue);
+
+                }
+            }//End of for loop
+            g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+            getCompanyChecklist(g_getLocalStorage);
+
+
+        });//End of document ready
+
+        function getCookie(name) {
+            var dc = document.cookie;
+            var prefix = name + "=";
+            var begin = dc.indexOf("; " + prefix);
+            if (begin == -1) {
+                begin = dc.indexOf(prefix);
+                if (begin != 0) return null;
+            } else {
+                begin += 2;
+            }
+            var end = document.cookie.indexOf(";", begin);
+            if (end == -1) {
+                end = dc.length;
+            }
+            return unescape(dc.substring(begin + prefix.length, end));
+        }
+
+        function setCookie() {
+            var inName = "selectedStudent";
+            var inValue = $('#selectstudent').val();
+            //setCookie("selectedStudent", ("#selectstudent").val());
+            var exdate = new Date();
+            var expiredays = 1;
+            exdate.setHours(exdate.getHours() + 4);
+            exdate.setDate(exdate.getDate());
+            document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+        };
+        function getCompanyChecklist(inStudentId) {
+            $.ajax({
+                url: '/api/Internship_Record/ViewCompanyChecklist/' + inStudentId,
+                method: 'GET',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                cache: false,
+                success: function (data) {
+                    $('#q1').prop('checked', data.CompanyCheck1a);
+                    $('#q2').prop('checked', data.CompanyCheck1b);
+                    $('#q3').prop('checked', data.CompanyCheck2a);
+
+                    $('#q4').prop('checked', data.CompanyCheck2b);
+                    $('#q5').prop('checked', data.CompanyCheck2c);
+                    $('#q6').prop('checked', data.CompanyCheck2d);
+                    $('#q7').prop('checked', data.CompanyCheck2e);
+                    $('#q8').prop('checked', data.CompanyCheck2f);
+
+                    $('#q9').prop('checked', data.CompanyCheck3a);
+                    $('#q10').prop('checked', data.CompanyCheck3b);
+                    $('#q11').prop('checked', data.CompanyCheck3c);
+                },//End of success
+                error: function (data) {
+                    swal({
+                        type: 'error',
+                        title: 'Error',
+                        text: data.Message
+                    });
+                }//End of error
+            });
+
+        }
     </script>
