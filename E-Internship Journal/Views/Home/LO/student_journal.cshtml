@@ -182,11 +182,10 @@
 
         }
         $('#selectstudent').on('change', function (e) {
-            console.dir('test');
             $('#studentId').text($(this).val());
         });
 
-    });
+    });//End of document ready
     function getCookie(name) {
         var dc = document.cookie;
         var prefix = name + "=";

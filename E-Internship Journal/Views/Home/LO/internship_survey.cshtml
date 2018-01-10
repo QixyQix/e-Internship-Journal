@@ -172,7 +172,7 @@
 
     function getStudentSurvey(inStudentId) {
         $.ajax({
-            url: '/api/Internship_Record/viewInternshipSurvey/' + inStudentId,
+            url: '/api/Internship_Record/ViewInternshipSurvey/' + inStudentId,
             method: 'GET',
             dataType: "json",
             contentType: "application/json; charset=utf-8",
@@ -186,6 +186,7 @@
                 $('#q6').val(data.FeedbackLeastEnjoy);
                 $('#q7').val(data.FeedbackTakeaway);
                 $('#q7').val(data.FeedbackCareer);
+                
             },//End of success
             error: function (data) {
                 swal({
