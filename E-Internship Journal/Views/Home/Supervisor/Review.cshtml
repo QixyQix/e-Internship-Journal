@@ -52,69 +52,78 @@
         </div>
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="attendance">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable_attendance" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Time in</th>
-                                    <th>Time Out</th>
-                                    <th>Remarks</th>
-                                    <th width="5%">Comments</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>2011/04/27</td>
-                                    <td>10:00</td>
-                                    <td>18:00</td>
-                                    <td>PH</td>
-                                    <td><input id="comments"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="card-header">
-                    <i class="fa fa-table"></i> Attendance Overall
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTableAttendanceOverall" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>Public Holidays</th>
-                                    <th>MCs</th>
-                                    <th>Company Off-Day</th>
-                                    <th>Leave of Absence</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                    <td>0</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="container text-left">
+                    <br />
                     <div>
-                        <form class="form-inline">
-                            <div class="form-group">
-                                <label class="col-md-2 control-label">Total no. of days required:</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" id="totaldays" type="text" value="80" readonly>
+                        <h5>Attendance</h5>
+                    </div>
+                    <hr />
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable_attendance" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Time in</th>
+                                        <th>Time Out</th>
+                                        <th>Remarks</th>
+                                        <th width="5%">Comments</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2011/04/27</td>
+                                        <td>10:00</td>
+                                        <td>18:00</td>
+                                        <td>PH</td>
+                                        <td><input id="comments"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <br />
+                    <div>
+                        <h5>Attendance Overall</h5>
+                    </div>
+                    <hr />
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTableAttendanceOverall" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Public Holidays</th>
+                                        <th>MCs</th>
+                                        <th>Company Off-Day</th>
+                                        <th>Leave of Absence</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div>
+                            <form class="form-inline">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">Total no. of days required:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" id="requiredDays" type="text" value="80" readonly>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-2 control-label">No. of working days:</label>
-                                <div class="col-sm-10">
-                                    <input class="form-control" id="totaldays" type="text" value="-" readonly>
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">No. of working days:</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" id="doneDays" type="text" value="-" readonly>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
