@@ -81,14 +81,16 @@ namespace E_Internship_Journal.API
 
         [HttpPut("updateInternshipSurvey/{id}")]
         [Authorize(Roles = "STUDENT")]
-        public IActionResult updateInternshipSurvey(int id, [FromBody] String value) {
+        public IActionResult updateInternshipSurvey(int id, [FromBody] String value)
+        {
             var internshipRecord = _context.Internship_Records
                 .Include(ir => ir.UserBatch)
                 .ThenInclude(ir => ir.Batch)
                 .Where(ir => ir.InternshipRecordId == id && _userManager.GetUserId(User).Equals(ir.UserBatch.User.Id))
                 .SingleOrDefault();
 
-            if (internshipRecord == null) {
+            if (internshipRecord == null)
+            {
                 return NotFound();
             }
 
@@ -108,7 +110,8 @@ namespace E_Internship_Journal.API
 
                 _context.SaveChanges();
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 return BadRequest(new { Message = e.Message.ToString() });
             }
 
@@ -116,7 +119,38 @@ namespace E_Internship_Journal.API
 
             return new OkObjectResult(new { Message = "Survey updated successfully!" });
         }
+        [HttpGet("viewInternshipSurvey/{id}")]
+        [Authorize(Roles = "LO")]
+        public IActionResult viewInternshipSurvey(int id, [FromBody] String value)
+        {
+            var internshipRecord = _context.Internship_Records
+                .Where(ir => ir.InternshipRecordId == id).SingleOrDefault();
+            if (internshipRecord == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                var response = new
+                {
+                    internshipRecord.FeedbackUseful,
+                    internshipRecord.FeedbackImproved,
+                    internshipRecord.FeedbackExperiences,
+                    internshipRecord.FeedbackRecommend,
+                    internshipRecord.FeedbackEnjoy,
+                    internshipRecord.FeedbackLeastEnjoy,
+                    internshipRecord.FeedbackTakeaway,
+                    internshipRecord.FeedbackCareer
 
+                };
+                return new JsonResult(response);
+            }
+            catch (Exception exceptionObject)
+            {
+                return BadRequest(new { Message = exceptionObject.Message });
+            }
+
+        }
         // PUT: api/Internship_Record/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutInternship_Record([FromRoute] int id, [FromBody] Internship_Record internship_Record)

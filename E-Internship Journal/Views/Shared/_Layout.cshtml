@@ -27,6 +27,7 @@
     <link href="~/lib/sweetalert2/dist/sweetalert2.css" rel="stylesheet" />
     <link href="~/lib/bootstrap-switch/dist/css/bootstrap-switch.css" rel="stylesheet" />
     <link href="~/lib/bootstrap-multiselect/dist/css/bootstrap-multiselect.css" rel="stylesheet" />
+    <link href="~/css/freelancer.css" rel="stylesheet" />
     <!-- Bootstrap core JavaScript -->
     <script src="~/js/jquery/jquery.js"></script>
     <script src="~/js/calendar/moment.min.js"></script>
@@ -62,16 +63,16 @@
                         </span>
                     </a>
                 </li>
-                <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Personal Particulars">
-                    <a class="nav-link" href="~/Home/Personal">
-                        <i class="fa fa-fw fa-user-o"></i>
-                        <span class="nav-link-text">
-                            Personal Particulars
-                        </span>
-                    </a>
-                </li>
                 @if (User.IsInRole("STUDENT"))
                 {
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Personal Particulars">
+                        <a class="nav-link" href="~/Home/Personal">
+                            <i class="fa fa-fw fa-user-o"></i>
+                            <span class="nav-link-text">
+                                Personal Particulars
+                            </span>
+                        </a>
+                    </li>
                     <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Daily Task">
                         <a class="nav-link" href="~/Home/Daily_Task">
                             <i class="fa fa-fw fa-calendar"></i>
@@ -131,17 +132,38 @@
                 }
                 else if (User.IsInRole("SUPERVISOR"))
                 {
-
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Personal Particulars">
+                        <a class="nav-link" href="~/Home/Personal">
+                            <i class="fa fa-fw fa-user-o"></i>
+                            <span class="nav-link-text">
+                                Personal Particulars
+                            </span>
+                        </a>
+                    </li>
 
                 }
                 else if (User.IsInRole("LO"))
                 {
-
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Personal Particulars">
+                        <a class="nav-link" href="~/Home/Personal">
+                            <i class="fa fa-fw fa-user-o"></i>
+                            <span class="nav-link-text">
+                                Personal Particulars
+                            </span>
+                        </a>
+                    </li>
 
                 }
                 else if (User.IsInRole("SLO"))
                 {
-
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Personal Particulars">
+                        <a class="nav-link" href="~/Home/Personal">
+                            <i class="fa fa-fw fa-user-o"></i>
+                            <span class="nav-link-text">
+                                Personal Particulars
+                            </span>
+                        </a>
+                    </li>
 
                 }
                 else
@@ -276,7 +298,7 @@
     </div>
 
 
-    <!-- Edit Manage Student Modal -->
+    @*<!-- Edit Manage Student Modal -->
     <div class="modal fade" id="updateManageStudentModal" tabindex="-1" role="dialog" aria-labelledby="updateManageStudentModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -332,7 +354,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>*@
 
     <!-- uploadcsv Modal -->
     <div class="modal fade" id="uploadcsvModal" tabindex="-1" role="dialog" aria-labelledby="uploadcsvModalLabel" aria-hidden="true">
@@ -416,6 +438,9 @@
     <script src="~/js/datetimepicker/bootstrap-datepicker.js"></script>
     <script src="~/lib/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
     <script src="~/lib/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
+    <script src="~/js/freelancer.js"></script>
+    <script src="~/js/jqBootstrapValidation.js"></script>
+    <script src="~/js/contact_me.js"></script>
     <script>
         $(document).ready(function () {
             $("#submit").click(function () {
@@ -444,6 +469,7 @@
                 format: 'dd/mm/yyyy',
                 todayHighlight: true,
                 autoclose: true
+             
             });
             //------end date script-----
             // check if this day has an event before

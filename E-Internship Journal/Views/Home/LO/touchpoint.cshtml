@@ -14,9 +14,7 @@
             <div class="form-group">
                 <div class="pull-left">
                     <label>Student Name:&nbsp</label>
-                    <select class="form-control" id="selectstudent">
-
-                    </select>
+                    <select class="form-control" id="selectstudent"></select>
                 </div>
             </div>
         </div>
@@ -42,7 +40,6 @@
                             <th>Date</th>
                             <th>Time</th>
                             <th>Comment</th>
-                            <th>Remarks</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -58,11 +55,11 @@
                 </div>
             </div>
         </div>
-        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+        <div class="card-footer"></div>
     </div>
 </div>
 
-    <!-- Add Touchpoint Modal -->
+<!-- Add Touchpoint Modal -->
 <div class="modal fade" id="addtpModal" tabindex="-1" role="dialog" aria-labelledby="addtpModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -103,7 +100,7 @@
                                     <i class="fa fa-clock-o"></i>
                                 </div>
 
-                                <input type='text' class="form-control" id="newTimeIn" required/>
+                                <input type='text' class="form-control" id="newTimeIn" required />
                             </div>
                         </div>
                         <div class="form-group ">
@@ -150,29 +147,30 @@
                                     <i class="fa fa-calendar">
                                     </i>
                                 </div>
-                                <input class="form-control" id="editDate" name="date" placeholder="MM/DD/YYYY" type="text">
+                                <input class="form-control" id="updateDate" name="date" placeholder="MM/DD/YYYY" type="text">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label requiredField" for="timein">
+                            <label class="control-label requiredField" for="editTimeIn">
                                 Time
                                 <span class="asteriskField">
                                     *
                                 </span>
                             </label>
-                            <div class='input-group date' id='timein'>
+                            <div class='input-group date' id='editTimeIn'>
                                 <div class="input-group-addon">
                                     <i class="fa fa-clock-o"></i>
                                 </div>
 
-                                <input type='text' class="form-control" id="editTimeIn"/>
+                                <input type='text' class="form-control" id="updateTimeIn" />
                             </div>
                         </div>
+
                         <div class="form-group ">
                             <label class="control-label" for="comment">
                                 Comment
                             </label>
-                            <textarea class="form-control" rows="5" id="editComment"></textarea>
+                            <textarea class="form-control" rows="5" id="updateComment"></textarea>
                         </div>
                     </form>
                 </div>
@@ -187,7 +185,12 @@
 </div>
 <script>
     var editor;
+
     $(document).ready(function () {
+        $('#editTimeIn').datetimepicker({
+            allowInputToggle: true,
+            format: 'LT'
+        });
         var cookies = document.cookie.split("; ");
         for (var i = 0; i < cookies.length; i++) {
             var cookie = cookies[i];
@@ -209,22 +212,26 @@
         }
         g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
         loadDataTable(g_getLocalStorage);
-        
+
 
         $('#addtp').on('click', function (e) {
             $('#addtpModal').modal('show');
         });
-        
+
         $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
             $('#updatetpModal').modal('show');
-            $('#editDate').val
-            $('#editTimeIn').val
-            $('#editComment').val
+            //$('#editDate').val($('#Date_1').text());
+            $('#updateDate').datepicker('setDate', $('#Date_' + $(this).val()).text());
+            //$('#editTimeIn').val
+            //$('#editComment').val
+            $('#updateTimeIn').val($('#Time_' + $(this).val()).text());
+            $('#updateComment').val($('#Comments_' + $(this).val()).text());
+
             $('#btnUpdate').val($(this).val());
         });
         $('#btnCreate').on('click', function (e) {
             if ($('#newDate').val() == null || $('#newTimeIn').val() == null) {
-                
+
                 swal({
                     type: 'error',
                     title: 'Oops!',
@@ -266,10 +273,10 @@
 
                 });//End of ajax call
             }//End of Else statement
-        
+
         })//End of btnCreate on Click Function
         $('#btnUpdate').on('click', function (e) {
-            if ($('#editDate').val() == null || $('#editTimeIn').val() == null) {
+            if ($('#updateDate').val() == null || $('#updateTimeIn').val() == null) {
 
                 swal({
                     type: 'error',
@@ -280,13 +287,13 @@
 
             }//end of If statement
             else {
-                var collectedDate = moment($('#editDate').val() + ' ' + $('#editTimeIn').val(), ["DD/MM/YYYY h:mm A"]).toDate();
-                var collectedComments = $('#editComment').val();
+                var collectedDate = moment($('#updateDate').val() + ' ' + $('#updateTimeIn').val(), ["DD/MM/YYYY h:mm A"]).toDate();
+                var collectedComments = $('#updateComment').val();
                 var webFormData = new WebFormData(collectedDate, collectedComments);
                 console.dir(webFormData);
                 $.ajax({
-                    url: '/Api/TouchPoint/UpdateTouchPointRecord/' +  $(this).val(),
-                    method: 'POST',
+                    url: '/Api/TouchPoint/UpdateTouchPointRecord/' + $(this).val(),
+                    method: 'PUT',
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
                     cache: false,
@@ -313,7 +320,7 @@
 
 
         })//End of btnUpdate on Click Function
-        
+
 
     });//End of Ready function
     function getCookie(name) {
@@ -342,9 +349,12 @@
         exdate.setDate(exdate.getDate());
         document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
     };//End of setCookie
-    function WebFormData(inDate , inComments) {
+    function WebFormData(inDate, inComments) {
         this.TouchPointDate = inDate;
         this.Comments = inComments;
+    }
+    function deleteTouchPointRecord() {
+        console.dir("test");
     }
     function loadDataTable(inId) {
         var g_table = $('#dataTable').DataTable({
@@ -359,23 +369,19 @@
             columns: [
                 {
                     data: "TouchPointDate",
-                    mRender: function (o) { return moment(o).format("DD/MM/YYYY") }
+                    mRender: function (data, type, row) { return '<span id="Date_' + row.TouchPointId + '" value="' + data + '">' + moment(data).format("DD/MM/YYYY") + '</span>' }
                 }, {
-                    data: "ArrivalTime",
-                    mRender: function (o) { return moment(o).format("H:m A") }
+                    data: "TouchPointDate",
+                    mRender: function (data, type, row) { return '<span id="Time_' + row.TouchPointId + '">' + moment(data).format("h:m A") + '</span>' }
 
                 }, {
-                    data: "DepartureTime",
-                    mRender: function (o) { return moment(o).format("H:m A") }
-
-                }, {
-                    data: "Comments"
-
+                    data: "Comments",
+                    mRender: function (data, type, row) { return '<span id="Comments_' + row.TouchPointId + '">' + data + '</span>' }
                 }, {
                     data: "TouchPointId",
                     "sWidth": "10%",
                     "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary" value="' + o + '"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn" value="' + o + '"><i class="fa fa-trash"></i></button>' }
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary" value="' + o + '"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button onclick="deleteTouchPointRecord()" class="btn btn-sm btn-danger" id="deletebtn" value="' + o + '"><i class="fa fa-trash"></i></button>' }
                 }
             ],
             language: {
@@ -383,4 +389,6 @@
             }
         });//End of DataTable
     }// End of loadDataTable Function
+
+
 </script>
