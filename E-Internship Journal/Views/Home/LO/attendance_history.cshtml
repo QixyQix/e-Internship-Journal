@@ -21,12 +21,8 @@
                     </select>
                 </div>
                 <div class="col-xs-12 pull-right">
-<<<<<<< Updated upstream
-                    <select class="form-control" id="selectWeek">
-=======
                     <label>View By:&nbsp</label>
-                    <select class="form-control" id="exampleSelect1">
->>>>>>> Stashed changes
+                    <select class="form-control" id="selectWeek">
                         <option>Week 1</option>
                         <option>Week 2</option>
                         <option>Week 3</option>
@@ -55,12 +51,12 @@
                     </thead>
                     <tbody>
                         @*<tr>
-                            <td>2011/04/27</td>
-                            <td>10:00</td>
-                            <td>18:00</td>
-                            <td>PH</td>
-                            <td></td>
-                        </tr>*@
+                                <td>2011/04/27</td>
+                                <td>10:00</td>
+                                <td>18:00</td>
+                                <td>PH</td>
+                                <td></td>
+                            </tr>*@
                     </tbody>
                 </table>
             </div>
@@ -107,11 +103,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">No. of working days:</label>
                         <div class="col-sm-10">
-<<<<<<< Updated upstream
                             <input class="form-control" id="workingDays" type="text" value="-" readonly>
-=======
-                            <input class="form-control" id="doneDays" type="text" value="-" readonly>
->>>>>>> Stashed changes
                         </div>
                     </div>
                 </form>
@@ -274,11 +266,11 @@
                 {
                     data: "Date",
                     mRender: function (o) { return moment(o).format("DD/MM/YYYY") }
-                },{
+                }, {
                     data: "ArrivalTime",
                     mRender: function (o) { return moment(o).format("H:m A") }
-                
-                },{
+
+                }, {
                     data: "DepartureTime",
                     mRender: function (o) { return moment(o).format("H:m A") }
 
@@ -314,7 +306,7 @@
             while (g_WeekNo.length) {
                 var obj = {};
                 var tempWeekVal = (g_WeekNo.splice(0, 4)).sort(function (a, b) { return a - b });
-                var tempWeekText = "Week " + tempWeekVal[0] + " to Week " + tempWeekVal[tempWeekVal.length - 1];
+                var tempWeekText = "Week " + tempWeekVal[0] + " - " + tempWeekVal[tempWeekVal.length - 1];
 
                 //obj[tempWeekText] = tempWeekVal;
                 //qqq.push(obj);
@@ -323,7 +315,7 @@
                 $weekInputElement.append($weekOptionElement);
 
             }
-            
+
         });//End of Then function
         selectedWeek();
     }
