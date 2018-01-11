@@ -13,11 +13,11 @@
     <div class="card" style="border-width:0px;">
         <div class="card-body">
             <div class="form-group">
-                <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
-                    <div class="form-inline">
-                        <select class="form-control" id="selectMonthRecord">
-                        </select>
-                    </div>
+                <div class="pull-left">
+                </div>
+                <div class="col-xs-12 pull-right">
+                    <label>View By:&nbsp</label>
+                    <select class="form-control" id="selectMonthRecord"></select>
                 </div>
             </div>
         </div>
@@ -32,7 +32,7 @@
                 <div class="col-6 pull-left">
                     <div class="form-group">
                         <label class="control-label" for="datelocked">
-                            Date of Session
+                            Session Date
                         </label>
                         <div class="input-group">
                             <div class="input-group-addon">
@@ -50,24 +50,23 @@
                             <div class="input-group-addon">
                                 <i class="fa fa-clock-o"></i>
                             </div>
-
-                            <input type='text' class="form-control" id="MentorSessionDateTimeStart" readonly/>
+                            <input type='text' class="form-control" id="MentorSessionDateTimeStart" readonly />
                         </div>
                     </div>
                 </div>
                 <div class="col-6 pull-right">
-                        <div class="form-group">
-                            <label class="control-label" for="timeoutlocked">
-                                Time ended
-                            </label>
-                            <div class='input-group date' id='timeoutlocked'>
-                                <div class="input-group-addon">
-                                    <i class="fa fa-clock-o"></i>
-                                </div>
-                                <input type='text' class="form-control" id="MentorSessionDateTimeEnd" readonly />
+                    <div class="form-group">
+                        <label class="control-label" for="timeoutlocked">
+                            Time ended
+                        </label>
+                        <div class='input-group date' id='timeoutlocked'>
+                            <div class="input-group-addon">
+                                <i class="fa fa-clock-o"></i>
                             </div>
+                            <input type='text' class="form-control" id="MentorSessionDateTimeEnd" readonly />
                         </div>
                     </div>
+                </div>
             </div>
         </div>
         <div class="card-footer"></div>
@@ -86,7 +85,6 @@
         </div>
         <div class="card-footer"></div>
     </div>
-
     <!--end with attendance taking-->
     <div class="card-body">
         <div class="form-group">
@@ -99,7 +97,6 @@
     </div>
     <br />
 </div>
-
 <script>
     var internshipRecordId = getCookie("InternshipRecordId");
     var monthRecords;

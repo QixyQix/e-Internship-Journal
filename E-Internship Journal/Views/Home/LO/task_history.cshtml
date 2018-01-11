@@ -17,7 +17,8 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="pull-left">
-                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
+                    <label>Student Name:&nbsp</label>
+                    <select class="form-control" id="selectstudent">
                         <option>Amelia Goh</option>
                         <option>Cho Qi Xiang</option>
                         <option>Tan Chia Wei</option>
@@ -236,7 +237,7 @@
             while (g_WeekNo.length) {
                 var obj = {};
                 var tempWeekVal = g_WeekNo.splice(0, 4);
-                var tempWeekText = "Week " + tempWeekVal[0] + " to Week " + tempWeekVal[tempWeekVal.length - 1];
+                var tempWeekText = "Week " + tempWeekVal[0] + " - " + tempWeekVal[tempWeekVal.length - 1];
 
                 //obj[tempWeekText] = tempWeekVal;
                 //qqq.push(obj);

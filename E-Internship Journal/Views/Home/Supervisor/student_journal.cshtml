@@ -23,94 +23,84 @@
                 </div>
             </div>
         </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-calendar fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Daily Tasks</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/Task_History" class="btn btn-primary">View Daily Tasks</a>
-                        </div>
+        <hr />
+        <section id="toDo">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-left">
+                        <h5 class="section-heading" style="text-decoration:underline;">TO DO</h5>
                     </div>
                 </div>
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-clock-o fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Attendance</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/attendance_history" class="btn btn-primary">View Attendance</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-check-square fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Competency</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/competency_history" class="btn btn-primary">Check Competency Checklist</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-pencil-square fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Reflection</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/reflection_history" class="btn btn-primary">View Monthly Reflection</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-eye fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Mentoring</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/mentoring_history" class="btn btn-primary">Mentoring History</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-building fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Company</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/company_checklist" class="btn btn-primary">Check Company Checklist</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card text-center">
-                        <div class="card-header">
-                            <i class="fa fa-graduation-cap fa-5x"></i>
-                        </div>
-                        <div class="card-body">
-                            <h2>Grading</h2>
-                            @*<p>View Daily <strong>Tasks</strong></p>*@
-                            <a href="~/Home/grading" class="btn btn-primary">Grading</a>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 text-center">
+                        <div class="service-box mt-5 mx-auto" onclick="location.href='company_checklist'">
+                            <i class="fa fa-4x fa-building text-primary mb-3 sr-icons"></i>
+                            <h3 class="mb-3">Company</h3>
+                            <p class="text-muted mb-0">Check on this checklist to ensure student(s) are progressing well.</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+        <hr />
+        <section id="forViewing">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-left">
+                        <h5 class="section-heading" style="text-decoration:underline;">FOR VIEWING</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 text-center">
+                        <div class="service-box mt-5 mx-auto" onclick="location.href='Task_History'">
+                            <i class="fa fa-4x fa-calendar text-primary mb-3 sr-icons"></i>
+                            <h3 class="mb-3">Daily Tasks</h3>
+                            <p class="text-muted mb-0">View student's daily tasks.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 text-center">
+                        <div class="service-box mt-5 mx-auto" onclick="location.href='attendance_history'">
+                            <i class="fa fa-4x fa-clock-o text-primary mb-3 sr-icons"></i>
+                            <h3 class="mb-3">Attendance</h3>
+                            <p class="text-muted mb-0">View student's daily attendance.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 text-center">
+                        <div class="service-box mt-5 mx-auto" onclick="location.href='competency_history'">
+                            <i class="fa fa-4x fa-check-square text-primary mb-3 sr-icons"></i>
+                            <h3 class="mb-3">Checklist</h3>
+                            <p class="text-muted mb-0">View student's monthly competency checklist.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 text-center">
+                        <div class="service-box mt-5 mx-auto" onclick="location.href='reflection_history'">
+                            <i class="fa fa-4x fa-pencil-square text-primary mb-3 sr-icons"></i>
+                            <h3 class="mb-3">Reflection</h3>
+                            <p class="text-muted mb-0">View student's monthly reflection</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 text-center">
+                        <div class="service-box mt-5 mx-auto" onclick="location.href='mentoring_history'">
+                            <i class="fa fa-4x fa-eye text-primary mb-3 sr-icons"></i>
+                            <h3 class="mb-3">Mentoring</h3>
+                            <p class="text-muted mb-0">View student's records of mentoring session.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 text-center">
+                        <div class="service-box mt-5 mx-auto" onclick="location.href='grading'">
+                            <i class="fa fa-4x fa-graduation-cap text-primary mb-3 sr-icons"></i>
+                            <h3 class="mb-3">Grading</h3>
+                            <p class="text-muted mb-0">View student's grades.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <hr />
         <div class="card-body">
             <div class="form-group">
                 <div class="col-12">

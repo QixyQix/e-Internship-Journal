@@ -54,12 +54,12 @@
                     </thead>
                     <tbody>
                         @*<tr>
-                            <td>2011/04/27</td>
-                            <td>10:00</td>
-                            <td>18:00</td>
-                            <td>PH</td>
-                            <td></td>
-                        </tr>*@
+                                <td>2011/04/27</td>
+                                <td>10:00</td>
+                                <td>18:00</td>
+                                <td>PH</td>
+                                <td></td>
+                            </tr>*@
                     </tbody>
                 </table>
             </div>
@@ -271,11 +271,11 @@
                 {
                     data: "Date",
                     mRender: function (o) { return moment(o).format("DD/MM/YYYY") }
-                },{
+                }, {
                     data: "ArrivalTime",
                     mRender: function (o) { return moment(o).format("H:m A") }
-                
-                },{
+
+                }, {
                     data: "DepartureTime",
                     mRender: function (o) { return moment(o).format("H:m A") }
 
@@ -311,7 +311,7 @@
             while (g_WeekNo.length) {
                 var obj = {};
                 var tempWeekVal = (g_WeekNo.splice(0, 4)).sort(function (a, b) { return a - b });
-                var tempWeekText = "Week " + tempWeekVal[0] + " to Week " + tempWeekVal[tempWeekVal.length - 1];
+                var tempWeekText = "Week " + tempWeekVal[0] + " - " + tempWeekVal[tempWeekVal.length - 1];
 
                 //obj[tempWeekText] = tempWeekVal;
                 //qqq.push(obj);
@@ -320,7 +320,7 @@
                 $weekInputElement.append($weekOptionElement);
 
             }
-            
+
         });//End of Then function
         selectedWeek();
     }
