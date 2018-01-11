@@ -29,6 +29,7 @@ namespace E_Internship_Journal.API
 
         // GET: api/values
         [HttpGet("InternshipMonthRecords/{id}")]
+        [Authorize(Roles = "STUDENT , LO")]
         public IActionResult GetInternshipMonthRecords(int id)
         {
             var internshipRecord = _context.Internship_Records
