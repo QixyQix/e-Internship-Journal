@@ -15,13 +15,7 @@
             <div class="form-group">
                 <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
                     <div class="form-inline">
-                        <label for="exampleFormControlSelect1">Session #</label>
-                        <select class="form-control" id="exampleFormControlSelect1">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
+                        <select class="form-control" id="selectMonthRecord">
                         </select>
                     </div>
                 </div>
@@ -37,17 +31,7 @@
             <div class="col-12">
                 <div class="col-6 pull-left">
                     <div class="form-group">
-                        <label for="exampleFormControlSelect1">Mentoring Session #</label>
-                        <select class="form-control" id="exampleFormControlSelect1" disabled>
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                            <option>5</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label" for="date">
+                        <label class="control-label" for="datelocked">
                             Date of Session
                         </label>
                         <div class="input-group">
@@ -55,32 +39,32 @@
                                 <i class="fa fa-calendar">
                                 </i>
                             </div>
-                            <input class="form-control" id="date" name="date" placeholder="DD/MM/YYYY" type="text" readonly>
+                            <input class="form-control" id="datelocked" name="date" placeholder="DD/MM/YYYY" type="text" readonly>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label" for="timein">
+                        <label class="control-label" for="timeinlocked">
                             Time started
                         </label>
-                        <div class='input-group date' id='timein'>
+                        <div class='input-group date' id='timeinlocked'>
                             <div class="input-group-addon">
                                 <i class="fa fa-clock-o"></i>
                             </div>
 
-                            <input type='text' class="form-control" id="timeinval" readonly/>
+                            <input type='text' class="form-control" id="MentorSessionDateTimeStart" readonly/>
                         </div>
                     </div>
                 </div>
                 <div class="col-6 pull-right">
                         <div class="form-group">
-                            <label class="control-label" for="timeout">
+                            <label class="control-label" for="timeoutlocked">
                                 Time ended
                             </label>
-                            <div class='input-group date' id='timeout'>
+                            <div class='input-group date' id='timeoutlocked'>
                                 <div class="input-group-addon">
                                     <i class="fa fa-clock-o"></i>
                                 </div>
-                                <input type='text' class="form-control" id="timeoutval" readonly />
+                                <input type='text' class="form-control" id="MentorSessionDateTimeEnd" readonly />
                             </div>
                         </div>
                     </div>
@@ -95,8 +79,8 @@
         <div class="card-body">
             <div class="col-12">
                 <div class="form-group">
-                    <label class="control-label" for="comment">Please note down what you have learnt from the mentoring session. The areas of learning may include, but not limited to, an overview of the company structure, nature of business and work requirements; jobs prospects and career paths within the industry; or work experience of your mentor in the industry</label>
-                    <textarea class="form-control" rows="5" id="comment" readonly></textarea>
+                    <label class="control-label" for="MentorSessionReflection">Please note down what you have learnt from the mentoring session. The areas of learning may include, but not limited to, an overview of the company structure, nature of business and work requirements; jobs prospects and career paths within the industry; or work experience of your mentor in the industry</label>
+                    <textarea class="form-control" rows="5" id="MentorSessionReflection" readonly></textarea>
                 </div>
             </div>
         </div>
@@ -117,6 +101,58 @@
 </div>
 
 <script>
-    $(document).ready(function () {
+    var internshipRecordId = getCookie("InternshipRecordId");
+    var monthRecords;
+
+    if (internshipRecordId != null) {
+        $.ajax({
+            url: '/api/month_record/InternshipMonthRecords/' + internshipRecordId,
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                console.dir(data);
+                monthRecords = data;
+                if (data.length > 0) {
+                    var selectedMonth = monthRecords[0];
+                    $('#date').val(moment(new Date(selectedMonth.MentorSessionDateTimeStart)).format('DD/MM/YYYY'));
+                    $('#MentorSessionDateTimeStart').val(moment(new Date(selectedMonth.MentorSessionDateTimeStart)).format('hh:mm A'));
+                    $('#MentorSessionDateTimeEnd').val(moment(new Date(selectedMonth.MentorSessionDateTimeEnd)).format('hh:mm A'));
+                    $('#MentorSessionReflection').val(selectedMonth.MentorSessionReflection);
+                }
+                for (i = 0; i < data.length; i++) {
+                    var selectMonthRecord
+                    var newOption = $('<option>').text('Month ' + (i + 1)).val(i);
+                    $('#selectMonthRecord').append(newOption);
+                }
+            }
+        });
+    }
+
+
+    $('#selectMonthRecord').change(function () {
+        var selectedMonth = monthRecords[$(this).val()];
+        $('#datelocked').val(moment(new Date(selectedMonth.MentorSessionDateTimeStart)).format('DD/MM/YYYY'));
+        $('#MentorSessionDateTimeStart').val(moment(new Date(selectedMonth.MentorSessionDateTimeStart)).format('hh:mm A'));
+        $('#MentorSessionDateTimeEnd').val(moment(new Date(selectedMonth.MentorSessionDateTimeEnd)).format('hh:mm A'));
+        $('#MentorSessionReflection').val(selectedMonth.MentorSessionReflection);
     });
+
+
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
 </script>
