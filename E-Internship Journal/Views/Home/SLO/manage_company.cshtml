@@ -37,22 +37,22 @@
                     <thead>
                         <tr>
                             <th width="5%"><input name="select_all" value="1" type="checkbox" /></th>
-                            <th>Company Name</th>
-                            <th>Address</th>
-                            <th>Contact Person</th>
-                            <th>Email Address</th>
-                            <th>Mobile No.</th>
-                            <th>Fax</th>
+                            <th class="C_Name">Company Name</th>
+                            <th class="C_Add">Address</th>
+                            <th class="CP_Name">Contact Person</th>
+                            <th class="E_Add">Email Address</th>
+                            <th class="M_NO">Mobile No.</th>
+                            <th class="Fax">Fax</th>
                             <th width="10%">Action</th>
                         </tr>
                         <tr id="filterrow">
                             <th></th>
-                            <th>Company Name</th>
-                            <th>Address</th>
-                            <th>Contact Person</th>
-                            <th>Email Address</th>
-                            <th>Mobile No.</th>
-                            <th>Fax</th>
+                            <th class="C_Name">Company Name</th>
+                            <th class="C_Add">Address</th>
+                            <th class="CP_Name">Contact Person</th>
+                            <th class="E_Add">Email Address</th>
+                            <th class="M_NO">Mobile No.</th>
+                            <th class="Fax">Fax</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -114,6 +114,26 @@
     </div>
     &nbsp;
     </div>
+
+<style>
+
+@@media only screen and (max-width: 768px) {
+	.Fax, tr td:nth-child(7)		{ display:none; visibility:hidden; }
+}
+
+@@media only screen and (max-width: 420px) {
+	.Fax, tr td:nth-child(7)	{ display:none; visibility:hidden; }
+	.M_NO, tr td:nth-child(6)	{ display:none; visibility:hidden; }
+	.C_Add, tr td:nth-child(3)			{ display:none; visibility:hidden; }
+}
+
+@@media only screen and (max-width: 320px) {
+	.Fax, tr td:nth-child(7)	{ display:none; visibility:hidden; }
+	.M_NO, tr td:nth-child(6)	{ display:none; visibility:hidden; }
+	.C_Add, tr td:nth-child(3)			{ display:none; visibility:hidden; }
+}
+</style>
+
     <script>
     //
     // Updates "Select all" control in a data table

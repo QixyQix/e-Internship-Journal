@@ -37,20 +37,20 @@
                     <thead>
                         <tr>
                             <th width="5%"><input name="select_all" value="1" type="checkbox" /></th>
-                            <th>Project name</th>
-                            <th>Supervisor</th>
-                            <th>Supervisor's Contact No</th>
-                            <th>Supervisor's Email</th>
-                            <th>Company</th>
+                            <th class="Proj">Project name</th>
+                            <th class="Superv">Supervisor</th>
+                            <th class="S_NO">Supervisor's Contact No</th>
+                            <th class="S_Email">Supervisor's Email</th>
+                            <th class="Comp">Company</th>
                             <th width="10%">Action</th>
                         </tr>
                         <tr id="filterrow">
                             <th></th>
-                            <th>Project name</th>
-                            <th>Supervisor</th>
-                            <th>Supervisor's Contact No</th>
-                            <th>Supervisor's Email</th>
-                            <th>Company</th>
+                            <th class="Proj">Project name</th>
+                            <th class="Superv">Supervisor</th>
+                            <th class="S_NO">Supervisor's Contact No</th>
+                            <th class="S_Email">Supervisor's Email</th>
+                            <th class="Comp">Company</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -107,6 +107,24 @@
         </div>
     </div>
 </div>
+
+<style>
+
+@@media only screen and (max-width: 768px) {
+	.S_NO, tr td:nth-child(4)		{ display:none; visibility:hidden; }
+}
+
+@@media only screen and (max-width: 420px) {
+	.S_NO, tr td:nth-child(4)	{ display:none; visibility:hidden; }
+	.S_Email, tr td:nth-child(5)			{ display:none; visibility:hidden; }
+}
+
+@@media only screen and (max-width: 320px) {
+	.S_NO, tr td:nth-child(4)	{ display:none; visibility:hidden; }
+	.S_Email, tr td:nth-child(5)			{ display:none; visibility:hidden; }
+}
+</style>
+
 <script>
        //
        // Updates "Select all" control in a data table
@@ -355,3 +373,4 @@
            });
        });
 </script>
+
