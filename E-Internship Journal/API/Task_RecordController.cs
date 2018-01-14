@@ -74,7 +74,8 @@ namespace E_Internship_Journal.API
                     Description = task.Description,
                     TaskRecordId = task.TaskRecordId,
                     TaskRemarks = task.Remarks,
-                    WeekNo = task.WeekNo
+                    WeekNo = task.WeekNo,
+                    task.MonthRecordId
 
                 });
             }

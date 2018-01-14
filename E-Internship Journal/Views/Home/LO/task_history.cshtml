@@ -149,7 +149,7 @@
         });
         $('#selectWeek').on('change', function (e) {
             //console.dir('testing');
-            g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+            //g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
             selectedWeek();
         });
 
@@ -225,24 +225,24 @@
     function loadWeekOption() {
         $("#selectWeek option").remove();
         g_taskData.then(function (data) {
-            var finalData = [];
+            var g_Month = [];
+            var g_MonthRecordId = [];
             for (i = 0; i < data.length; i++) {
-                if (g_WeekNo.includes(data[i].WeekNo)) {
+                if (g_Month.includes(Math.ceil(data[i].WeekNo / 4))) {
                     //Do nothing
-
                 } else {
-                    g_WeekNo.push(data[i].WeekNo);
-                }
-            };
-            while (g_WeekNo.length) {
-                var obj = {};
-                var tempWeekVal = g_WeekNo.splice(0, 4);
-                var tempWeekText = "Week " + tempWeekVal[0] + " - " + tempWeekVal[tempWeekVal.length - 1];
 
-                //obj[tempWeekText] = tempWeekVal;
-                //qqq.push(obj);
+                    g_Month.push(Math.ceil(data[i].WeekNo / 4));
+                    g_MonthRecordId.push(data[i].MonthRecordId);
+                }
+
+            };
+            for (k = 0; k < g_Month.length; k++) {
+                var tempWeek = g_Month[k] * 4;
+
+                var tempWeekText = "Week " + (tempWeek - 3) + " to Week " + tempWeek;
                 $weekInputElement = $('#selectWeek');
-                $weekOptionElement = $('<option>').text(tempWeekText).attr('value', tempWeekVal);
+                $weekOptionElement = $('<option>').text(tempWeekText).attr('value', g_MonthRecordId[k]);
                 $weekInputElement.append($weekOptionElement);
 
             }
@@ -255,7 +255,7 @@
             var finalData = [];
             var selectedWeek = $('#selectWeek').val().split(',').map(Number);
             for (i = 0; i < data.length; i++) {
-                if (selectedWeek.includes(data[i].WeekNo)) {
+                if (selectedWeek.includes(data[i].MonthRecordId)) {
                     finalData.push(data[i]);
 
                 }
