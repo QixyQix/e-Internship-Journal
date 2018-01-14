@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using E_Internship_Journal.Data;
 using E_Internship_Journal.Models;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Identity;
 
 namespace E_Internship_Journal.API
 {
@@ -16,9 +17,10 @@ namespace E_Internship_Journal.API
     public class CompetenciesController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public CompetenciesController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public CompetenciesController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
+            _userManager = userManager;
             _context = context;
         }
 
@@ -41,6 +43,42 @@ namespace E_Internship_Journal.API
             }
 
             return new JsonResult(competencies_List);
+        }
+
+        [HttpGet("getInternshipCompetncies/{id}")]
+        public IActionResult GetInternshipCompetncies(int id) {
+            Internship_Record internshipRecord = _context.Internship_Records.Where(ir => ir.InternshipRecordId == id)
+                .Include(ir => ir.UserBatch)
+                .ThenInclude(ub => ub.Batch)
+                .ThenInclude(batch => batch.Course)
+                .ThenInclude(course => course.Competencies)
+                .Include(ir => ir.UserBatch)
+                .ThenInclude(ub => ub.User)
+                .SingleOrDefault();
+
+            if (internshipRecord == null)
+            {
+                return BadRequest(new { Message = "This internshipRecord does not exist." });
+            }
+
+            List<object> competencyObjList = new List<object>();
+
+            foreach (var competency in internshipRecord.UserBatch.Batch.Course.Competencies) {
+                competencyObjList.Add(new
+                {
+                    CompetencyId = competency.CompetencyId,
+                    TitleDescription = competency.TitleDescription,
+                    Description = competency.Description,
+                    DeletedAt = competency.DeletedAt,
+                    ModifiedBy = competency.ModifiedBy,
+                    ModifiedAt = competency.ModifiedAt,
+                    CreatedBy = competency.CreatedBy,
+                    CourseId = competency.CourseId
+                });
+            }
+
+            return new OkObjectResult(competencyObjList);
+
         }
 
         // GET: api/Competencies/5

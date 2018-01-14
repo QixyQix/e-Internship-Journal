@@ -35,6 +35,7 @@ namespace E_Internship_Journal.API
             var internshipRecord = _context.Internship_Records
                 .Where(ir => ir.InternshipRecordId == id)
                 .Include(ir => ir.MonthRecords)
+                .ThenInclude(mr => mr.CompetencyCheckeds)
                 .SingleOrDefault();
 
             if (internshipRecord == null)
@@ -46,6 +47,18 @@ namespace E_Internship_Journal.API
 
             foreach (var monthRecord in internshipRecord.MonthRecords)
             {
+                List<object> checkedCompetencyObjList = new List<object>();
+
+                foreach (var cc in monthRecord.CompetencyCheckeds)
+                {
+                    checkedCompetencyObjList.Add(new
+                    {
+                        CompentencyCheckedId = cc.CompentencyCheckedId,
+                        MonthRecordId = cc.MonthRecordId,
+                        CompetencyId = cc.CompetencyId
+                    });
+                }
+
                 monthRecordObjList.Add(new
                 {
                     MonthId = monthRecord.MonthId,
@@ -63,7 +76,8 @@ namespace E_Internship_Journal.API
                     IndependenceGrading = monthRecord.IndependenceGrading,
                     PerformanceGrading = monthRecord.PerformanceGrading,
                     OverallGrading = monthRecord.OverallGrading,
-                    OverallFeedback = monthRecord.OverallFeedback
+                    OverallFeedback = monthRecord.OverallFeedback,
+                    CompetencyCheckeds = checkedCompetencyObjList
                 });
             }
 
@@ -82,6 +96,8 @@ namespace E_Internship_Journal.API
                 .Where(ir => ir.UserBatch.User.Id.Equals(_userManager.GetUserId(User)))
                 .Include(ir => ir.MonthRecords)
                 .ThenInclude(mn => mn.DayRecords)
+                .Include(ir => ir.MonthRecords)
+                .ThenInclude(mn => mn.CompetencyCheckeds)
                 .SingleOrDefault();
 
             if (internshipRecord == null)
@@ -104,6 +120,17 @@ namespace E_Internship_Journal.API
                 _context.SaveChanges();
             }
 
+            List<object> checkedCompetencyObjList = new List<object>();
+
+            foreach (var cc in monthRecord.CompetencyCheckeds) {
+                checkedCompetencyObjList.Add(new
+                {
+                    CompentencyCheckedId = cc.CompentencyCheckedId,
+                    MonthRecordId = cc.MonthRecordId,
+                    CompetencyId = cc.CompetencyId
+                });
+            }
+
             var monthRecordObj = new
             {
                 MonthId = monthRecord.MonthId,
@@ -121,11 +148,56 @@ namespace E_Internship_Journal.API
                 IndependenceGrading = monthRecord.IndependenceGrading,
                 PerformanceGrading = monthRecord.PerformanceGrading,
                 OverallGrading = monthRecord.OverallGrading,
-                OverallFeedback = monthRecord.OverallFeedback
+                OverallFeedback = monthRecord.OverallFeedback,
+                CompetencyCheckeds = checkedCompetencyObjList
             };
 
             return new OkObjectResult(monthRecordObj);
 
+        }
+
+        [HttpPut("UpdateCompetencyCheckList/{id}")]
+        [Authorize(Roles = "STUDENT")]
+        public IActionResult UpdateCompetencyCheckList(int id, [FromBody] string value) {
+            Month_Record monthRecord = _context.Month_Records
+                .Include(mr => mr.InternshipRecord)
+                .ThenInclude(ir => ir.UserBatch)
+                .ThenInclude(ub => ub.Batch)
+                .Include(mr => mr.InternshipRecord)
+                .ThenInclude(ir => ir.UserBatch)
+                .ThenInclude(ub => ub.User)
+                .Where(mr => mr.InternshipRecord.UserBatch.Batch.StartDate < DateTime.Now && mr.InternshipRecord.UserBatch.Batch.EndDate > DateTime.Now && mr.MonthId == id)
+                .SingleOrDefault();
+
+            if (monthRecord == null)
+            {
+                return BadRequest(new { Message = "This month record is not editable or does not exist." });
+            }
+            else if (!monthRecord.InternshipRecord.UserBatch.User.Id.Equals(_userManager.GetUserId(User)))
+            {
+                return BadRequest(new { Message = "This month record does not belong to you!" });
+            }
+            else if (monthRecord.Approved == true)
+            {
+                return BadRequest(new { Message = "This month's records have already been approved and cannot be edited" });
+            }
+
+            var competencyInput = JsonConvert.DeserializeObject<dynamic>(value);
+
+            var competencyChecked = _context.Competency_Checkeds.Where(cc => cc.MonthRecordId == id)
+                .ToList();
+
+            foreach (var cc in competencyChecked) {
+                _context.Competency_Checkeds.Remove(cc);
+            }
+
+            foreach (var competencyId in competencyInput.CompetencyIds) {
+                _context.Competency_Checkeds.Add(new Competency_Checked { MonthRecord = monthRecord, CompetencyId = competencyId });
+            }
+
+            _context.SaveChanges();
+
+            return new OkObjectResult(new { Message = "Month Record Updated Successfully!" });
         }
 
         [HttpPut("UpdateMentorSession/{id}")]

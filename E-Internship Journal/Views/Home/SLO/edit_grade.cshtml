@@ -1,173 +1,73 @@
 ﻿<div class="container-fluid">
-    <!-- Breadcrumbs-->
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a href="~/Home/Index">Homepage</a>
-        </li>
-        <li class="breadcrumb-item">
-            <a href="~/Home/ViewBatch">Manage Grades</a>
-        </li>
-        <li class="breadcrumb-item active">Edit Grade</li>
-    </ol>
     <!-- Example DataTables Card-->
-    <div class="card mb-3">
-        <div class="card-header">
-            <i class="fa fa-table"></i> Edit Grade
-        </div>
-
-        <div>
-            <form class="form-group">
-                <div class="form-inline">
-                    <label class="col-md-2 control-label">Student ID:</label>
-                    <div class="col-sm-3">
-                        <input class="form-control" id="studentId" type="text" readonly>
-                    </div>
-                </div>
-                <div class="form-inline">
-                    <label class="col-md-2 control-label">Name:</label>
-                    <div class="col-sm-3">
-                        <input class="form-control" id="studentName" type="text" readonly>
-                    </div>
-                </div>
-                <div class="form-inline">
-                    <label class="col-md-2 control-label">Supervisor's Grading (%):</label>
-                    <div class="col-sm-3">
-                        <input class="form-control" id="supervisorgrading" type="text" readonly>
-                    </div>
-                </div>
-                <div class="form-inline">
-                    <label class="col-md-2 control-label">LO's Grading (%):</label>
-                    <div class="col-sm-3">
-                        <input class="form-control" id="lograding" type="text" readonly>
-                    </div>
-                </div>
-                <div class="form-inline">
-                    <label class="col-md-2 control-label">Final Grading (%):</label>
-                    <div class="col-sm-3">
-                        <input class="form-control" id="finalgrading" type="text">
-                    </div>
-                </div>
-                <div class="form-inline">
-                    <label class="col-md-2 control-label">Grade:</label>
-                    <div class="col-sm-3">
-                        <input class="form-control" id="grade" type="text" readonly>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="card-footer"></div>
-    </div>
-    <div class="card-body">
-        <div class="form-group">
-            <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
-                    Back
-                </button>
-                <button class="btn btn-primary pull-right" name="submit" type="submit">
-                    Save
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Project Modal -->
-<div class="modal fade" id="projectModal" tabindex="-1" role="dialog" aria-labelledby="projectModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="projectModalLabel">Project Assigned</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <div class="col-12">
-                    <form>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <input class="form-control" placeholder="Search...">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-search">
-                                    </i>
-                                </div>
+    <section id="contact">
+        <div class="container">
+            <h2 class="text-center text-uppercase text-secondary mb-0">Edit Student</h2>
+            <hr />
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
+                    <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
+                    <form name="sentMessage" id="contactForm" novalidate="novalidate">
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Student ID</label>
+                                <input class="form-control" id="studentId" type="text" placeholder="Student ID" style="background-color:white" readonly>
+                                <p class="help-block text-danger"></p>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <textarea class="form-control" rows="5" id="task">Parliament</textarea>
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Name</label>
+                                <input class="form-control" id="studentName" type="text" placeholder="Student Name" style="background-color:white" readonly>
+                                <p class="help-block text-danger"></p>
+                            </div>
                         </div>
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Supervisor's Grading (%)</label>
+                                <input class="form-control" id="supervisor_grading" type="number" placeholder="Supervisor's Grading (%)" style="background-color:white" readonly>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>LO's Grading (%)</label>
+                                <input class="form-control" id="lo_grading" type="number" placeholder="LO's' Grading (%)" style="background-color:white" readonly>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Final Grading (%)</label>
+                                <input class="form-control" id="final_grading" type="number" placeholder="Final Grading (%)" style="background-color:white">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Grade</label>
+                                <input class="form-control" id="grade" type="number" placeholder="Grade" style="background-color:white" readonly>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <br>
+                        <div id="success"></div>
                         <div class="form-group">
                             <div class="col-12">
-                                <div class="form-inline">
-                                    <label>Selected: &nbsp;</label>
-                                    <input class="form-control" value="Parliament" readonly>
-                                </div>
+                                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Manage_Student'">
+                                    Back
+                                </button>
+                                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                                    Update
+                                </button>
                             </div>
                         </div>
+                        <br />
+                        <br />
                     </form>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
-                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
-            </div>
         </div>
-    </div>
+    </section>
 </div>
-
-<!-- SLO Modal -->
-<div class="modal fade" id="loModal" tabindex="-1" role="dialog" aria-labelledby="loModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="loModalLabel">LO Assigned</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <div class="col-12">
-                    <form>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <input class="form-control" placeholder="Search...">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-search">
-                                    </i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" rows="5" id="task">Kish Choy</textarea>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-12">
-                                <div class="form-inline">
-                                    <label>Selected: &nbsp;</label>
-                                    <input class="form-control" value="Kish Choy" readonly>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
-                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
-            </div>
-        </div>
-    </div>
-</div>
-<script>
-    function findProjectModal() {
-        $('#projectModal').modal('show');
-        //http://www.dyn-web.com/tutorials/forms/select/multi-selected.php
-        //please take a look at this for reference
-    }
-    function findLOModal() {
-        $('#loModal').modal('show');
-        //http://www.dyn-web.com/tutorials/forms/select/multi-selected.php
-        //please take a look at this for reference
-    }
-</script>
