@@ -64,17 +64,19 @@ namespace E_Internship_Journal.API
             List<object> competencyObjList = new List<object>();
 
             foreach (var competency in internshipRecord.UserBatch.Batch.Course.Competencies) {
-                competencyObjList.Add(new
-                {
-                    CompetencyId = competency.CompetencyId,
-                    TitleDescription = competency.TitleDescription,
-                    Description = competency.Description,
-                    DeletedAt = competency.DeletedAt,
-                    ModifiedBy = competency.ModifiedBy,
-                    ModifiedAt = competency.ModifiedAt,
-                    CreatedBy = competency.CreatedBy,
-                    CourseId = competency.CourseId
-                });
+                if (competency.DeletedAt != null) {
+                    competencyObjList.Add(new
+                    {
+                        CompetencyId = competency.CompetencyId,
+                        TitleDescription = competency.TitleDescription,
+                        Description = competency.Description,
+                        DeletedAt = competency.DeletedAt,
+                        ModifiedBy = competency.ModifiedBy,
+                        ModifiedAt = competency.ModifiedAt,
+                        CreatedBy = competency.CreatedBy,
+                        CourseId = competency.CourseId
+                    });
+                }
             }
 
             return new OkObjectResult(competencyObjList);

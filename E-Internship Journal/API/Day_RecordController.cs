@@ -64,6 +64,39 @@ namespace E_Internship_Journal.API
             return new JsonResult(Day_Records_List);
         }
 
+        [HttpGet("getLatestInternshipMonthDayRecords/{id}")]
+        public IActionResult GetLatestInternshipMonthDayRecords(int id) {
+            List<object> Day_Records_List = new List<object>();
+
+            var internshipRecord = _context.Internship_Records
+                .Where(ir => ir.InternshipRecordId == id)
+                .Include(ir => ir.MonthRecords)
+                .ThenInclude(mr => mr.DayRecords)
+                .SingleOrDefault();
+
+            if (internshipRecord == null) {
+                return new BadRequestObjectResult(new { Message = "Internship record does not exist" });
+            }
+
+            //Latest month record
+            Month_Record monthRecord = internshipRecord.MonthRecords[internshipRecord.MonthRecords.Count-1];
+
+            foreach (var dayRecord in monthRecord.DayRecords)
+            {
+                Day_Records_List.Add(new
+                {
+                    DayId = dayRecord.DayId,
+                    Date = dayRecord.Date,
+                    ArrivalTime = dayRecord.ArrivalTime,
+                    DepartureTime = dayRecord.DepartureTime,
+                    WeekNo = dayRecord.WeekNo,
+                    Remarks = dayRecord.Remarks,
+                    MonthRecordId = dayRecord.MonthRecordId
+                });
+            }
+            return new JsonResult(Day_Records_List);
+        }
+
         // GET: api/Day_Record
         [Authorize(Roles = "LO")]
         [HttpGet("getStudentDayRecords/{id}")]
@@ -122,6 +155,34 @@ namespace E_Internship_Journal.API
             {
                 return NotFound(new { Message = "Day record not found" });
             }
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "STUDENT")]
+        public IActionResult DeleteDay_Record(int id) {
+            Day_Record dayRecord = _context.Day_Records.Where(dr => dr.DayId == id)
+                .Include(dr => dr.Month)
+                .ThenInclude(mr => mr.InternshipRecord)
+                .ThenInclude(ir => ir.UserBatch)
+                .ThenInclude(ub => ub.User)
+                .SingleOrDefault();
+
+            if (dayRecord == null)
+            {
+                return new BadRequestObjectResult(new { Message = "Day record does not exist!" });
+            }
+            else if (dayRecord.Month.Approved == true)
+            {
+                return new BadRequestObjectResult(new { Message = "The month this day record belongs to has already been approved and cannot be edited" });
+            }
+            else if (!dayRecord.Month.InternshipRecord.UserBatch.User.Id.Equals(_userManager.GetUserId(User))) {
+                return new BadRequestObjectResult(new { Message = "This day record does not belong to you!" });
+            }
+
+            _context.Day_Records.Remove(dayRecord);
+            _context.SaveChanges();
+
+            return new OkObjectResult(new { Message = "Day record deleted successfully!" });
         }
 
         //// GET: api/Day_Record/09-11-2017
@@ -378,27 +439,6 @@ namespace E_Internship_Journal.API
             }
 
             return new OkObjectResult(new { Message = "Saved day record successfully." });
-        }
-
-        //DELETE: api/Day_Record/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDay_Record([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var day_Record = await _context.Day_Records.SingleOrDefaultAsync(m => m.DayId == id);
-            if (day_Record == null)
-            {
-                return NotFound();
-            }
-
-            _context.Day_Records.Remove(day_Record);
-            await _context.SaveChangesAsync();
-
-            return Ok(day_Record);
         }
 
         private bool Day_RecordExists(int id)

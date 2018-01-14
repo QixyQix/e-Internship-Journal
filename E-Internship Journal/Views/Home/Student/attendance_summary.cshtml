@@ -240,7 +240,7 @@
             dom: "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
             ajax: {
-                url: '/Api/Day_Record/getInternshipDayRecords/' + internshipId,
+                url: '/Api/Day_Record/getLatestInternshipMonthDayRecords/' + internshipId,
                 dataSrc: ''
             },
             columns: [
@@ -266,10 +266,6 @@
             language: {
                 emptyTable: "No Attendance was found, please create one.",
             }
-        });
-
-        $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
-            console.log("button 1 is click");
         });
 
         $('#addattendance').on('click', function (e) {
@@ -305,6 +301,43 @@
                         $('#remarks').val(data.Remarks);
                     }
                 }
+            })
+        });
+
+        //DELETE DAY RECORD
+        $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
+            console.log($(this).val());
+            var id = $(this).val();
+            swal({
+                title: 'Are you sure you want this task deleted?',
+                text: "This cannot be undone!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Delete'
+            }).then(function () {
+                $.ajax({
+                    url: '/Api/Day_Record/' + id,
+                    method: 'DELETE',
+                    dataType: 'json',
+                    cache: false,
+                    success: function (data) {
+                        swal({
+                            type: 'success',
+                            title: 'Deleted!',
+                            text: data.Message
+                        }).then(function () {
+                            window.location.reload();
+                        });
+                    },
+                    fail: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Oops!',
+                            text: data.Message
+                        });
+                    }
+                });
             })
         });
     });
@@ -362,16 +395,6 @@
                 $('#specifygroup').hide(); //NOT OTHERS
             }
         }
-    });
-
-    $('#timeinval').datetimepicker({
-        allowInputToggle: true,
-        format: 'LT'
-    });
-
-    $('#timeoutval').datetimepicker({
-        allowInputToggle: true,
-        format: 'LT'
     });
 
     function getCookie(name) {
