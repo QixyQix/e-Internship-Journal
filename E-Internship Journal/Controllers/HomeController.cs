@@ -275,7 +275,14 @@ namespace E_Internship_Journal.Controllers
         //LO
         public IActionResult Touchpoint()
         {
-            return View("~/Views/Home/LO/touchpoint.cshtml");
+            if (User.IsInRole("LO"))
+            {
+                return View("~/Views/Home/LO/touchpoint.cshtml");
+            }
+            else
+            {
+                return View("~/Views/Home/Student/touchpoint.cshtml");
+            }           
         }
         public IActionResult Final_Grading()
         {

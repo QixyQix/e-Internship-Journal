@@ -19,8 +19,8 @@
         </div>
     </div>
     <div class="card mb-3">
-        <div class="card-header">
-            <i class="fa fa-table"></i> Manage Students
+        <div class="card-header d-inline">
+            <i class="fa fa-table fa-2x pull-left"></i> <h3>Manage Students</h3>
         </div>
         <div class="card-body">
             <div class="form-inline">
@@ -49,28 +49,28 @@
                     <thead>
                         <tr>
                             <th width="5%"><input name="select_all" value="1" type="checkbox" /></th>
-                            <th>Student ID</th>
-                            <th>Student Name</th>
-                            <th>Mobile No</th>
-                            <th>Email Address</th>
-                            <th>Liason Officer</th>
-                            <th>Project</th>
-                            <th>Company</th>
-                            <th>Designation</th>
-                            <th>Allowance</th>
+                            <th class="S_ID" width="5%">Student ID</th>
+                            <th class="S_Name" width="10%">Student Name</th>
+                            <th class="M_NO" width="8%">Mobile No</th>
+                            <th class="E_Add" width="10%">Email Address</th>
+                            <th class="L_O" width="10%">Liason Officer</th>
+                            <th class="Proj" width="5%">Project</th>
+                            <th class="Comp" width="15%">Company</th>
+                            <th class="Des" width="5%">Designation</th>
+                            <th class="Allow" width="8%">Allowance</th>
                             <th width="10%">Action</th>
                         </tr>
                         <tr id="filterrow">
                             <th></th>
-                            <th>Student ID</th>
-                            <th>Student Name</th>
-                            <th>Mobile No</th>
-                            <th>Email Address</th>
-                            <th>Liason Officer</th>
-                            <th>Project</th>
-                            <th>Company</th>
-                            <th>Designation</th>
-                            <th>Allowance</th>
+                            <th class="S_ID">Student ID</th>
+                            <th class="S_Name">Student Name</th>
+                            <th class="M_NO">Mobile No</th>
+                            <th class="E_Add">Email Address</th>
+                            <th class="L_O">Liason Officer</th>
+                            <th class="Proj">Project</th>
+                            <th class="Comp">Company</th>
+                            <th class="Des">Designation</th>
+                            <th class="Allow">Allowance</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -86,6 +86,7 @@
                             <td>Web Designer</td>
                             <td>600</td>
                             <td></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td></td>
@@ -97,6 +98,7 @@
                             <td>Rapid Cloud Pte Ltd</td>
                             <td>SEO analyze</td>
                             <td>600</td>
+                            <td></td>
                             <td></td>
                         </tr>
                         <tr>
@@ -110,6 +112,7 @@
                             <td>Backend Coder</td>
                             <td>750</td>
                             <td></td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
@@ -119,7 +122,7 @@
     <div class="card-body">
         <div class="form-group">
             <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Manage_Batch'">
                     Back
                 </button>
             </div>
@@ -127,6 +130,32 @@
     </div>
     &nbsp;
 </div>
+
+
+<style>
+
+@@media only screen and (max-width: 768px) {
+	.Allow, tr td:nth-child(10)		{ display:none; visibility:hidden; }
+}
+
+@@media only screen and (max-width: 420px) {
+	.Allow, tr td:nth-child(10)	{ display:none; visibility:hidden; }
+	.Des, tr td:nth-child(9)			{ display:none; visibility:hidden; }
+	.Comp, tr td:nth-child(8)			{ display:none; visibility:hidden; }
+	.Proj, tr td:nth-child(7)		{ display:none; visibility:hidden; }
+	.E_Add, tr td:nth-child(5)			{ display:none; visibility:hidden; }
+	.M_NO, tr td:nth-child(4)		{ display:none; visibility:hidden; }
+}
+
+@@media only screen and (max-width: 320px) {
+	.Allow, tr td:nth-child(10)	{ display:none; visibility:hidden; }
+	.Des, tr td:nth-child(9)			{ display:none; visibility:hidden; }
+	.Comp, tr td:nth-child(8)			{ display:none; visibility:hidden; }
+	.Proj, tr td:nth-child(7)		{ display:none; visibility:hidden; }
+	.E_Add, tr td:nth-child(5)			{ display:none; visibility:hidden; }
+	.M_NO, tr td:nth-child(4)		{ display:none; visibility:hidden; }
+}
+</style>
 
 <script>
     //
@@ -248,7 +277,7 @@
             },
             columns: [
                 { data: null },
-                { data: "StudentEmail" },
+                { data: "StudentUserId" },
                 { data: "StudentName" },
                 { data: "StudentPhoneNumber" },
                 { data: "StudentEmail" },
@@ -260,7 +289,7 @@
                 {
                     data: null,
                     "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
+                    "mRender": function (o) { return '<div class="d-inline"><button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button></div>' }
                 }
             ],
             language: {
