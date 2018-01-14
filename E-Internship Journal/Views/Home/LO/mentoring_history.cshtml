@@ -52,7 +52,7 @@
                                 <i class="fa fa-calendar">
                                 </i>
                             </div>
-                            <input class="form-control col-sm-12" id="date" name="date" placeholder="DD/MM/YYYY" type="text" readonly>
+                            <input class="form-control col-sm-12" id="MentorSessionDate" name="" placeholder="DD/MM/YYYY" type="text" readonly>
                         </div>
                     </div>
                     <div class="form-group">
@@ -139,18 +139,8 @@
         g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
         monthRecords = getMentoringHistory(g_getLocalStorage);
         $('#sessionNumber').on('change', function (e) {
-            monthRecords.then(function (data) {
-                var sessionNumber = $('#sessionNumber').val();
-                var selectedSession = data[sessionNumber];
-                // var newOption = $('<option>').text((data.length)).val(data.length);                var newOption = $('<option>').text(($('#sessionNumber').val() + 1)).val(($('#sessionNumber').val() + 1));
-                $('#MentorSessionNumber').append(newOption);
-                $('#date').val(moment(new Date(selectedSession.MentorSessionDateTimeStart)).format('DD/MM/YYYY'));
-                $('#MentorSessionDateTimeStart').val(moment(new Date(selectedSession.MentorSessionDateTimeStart)).format('hh:mm A'));
-                $('#MentorSessionDateTimeEnd').val(moment(new Date(selectedSession.MentorSessionDateTimeEnd)).format('hh:mm A'));
-                $('#MentorSessionReflection').val(selectedSession.MentorSessionReflection);
+            selectedSession();
 
-
-            });//End of then Function
 
 
         });//End of change function 
@@ -160,6 +150,7 @@
             setCookie();
             g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
             monthRecords = getMentoringHistory(g_getLocalStorage);
+            
             //g_taskData = loadTaskData(g_getLocalStorage);
             //loadWeekOption();
         });
@@ -201,18 +192,12 @@
             contentType: "application/json; charset=utf-8",
             cache: false,
             success: function (data) {
-                var selectedSession = data[0];
-                var newOption = $('<option>').text((data.length)).val(data.length);                
-                $('#MentorSessionNumber').append(newOption);
-                $('#date').val(moment(new Date(selectedSession.MentorSessionDateTimeStart)).format('DD/MM/YYYY'));
-                $('#MentorSessionDateTimeStart').val(moment(new Date(selectedSession.MentorSessionDateTimeStart)).format('hh:mm A'));
-                $('#MentorSessionDateTimeEnd').val(moment(new Date(selectedSession.MentorSessionDateTimeEnd)).format('hh:mm A'));
-                $('#MentorSessionReflection').val(selectedSession.MentorSessionReflection);
                 for (i = 0; i < data.length; i++) {
                     var selectMonthRecord
                     var newOption = $('<option>').text((i + 1)).val(i);
                     $('#sessionNumber').append(newOption);
                 }
+                selectedSession();
             },//End of success
             error: function (data) {
                 swal({
@@ -223,5 +208,18 @@
             }//End of error
         });//End of ajax call
 
-    }//end of getCOmpanyCheckList function
+    }//end of getMentoringHistory function
+    function selectedSession() {
+        $("#MentorSessionNumber option").remove();
+        monthRecords.then(function (data) {
+
+            var sessionNumber = $('#sessionNumber').val();
+            var selectedSession = data[sessionNumber];            var newOption = $('<option>').text(parseInt($('#sessionNumber').val()) + 1).val(parseInt($('#sessionNumber').val()) + 1 );
+            $('#MentorSessionNumber').append(newOption);
+            selectedSession.MentorSessionDateTimeStart == null ? $('#MentorSessionDate').val("") : $('#MentorSessionDate').val(moment(new Date(selectedSession.MentorSessionDateTimeStart)).format('DD/MM/YYYY'));
+            selectedSession.MentorSessionDateTimeStart == null ? $('#MentorSessionDateTimeStart').val("") : $('#MentorSessionDateTimeStart').val(moment(new Date(selectedSession.MentorSessionDateTimeStart)).format('hh:mm A'));
+            selectedSession.MentorSessionDateTimeEnd == null ? $('#MentorSessionDateTimeEnd').val("") : $('#MentorSessionDateTimeEnd').val(moment(new Date(selectedSession.MentorSessionDateTimeEnd)).format('hh:mm A'));
+            $('#MentorSessionReflection').val(selectedSession.MentorSessionReflection);
+        })
+    }
 </script>

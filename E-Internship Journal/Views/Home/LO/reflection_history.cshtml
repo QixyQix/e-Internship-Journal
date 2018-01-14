@@ -13,15 +13,11 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="pull-left">
-                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
-                        <option>Amelia Goh</option>
-                        <option>Cho Qi Xiang</option>
-                        <option>Tan Chia Wei</option>
-                    </select>
+                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent"></select>
                 </div>
                 <div class="col-xs-12 pull-right">
                     <label>View By:&nbsp</label>
-                    <select class="form-control" id="exampleSelect1">
+                    <select class="form-control" id="selectWeek">
                         <option>Week 1 - 4</option>
                         <option>Week 4 - 8</option>
                         <option>Week 8 - 12</option>
@@ -94,14 +90,148 @@
             </div>
         </div>
     </div>
-        <div class="card-body">
-             <div class="form-group">
-                    <div class="col-12">
-                        <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
-                            Back
-                        </button>
-                    </div>
-                </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                    Back
+                </button>
+            </div>
         </div>
+    </div>
     <br />
 </div>
+<script>
+    var monthRecords;
+    var cookies = document.cookie.split("; ");
+
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var eqPos = cookie.indexOf("=");
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        //console.dir(getCookie(name));
+        var cookievalue = getCookie(name);
+
+        if (name != "selectedStudent") {
+            $studentInputElement = $('#selectstudent');
+            $optionElement = $('<option>').text(name).attr('value', cookievalue);
+            $studentInputElement.append($optionElement);
+
+        } else {
+            $('#selectstudent').val(cookievalue);
+            $('#studentId').text(cookievalue);
+
+        }
+    }//End of for loop
+    g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+    monthRecords = getReflectionHistory(g_getLocalStorage);
+    $('#selectWeek').on('change', function (e) {
+        selectedReflection();
+
+    });
+    $('#selectstudent').on('change', function (e) {
+        //console.dir('test');
+        setCookie();
+        g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+        monthRecords = getReflectionHistory(g_getLocalStorage);
+        
+    });
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+    function setCookie() {
+        var inName = "selectedStudent";
+        var inValue = $('#selectstudent').val();
+        //setCookie("selectedStudent", ("#selectstudent").val());
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    }
+    function getReflectionHistory(inStudentId) {
+        return $.ajax({
+            url: '/api/month_record/InternshipMonthRecords/' + inStudentId,
+            method: 'GET',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+            success: function (data) {
+                var g_Month = [];
+                var g_MonthRecordId = [];
+                $("#selectWeek option").remove();
+                for (i = 0; i < data.length; i++) {
+                    if (g_Month.includes((i + 1) * 4)) {
+
+                    } else {
+                        g_Month.push((i + 1) * 4);
+                        g_MonthRecordId.push(data[i].MonthId);
+                    }
+                }
+
+                for (k = 0; k < g_Month.length; k++) {
+                    var tempWeek = g_Month[k];
+
+                    var tempWeekText = "Week " + (tempWeek - 3) + " to Week " + tempWeek;
+                    $weekInputElement = $('#selectWeek');
+                    $weekOptionElement = $('<option>').text(tempWeekText).attr('value', g_MonthRecordId[k]);
+                    $weekInputElement.append($weekOptionElement);
+
+                }
+                selectedReflection();
+            },//End of success
+            error: function (data) {
+                swal({
+                    type: 'error',
+                    title: 'Error',
+                    text: data.Message
+                });
+            }//End of error
+        });//End of ajax call
+
+    }//end of getReflectionHistory function
+    function selectedReflection() {
+        monthRecords.then(function (data) {
+            var selectedWeek;
+            for (o = 0; o < data.length; o++) {
+                if (data[o].MonthId == $('#selectWeek').val())
+                    selectedWeek = data[o];
+
+            }
+           // var selectedWeek = 
+           // console.dir($('#selectWeek').val());
+            //var selectedWeek = data[$('#selectWeek').val()];
+            console.dir(selectedWeek.SoftSkillsCompetencyDoneWell);
+
+            $('#softskill1').val(selectedWeek.SoftSkillsCompetencyDoneWell);
+            $('#softskill2').val(selectedWeek.SoftSkillsCompetencyImprove);
+            $('#hardskill1').val(selectedWeek.TechnicalCompetencyApplied);
+            $('#hardskill2').val(selectedWeek.TechnicalCompetencyDoneWell);
+            $('#hardskill3').val(selectedWeek.TechnicalCompetencyImprove);
+           // $('#feedback').val(selectedWeek.TechnicalCompetencyImprove);
+           
+            //var newOption = $('<option>').text(parseInt($('#sessionNumber').val()) + 1).val(parseInt($('#sessionNumber').val()) + 1);
+            //$('#MentorSessionNumber').append(newOption);
+            //selectedSession.MentorSessionDateTimeStart == null ? $('#MentorSessionDate').val("") : $('#MentorSessionDate').val(moment(new Date(selectedSession.MentorSessionDateTimeStart)).format('DD/MM/YYYY'));
+            //selectedSession.MentorSessionDateTimeStart == null ? $('#MentorSessionDateTimeStart').val("") : $('#MentorSessionDateTimeStart').val(moment(new Date(selectedSession.MentorSessionDateTimeStart)).format('hh:mm A'));
+            //selectedSession.MentorSessionDateTimeEnd == null ? $('#MentorSessionDateTimeEnd').val("") : $('#MentorSessionDateTimeEnd').val(moment(new Date(selectedSession.MentorSessionDateTimeEnd)).format('hh:mm A'));
+            //$('#MentorSessionReflection').val(selectedSession.MentorSessionReflection);
+        });
+    }
+
+
+</script>
