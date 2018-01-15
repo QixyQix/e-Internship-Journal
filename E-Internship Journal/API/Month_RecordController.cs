@@ -155,7 +155,94 @@ namespace E_Internship_Journal.API
             return new OkObjectResult(monthRecordObj);
 
         }
+        [HttpGet("ReviewInternshipMonth/{id}")]
+        [Authorize(Roles = "LO")]
+        public IActionResult GetReviewInternshipMonth(int id)
+        {
+            var internshipRecord = _context.Internship_Records
+                .Where(ir => ir.InternshipRecordId == id)
+                .Include(ir => ir.MonthRecords)
+                .ThenInclude(mr => mr.CompetencyCheckeds)
+                .Include(ir => ir.MonthRecords)
+                .ThenInclude(mr => mr.DayRecords)
+                .Include(ir=> ir.MonthRecords)
+                .ThenInclude(mr => mr.TaskRecords)
+                .SingleOrDefault();
 
+            if (internshipRecord == null)
+            {
+                return NotFound();
+            }
+
+            List<object> monthRecordObjList = new List<object>();
+
+            foreach (var monthRecord in internshipRecord.MonthRecords)
+            {
+                List<object> checkedCompetencyObjList = new List<object>();
+                List<object> taskRecordObjs = new List<object>();
+                List<object> Day_Records_List = new List<object>();
+                foreach (var cc in monthRecord.CompetencyCheckeds)
+                {
+                    checkedCompetencyObjList.Add(new
+                    {
+                        CompentencyCheckedId = cc.CompentencyCheckedId,
+                        MonthRecordId = cc.MonthRecordId,
+                        CompetencyId = cc.CompetencyId
+                    });
+                }
+                foreach (var task in monthRecord.TaskRecords)
+                {
+                    taskRecordObjs.Add(new
+                    {
+                        Date = task.Date,
+                        Description = task.Description,
+                        TaskRecordId = task.TaskRecordId,
+                        TaskRemarks = task.Remarks,
+                        WeekNo = task.WeekNo,
+                        task.MonthRecordId
+
+                    });
+                }
+                foreach (var dayRecord in monthRecord.DayRecords)
+                {
+                    Day_Records_List.Add(new
+                    {
+                        dayRecord.DayId,
+                        dayRecord.Date,
+                        dayRecord.ArrivalTime,
+                        dayRecord.DepartureTime,
+                        dayRecord.WeekNo,
+                        dayRecord.Remarks,
+                        dayRecord.MonthRecordId
+                    });
+                }
+
+                monthRecordObjList.Add(new
+                {
+                    monthRecord.MonthId,
+                    monthRecord.Approved,
+                    monthRecord.SoftSkillsCompetencyDoneWell,
+                    monthRecord.SoftSkillsCompetencyImprove,
+                    monthRecord.TechnicalCompetencyApplied,
+                    monthRecord.TechnicalCompetencyDoneWell,
+                    monthRecord.TechnicalCompetencyImprove,
+                    monthRecord.MentorSessionDateTimeStart,
+                    monthRecord.MentorSessionDateTimeEnd,
+                    monthRecord.MentorSessionReflection,
+                    monthRecord.CommunicationGrading,
+                    monthRecord.TechnicalGrading,
+                    monthRecord.IndependenceGrading,
+                    monthRecord.PerformanceGrading,
+                    monthRecord.OverallGrading,
+                    monthRecord.OverallFeedback,
+                    CompetencyCheckeds = checkedCompetencyObjList,
+                    TaskRecords = taskRecordObjs,
+                    AttendanceRecords = Day_Records_List
+                });
+            }
+
+            return new OkObjectResult(monthRecordObjList);
+        }
         [HttpPut("UpdateCompetencyCheckList/{id}")]
         [Authorize(Roles = "STUDENT")]
         public IActionResult UpdateCompetencyCheckList(int id, [FromBody] string value) {
