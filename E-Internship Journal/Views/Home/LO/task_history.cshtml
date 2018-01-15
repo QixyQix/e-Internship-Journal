@@ -240,7 +240,7 @@
             for (k = 0; k < g_Month.length; k++) {
                 var tempWeek = g_Month[k] * 4;
 
-                var tempWeekText = "Week " + (tempWeek - 3) + " to Week " + tempWeek;
+                var tempWeekText = "Week " + (tempWeek - 3) + " - " + tempWeek;
                 $weekInputElement = $('#selectWeek');
                 $weekOptionElement = $('<option>').text(tempWeekText).attr('value', g_MonthRecordId[k]);
                 $weekInputElement.append($weekOptionElement);

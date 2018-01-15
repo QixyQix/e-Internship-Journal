@@ -46,20 +46,20 @@
                     <thead>
                         <tr>
                             <th><input name="select_all" value="1" type="checkbox"></th>
-                            <th>Name</th>
-                            <th>Mobile No</th>
-                            <th>Email</th>
-                            <th>Batch Name</th>
-                            <th>Role</th>
+                            <th class="Name">Name</th>
+                            <th class="M_NO">Mobile No</th>
+                            <th class="E_Add">Email</th>
+                            <th class="B_Name">Batch Name</th>
+                            <th class="Role">Role</th>
                             <th>Action</th>
                         </tr>
                         <tr id="filterrow">
                             <th></th>
-                            <th>Name</th>
-                            <th>Mobile No</th>
-                            <th>Email</th>
-                            <th>Batch Name</th>
-                            <th>Role</th>
+                            <th class="Name">Name</th>
+                            <th class="M_NO">Mobile No</th>
+                            <th class="E_Add">Email</th>
+                            <th class="B_Name">Batch Name</th>
+                            <th class="Role">Role</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -146,20 +146,20 @@
                     <thead>
                         <tr>
                             <th><input name="select_all" value="1" type="checkbox"></th>
-                            <th>Name</th>
-                            <th>Mobile No</th>
-                            <th>Email</th>
-                            <th>Batch Name</th>
-                            <th>Role</th>
+                            <th class="Name">Name</th>
+                            <th class="M_NO">Mobile No</th>
+                            <th class="E_Add">Email</th>
+                            <th class="B_Name">Batch Name</th>
+                            <th class="Role">Role</th>
                             <th>Action</th>
                         </tr>
                         <tr id="filterrow">
                             <th></th>
-                            <th>Name</th>
-                            <th>Mobile No</th>
-                            <th>Email</th>
-                            <th>Batch Name</th>
-                            <th>Role</th>
+                            <th class="Name">Name</th>
+                            <th class="M_NO">Mobile No</th>
+                            <th class="E_Add">Email</th>
+                            <th class="B_Name">Batch Name</th>
+                            <th class="Role">Role</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -235,6 +235,24 @@
     </div>
 </div>
 &nbsp;
+
+<style>
+
+@@media only screen and (max-width: 768px) {
+	.M_NO, tr td:nth-child(3)		{ display:none; visibility:hidden; }
+}
+
+@@media only screen and (max-width: 420px) {
+	.M_NO, tr td:nth-child(3)			{ display:none; visibility:hidden; }
+	.E_Add, tr td:nth-child(4)		{ display:none; visibility:hidden; }
+}
+
+@@media only screen and (max-width: 320px) {
+	.M_NO, tr td:nth-child(3)			{ display:none; visibility:hidden; }
+	.E_Add, tr td:nth-child(4)		{ display:none; visibility:hidden; }
+}
+</style>
+
 <script>
     //
     // Updates "Select all" control in a data table
