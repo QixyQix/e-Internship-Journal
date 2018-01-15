@@ -64,7 +64,7 @@ namespace E_Internship_Journal.API
             List<object> competencyObjList = new List<object>();
 
             foreach (var competency in internshipRecord.UserBatch.Batch.Course.Competencies) {
-                if (competency.DeletedAt != null) {
+                if (competency.DeletedAt == null) {
                     competencyObjList.Add(new
                     {
                         CompetencyId = competency.CompetencyId,
