@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>SB Student - Start Bootstrap Template</title>
+    <title id="tabname">SPEIJ - @ViewData["Title"]</title>
     <!-- Bootstrap core CSS -->
     <link href="~/js/bootstrap/css/bootstrap.css" rel="stylesheet">
     <!-- Custom fonts for this template -->
@@ -105,6 +105,14 @@
                             </span>
                         </a>
                     </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Mentoring">
+                        <a class="nav-link" href="~/Home/Mentoring">
+                            <i class="fa fa-fw fa-eye"></i>
+                            <span class="nav-link-text">
+                                Mentoring Session
+                            </span>
+                        </a>
+                    </li>
                     <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Guidelines">
                         <a class="nav-link" href="~/Home/Guide">
                             <i class="fa fa-fw fa-info"></i>
@@ -121,11 +129,11 @@
                             </span>
                         </a>
                     </li>
-                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Mentoring">
-                        <a class="nav-link" href="~/Home/Mentoring">
-                            <i class="fa fa-fw fa-eye"></i>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Touchpoint">
+                        <a class="nav-link" href="~/Home/touchpoint">
+                            <i class="fa fa-fw fa-comment-o"></i>
                             <span class="nav-link-text">
-                                Mentoring Session
+                                Touchpoint
                             </span>
                         </a>
                     </li>
@@ -140,7 +148,6 @@
                             </span>
                         </a>
                     </li>
-
                 }
                 else if (User.IsInRole("LO"))
                 {
@@ -164,12 +171,81 @@
                             </span>
                         </a>
                     </li>
-
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage Batch">
+                        <a class="nav-link" href="~/Home/Manage_Batch">
+                            <i class="fa fa-fw fa-users"></i>
+                            <span class="nav-link-text">
+                                Manage Batch
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage Competency">
+                        <a class="nav-link" href="~/Home/Manage_Competency">
+                            <i class="fa fa-fw fa-check-square-o"></i>
+                            <span class="nav-link-text">
+                                Manage Competency
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage Company">
+                        <a class="nav-link" href="~/Home/Manage_Company">
+                            <i class="fa fa-fw fa-building"></i>
+                            <span class="nav-link-text">
+                                Manage Company
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage Project">
+                        <a class="nav-link" href="~/Home/Manage_Project">
+                            <i class="fa fa-fw fa-briefcase"></i>
+                            <span class="nav-link-text">
+                                Manage Project
+                            </span>
+                        </a>
+                    </li>
                 }
                 else
                 {
-
-
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage User">
+                        <a class="nav-link" href="~/Home/ViewUser">
+                            <i class="fa fa-fw fa-user-plus"></i>
+                            <span class="nav-link-text">
+                                Manage User
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage Course">
+                        <a class="nav-link" href="~/Home/ViewCourse">
+                            <i class="fa fa-fw fa-book"></i>
+                            <span class="nav-link-text">
+                                Manage Course
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage Batch">
+                        <a class="nav-link" href="~/Home/ViewBatch">
+                            <i class="fa fa-fw fa-users"></i>
+                            <span class="nav-link-text">
+                                Manage Batch
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage Company">
+                        <a class="nav-link" href="~/Home/ViewCompany">
+                            <i class="fa fa-fw fa-building"></i>
+                            <span class="nav-link-text">
+                                Manage Company
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage Project">
+                        <a class="nav-link" href="~/Home/ViewProject">
+                            <i class="fa fa-fw fa-briefcase"></i>
+                            <span class="nav-link-text">
+                                Manage Project
+                            </span>
+                        </a>
+                    </li>
                 }
             </ul>
             <ul class="navbar-nav sidenav-toggler">
@@ -299,62 +375,62 @@
 
 
     @*<!-- Edit Manage Student Modal -->
-    <div class="modal fade" id="updateManageStudentModal" tabindex="-1" role="dialog" aria-labelledby="updateManageStudentModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="updateManageStudentModalLabel">Edit Student</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="container">
-                        <form>
-                            <div class="form-group">
-                                <label class="control-label" for="studentID">Student ID:</label>
-                                <div class="col-sm-6">
-                                    <input class="form-control" id="studentID" type="text" value="">
+        <div class="modal fade" id="updateManageStudentModal" tabindex="-1" role="dialog" aria-labelledby="updateManageStudentModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateManageStudentModalLabel">Edit Student</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form>
+                                <div class="form-group">
+                                    <label class="control-label" for="studentID">Student ID:</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" id="studentID" type="text" value="">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="name">Name:</label>
-                                <div class="col-sm-6">
-                                    <input class="form-control" id="name" type="text" value="">
+                                <div class="form-group">
+                                    <label class="control-label" for="name">Name:</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" id="name" type="text" value="">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="project">Project:</label>
-                                <div class="col-sm-6">
-                                    <select class="form-control" id="project">
-                                        <option>Parliament</option>
-                                        <option>CAAS</option>
-                                        <option>MDA</option>
-                                        <option>WIS</option>
-                                    </select>
+                                <div class="form-group">
+                                    <label class="control-label" for="project">Project:</label>
+                                    <div class="col-sm-6">
+                                        <select class="form-control" id="project">
+                                            <option>Parliament</option>
+                                            <option>CAAS</option>
+                                            <option>MDA</option>
+                                            <option>WIS</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="liaisonOfficer">Liaison Officer:</label>
-                                <div class="col-sm-6">
-                                    <select class="form-control" id="liaisonOfficer">
-                                        <option>Mr Vincent Goh</option>
-                                        <option>Ms Leong Fong Sow</option>
-                                        <option>Mr Lim De Yang</option>
-                                        <option>Dr Leong</option>
-                                    </select>
+                                <div class="form-group">
+                                    <label class="control-label" for="liaisonOfficer">Liaison Officer:</label>
+                                    <div class="col-sm-6">
+                                        <select class="form-control" id="liaisonOfficer">
+                                            <option>Mr Vincent Goh</option>
+                                            <option>Ms Leong Fong Sow</option>
+                                            <option>Mr Lim De Yang</option>
+                                            <option>Dr Leong</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="submit">Submit</button>
+                        <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="submit">Submit</button>
-                    <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
-                </div>
             </div>
-        </div>
-    </div>*@
+        </div>*@
 
     <!-- uploadcsv Modal -->
     <div class="modal fade" id="uploadcsvModal" tabindex="-1" role="dialog" aria-labelledby="uploadcsvModalLabel" aria-hidden="true">
@@ -372,7 +448,7 @@
                         <form id="csv_form" method="post" enctype="multipart/form-data">
                             <div class="form-group">
                                 <input class="form-control" id="csv_upload" name="files" type="file">
-                                
+
                             </div>
 
                         </form>
@@ -469,7 +545,7 @@
                 format: 'dd/mm/yyyy',
                 todayHighlight: true,
                 autoclose: true
-             
+
             });
             //------end date script-----
             // check if this day has an event before
