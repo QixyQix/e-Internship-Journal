@@ -193,6 +193,20 @@
            }
        }
        $(document).ready(function () {
+
+           $.ajax({
+               url: '/api/Projects',
+               method: 'GET',
+               dataType: 'json',
+               cache: false,
+               success: function (data) {
+                   loadDataTable(data);
+               }//End of success
+           });//End of Ajax
+
+       });//End of document ready function
+       function loadDataTable(inData) {
+
            // Array holding selected row IDs
            var rows_selected = [];
            var table = $('#project_dataTable').DataTable({
@@ -204,10 +218,7 @@
                //},
                dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
                "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-               ajax: {
-                   url: '/Api/Task_Record',
-                   dataSrc: ''
-               },
+               data: inData,
                columnDefs: [{
                    'targets': 0,
                    'searchable': false,
@@ -235,11 +246,11 @@
                },
                columns: [
                    { data: null },
-                   { data: "DayRecordId" },
-                   { data: "DayRecordId" },
-                   { data: "Description" },
-                   { data: "Description" },
-                   { data: "Description" },
+                   { data: "ProjectName" },
+                   { data: "FullName" },
+                   { data: "PhoneNumber" },
+                   { data: "Email" },
+                   { data: "CompanyName" },
                    {
                        data: null,
                        "bSortable": false,
@@ -255,7 +266,8 @@
                    $("div.toolbar").parent().children().addClass("pull-right");
                    hideFilter1();
                }
-           });
+           });//End of DataTable
+
 
            // Handle click on checkbox
            $('#project_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
@@ -263,7 +275,7 @@
 
                // Get row data
                var data = table.row($row).data();
-
+               console.dir(data);
                // Get row ID
                var rowId = data[0];
 
@@ -351,7 +363,7 @@
            //});
            $('#project_dataTable tbody').on('click', 'button.btn-primary', function (e) {
                location.href = 'edit_project';
-           });
+           });//End of on Click
            $('#project_dataTable tbody').on('click', 'button.btn-danger', function (e) {
                swal({
                    title: 'Are you sure?',
@@ -370,7 +382,7 @@
                        )
                    }
                }).catch(swal.noop);
-           });
-       });
+           });//End of on Click
+       }//End of function
 </script>
 

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using E_Internship_Journal.Data;
 using E_Internship_Journal.Models;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Internship_Journal.API
 {
@@ -24,9 +25,21 @@ namespace E_Internship_Journal.API
 
         // GET: api/Companies
         [HttpGet]
-        public IEnumerable<Company> GetCompanies()
+        [Authorize(Roles = "SLO")]
+        public IActionResult GetCompanies()
         {
-            return _context.Companies;
+            var Companies = _context.Companies
+                .ToList();
+            List<object> companyList = new List<object>();
+            foreach (var oneCompany in Companies)
+            {
+                companyList.Add(new
+                {
+                    oneCompany.CompanyId,
+                    oneCompany.CompanyName
+                });
+            }
+            return new JsonResult(companyList);
         }
 
         // GET: api/Companies/5

@@ -16,19 +16,19 @@
                     <label class="control-label" for="name">
                         Name:
                     </label>
-                    <input type='text' class="form-control" id="name" readonly/>
+                    <input type='text' class="form-control" id="nameInput" readonly/>
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="contact">
                         Contact:
                     </label>
-                    <input type='text' class="form-control" id="contact" />
+                    <input type='text' class="form-control" id="contactInput" />
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="email">
                         Email:
                     </label>
-                    <input type='text' class="form-control" id="email" />
+                    <input type='text' class="form-control" id="emailInput" />
                 </div>
         </div>
     </div>
@@ -39,7 +39,7 @@
             <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Index'">
                 Back
             </button>
-            <button class="btn btn-primary pull-right" name="submit" type="submit">
+            <button class="btn btn-primary pull-right" name="submit" type="submit" id="btnUpdate">
                 Update Details
             </button>
         </div>
@@ -47,8 +47,61 @@
 </div>
 <br />
 <script>
-    $('#promptreset').on('click', function (e) {
-        $('#resetModal').modal('show');
-        console.log("hi")
-    });
+    $.ajax({
+        url: '/api/UserManager/GetPersonal/',
+        method: 'GET',
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        cache: false,
+        success: function (data) {
+            $('#nameInput').val(data.FullName);
+            $('#contactInput').val(data.PhoneNumber)
+            $('#emailInput').val(data.Email)
+        },//End of success
+        error: function (data) {
+            swal({
+                type: 'error',
+                title: 'Error',
+                text: data.Message
+            });
+        }//End of error
+    });//End of ajax call
+
+    $('#btnUpdate').on('click', function (e) {
+        var contactNumber = $('#contatInput').val();
+        var email = $('#emailInput').val();
+
+        var webFormData = new WebFormData(contactNumber, email);
+
+        $.ajax({
+            url: '/API/UserManager/UpdatePersonal',
+            method: 'PUT',
+            contentType: "application/json",
+            cache: false,
+            data: "'" + JSON.stringify(webFormData) + "'",
+            success: function (data) {
+                swal({
+                    type: 'success',
+                    title: 'Saved',
+                    text: data.Message
+                }).then(
+                    function () {
+                        window.location.reload();
+                    });
+            },
+            error: function (data) {
+                swal({
+                    type: 'error',
+                    title: 'Error',
+                    text: data.Message
+                });
+            }//End of error 
+        });//End of ajax
+
+
+    });//End of btnUpdate
+    function WebFormData(inContactNumber, inEmail) {
+        this.PhoneNumber = inContactNumber;
+        this.Email = inEmail;
+    }
 </script>

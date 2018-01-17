@@ -56,6 +56,8 @@ namespace E_Internship_Journal.API
                 {
                     oneProject.ProjectId,
                     oneProject.ProjectName,
+                    oneProject.Supervisor.PhoneNumber,
+                    oneProject.Supervisor.Email,
                     oneProject.Supervisor.FullName,
                     oneProject.Company.CompanyName
                 });

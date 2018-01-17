@@ -236,6 +236,7 @@
     var dayRecords = [];
 
     $(document).ready(function () {
+        $("#dateval").datepicker({ endDate: new Date });
         var table = $('#dataTable').DataTable({
             dom: "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",

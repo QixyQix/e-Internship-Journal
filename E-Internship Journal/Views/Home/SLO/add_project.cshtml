@@ -20,7 +20,7 @@
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Company</label>
                                 <div class='input-group' id='findcompany'>
-                                    <input type='text' class="form-control" id="selectcompany" placeholder="Company" required="required" style="background-color:white" onclick="findCompanyModal()" data-validation-required-message="Please select a company." readonly />
+                                    <input type='text' class="form-control" id="selectCompany" placeholder="Company" required="required" style="background-color:white" onclick="findCompanyModal()" data-validation-required-message="Please select a company." readonly />
                                     <div class="input-group-addon" onclick="findCompanyModal()" style="background-color:white;border:none;">
                                         <i class="fa fa-search"></i>
                                     </div>
@@ -56,7 +56,7 @@
                                 <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Manage_Project'">
                                     Back
                                 </button>
-                                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                                <button class="btn btn-primary pull-right" name="submit" type="submit" id="btnSave">
                                     Save
                                 </button>
                             </div>
@@ -86,7 +86,7 @@
                     <form>
                         <div class="form-group">
                             <div class="input-group">
-                                <input class="form-control" placeholder="Search...">
+                                <input class="form-control" placeholder="Search..." id="txtSearch">
                                 <div class="input-group-addon">
                                     <i class="fa fa-search">
                                     </i>
@@ -94,13 +94,14 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <textarea class="form-control" rows="5">Convertium</textarea>
+
+                            <select id="companySelect" size="6" style="width: 100%;"></select>
                         </div>
                         <div class="form-group">
                             <div class="col-12">
                                 <div class="form-inline">
                                     <label>Selected: &nbsp;</label>
-                                    <input class="form-control" value="Convertium" readonly>
+                                    <input class="form-control" value="Convertium" readonly id="txtSelected">
                                 </div>
                             </div>
                         </div>
@@ -108,52 +109,144 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
+                <button type="button" class="btn btn-secondary" id="btnSubmit">Confirm</button>
                 <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
             </div>
         </div>
     </div>
 </div>
 <script>
-    var editor;
+    // $(function () { $('#contactForm input').not('[type=submit]').jqBootstrapValidation(); });
     $(document).ready(function () {
-        var table = $('#dataTable').DataTable({
-            "paging": true,
-            "bPaginate": true,
-            "bLengthChange": false,
-            "bFilter": false,
-            "bSort": false,
-            "bInfo": true,
-            "bAutoWidth": false,
-            "asStripClasses": null,
-            //--disable the sorting--
-            dom: 'rtip',
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
-            },
-            order: [[1, 'asc']],
-            columns: [
-                { data: "DayRecordId" },
-                { data: "Description" },
-                {
-                    data: null,
-                    "sWidth": "10%",
-                    "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
+        //  console.dir($('#contactForm input'));
+
+        //  $('#projectName').jqBootstrapValidation();
+        $.ajax({
+            url: '/api/Companies',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                for (i = 0; i < data.length; i++) {
+                    //    $('#companySelect').val(data[i].)
+                    $companyInputElement = $('#companySelect');
+                    $optionElement = $('<option>').text(data[i].CompanyName).attr('value', data[i].CompanyId);
+                    $companyInputElement.append($optionElement);
                 }
-            ],
-            language: {
-                emptyTable: "No task was found, please create one.",
+
+            }//End of success
+        });//End of Ajax
+
+        $('#txtSearch').on("keyup", function (e) {
+            console.dir($(this).val());
+            var text = $(this).val();
+            var options = $('#companySelect option');
+            //var options = $('#companySelect').option;
+            for (var i = 0; i < options.length; i++) {
+                var option = options[i];
+                var optionText = option.text;
+                var lowerOptionText = optionText.toLowerCase();
+                var lowerText = text.toLowerCase();
+                var regex = new RegExp("^" + text, "i");
+                var match = optionText.match(regex);
+                var contains = lowerOptionText.indexOf(lowerText) != -1;
+                if (match || contains) {
+
+                    //option.selected = true;
+                    return;
+                }
+                $(this).selectedIndex = 0;
             }
-        });
-        
-        //$('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
-        //    $('#updatetpModal').modal('show');
+        });//End of txtSearch function
+
+        $('#companySelect').on('change', function (e) {
+            $('#txtSelected').val($('#companySelect option:selected').text());
+        });//End of Select Change
+        $('#btnSubmit').on('click', function (e) {
+
+            $('#selectCompany').val($('#companySelect option:selected').text());// To set display text on input element
+            $('#selectCompany').attr('value', ($('#companySelect option:selected').val())); // To set company value id to the input element
+
+            $('#selectCompanyModal').modal('hide');
+        });//End of button submit for popup
+
+        //$('#btnSave').on('click', function (e) {
+        //    var errorMessages = [];
+        //    $('#contactForm input').each(function (i, el) {
+        //        errorMessages = errorMessages.concat(
+        //            $(this).triggerHandler("validation.validation")
+        //        );
+        //    });
+        //    var errors = $('#contactForm').jqBootstrapValidation("collectErrors");
+        //    console.dir(errorMessages);
+        //    console.dir(errors);
+        //    console.dir('test');
+        //    var collectedProjectName = $('#projectName').val();
+        //    var collectedCompany = $('#selectCompany').attr('value');
+        //    var collectedSupervisorName = $('#supervisorName').val();
+        //    var collectedSupervisorNumber = $('#mobileNo').val();
+        //    var collectedSupervsorEmail = $('#email').val();
+
+
         //});
-    });
+        $(function () {
+
+            $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
+                preventSubmit: true,
+                submitSuccess: function ($form, event) {
+                        var collectedProjectName = $('#projectName').val();
+                        var collectedCompany = $('#selectCompany').attr('value');
+                        var collectedSupervisorName = $('#supervisorName').val();
+                        var collectedSupervisorNumber = $('#mobileNo').val();
+                        var collectedSupervsorEmail = $('#email').val();
+                        var webFormData = new WebFormData(collectedProjectName, collectedCompany, collectedSupervisorName,
+                            collectedSupervisorNumber, collectedSupervsorEmail);
+
+                        $.ajax({
+                            url: '/Api/TouchPoint/SaveTouchPointRecord/',
+                            method: 'POST',
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+                            cache: false,
+                            data: "'" + JSON.stringify(webFormData) + "'",
+                            success: function (data) {
+                                swal({
+                                    type: 'success',
+                                    title: 'Saved!',
+                                    text: data.Message
+                                }).then(
+                                    function () {
+                                        window.location.reload();
+                                    });
+                            },//End of success
+                            error: function (data) {
+                                swal({
+                                    type: 'error',
+                                    title: 'Error',
+                                    text: data.Message
+                                });
+                            }//End of error
+                        });//End of ajax call
+
+
+                    // will not trigger the default submission in favor of the ajax function
+                    event.preventDefault();
+                },
+                submitError: function ($form, event, errors) {
+
+                }
+
+            });
+
+        });
+
+    });//End of document ready.
 
     function findCompanyModal() {
         $('#selectCompanyModal').modal('show');
+    }
+    function WebFormData(inDate, inComments) {
+        this.TouchPointDate = inDate;
+        this.Comments = inComments;
     }
 </script>

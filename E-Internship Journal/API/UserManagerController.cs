@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using E_Internship_Journal.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Authorization;
+using E_Internship_Journal.Services;
 namespace E_Internship_Journal.API
 {
     [Produces("application/json")]
@@ -20,10 +21,14 @@ namespace E_Internship_Journal.API
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public UserManagerController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
+        private readonly IEmailSender _emailSender;
+        public UserManagerController(ApplicationDbContext context,
+                        IEmailSender emailSender,
+            UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
+            _emailSender = emailSender;
             _signInManager = signInManager;
             _context = context;
         }
@@ -112,10 +117,22 @@ namespace E_Internship_Journal.API
 
 
         // GET: api/UserManager
-        [HttpGet]
-        public IEnumerable<string> Getttt()
+        [HttpGet("GetPersonal")]
+        [Authorize(Roles = "LO")]
+        public IActionResult GetPersonal()
         {
-            return new string[] { "value1", "value2" };
+            var personalReord = _context.Users
+                  .Where(ur => ur.Id == _userManager.GetUserId(User))
+                  .SingleOrDefault();
+
+            var response = new
+            {
+                personalReord.Email,
+                personalReord.FullName,
+                personalReord.PhoneNumber,
+
+            };
+            return new JsonResult(response);
         }
 
         // GET: api/UserManager/5
@@ -153,6 +170,37 @@ namespace E_Internship_Journal.API
             }
 
             return new JsonResult(response);
+        }
+        [HttpPut("UpdatePersonal")]
+        [Authorize(Roles = "LO")]
+        public async Task<IActionResult> UpdatePersonalAsync([FromBody] string value)
+        {
+            var personalReord = _context.Users
+                  .Where(ur => ur.Id == _userManager.GetUserId(User))
+                  .SingleOrDefault();
+
+            // var result = await _userManager.ChangeEmailAsync(user, newEmail, token);
+            var personalInput = JsonConvert.DeserializeObject<dynamic>(value);
+            try
+            {
+               // var previousUser = await _userManager.GetUserAsync(User);
+                var code = await _userManager.GenerateChangeEmailTokenAsync(personalReord, personalInput.Email.ToString());
+                // added HTML encoding
+               string codeHtmlVersion = System.Net.WebUtility.UrlEncode(code);
+                //personalReord.Email = personalInput.Email;
+                personalReord.PhoneNumber = personalInput.PhoneNumber;
+                //var result = await _userManager.ChangeEmailAsync(personalReord, personalInput.Email.ToString(), code);
+                _emailSender.SendChangeEmailAsync(personalInput.Email.ToString(), "Change Email", 
+                    "http://localhost:63071/Account/ConfirmEmail?userId=" + personalReord.Email.ToString() + "&newEmail=" + personalInput.Email + "&code=" + codeHtmlVersion);
+                _context.SaveChanges();
+
+                return new OkObjectResult(new { Message = "Personal Information Updated Successfully!" });
+            }
+            catch (Exception execeptionObject)
+            {
+                return BadRequest(new { Message = execeptionObject });
+            }
+
         }
 
         // POST: api/UserManager
