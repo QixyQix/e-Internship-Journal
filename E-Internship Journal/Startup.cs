@@ -141,7 +141,7 @@ namespace E_Internship_Journal
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            DataSeeder.SeedData(new ApplicationDbContext());
+            //DataSeeder.SeedData(new ApplicationDbContext());
         }
     }
 }
