@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Manage Course Page";
+}
+<div class="container-fluid">
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -151,7 +154,7 @@
             dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
             ajax: {
-                url: '/Api/Task_Record',
+                url: '/Api/Courses',
                 dataSrc: ''
             },
             columnDefs: [{
@@ -181,8 +184,8 @@
             },
             columns: [
                 { data: null },
-                { data: "DayRecordId" },
-                { data: "Description" },
+                { data: "CourseCode" },
+                { data: "CourseName" },
                 {
                     data: null,
                     "bSortable": false,

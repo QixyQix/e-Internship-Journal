@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Add Project Page";
+}
+<div class="container-fluid">
     <!-- Example DataTables Card-->
     <section id="contact">
         <div class="container">
@@ -115,11 +118,44 @@
         </div>
     </div>
 </div>
+
+<!--modal for supervisor Details-->
+<div class="modal fade" id="supervisorModal" tabindex="-1" role="dialog" aria-labelledby="supervisorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="supervisorModalLabel">Action Required - Confirm supervisor details</h5>
+            </div>
+            <div class="modal-body">
+                <div class="col-12">
+                    <form>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input class="form-control" placeholder="Search..." id="txtSearch">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-search">
+                                    </i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="supervisorDetailsSelection">
+                         
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnSubmit">Confirm</button>
+                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     // $(function () { $('#contactForm input').not('[type=submit]').jqBootstrapValidation(); });
     $(document).ready(function () {
         //  console.dir($('#contactForm input'));
-
+        $('#projectName').attr(value, { 'test': 'test1'});
         //  $('#projectName').jqBootstrapValidation();
         $.ajax({
             url: '/api/Companies',
@@ -194,22 +230,45 @@
             $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
                 preventSubmit: true,
                 submitSuccess: function ($form, event) {
-                        var collectedProjectName = $('#projectName').val();
-                        var collectedCompany = $('#selectCompany').attr('value');
-                        var collectedSupervisorName = $('#supervisorName').val();
-                        var collectedSupervisorNumber = $('#mobileNo').val();
-                        var collectedSupervsorEmail = $('#email').val();
-                        var webFormData = new WebFormData(collectedProjectName, collectedCompany, collectedSupervisorName,
-                            collectedSupervisorNumber, collectedSupervsorEmail);
+                    event.preventDefault();
+                    var collectedProjectName = $('#projectName').val();
+                    var collectedCompany = $('#selectCompany').attr('value');
+                    var collectedSupervisorName = $('#supervisorName').val();
+                    var collectedSupervisorNumber = $('#mobileNo').val();
+                    var collectedSupervisorEmail = $('#email').val();
+                    var webFormData = new WebFormData(collectedProjectName, collectedCompany, collectedSupervisorName,
+                        collectedSupervisorNumber, collectedSupervisorEmail);
 
-                        $.ajax({
-                            url: '/Api/TouchPoint/SaveTouchPointRecord/',
-                            method: 'POST',
-                            dataType: "json",
-                            contentType: "application/json; charset=utf-8",
-                            cache: false,
-                            data: "'" + JSON.stringify(webFormData) + "'",
-                            success: function (data) {
+                    $.ajax({
+                        url: '/Api/Projects/SaveNewProjectRecord/',
+                        method: 'PUT',
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        data: "'" + JSON.stringify(webFormData) + "'",
+                        success: function (data, status, jqXHR) {
+                            if (jqXHR.status == 202) {
+                                swal({
+                                    type: 'warning',
+                                    title: 'Attention!',
+                                    text: "Requires your attention!"
+                                }).then(
+                                    function () {
+                                        $('#supervisorModal').modal('show');
+                                        $visibilityIdInputElement = $('#supervisorDetailsSelection');
+
+                                       // $radioElement = $('<input>').attr('type', 'radio').val({ data.FullName , data.PhoneNumber }).attr('name', 'visibilityIdInput');
+
+                                        $visibilityIdInputElement.append($radioElement);
+                                        $labelElement = $('<span>' + data.FullName + '</span>').attr('id', 'visibilityName');
+                                        $visibilityIdInputElement.append($labelElement);
+                                        $labelElement = $('<span>' + data.PhoneNumber + '<br/>').attr('id', 'visibilityName');
+                                        $visibilityIdInputElement.append($labelElement);
+                                       // $radioElement = $('<input>').attr('type', 'radio').val(visibilityId).attr('name', 'visibilityIdInput');
+                                      //  $labelElement = $('<span>' + visibilityRadioName + '<br/>').attr('id', 'visibilityName');
+                                    });
+
+                            } else {
                                 swal({
                                     type: 'success',
                                     title: 'Saved!',
@@ -218,19 +277,21 @@
                                     function () {
                                         window.location.reload();
                                     });
-                            },//End of success
-                            error: function (data) {
-                                swal({
-                                    type: 'error',
-                                    title: 'Error',
-                                    text: data.Message
-                                });
-                            }//End of error
-                        });//End of ajax call
+
+                            }
+                        },//End of success
+                        error: function (data) {
+                            swal({
+                                type: 'error',
+                                title: 'Error',
+                                text: data.Message
+                            });
+                        }//End of error
+                    });//End of ajax call
 
 
                     // will not trigger the default submission in favor of the ajax function
-                    event.preventDefault();
+
                 },
                 submitError: function ($form, event, errors) {
 
@@ -245,8 +306,12 @@
     function findCompanyModal() {
         $('#selectCompanyModal').modal('show');
     }
-    function WebFormData(inDate, inComments) {
-        this.TouchPointDate = inDate;
-        this.Comments = inComments;
+    function WebFormData(inProjectName, inCompany, inSupervisorName,
+        inSupervisorNumber, inSupervisorEmail) {
+        this.ProjectName = inProjectName;
+        this.Company = inCompany;
+        this.SupervisorName = inSupervisorName;
+        this.SupervisorNumber = inSupervisorNumber;
+        this.SupervisorEmail = inSupervisorEmail;
     }
 </script>

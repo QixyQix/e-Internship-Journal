@@ -11,6 +11,8 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System.Text;
 
 namespace E_Internship_Journal.API
 {
@@ -217,6 +219,122 @@ namespace E_Internship_Journal.API
             return httpOkResult;
         }
 
+        [HttpPut("SaveNewProjectRecord")]
+        [Authorize(Roles = "SLO")]
+        public async Task<IActionResult> SaveNewProjectRecord([FromBody] string value)
+        {
+            var projectNewInput = JsonConvert.DeserializeObject<dynamic>(value);
+            //var projectRecord = _context.TouchPointRecords
+            //    .Where(tr => tr.TouchPointId == id).SingleOrDefault();
+            // var www = projectNewInput.sss;
+
+            try
+            {
+                var checkSupervisorExist = (await _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail.Value));
+
+                //Check if supervisor acount exist
+                if (checkSupervisorExist != null)
+                {
+                    var existingSupervisorAccount = await _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail.Value);
+                    //var exitingSupervisorAccount = (string)(await _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail.Value)).Id;
+                    //Save new project
+                    Project newProject = new Project
+                    {
+                        ProjectName = projectNewInput.ProjectName.Value,
+                        CompanyID = Convert.ToInt32(projectNewInput.Company.Value),
+                        SupervisorId = existingSupervisorAccount.Id
+                    };
+                    _context.Projects.Add(newProject);
+                    _context.SaveChanges();
+                    //Check if Supervisor name & Phone Number matches with existing record in the DB
+                    if (existingSupervisorAccount.FullName.Equals(projectNewInput.SupervisorName.Value, StringComparison.OrdinalIgnoreCase) && (existingSupervisorAccount.PhoneNumber.Equals(projectNewInput.SupervisorNumber.Value)))
+                    {
+                        //  var ttta = "jajaja";
+                        var successRequestResultMessage = new
+                        {
+                            Message = "Saved Project"
+                        };
+                        OkObjectResult httpOkResult =
+                        new OkObjectResult(successRequestResultMessage);
+                        return httpOkResult;
+                    }
+                    else
+                    {
+                        // Return Status code with existing Supervisor account value for further action from the user
+                        return StatusCode(202, new { existingSupervisorAccount.FullName, existingSupervisorAccount.PhoneNumber });
+
+                    }
+
+
+                }
+                else
+                {
+                    //Create user
+                    var userStore = new UserStore<ApplicationUser>(_context);
+                    var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
+                    var newSupervisorUser = new ApplicationUser
+                    {
+                        UserName = projectNewInput.SupervisorEmail.Value,
+                        Email = projectNewInput.SupervisorEmail.Value,
+                        FullName = projectNewInput.SupervisorName.Value,
+                        PhoneNumber = projectNewInput.SupervisorNumber.Value
+                    };
+                    PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
+                    newSupervisorUser.PasswordHash = ph.HashPassword(newSupervisorUser, generateRandomString(11));
+
+                    await userManager.CreateAsync(newSupervisorUser);
+                    await userManager.AddToRoleAsync(newSupervisorUser, "SUPERVISOR");
+
+                    //Save new project and assign with supervisor's new acount
+                    Project newProject = new Project
+                    {
+                        ProjectName = projectNewInput.ProjectName.Value,
+                        CompanyID = Convert.ToInt32(projectNewInput.Company.Value),
+                        SupervisorId = newSupervisorUser.Id
+                    };
+                    _context.Projects.Add(newProject);
+
+                    var repeatPinGeneration = true;
+                    do
+                    {
+                        var registationPin = generateRandomString(50);
+                        if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
+                        {
+                            //Create new registration pin
+                            var newRegistrationPin = new RegistrationPin
+                            {
+                                User = newSupervisorUser,
+                                RegistrationPinId = generateRandomString(50)
+                            };
+                            _context.RegistrationPins.Add(newRegistrationPin);
+                            repeatPinGeneration = false;
+                        }
+                    } while (repeatPinGeneration);
+
+                    await _context.SaveChangesAsync();
+
+                    var successRequestResultMessage = new
+                    {
+                        Message = "Saved Project & Created Supervisor Account"
+                    };
+                    OkObjectResult httpOkResult =
+                    new OkObjectResult(successRequestResultMessage);
+                    return httpOkResult; 
+
+                }
+
+
+                //var supervisorRecord = _context.Users
+                //    .Where(ur => ur.Id == exitingSupervisor);
+                
+            }
+            catch (Exception exceptionObject)
+            {
+                return BadRequest(new { exceptionObject.Message });
+            }
+
+        }//End of Http Put
+
         // DELETE: api/Projects/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject([FromRoute] int id)
@@ -241,6 +359,20 @@ namespace E_Internship_Journal.API
         private bool ProjectExists(int id)
         {
             return _context.Projects.Any(e => e.ProjectId == id);
+        }
+        public string generateRandomString(int size)
+        {
+            //ACKNOWLEDGEMENT: http://azuliadesigns.com/generate-random-strings-characters/
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 1; i < size + 1; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+
+            return builder.ToString();
         }
     }
 }
