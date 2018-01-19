@@ -199,8 +199,15 @@
             //$("#divMessage").dialog("open");
 
         },
-        //events: [
-        //    {
+        events: [
+            {
+                  // red areas where no events can be dropped   
+                start: '2018-01-24',
+                end: '2018-05-10',
+                overlap: false,
+                rendering: 'background',
+                color: '#ff9f89'
+            }
         //        title: 'All Day Event',
         //        start: '2017-11-01'
         //    },
@@ -259,8 +266,8 @@
         //        title: 'Click for Google',
         //        url: 'http://google.com/',
         //        start: '2017-11-28'
-        //    }
-        //],
+            //}
+        ],
         dayClick: function (date, allDay, jsEvent, view) {
             var www = $('#eventModalLabel');
             //$('#eventModalLabel').text(date.format('DD MMMM YYYY'));
