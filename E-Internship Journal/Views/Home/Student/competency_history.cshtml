@@ -90,14 +90,20 @@
                         $('#selectMonthRecord').append(newOption);
                     }
                     var selectedMonth = monthRecords[0];
-                    for (i = 0; i < selectedMonth.CompetencyCheckeds.length; i++) {
-                        var ccid = data.CompetencyCheckeds[i].CompetencyId;
-                        $("input[name='CompetencyCheck']").each(function () {
-                            if ($(this).val() == ccid) {
-                                $(this).prop('checked', true);
+                    $("input[name='CompetencyCheck']").each(function () {
+                        if (selectedMonth.CompetencyCheckeds.length > 0) {
+                            for (i = 0; i < selectedMonth.CompetencyCheckeds.length; i++) {
+                                var ccid = selectedMonth.CompetencyCheckeds[i].CompetencyId;
+                                if ($(this).val() == ccid) {
+                                    $(this).prop('checked', true);
+                                } else {
+                                    $(this).prop('checked', false);
+                                }
                             }
-                        });
-                    }
+                        } else {
+                            $(this).prop('checked', false);
+                        }
+                    });
                 }
             }
         });

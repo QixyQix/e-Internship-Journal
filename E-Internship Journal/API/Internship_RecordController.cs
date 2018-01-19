@@ -153,7 +153,7 @@ namespace E_Internship_Journal.API
         }//End of viewInternshipSurvey method
 
         [HttpGet("ViewCompanyChecklist/{id}")]
-        [Authorize(Roles = "LO")]
+        [Authorize(Roles = "LO, SUPERVISOR")]
         public IActionResult ViewCompanyChecklist(int id)
         {
             var internshipRecord = _context.Internship_Records
@@ -187,6 +187,50 @@ namespace E_Internship_Journal.API
             }
 
         }//End of viewCompanyChecklist method
+
+        [HttpPut("updateCompanyChecklist/{id}")]
+        [Authorize(Roles = "SUPERVISOR")]
+        public IActionResult UpdateCompanyChecklist(int id, [FromBody] string value) {
+            var internshipRecord = _context.Internship_Records
+                .Where(ir => ir.InternshipRecordId == id)
+                .Include(ir => ir.Project)
+                .ThenInclude(p => p.Supervisor)
+                .SingleOrDefault();
+
+            if (internshipRecord == null)
+            {
+                return new BadRequestObjectResult(new { Message = "Internship record does not exist!" });
+            }
+            else if (!internshipRecord.Project.Supervisor.Id.Equals(_userManager.GetUserId(User))) {
+                return new BadRequestObjectResult(new { Message = "You are not authorized to perform this action!" });
+            }
+
+            var checklistInput = JsonConvert.DeserializeObject<dynamic>(value);
+
+            try
+            {
+                internshipRecord.CompanyCheck1a = checklistInput.CompanyCheck1a.Value;
+                internshipRecord.CompanyCheck1b = checklistInput.CompanyCheck1b.Value;
+                internshipRecord.CompanyCheck2a = checklistInput.CompanyCheck2a.Value;
+                internshipRecord.CompanyCheck2b = checklistInput.CompanyCheck2b.Value;
+                internshipRecord.CompanyCheck2c = checklistInput.CompanyCheck2c.Value;
+                internshipRecord.CompanyCheck2d = checklistInput.CompanyCheck2d.Value;
+                internshipRecord.CompanyCheck2e = checklistInput.CompanyCheck2e.Value;
+                internshipRecord.CompanyCheck2f = checklistInput.CompanyCheck2f.Value;
+                internshipRecord.CompanyCheck3a = checklistInput.CompanyCheck3a.Value;
+                internshipRecord.CompanyCheck3b = checklistInput.CompanyCheck3b.Value;
+                internshipRecord.CompanyCheck3c = checklistInput.CompanyCheck3c.Value;
+
+                _context.SaveChanges();
+
+                return new OkObjectResult(new { Message = "Updated company checklist successfully!" });
+            }
+            catch (Exception e) {
+                return new BadRequestObjectResult(new { Message = e.Message.ToString()});
+            }
+
+
+        }
 
         // PUT: api/Internship_Record/5
         [HttpPut("{id}")]
@@ -291,6 +335,85 @@ namespace E_Internship_Journal.API
             return new JsonResult(studentList);
         }
 
+        [HttpGet("StudentInfo/{id}")]
+        public IActionResult GetStudentInfo(int id) {
+            var sir = _context.Internship_Records.Where(ir => ir.InternshipRecordId == id)
+                .Include(ir => ir.UserBatch)
+                .ThenInclude(ub => ub.User)
+                .Include(ir => ir.UserBatch)
+                .ThenInclude(ub => ub.Batch)
+                .ThenInclude(b => b.Course)
+                .Include(ir => ir.Project)
+                .ThenInclude(p => p.Supervisor)
+                .Include(ir => ir.Project)
+                .ThenInclude(p => p.Company)
+                .Include(ir => ir.LiaisonOfficer)
+                .SingleOrDefault();
+
+            if (sir == null) {
+                return new BadRequestObjectResult(new { Message = "Internship record not found" });
+            }
+
+            var studentdetailsobj = new
+            {
+                StudentName = sir.UserBatch.User.FullName,
+                StudentCourse = sir.UserBatch.Batch.Course.CourseName,
+                StudentSchool = "NEED TO DO THIS",
+                StudentMobileNo = sir.UserBatch.User.PhoneNumber,
+                StudentEmail = sir.UserBatch.User.Email,
+                LOName = sir.LiaisonOfficer.FullName,
+                LOMobileNo = sir.LiaisonOfficer.PhoneNumber,
+                LOEmail = sir.LiaisonOfficer.Email,
+                CompanyName = sir.Project.Company.CompanyName,
+                CompanyAddress = sir.Project.Company.CompanyAddress,
+                CompanySupervisor = sir.Project.Supervisor.FullName,
+                CompanySupervisorNo = sir.Project.Supervisor.PhoneNumber,
+                CompanySupervisorEmail = sir.Project.Supervisor.Email
+            };
+
+            return new OkObjectResult(studentdetailsobj);
+        }
+
+        // GET: api/Internship_Record/5
+        [HttpGet("Sup_GetStudentInternship_Record")]
+        public IActionResult Sup_GetStudentInternship_Record()
+        {
+
+            var internship_Record = _context.Internship_Records.Include(ir => ir.UserBatch).ThenInclude(ub => ub.User)
+                .Include(ir => ir.Project)
+                .Where(ir => ir.Project.Supervisor.Id.Equals(_userManager.GetUserId(User)))
+                .Include(ir => ir.MonthRecords);
+
+
+            if (internship_Record == null)
+            {
+                return NotFound();
+            }
+
+            List<object> studentList = new List<object>();
+            foreach (var ir in internship_Record)
+            {
+                bool needReview = false;
+                foreach (var mr in ir.MonthRecords)
+                {
+                    if (mr.Approved == false)
+                    {
+                        needReview = true;
+                        break;
+                    }
+                }
+
+                studentList.Add(new
+                {
+                    StudentId = ir.UserBatch.User.Email,
+                    StudentName = ir.UserBatch.User.FullName,
+                    InternshipRecordId = ir.InternshipRecordId,
+                    Review = needReview
+                });
+            }
+
+            return new JsonResult(studentList);
+        }
 
         private bool Internship_RecordExists(int id)
         {

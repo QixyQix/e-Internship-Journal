@@ -1,7 +1,6 @@
 ﻿@{
     ViewData["Title"] = "View Task Page";
 }
-
 <div class="container-fluid">
     <!-- Breadcrumbs -->
     <ol class="breadcrumb">
@@ -17,20 +16,11 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="pull-left">
-                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
-                        <option>Amelia Goh</option>
-                        <option>Cho Qi Xiang</option>
-                        <option>Tan Chia Wei</option>
-                    </select>
+                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent"></select>
                 </div>
                 <div class="col-xs-4 pull-right">
                     <label>View By:&nbsp</label>
-                    <select class="form-control" id="exampleSelect1">
-                        <option>Week 1</option>
-                        <option>Week 2</option>
-                        <option>Week 3</option>
-                        <option>Week 4</option>
-                    </select>
+                    <select class="form-control" id="selectMonthRecord"></select>
                 </div>
             </div>
         </div>
@@ -74,19 +64,17 @@
     </div>
     <br />
 </div>
-
 <!-- comment Modal -->
 <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="attendanceModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="attendanceModalLabel">11 October 2017</h5>
+                <h5 class="modal-title" id="commentModalLabel"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-
                 <div class="container">
                     <form>
                         <div class="form-group ">
@@ -102,29 +90,147 @@
 <!-- /.container-fluid -->
 <!-- /.content-wrapper -->
 <script>
-    $(document).ready(function () {
-        var table = $('#dataTable').DataTable({
-            dom: "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
+    var months;
+    var selectedMonthData;
+    loadStudents();
+    var internshipId = getCookie("selectedInternship");
+    $('#selectstudent').val(internshipId);
+    loadMonths(internshipId);
+    
+
+    var table = $('#dataTable').DataTable({
+        dom: "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+        columns: [
+            {
+                data: "Date",
+                mRender: function (o) { return moment(o).format("DD/MM/YYYY"); }
             },
-            columns: [
-                { data: "DayRecordId" },
-                { data: "Description" },
-                {
-                    data: null,
-                    "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary">View</button>' } //note under condition if no remarks was given the column would be blank
+            { data: "Description" },
+            {
+                "bSortable": false,
+                "mData": function (data, type, dataToSet) {
+                    if (data.Remarks.toString().trim() != "") {
+                        return data.TaskRecordId;
+                    } else { 
+                        return null;
+                    }
+                },
+                "mRender": function (o) {
+                    if (o != null) {
+                        return '<button class="btn btn-sm btn-primary" onClick="showComment(' + o + ')">View</button>'
+                    } else { 
+                        return ''
+                    }
+                    
+                } //note under condition if no remarks was given the column would be blank
+            }
+        ],
+        language: {
+            emptyTable: "No Task was found.",
+        }
+    });
+
+    function showComment(taskId) { 
+        selectedMonthData = monthRecords[$('#selectMonthRecord').val()];
+        var taskobj
+        for (i = 0; i < selectedMonthData.TaskRecords.length; i++) { 
+            var ataskobj = selectedMonthData.TaskRecords[i];
+            if (ataskobj.TaskRecordId == taskId) { 
+                taskobj = ataskobj;
+                break;
+            }
+        }
+        console.dir(taskobj);
+        $('#commentModalLabel').text(moment(taskobj.Date).format("DD/MM/YYYY"));
+        $('#commentTask').val(taskobj.Remarks);
+        $('#commentModal').modal('show');
+    }
+
+    $('#selectstudent').change(function () {
+        setCookie("selectedInternship", $(this).val());
+    });
+
+    $('#selectMonthRecord').change(function () {
+        selectedMonthData = monthRecords[$(this).val()];
+        loadData(selectedMonthData);
+    });
+
+    function loadMonths(internshipId) {
+        $.ajax({
+            url: '/Api/Month_Record/getMonthsTasks/' + internshipId,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                for (i = 0; i < data.length; i++) {
+                    $('#selectMonthRecord').innerHTML = "";
+                    var selectMonthRecord
+                    var newOption = $('<option>').text('Month ' + (i + 1)).val(i);
+                    $('#selectMonthRecord').append(newOption);
                 }
-            ],
-            language: {
-                emptyTable: "No Task was found, please create one.",
+                console.dir(data);
+                monthRecords = data;
+                loadData(monthRecords[0]);
+            },
+            fail: function (data) {
+                alert(data.Message);
             }
         });
-        $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
-            $('#commentModal').modal('show');
+    }
+
+    function loadData(monthData) {
+        console.dir(monthData);
+        $('#dataTable').dataTable().fnClearTable();
+        if (monthData.TaskRecords.length > 0) {
+            $('#dataTable').dataTable().fnAddData(monthData.TaskRecords);
+        }
+    }
+
+    function loadStudents() {
+        $.ajax({
+            url: '/Api/Internship_Record/Sup_GetStudentInternship_Record',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                console.dir(data);
+                for (i = 0; i < data.length; i++) {
+                    var student = data[i];
+                    $('#selectstudent').innerHTML = "";
+                    var newOption = $('<option></option>').text(student.StudentName).val(student.InternshipRecordId);
+                    $('#selectstudent').append(newOption);
+                }
+            },
+            fail: function (data) {
+                alert(data.Message);
+            }
         });
-    });
+    }
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+    function setCookie(inName, inValue) {
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };
+
 </script>

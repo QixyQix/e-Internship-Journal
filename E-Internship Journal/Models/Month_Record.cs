@@ -23,7 +23,7 @@ namespace E_Internship_Journal.Models
         public int? TechnicalGrading { get; set; }
         public int? IndependenceGrading { get; set; }
         public int? PerformanceGrading { get; set; }
-        public int? OverallGrading { get; set; }
+        public decimal? OverallGrading { get; set; }
         public string OverallFeedback { get; set; }
         
         public Internship_Record InternshipRecord { get; set; }

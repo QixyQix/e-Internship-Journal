@@ -590,7 +590,7 @@ namespace E_Internship_Journal.Data
             modelBuilder.Entity<Month_Record>()
             .Property(month_Records => month_Records.OverallGrading)
             .HasColumnName("OverallGrading")
-            .HasColumnType("int")
+            .HasColumnType("decimal")
             .IsRequired(false);
 
             modelBuilder.Entity<Month_Record>()
@@ -635,6 +635,13 @@ namespace E_Internship_Journal.Data
             modelBuilder.Entity<Day_Record>()
             .Property(day_Records => day_Records.Remarks)
             .HasColumnName("Remarks")
+            .HasColumnType("VARCHAR(MAX)")
+            .HasDefaultValue("")
+            .IsRequired(true);
+
+            modelBuilder.Entity<Day_Record>()
+            .Property(day_Records => day_Records.SupervisorRemarks)
+            .HasColumnName("SupervisorRemarks")
             .HasColumnType("VARCHAR(MAX)")
             .HasDefaultValue("")
             .IsRequired(true);

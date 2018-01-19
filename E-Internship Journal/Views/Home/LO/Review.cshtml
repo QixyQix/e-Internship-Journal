@@ -856,21 +856,22 @@
     }//End of functon LoadDataTable
 
     function getGrade(average) {
-        if (average < 1.5)
-            return 'F';
-        else if (average >= 1.5)
-            return 'D';
-        else if (average >= 2.0)
-            return 'C';
-        else if (average >= 2.5)
-            return 'C+';
-        else if (average >= 3.0)
-            return 'B';
-        else if (average >= 3.5)
-            return 'B+';
+        console.dir(average);
+        if (average >= 4.5)
+            return 'DIST';
         else if (average >= 4.0)
             return 'A';
-        else if (average >= 4.5)
-            return 'DIST';
+        else if (average >= 3.5)
+            return 'B+';
+        else if (average >= 3.0)
+            return 'B';
+        else if (average >= 2.5)
+            return 'C+';
+        else if (average >= 2.0)
+            return 'C';
+        else if (average >= 1.5)
+            return 'D';
+        else if (average < 1.5)
+            return 'F';
     }
 </script>

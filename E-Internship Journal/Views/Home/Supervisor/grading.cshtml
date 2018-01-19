@@ -17,18 +17,11 @@
             <div class="form-group">
                 <div class="pull-left">
                     <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
-                        <option>Amelia Goh</option>
-                        <option>Cho Qi Xiang</option>
-                        <option>Tan Chia Wei</option>
                     </select>
                 </div>
                 <div class="pull-right">
                     <label>View By:&nbsp</label>
-                    <select class="form-control" id="exampleSelect1">
-                        <option>Week 1 - 4</option>
-                        <option>Week 4 - 8</option>
-                        <option>Week 8 - 12</option>
-                        <option>Week 12 - 16</option>
+                    <select class="form-control" id="selectMonthRecord">
                     </select>
                 </div>
             </div>
@@ -89,7 +82,7 @@
                                 </div>
                             </td>
                             <td>
-                                <select class="form-control" id="rating1" disabled>
+                                <select class="form-control" id="CommunicationGrading" disabled>
                                     <option>1</option>
                                     <option>2</option>
                                     <option>3</option>
@@ -118,7 +111,7 @@
                                 </div>
                             </td>
                             <td>
-                                <select class="form-control" id="rating2" disabled>
+                                <select class="form-control" id="TechnicalGrading" disabled>
                                     <option>1</option>
                                     <option>2</option>
                                     <option>3</option>
@@ -146,7 +139,7 @@
                                 </div>
                             </td>
                             <td>
-                                <select class="form-control" id="rating3" disabled>
+                                <select class="form-control" id="IndependenceGrading" disabled>
                                     <option>1</option>
                                     <option>2</option>
                                     <option>3</option>
@@ -161,26 +154,19 @@
                                     <div class="card-header" role="tab" id="headingFive">
                                         <h6 class="mb-0">
                                             <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseThree">
-                                                4. Average rating to overall grade
+                                                4. Overall Performance
                                             </a>
                                         </h6>
                                     </div>
                                     <div id="collapseFive" class="collapse" role="tabpanel" aria-labelledby="headingFive">
                                         <ul class="card-block">
-                                            <li>Higher or equal to 4.5 -- Distinction</li>
-                                            <li>Higher or equal to 4.0 -- A (Excellent)</li>
-                                            <li>Higher or equal to 3.5 -- B+ (Very good)</li>
-                                            <li>Higher or equal to 3.0 -- B (Good)</li>
-                                            <li>Higher or equal to 2.5 -- C+ (Good Credit)</li>
-                                            <li>Higher or equal to 2.0 -- C (Credit)</li>
-                                            <li>Higher or equal to 1.5 -- D (Pass)</li>
-                                            <li>Less than 1.5 -- F (Fail)</li>
+                                            <li>I am satisfied with the overall performance and contributions of this stdent</li>
                                         </ul>
                                     </div>
                                 </div>
                             </td>
                             <td>
-                                <select class="form-control" id="grading" disabled>
+                                <select class="form-control" id="PerformanceGrading" disabled>
                                     <option>1</option>
                                     <option>2</option>
                                     <option>3</option>
@@ -191,24 +177,42 @@
                         </tr>
                     </tbody>
                 </table>
-                <div>
-
+                <div class="card">
+                    <div class="card-header" role="tab" id="headingFive">
+                        <h6 class="mb-0">
+                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseThree">
+                                Average rating to overall grade
+                            </a>
+                        </h6>
+                    </div>
+                    <div id="collapseSix" class="collapse" role="tabpanel" aria-labelledby="headingFive">
+                        <ul class="card-block">
+                            <li>Higher or equal to 4.5 -- Distinction</li>
+                            <li>Higher or equal to 4.0 -- A (Excellent)</li>
+                            <li>Higher or equal to 3.5 -- B+ (Very good)</li>
+                            <li>Higher or equal to 3.0 -- B (Good)</li>
+                            <li>Higher or equal to 2.5 -- C+ (Good Credit)</li>
+                            <li>Higher or equal to 2.0 -- C (Credit)</li>
+                            <li>Higher or equal to 1.5 -- D (Pass)</li>
+                            <li>Less than 1.5 -- F (Fail)</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-8 control-label">Average rating based on the above four assessment criteria:</label>
                     <div class="col-sm-5">
-                        <input class="form-control" id="assessmentCriteria" type="text" value="" readonly>
+                        <input class="form-control" id="OverallGrading" type="text" value="" readonly>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Overall Grade:</label>
                     <div class="col-sm-5">
-                        <input class="form-control" id="overallGrade" type="text" value="" readonly>
+                        <input class="form-control" id="OverallGrade" type="text" value="" readonly>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-3" for="overallComment">Overall Comments:</label>
-                    <textarea class="form-control" rows="5" id="overallComment" readonly></textarea>
+                    <label class="control-label col-sm-3" for="OverallFeedback">Overall Comments:</label>
+                    <textarea class="form-control" rows="5" id="OverallFeedback" readonly></textarea>
                 </div>
             </div>
         </div>
@@ -225,4 +229,123 @@
 </div>
 &nbsp;
 <script>
+    var months;
+    var selectedMonthData;
+    loadStudents();
+    var internshipId = getCookie("selectedInternship");
+    $('#selectstudent').val(internshipId);
+    loadMonths(internshipId);
+
+    $('#selectstudent').change(function () {
+        setCookie("selectedInternship", $(this).val());
+    });
+
+    $('#selectMonthRecord').change(function () {
+        selectedMonthData = monthRecords[$(this).val()];
+        loadData(selectedMonthData);
+    });
+
+    function loadMonths(internshipId) {
+        $.ajax({
+            url: '/Api/Month_Record/InternshipMonthRecords/' + internshipId,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                for (i = 0; i < data.length; i++) {
+                    $('#selectMonthRecord').innerHTML = "";
+                    var selectMonthRecord
+                    var newOption = $('<option>').text('Month ' + (i + 1)).val(i);
+                    $('#selectMonthRecord').append(newOption);
+                }
+                console.dir(data);
+                monthRecords = data;
+                loadData(monthRecords[0]);
+            },
+            fail: function (data) {
+                alert(data.Message);
+            }
+        });
+    }
+
+    function loadData(selectedMonth) {
+        $('#CommunicationGrading').val(selectedMonth.CommunicationGrading);
+        $('#TechnicalGrading').val(selectedMonth.TechnicalGrading);
+        $('#IndependenceGrading').val(selectedMonth.IndependenceGrading);
+        $('#PerformanceGrading').val(selectedMonth.PerformanceGrading);
+        $('#OverallGrading').val(selectedMonth.OverallGrading);
+        if (selectedMonth.Approved) {
+            $('#OverallGrade').val(getGrade(selectedMonth.OverallGrading));
+        } else {
+            $('#OverallGrade').val("Not Graded Yet");
+        }
+
+        $('#OverallFeedback').val(selectedMonth.OverallFeedback);
+    }
+
+    function loadStudents() {
+        $.ajax({
+            url: '/Api/Internship_Record/Sup_GetStudentInternship_Record',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                console.dir(data);
+                for (i = 0; i < data.length; i++) {
+                    var student = data[i];
+                    $('#selectstudent').innerHTML = "";
+                    var newOption = $('<option></option>').text(student.StudentName).val(student.InternshipRecordId);
+                    $('#selectstudent').append(newOption);
+                }
+            },
+            fail: function (data) {
+                alert(data.Message);
+            }
+        });
+    }
+
+    function getGrade(average) {
+        console.dir(average);
+        if (average >= 4.5)
+            return 'DIST';
+        else if (average >= 4.0)
+            return 'A';
+        else if (average >= 3.5)
+            return 'B+';
+        else if (average >= 3.0)
+            return 'B';
+        else if (average >= 2.5)
+            return 'C+';
+        else if (average >= 2.0)
+            return 'C';
+        else if (average >= 1.5)
+            return 'D';
+        else if (average < 1.5)
+            return 'F';
+    }
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+    function setCookie(inName, inValue) {
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };
 </script>

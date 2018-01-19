@@ -11,22 +11,9 @@
     </ol>
     <div class="card" style="border-width:0px;">
         <div class="card-body">
-            <div class="form-group">
-                <div class="pull-left">
-                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
-                        <option>Amelia Goh</option>
-                        <option>Cho Qi Xiang</option>
-                        <option>Tan Chia Wei</option>
-                    </select>
-                </div>
-                @*<div class="col-md-2 col-sm-2 col-xs-12 pull-right">
-                        <select class="form-control" id="exampleSelect1">
-                            <option>Week 1 - 4</option>
-                            <option>Week 4 - 8</option>
-                            <option>Week 8 - 12</option>
-                            <option>Week 12 - 16</option>
-                        </select>
-                    </div>*@
+            <div class="col-xs-12 pull-right">
+                <label>View By:&nbsp</label>
+                <select class="form-control" id="selectMonthRecord"></select>
             </div>
         </div>
     </div>
@@ -142,14 +129,14 @@
                     </div>
                     <div class="col-md-10 col-sm-10 col-xs-12">
                         <div class="form-group">
-                            <label class="control-label col-sm-8 requiredField" for="softskill1">(a) Areas you have done well.</label>
-                            <textarea class="form-control" rows="5" id="softskill1" readonly></textarea>
+                            <label class="control-label col-sm-8 requiredField" for="softskilldonewell">(a) Areas you have done well.</label>
+                            <textarea class="form-control" rows="5" id="softskilldonewell" readonly></textarea>
                         </div>
                     </div>
                     <div class="col-md-10 col-sm-10 col-xs-12">
                         <div class="form-group">
-                            <label class="control-label col-sm-8 requiredField" for="softskill2">(b) Areas you would like to improve.</label>
-                            <textarea class="form-control" rows="5" id="softskill2" readonly></textarea>
+                            <label class="control-label col-sm-8 requiredField" for="softskillimprove">(b) Areas you would like to improve.</label>
+                            <textarea class="form-control" rows="5" id="softskillimprove" readonly></textarea>
                         </div>
                     </div>
                     <br />
@@ -162,20 +149,20 @@
                     </div>
                     <div class="col-md-10 col-sm-10 col-xs-12">
                         <div class="form-group">
-                            <label class="control-label col-sm-8 requiredField" for="hardskill1">(a) How you have applied what you have learnt in school and workplace</label>
-                            <textarea class="form-control" rows="5" id="hardskill1" readonly></textarea>
+                            <label class="control-label col-sm-8 requiredField" for="hardskillapply">(a) How you have applied what you have learnt in school and workplace</label>
+                            <textarea class="form-control" rows="5" id="hardskillapply" readonly></textarea>
                         </div>
                     </div>
                     <div class="col-md-10 col-sm-10 col-xs-12">
                         <div class="form-group">
-                            <label class="control-label col-sm-8 requiredField" for="hardskill2">(b) Areas you have done well.</label>
-                            <textarea class="form-control" rows="5" id="hardskill2" readonly></textarea>
+                            <label class="control-label col-sm-8 requiredField" for="hardskilldonewell">(b) Areas you have done well.</label>
+                            <textarea class="form-control" rows="5" id="hardskilldonewell" readonly></textarea>
                         </div>
                     </div>
                     <div class="col-md-10 col-sm-10 col-xs-12">
                         <div class="form-group ">
-                            <label class="control-label col-sm-8 requiredField" for="hardskill3">(c) Areas you would like to improve.</label>
-                            <textarea class="form-control" rows="5" id="hardskill3" readonly></textarea>
+                            <label class="control-label col-sm-8 requiredField" for="hardskillimprove">(c) Areas you would like to improve.</label>
+                            <textarea class="form-control" rows="5" id="hardskillimprove" readonly></textarea>
                         </div>
                     </div>
                     <br />
@@ -209,156 +196,14 @@
             <div role="tabpanel" class="tab-pane fade" id="competency">
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered" id="tablecompetency" cellspacing="0">
+                        <table class="table table-bordered" id="tblCompetencies" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>A. Domain Immersation</th>
+                                    <th>Competency</th>
                                     <th>Tick if performed</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        1. Describe and explain respectively domain knowledge
-                                        <ul>
-                                            <li>
-                                                Understand existing business operations
-                                            </li>
-                                            <li>
-                                                Identify roles and responsibilities of company staff members
-                                            </li>
-                                            <li>
-                                                Understand a project/system business requirements
-                                            </li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <div class="checkbox">
-                                            <input type="checkbox" name="checkboxQ1" id="q1" />
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>B. Project/System Analysis & Design</th>
-                                    <th></th>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        2. Participate and contribute to the review, analysis and verification of business and software requirements
-                                        <ul>
-                                            <li>
-                                                Assist project team for project requirements gathering and analysis
-                                            </li>
-                                            <li>
-                                                Assist in gathering of user requirements, which can be any activity such as design of questionnaire, logistics planning
-                                            </li>
-                                            <li>
-                                                Identify and document an application problem or symptoms from users(when there is reported software bug)
-                                            </li>
-                                            <li>
-                                                Propose solutions to an application problem with designated supervisors or mentors
-                                            </li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <div class="checkbox">
-                                            <input type="checkbox" name="checkboxQ2" id="q2" />
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        3. Prepare technical documentation and reports on requirements and analysis
-                                        <ul>
-                                            <li>
-                                                Report the workflow of a business requirement, in the form of UML(Sequence, State etc. diagrams) or any in company standard documentation format
-                                            </li>
-                                            <li>
-                                                Report or present a problem resolution/design to the users
-                                            </li>
-                                            <li>
-                                                Document constraints or possible impacts in the application, during any code or functionality changes from bugfix or change request
-                                            </li>
-                                            <li>
-                                                Perform an impact analysis (i.e. what could happen to the users, like loss of what data) of the risks involved in the reported application problem/error
-                                            </li>
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <div class="checkbox">
-                                            <input type="checkbox" name="checkboxQ3" id="q3" />
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>b. Discuss with the student on the internship requirements. (This is recommended to be carried out at the start of the inrernship)</td>
-                                    <td>
-                                        <div class="checkbox">
-                                            <input type="checkbox" name="checkboxQ4" id="q4" />
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>c. Guide the student to meet requirements and learning objectives. This includes guiding the student on the tasks, setting performance expectations and encouraging student to ask questions to clarify job resposibilities.</td>
-                                    <td>
-                                        <div class="checkbox">
-                                            <input type="checkbox" name="checkboxQ5" id="q5" />
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>d. Provide periodic feedback to student on his/her performance</td>
-                                    <td>
-                                        <div class="checkbox">
-                                            <input type="checkbox" name="checkboxQ6" id="q6" />
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>e. Meet and discuss with the SP Liaison Officer on student's progress and performance during company visits.</td>
-                                    <td>
-                                        <div class="checkbox">
-                                            <input type="checkbox" name="checkboxQ7" id="q7" />
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>f. Provide final assessment on student's performance</td>
-                                    <td>
-                                        <div class="checkbox">
-                                            <input type="checkbox" name="checkbox8" id="q8" />
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>3. Mentorship</th>
-                                    <th></th>
-                                </tr>
-                                <tr>
-                                    <td>a. Provide student an overview of the company structure, nature of business and work requirements.</td>
-                                    <td>
-                                        <div class="checkbox">
-                                            <input type="checkbox" name="checkboxQ9" id="q9" />
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>b. Share about job propects, career paths and trends within the industry. This can be done through sharing of work experience, relevant resources, networking contacts, as appropriate.</td>
-                                    <td>
-                                        <div class="checkbox">
-                                            <input type="checkbox" name="checkboxQ10" id="q10" />
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>b. Motivate the student with your work experience and career journey in the industry. This includes, but not limited to, providing the student and understanding on the right kind of professional and personal ethics, attiudes and values to adopt to be effective</td>
-                                    <td>
-                                        <div class="checkbox">
-                                            <input type="checkbox" name="checkboxQ11" id="q11" />
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
+                            <tbody></tbody>
                         </table>
                     </div>
                 </div>
@@ -373,16 +218,6 @@
                     <div class="col-12">
                         <div class="col-6 pull-left">
                             <div class="form-group">
-                                <label for="exampleFormControlSelect1">Session #</label>
-                                <select class="form-control" id="exampleFormControlSelect1" disabled>
-                                    <option>1</option>
-                                    <option>2</option>
-                                    <option>3</option>
-                                    <option>4</option>
-                                    <option>5</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
                                 <label class="control-label" for="date">
                                     Session Date
                                 </label>
@@ -391,7 +226,7 @@
                                         <i class="fa fa-calendar">
                                         </i>
                                     </div>
-                                    <input class="form-control" id="date" name="date" placeholder="DD/MM/YYYY" type="text" readonly>
+                                    <input class="form-control" id="datelocked" name="datelocked" placeholder="DD/MM/YYYY" type="text" readonly>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -402,8 +237,7 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-clock-o"></i>
                                     </div>
-
-                                    <input type='text' class="form-control" id="timeinval" readonly />
+                                    <input type='text' class="form-control" id="MentorSessionDateTimeStart" readonly />
                                 </div>
                             </div>
                         </div>
@@ -416,7 +250,7 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-clock-o"></i>
                                     </div>
-                                    <input type='text' class="form-control" id="timeoutval" readonly />
+                                    <input type='text' class="form-control" id="MentorSessionDateTimeEnd" readonly />
                                 </div>
                             </div>
                         </div>
@@ -424,7 +258,7 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label class="control-label" for="comment">Please note down what you have learnt from the mentoring session. The areas of learning may include, but not limited to, an overview of the company structure, nature of business and work requirements; jobs prospects and career paths within the industry; or work experience of your mentor in the industry</label>
-                            <textarea class="form-control" rows="5" id="comment" readonly></textarea>
+                            <textarea class="form-control" rows="5" id="MentorSessionReflection" readonly></textarea>
                         </div>
                     </div>
                 </div>
@@ -440,7 +274,6 @@
                                     </a>
                                 </h5>
                             </div>
-
                             <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
                                 <ul class="card-block">
                                     <li>Exceeds expectations in the area assessed </li>
@@ -481,12 +314,12 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <select class="form-control" id="rating1">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
+                                        <select class="form-control" id="CommunicationGrading">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -510,12 +343,12 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <select class="form-control" id="rating2">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
+                                        <select class="form-control" id="TechnicalGrading">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -538,12 +371,12 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <select class="form-control" id="rating3">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
+                                        <select class="form-control" id="IndependenceGrading">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
                                         </select>
                                     </td>
                                 </tr>
@@ -553,55 +386,64 @@
                                             <div class="card-header" role="tab" id="headingFive">
                                                 <h6 class="mb-0">
                                                     <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseThree">
-                                                        4. Average rating to overall grade
+                                                        4. Overall Performance
                                                     </a>
                                                 </h6>
                                             </div>
                                             <div id="collapseFive" class="collapse" role="tabpanel" aria-labelledby="headingFive">
                                                 <ul class="card-block">
-                                                    <li>Higher or equal to 4.5 -- Distinction</li>
-                                                    <li>Higher or equal to 4.0 -- A (Excellent)</li>
-                                                    <li>Higher or equal to 3.5 -- B+ (Very good)</li>
-                                                    <li>Higher or equal to 3.0 -- B (Good)</li>
-                                                    <li>Higher or equal to 2.5 -- C+ (Good Credit)</li>
-                                                    <li>Higher or equal to 2.0 -- C (Credit)</li>
-                                                    <li>Higher or equal to 1.5 -- D (Pass)</li>
-                                                    <li>Less than 1.5 -- F (Fail)</li>
+                                                    <li>I am satisfied with the overall performance and contributions of this stdent</li>
                                                 </ul>
                                             </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <select class="form-control" id="grading">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
+                                        <select class="form-control" id="PerformanceGrading">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
                                         </select>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
-                        <div>
-
+                        <div class="card">
+                            <div class="card-header" role="tab" id="headingFive">
+                                <h6 class="mb-0">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseThree">
+                                        Average rating to overall grade
+                                    </a>
+                                </h6>
+                            </div>
+                            <div id="collapseSix" class="collapse" role="tabpanel" aria-labelledby="headingFive">
+                                <ul class="card-block">
+                                    <li>Higher or equal to 4.5 -- Distinction</li>
+                                    <li>Higher or equal to 4.0 -- A (Excellent)</li>
+                                    <li>Higher or equal to 3.5 -- B+ (Very good)</li>
+                                    <li>Higher or equal to 3.0 -- B (Good)</li>
+                                    <li>Higher or equal to 2.5 -- C+ (Good Credit)</li>
+                                    <li>Higher or equal to 2.0 -- C (Credit)</li>
+                                    <li>Higher or equal to 1.5 -- D (Pass)</li>
+                                    <li>Less than 1.5 -- F (Fail)</li>
+                                </ul>
+                            </div>
                         </div>
                         <form class="form-group">
                             <div class="form-group">
                                 <label class="col-md-8 control-label">Average rating based on the above four assessment criteria:</label>
                                 <div class="col-sm-5">
-                                    <input class="form-control" id="assessmentCriteria" type="text" value="">
+                                    <input class="form-control" id="OverallGrading" type="text" value="" disabled>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Overall Grade:</label>
                                 <div class="col-sm-5">
-                                    <input class="form-control" id="overallGrade" type="text" value="">
+                                    <input class="form-control" id="OverallGrade" type="text" value="" disabled>
                                 </div>
                             </div>
                         </form>
-
-
 
                         <div class="col-md-10 col-sm-10 col-xs-12">
                             <div class="form-group">
@@ -610,7 +452,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -623,91 +464,430 @@
                 Back
             </button>
             <div class="pull-right">
-                <button class="btn btn-primary pull-right" name="submit" id="submit">
-                    Submit
+                <button class="btn btn-primary pull-right" name="submit" id="btnApprove">
+                    Approve Records
                 </button>
             </div>
         </div>
     </div>
 </div>
 &nbsp;
-<!-- comment Modal -->
-<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="attendanceModalLabel" aria-hidden="true">
+<!--Day comment Modal -->
+<div class="modal fade" id="dayModal" tabindex="-1" role="dialog" aria-labelledby="dayModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="attendanceModalLabel">11 October 2017</h5>
+                <h5 class="modal-title" id="dayModalLabel">Add/Edit Comment for day</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-
                 <div class="container">
+                    <p id="dayModalDescription"></p>
                     <form>
                         <div class="form-group ">
                             <label>Comment:</label>
-                            <textarea class="form-control" rows="5" id="commentTask" readonly>Went to meeting, and prepared meeting report.</textarea>
+                            <textarea class="form-control" rows="5" id="commentDay"></textarea>
                         </div>
                     </form>
+                    <button class="btn btn-default" data-dismiss="modal" id="btnCancel1">Cancel</button>
+                    <button class="btn btn-primary pull-right" id="btnSaveDayComment">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- comment for task Modal -->
+<div class="modal fade" id="taskModal" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="taskModalLabel">Add/Edit Comment for task</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <p id="taskModalDescription"></p>
+                    <form>
+                        <div class="form-group ">
+                            <label>Comment:</label>
+                            <textarea class="form-control" rows="5" id="commentTask"></textarea>
+                        </div>
+                    </form>
+                    <button class="btn btn-default" data-dismiss="modal" id="btnCancel">Cancel</button>
+                    <button class="btn btn-primary pull-right" id="btnSaveTaskComment">Save</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <script>
-    $(document).ready(function () {
-        var attendancetable = $('#dataTable_attendance').DataTable({
-            dom: "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
-            },
-            columns: [
-                { data: "DayRecordId" },
-                { data: "Description" },
-                { data: "Description" },
-                { data: "Description" },
-                {
-                    data: null,
-                    "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>' }
-                }
-            ]
-        });
-        $('#dataTable_attendance tbody').on('click', 'button.btn-primary', function (e) {
-            $('#commentModal').modal('show');
-        });
-        //end of attendance script
+    var months;
+    var internshipId = getCookie("selectedInternship");
+    $('#selectstudent').val(internshipId);
 
-        var tasktable = $('#dataTable_task').DataTable({
-            dom: "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
+    //Initialize the datatables
+    var attendancetable = $('#dataTable_attendance').DataTable({
+        dom: "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+        columns: [
+            {
+                data: "Date",
+                mRender: function (o) { return moment(o).format("DD/MM/YYYY"); }
             },
-            columns: [
-                { data: "DayRecordId" },
-                { data: "Description" },
-                {
-                    data: null,
-                    "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>' }
+            {
+                data: "ArrivalTime",
+                mRender: function (o) { return moment(o).format("hh:mm A"); }
+            },
+            {
+                data: "DepartureTime",
+                mRender: function (o) { return moment(o).format("hh:mm A"); }
+            },
+            { data: "Remarks" },
+            {
+                data: "DayId",
+                "mRender": function (o) {
+                    return '<button class="btn btn-sm btn-primary" onClick="showDayComment(' + o + ')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit Comment</button>'
+
                 }
-            ],
-            language: {
-                emptyTable: "No Task was found, please create one.",
+            }
+        ],
+        language: {
+            emptyTable: "No Attendance was found.",
+        }
+    });
+
+    var tasktable = $('#dataTable_task').DataTable({
+        dom: "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+        columns: [
+            {
+                data: "Date",
+                mRender: function (o) { return moment(o).format("DD/MM/YYYY"); }
+            },
+            { data: "Description" },
+            {
+                data: "TaskRecordId",
+                "mRender": function (o) {
+                    return '<button class="btn btn-sm btn-primary" onClick="showTaskComment(' + o + ')"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit Comment</button>'
+
+                } //note under condition if no remarks was given the column would be blank
+            }
+        ],
+        language: {
+            emptyTable: "No Task was found.",
+        }
+    });
+
+    //Load the competencies
+    $.ajax({
+        url: '/api/competencies/getInternshipCompetncies/' + internshipId,
+        method: 'GET',
+        dataType: 'json',
+        success: function (competencies) {
+            for (i = 0; i < competencies.length; i++) {
+                var competency = competencies[i];
+                var newRow = $('<tr></tr>');
+                var newCell = $('<td>');
+                newCell.html(competency.Description);
+                newRow.append(newCell);
+                var newCell = $('<td>');
+                var newCheckboxItem = $('<input name="CompetencyCheck" type="checkbox" value="' + competency.CompetencyId + '" disabled>');
+                newCell.append(newCheckboxItem);
+                newRow.append(newCell);
+                $('#tblCompetencies').append(newRow);
+            }
+        }
+    });
+
+    //Get the data
+    $.ajax({
+        url: '/api/Month_Record/DataForReview/' + internshipId,
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            months = data;
+            for (i = 0; i < data.length; i++) {
+                $('#selectMonthRecord').innerHTML = "";
+                var newOption = $('<option>').text('Month ' + months[i].MonthNumber).val(i);
+                $('#selectMonthRecord').append(newOption);
+            }
+            console.dir(data);
+            loadData(months[0]);
+        }
+    });
+
+    $('#btnApprove').click(function () {
+        var a = parseFloat($('#CommunicationGrading').val());
+        var b = parseFloat($('#TechnicalGrading').val());
+        var c = parseFloat($('#IndependenceGrading').val());
+        var d = parseFloat($('#PerformanceGrading').val());
+        var feedback = $('#overallComment').val();
+
+
+        var average = (a + b + c + d) / 4;
+        var grade = getGrade(average);
+
+        var gradingFormData = new GradingFormData(a, b, c, d, feedback);
+
+        var selectedMonth = months[$('#selectMonthRecord').val()];
+
+        console.dir(gradingFormData);
+
+        swal({
+            title: 'Confirm grading?',
+            html: "You are about to approve this student's month records and give him/her a grade of <strong>"+average+"("+grade+")</strong><br/>THIS CANNOT BE UNDONE.",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#007bff',
+            confirmButtonText: 'Approve'
+        }).then(function () {
+            $.ajax({
+                url: '/Api/Month_Record/gradeMonth/' + selectedMonth.MonthId,
+                method: 'PUT',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                cache: false,
+                data: "'" + JSON.stringify(gradingFormData) + "'",
+                success: function (data) {
+                    swal({
+                        type: 'success',
+                        title: 'Graded!',
+                        text: 'The grade has been applied to the student!'
+                    }).then(function () {
+                        object.closest('tr').remove();
+                        window.location.href = "/";
+                    });
+                },
+                fail: function (data) {
+                    swal({
+                        type: 'error',
+                        title: 'Oops!',
+                        text: data.Message
+                    });
+                }
+            });
+        })
+    });
+
+    $('#btnSaveTaskComment').click(function () {
+        var webFormData = new WebFormData($('#commentTask').val());
+
+        $.ajax({
+            url: '/api/Task_Record/updateComment/' + $(this).val(),
+            method: 'PUT',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+            data: "'" + JSON.stringify(webFormData) + "'",
+            success: function (data) {
+                swal({
+                    type: 'success',
+                    title: 'Saved!',
+                    text: data.Message
+                }).then(
+                    function () {
+                        window.location.reload();
+                    });
+            },
+            error: function (data) {
+                swal({
+                    type: 'error',
+                    title: 'Error',
+                    text: data.Message
+                });
             }
         });
-        $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
-            $('#commentModal').modal('show');
+    });
+
+    $('#btnSaveDayComment').click(function () {
+        var webFormData = new WebFormData($('#commentDay').val());
+
+        $.ajax({
+            url: '/api/Day_Record/updateComment/' + $(this).val(),
+            method: 'PUT',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+            data: "'" + JSON.stringify(webFormData) + "'",
+            success: function (data) {
+                swal({
+                    type: 'success',
+                    title: 'Saved!',
+                    text: data.Message
+                }).then(
+                    function () {
+                        window.location.reload();
+                    });
+            },
+            error: function (data) {
+                swal({
+                    type: 'error',
+                    title: 'Error',
+                    text: data.Message
+                });
+            }
+        });
+    });
+
+    function loadData(monthData) {
+        //Attendance
+        $('#dataTable_attendance').dataTable().fnClearTable();
+        if (monthData.DayRecords.length > 0) {
+            $('#dataTable_attendance').dataTable().fnAddData(monthData.DayRecords);
+        }
+        //Daily Task
+        $('#dataTable_task').dataTable().fnClearTable();
+        if (monthData.TaskRecords.length > 0) {
+            $('#dataTable_task').dataTable().fnAddData(monthData.TaskRecords);
+        }
+        //Reflection
+        $('#softskilldonewell').val(monthData.SoftSkillsCompetencyDoneWell);
+        $('#softskillimprove').val(monthData.SoftSkillsCompetencyImprove);
+        $('#hardskillapply').val(monthData.TechnicalCompetencyApplied);
+        $('#hardskilldonewell').val(monthData.TechnicalCompetencyDoneWell);
+        $('#hardskillimprove').val(monthData.TechnicalCompetencyImprove);
+
+        //CompetencyChecklist
+        $("input[name='CompetencyCheck']").each(function () {
+            if (monthData.CompetencyCheckeds.length > 0) {
+                for (i = 0; i < monthData.CompetencyCheckeds.length; i++) {
+                    var ccid = monthData.CompetencyCheckeds[i].CompetencyId;
+                    if ($(this).val() == ccid) {
+                        $(this).prop('checked', true);
+                    } else {
+                        $(this).prop('checked', false);
+                    }
+                }
+            } else {
+                $(this).prop('checked', false);
+            }
         });
 
-        //$('#addattendance').on('click', function (e) {
-        //    $('#attendanceModal').modal('show');
-        //});
-        $("#tablecompetency input").attr("disabled", "disabled"); //disable input for table competency
+        //Mentoring
+        $('#datelocked').val(moment(new Date(monthData.MentorSessionDateTimeStart)).format('DD/MM/YYYY'));
+        $('#MentorSessionDateTimeStart').val(moment(new Date(monthData.MentorSessionDateTimeStart)).format('hh:mm A'));
+        $('#MentorSessionDateTimeEnd').val(moment(new Date(monthData.MentorSessionDateTimeEnd)).format('hh:mm A'));
+        $('#MentorSessionReflection').val(monthData.MentorSessionReflection);
+
+        //Grading
+        calculateGrade();
+    }
+
+    $('#selectMonthRecord').change(function () {
+        selectedMonthData = months[$(this).val()];
+        loadData(selectedMonthData);
     });
+
+    $('#CommunicationGrading').change(function () { calculateGrade(); });
+    $('#TechnicalGrading').change(function () { calculateGrade(); });
+    $('#IndependenceGrading').change(function () { calculateGrade(); });
+    $('#PerformanceGrading').change(function () { calculateGrade(); });
+
+    function showTaskComment(taskId) {
+        selectedMonthData = months[$('#selectMonthRecord').val()];
+        var taskobj
+        for (i = 0; i < selectedMonthData.TaskRecords.length; i++) {
+            var ataskobj = selectedMonthData.TaskRecords[i];
+            if (ataskobj.TaskRecordId == taskId) {
+                taskobj = ataskobj;
+                break;
+            }
+        }
+        console.dir(taskobj);
+        $('#taskModalDescription').text(moment(taskobj.Date).format("DD/MM/YYYY") + ' - ' + taskobj.Description);
+        $('#commentTask').val(taskobj.Remarks);
+        $('#btnSaveTaskComment').val(taskId);
+        $('#taskModal').modal('show');
+    }
+
+    function showDayComment(dayId) {
+        selectedMonthData = months[$('#selectMonthRecord').val()];
+        var dayobj
+        for (i = 0; i < selectedMonthData.DayRecords.length; i++) {
+            var aDayObj = selectedMonthData.DayRecords[i];
+            if (aDayObj.DayId == dayId) {
+                dayobj = aDayObj;
+                break;
+            }
+        }
+        console.dir(dayobj);
+        $('#dayModalDescription').text(moment(dayobj.Date).format("DD/MM/YYYY") + ' - Present: ' + dayobj.IsPresent);
+        $('#commentDay').val(dayobj.SupervisorRemarks);
+        $('#btnSaveDayComment').val(dayId);
+        $('#dayModal').modal('show');
+    }
+
+    function WebFormData(comment) {
+        this.Comment = comment;
+    }
+
+    function GradingFormData(CommunicationGrading, TechnicalGrading, IndependenceGrading, PerformanceGrading, OverallFeedback) { 
+        this.CommunicationGrading = CommunicationGrading;
+        this.TechnicalGrading = TechnicalGrading;
+        this.IndependenceGrading = IndependenceGrading;
+        this.PerformanceGrading = PerformanceGrading;
+        this.OverallFeedback = OverallFeedback;
+    }
+
+    function calculateGrade() {
+        var a = parseFloat($('#CommunicationGrading').val());
+        var b = parseFloat($('#TechnicalGrading').val());
+        var c = parseFloat($('#IndependenceGrading').val());
+        var d = parseFloat($('#PerformanceGrading').val());
+
+        var average = (a + b + c + d) / 4;
+        $('#OverallGrading').val(average);
+        $('#OverallGrade').val(getGrade(average));
+
+    }
+
+    function getGrade(average) {
+        console.dir(average);
+        if (average >= 4.5)
+            return 'DIST';
+        else if (average >= 4.0)
+            return 'A';
+        else if (average >= 3.5)
+            return 'B+';
+        else if (average >= 3.0)
+            return 'B';
+        else if (average >= 2.5)
+            return 'C+';
+        else if (average >= 2.0)
+            return 'C';
+        else if (average >= 1.5)
+            return 'D';
+        else if (average < 1.5)
+            return 'F';
+    }
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+    function setCookie(inName, inValue) {
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };
 </script>
