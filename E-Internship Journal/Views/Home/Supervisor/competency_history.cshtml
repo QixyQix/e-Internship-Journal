@@ -67,8 +67,10 @@
 
     $('#selectstudent').change(function () {
         setCookie("selectedInternship", $(this).val());
-        loadCompetencies($(this).val());
-        loadMonths(getCookie("selectedInternship"));
+        internshipId = getCookie("selectedInternship");
+        console.dir("CHANGE STUDENT TO: " + internshipId);
+        loadCompetencies(internshipId);
+        loadMonths(internshipId);
     });
 
     $('#selectMonthRecord').change(function () {
@@ -83,8 +85,8 @@
             dataType: 'json',
             cache: false,
             success: function (data) {
+                $('#selectMonthRecord').find('option').remove();
                 for (i = 0; i < data.length; i++) {
-                    $('#selectMonthRecord').innerHTML = "";
                     var selectMonthRecord
                     var newOption = $('<option>').text('Month ' + (i + 1)).val(i);
                     $('#selectMonthRecord').append(newOption);
@@ -107,6 +109,8 @@
             method: 'GET',
             dataType: 'json',
             success: function (competencies) {
+                $('#tblCompetencies').find('tr').remove();
+                console.dir(competencies);
                 for (i = 0; i < competencies.length; i++) {
                     var competency = competencies[i];
                     var newRow = $('<tr></tr>');
@@ -152,12 +156,13 @@
             cache: false,
             success: function (data) {
                 console.dir(data);
+                $('#selectstudent').find('option').remove();
                 for (i = 0; i < data.length; i++) {
                     var student = data[i];
-                    $('#selectstudent').innerHTML = "";
                     var newOption = $('<option></option>').text(student.StudentName).val(student.InternshipRecordId);
                     $('#selectstudent').append(newOption);
                 }
+                $('#selectstudent').val("" + internshipId);
             },
             fail: function (data) {
                 alert(data.Message);

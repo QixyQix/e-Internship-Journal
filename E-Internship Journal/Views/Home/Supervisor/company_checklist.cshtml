@@ -173,14 +173,14 @@
             cache: false,
             success: function (data) {
                 console.dir(data);
+                $('#selectstudent').find('option').remove();
                 for (i = 0; i < data.length; i++) {
                     var student = data[i];
-                    $('#selectstudent').innerHTML = "";
                     var newOption = $('<option></option>').text(student.StudentName).val(student.InternshipRecordId);
                     $('#selectstudent').append(newOption);
                 }
-
-                loadData(data[0].InternshipRecordId);
+                $('#selectstudent').val("" + internshipId);
+                loadData(internshipId);
             },
             fail: function (data) {
                 alert(data.Message);
@@ -196,6 +196,10 @@
             cache: false,
             success: function (data) {
                 console.dir(data);
+                $('input[type=checkbox]').each(function () {
+                    $(this).prop('checked', false);
+                });
+
                 if (data.CompanyCheck1a)
                     $('#CompanyCheck1a').prop('checked', true);
                 if (data.CompanyCheck1b)

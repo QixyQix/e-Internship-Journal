@@ -130,8 +130,14 @@
     var selectedMonthData;
     loadStudents();
     var internshipId = getCookie("selectedInternship");
-    $('#selectstudent').val(internshipId);
     loadMonths(internshipId);
+
+    $('#selectstudent').change(function () {
+        setCookie("selectedInternship", $(this).val());
+        internshipId = getCookie("selectedInternship");
+        console.dir("CHANGE STUDENT TO: " + internshipId);
+        loadMonths(internshipId);
+    });
 
     var table = $('#dataTable').DataTable({
         dom: "<'row'<'col-sm-12'tr>>" +
@@ -153,12 +159,11 @@
             {
                 "bSortable": false,
                 "mData": function (data, type, dataToSet) {
-                    if (data.SupervisorRemarks.toString().trim() != "") {
-                        return data.DayRecordId;
+                    if (data.SupervisorRemarks != "") {
+                        return data.TaskRecordId;
                     } else {
                         return null;
                     }
-                    return null;
                 },
                 "mRender": function (o) {
                     if (o != null) {
@@ -191,16 +196,6 @@
         $('#commentModal').modal('show');
     }
 
-    $('#selectstudent').change(function () {
-        setCookie("selectedInternship", $(this).val());
-        loadMonths(internshipId);
-    });
-
-    $('#selectMonthRecord').change(function () {
-        selectedMonthData = monthRecords[$(this).val()];
-        loadData(selectedMonthData);
-    });
-
     function loadMonths(internshipId) {
         $.ajax({
             url: '/Api/Month_Record/getMonthsAttendance/' + internshipId,
@@ -208,8 +203,8 @@
             dataType: 'json',
             cache: false,
             success: function (data) {
+                $('#selectMonthRecord').find('option').remove();
                 for (i = 0; i < data.length; i++) {
-                    $('#selectMonthRecord').innerHTML = "";
                     var selectMonthRecord
                     var newOption = $('<option>').text('Month ' + (i + 1)).val(i);
                     $('#selectMonthRecord').append(newOption);
@@ -240,12 +235,13 @@
             cache: false,
             success: function (data) {
                 console.dir(data);
+                $('#selectstudent').find('option').remove();
                 for (i = 0; i < data.length; i++) {
                     var student = data[i];
-                    $('#selectstudent').innerHTML = "";
                     var newOption = $('<option></option>').text(student.StudentName).val(student.InternshipRecordId);
                     $('#selectstudent').append(newOption);
                 }
+                $('#selectstudent').val("" + internshipId);
             },
             fail: function (data) {
                 alert(data.Message);

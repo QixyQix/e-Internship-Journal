@@ -124,7 +124,7 @@ namespace E_Internship_Journal.API
                 .Include(ir => ir.MonthRecords)
                 .ThenInclude(mr => mr.TaskRecords)
                 .Where(ir => ir.UserBatch.UserId.Equals(_userManager.GetUserId(User)))
-                .Single();
+                .SingleOrDefault();
 
             if (internshipRecord == null)
             {

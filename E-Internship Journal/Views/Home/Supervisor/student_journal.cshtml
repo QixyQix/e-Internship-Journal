@@ -121,7 +121,7 @@
         setCookie("selectedInternship", $(this).val());
     });
 
-    function loadStudents() { 
+    function loadStudents() {
         $.ajax({
             url: '/Api/Internship_Record/Sup_GetStudentInternship_Record',
             method: 'GET',
@@ -129,12 +129,13 @@
             cache: false,
             success: function (data) {
                 console.dir(data);
+                $('#selectstudent').find('option').remove();
                 for (i = 0; i < data.length; i++) {
                     var student = data[i];
-                    $('#selectstudent').innerHTML = "";
                     var newOption = $('<option></option>').text(student.StudentName).val(student.InternshipRecordId);
                     $('#selectstudent').append(newOption);
                 }
+                $('#selectstudent').val("" + internshipId);
             },
             fail: function (data) {
                 alert(data.Message);
