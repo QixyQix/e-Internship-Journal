@@ -1,0 +1,163 @@
+﻿@{
+    ViewData["Title"] = "Manage Competency Page";
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item active">Manage Competency</li>
+    </ol>
+    <div class="card" style="border-width:0px;">
+        <div class="card-body">
+            <div class="form-group">
+                <div class="pull-left form-inline">
+                    <label>Batch Course:&nbsp</label>
+                    <select class="form-control" id="selectbatch"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-header d-inline">
+            <i class="fa fa-check-square fa-2x pull-left"></i> <h3>Manage Competency</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-inline">
+                <div class="col-12">
+                    <div class="col-md-3 col-sm-3 col-xs-12">
+                        <button title="add competency" class="col-12 btn btn-primary" id="addcategory" onclick="findCategoryModal()">
+                            Add Category
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="table-responsive">
+                <table class="table table-bordered" id="company_dataTable" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Category Title</th>
+                            <th width="10%"><div class='container'><div class='row'><button title="edit category" class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button><button title="add competency" class="btn btn-sm btn-success" onclick="findCompetencyModal()"><i class="fa fa-plus"></i></button><button title="delete category" class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button></div></div></th>
+                        </tr>
+                    <tbody>
+                        <tr>
+                            <td>Competency Description</td>
+                            <th width="10%"><div class='container'><div class='row'><button title="edit description" class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button><button title="delete description" class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button></div></div></th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Index'">
+                    Back
+                </button>
+            </div>
+        </div>
+    </div>
+    &nbsp;
+</div>
+
+<!--add/edit competency-->
+<div class="modal fade" id="competencyModal" tabindex="-1" role="dialog" aria-labelledby="competencyModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="competencyModalLabel">Manage Competency</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="container">
+                    <form>
+                        <div class="form-group">
+                            <div class="form-inline">
+                                <label class="col-md-3">Course: &nbsp;</label>
+                                <input class="form-control col-sm-8" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-inline">
+                                <label class="col-md-3">Title: &nbsp;</label>
+                                <input class="form-control col-sm-8">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-inline">
+                                <label class="col-md-3">Display By: &nbsp;</label>
+                                <input type="number" class="form-control col-sm-8">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="submit">Save</button>
+                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--add/edit category-->
+<div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="categoryModalLabel">Manage Competency Category</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="container">
+                    <form>
+                        <div class="form-group">
+                            <div class="form-inline">
+                                <label class="col-md-4">Category Title: &nbsp;</label>
+                                <input class="form-control col-sm-8" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-inline">
+                                <label class="col-md-4">Display By: &nbsp;</label>
+                                <input type="number" class="form-control col-sm-8">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4">Description: &nbsp;</label>
+                            <textarea class="form-control col-sm-12" rows="5" id="CateDesc"></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="submit">Save</button>
+                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+            </div>
+        </div>
+    </div>
+</div>
+@*<style>
+    input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+        height: auto !important;
+    }
+</style>*@
+<script>
+    function findCompetencyModal() {
+        $('#competencyModal').modal('show');
+    }
+    function findCategoryModal() {
+        $('#categoryModal').modal('show');
+    }
+</script>
