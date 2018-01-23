@@ -38,7 +38,7 @@
     <!-- Example DataTables Card-->
     <div class="card mb-3">
         <div class="card-header d-inline">
-            <i class="fa fa-table fa-2x pull-left"></i> <h3>Daily Tasks</h3>
+            <i class="fa fa-pencil fa-2x pull-left"></i> <h3>Daily Tasks</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -102,29 +102,150 @@
 <!-- /.container-fluid -->
 <!-- /.content-wrapper -->
 <script>
-    $(document).ready(function () {
-        var table = $('#dataTable').DataTable({
-            dom: "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
+    var months;
+    var selectedMonthData;
+    loadStudents();
+    var internshipId = getCookie("selectedInternship");
+    $('#selectstudent').val(internshipId);
+    loadMonths(internshipId);
+    
+
+    var table = $('#dataTable').DataTable({
+        dom: "<'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+        columns: [
+            {
+                data: "Date",
+                mRender: function (o) { return moment(o).format("DD/MM/YYYY"); }
             },
-            columns: [
-                { data: "DayRecordId" },
-                { data: "Description" },
-                {
-                    data: null,
-                    "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary">View</button>' } //note under condition if no remarks was given the column would be blank
+            { data: "Description" },
+            {
+                "bSortable": false,
+                "mData": function (data, type, dataToSet) {
+                    if (data.Remarks.toString().trim() != "") {
+                        return data.TaskRecordId;
+                    } else { 
+                        return null;
+                    }
+                },
+                "mRender": function (o) {
+                    if (o != null) {
+                        return '<button class="btn btn-sm btn-primary" onClick="showComment(' + o + ')">View</button>'
+                    } else { 
+                        return ''
+                    }
+                    
+                } //note under condition if no remarks was given the column would be blank
+            }
+        ],
+        language: {
+            emptyTable: "No Task was found.",
+        }
+    });
+
+    function showComment(taskId) { 
+        selectedMonthData = monthRecords[$('#selectMonthRecord').val()];
+        var taskobj
+        for (i = 0; i < selectedMonthData.TaskRecords.length; i++) { 
+            var ataskobj = selectedMonthData.TaskRecords[i];
+            if (ataskobj.TaskRecordId == taskId) { 
+                taskobj = ataskobj;
+                break;
+            }
+        }
+        console.dir(taskobj);
+        $('#commentModalLabel').text(moment(taskobj.Date).format("DD/MM/YYYY"));
+        $('#commentTask').val(taskobj.Remarks);
+        $('#commentModal').modal('show');
+    }
+
+    $('#selectstudent').change(function () {
+        setCookie("selectedInternship", $(this).val());
+        internshipId = getCookie("selectedInternship");
+        console.dir("CHANGE STUDENT TO: " + internshipId);
+        loadMonths(internshipId);
+    });
+
+    $('#selectMonthRecord').change(function () {
+        selectedMonthData = monthRecords[$(this).val()];
+        loadData(selectedMonthData);
+    });
+
+    function loadMonths(internshipId) {
+        $.ajax({
+            url: '/Api/Month_Record/getMonthsTasks/' + internshipId,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                $('#selectMonthRecord').find('option').remove();
+                for (i = 0; i < data.length; i++) {
+                    var selectMonthRecord
+                    var newOption = $('<option>').text('Month ' + (i + 1)).val(i);
+                    $('#selectMonthRecord').append(newOption);
                 }
-            ],
-            language: {
-                emptyTable: "No Task was found, please create one.",
+                console.dir(data);
+                monthRecords = data;
+                loadData(monthRecords[0]);
+            },
+            fail: function (data) {
+                alert(data.Message);
             }
         });
-        $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
-            $('#commentModal').modal('show');
+    }
+
+    function loadData(monthData) {
+        console.dir(monthData);
+        $('#dataTable').dataTable().fnClearTable();
+        if (monthData.TaskRecords.length > 0) {
+            $('#dataTable').dataTable().fnAddData(monthData.TaskRecords);
+        }
+    }
+
+    function loadStudents() {
+        $.ajax({
+            url: '/Api/Internship_Record/Sup_GetStudentInternship_Record',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                console.dir(data);
+                $('#selectstudent').find('option').remove();
+                for (i = 0; i < data.length; i++) {
+                    var student = data[i];
+                    var newOption = $('<option></option>').text(student.StudentName).val(student.InternshipRecordId);
+                    $('#selectstudent').append(newOption);
+                }
+                $('#selectstudent').val("" + internshipId);
+            },
+            fail: function (data) {
+                alert(data.Message);
+            }
         });
-    });
+    }
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+    function setCookie(inName, inValue) {
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };
 </script>

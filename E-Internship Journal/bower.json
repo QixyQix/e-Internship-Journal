@@ -7,13 +7,13 @@
     "jquery-validation": "1.17.0",
     "jquery-validation-unobtrusive": "3.2.6",
     "bootstrap-multiselect": "v0.9.13",
-    "moment": "2.20.1",
-    "sweetalert2": "v7.4.1",
     "tinymce": "4.7.4"
-  },
+    "popper.js": "v1.13.0-next",
+    "datetime-moment": "*"
+    "sweetalert2": "v7.4.1",
+    "moment": "2.20.1",
   "resolutions": {
     "sweetalert2": "v7.4.1",
-    "jquery-validation": "1.17.0",
-    "jqwidgets": "v5.0.0"
+    "moment": ">=2.10.5"
   }
 }

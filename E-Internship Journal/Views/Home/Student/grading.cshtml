@@ -22,7 +22,7 @@
     </div>
     <div class="card">
         <div class="card-header d-inline">
-            <i class="fa fa-pencil fa-2x pull-left"></i> <h3>Grading</h3>
+            <i class="fa fa-graduation-cap fa-2x pull-left"></i> <h3>Grading</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -273,23 +273,24 @@
         $('#OverallFeedback').val(selectedMonth.OverallFeedback);
     });
 
-    function getGrade(average) { 
-        if (average < 1.5)
-            return 'F';
-        else if (average >= 1.5)
-            return 'D';
-        else if (average >= 2.0)
-            return 'C';
-        else if (average >= 2.5)
-            return 'C+';
-        else if (average >= 3.0)
-            return 'B';
-        else if (average >= 3.5)
-            return 'B+';
+    function getGrade(average) {
+        console.dir(average);
+        if (average >= 4.5)
+            return 'DIST';
         else if (average >= 4.0)
             return 'A';
-        else if (average >= 4.5)
-            return 'DIST';
+        else if (average >= 3.5)
+            return 'B+';
+        else if (average >= 3.0)
+            return 'B';
+        else if (average >= 2.5)
+            return 'C+';
+        else if (average >= 2.0)
+            return 'C';
+        else if (average >= 1.5)
+            return 'D';
+        else if (average < 1.5)
+            return 'F';
     }
 
     function getCookie(name) {

@@ -16,11 +16,7 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="pull-left">
-                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
-                        <option>Amelia Goh</option>
-                        <option>Cho Qi Xiang</option>
-                        <option>Tan Chia Wei</option>
-                    </select>
+                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent"></select>
                 </div>
             </div>
         </div>
@@ -28,7 +24,7 @@
     <!-- Example DataTables Card-->
     <div class="card mb-3">
         <div class="card-header d-inline">
-            <i class="fa fa-table fa-2x pull-left"></i> <h3>Checklist for Company</h3>
+            <i class="fa fa-check-square fa-2x pull-left"></i> <h3>Checklist for Company</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -44,7 +40,7 @@
                             <td>a. Brief the student policies, functions and operations, rules and regulations, and safely and security matters</td>
                             <td>
                                 <div class="checkbox">
-                                    <input type="checkbox" name="checkboxQ1" id="q1" />
+                                    <input type="checkbox" name="checkboxQ1" id="CompanyCheck1a" />
                                 </div>
                             </td>
                         </tr>
@@ -52,7 +48,7 @@
                             <td>b. Introduce the student to fellow-colleagues and other important contacts within the organisation for him/her to be effective in his/her work</td>
                             <td>
                                 <div class="checkbox">
-                                    <input type="checkbox" name="checkboxQ2" id="q2" />
+                                    <input type="checkbox" name="checkboxQ2" id="CompanyCheck1b" />
                                 </div>
                             </td>
                         </tr>
@@ -64,7 +60,7 @@
                             <td>a. Plan and discuss with the SP Liaison Officer on the internship requirements to ensure learning objectives are (This is recommended to be carried out prior or at the start of the internship)</td>
                             <td>
                                 <div class="checkbox">
-                                    <input type="checkbox" name="checkboxQ3" id="q3" />
+                                    <input type="checkbox" name="checkboxQ3" id="CompanyCheck2a" />
                                 </div>
                             </td>
                         </tr>
@@ -72,7 +68,7 @@
                             <td>b. Discuss with the student on the internship requirements. (This is recommended to be carried out at the start of the inrernship)</td>
                             <td>
                                 <div class="checkbox">
-                                    <input type="checkbox" name="checkboxQ4" id="q4" />
+                                    <input type="checkbox" name="checkboxQ4" id="CompanyCheck2b" />
                                 </div>
                             </td>
                         </tr>
@@ -80,7 +76,7 @@
                             <td>c. Guide the student to meet requirements and learning objectives. This includes guiding the student on the tasks, setting performance expectations and encouraging student to ask questions to clarify job resposibilities.</td>
                             <td>
                                 <div class="checkbox">
-                                    <input type="checkbox" name="checkboxQ5" id="q5" />
+                                    <input type="checkbox" name="checkboxQ5" id="CompanyCheck2c" />
                                 </div>
                             </td>
                         </tr>
@@ -88,7 +84,7 @@
                             <td>d. Provide periodic feedback to student on his/her performance</td>
                             <td>
                                 <div class="checkbox">
-                                    <input type="checkbox" name="checkboxQ6" id="q6" />
+                                    <input type="checkbox" name="checkboxQ6" id="CompanyCheck2d" />
                                 </div>
                             </td>
                         </tr>
@@ -96,7 +92,7 @@
                             <td>e. Meet and discuss with the SP Liaison Officer on student's progress and performance during company visits.</td>
                             <td>
                                 <div class="checkbox">
-                                    <input type="checkbox" name="checkboxQ7" id="q7" />
+                                    <input type="checkbox" name="checkboxQ7" id="CompanyCheck2e" />
                                 </div>
                             </td>
                         </tr>
@@ -104,7 +100,7 @@
                             <td>f. Provide final assessment on student's performance</td>
                             <td>
                                 <div class="checkbox">
-                                    <input type="checkbox" name="checkbox8" id="q8" />
+                                    <input type="checkbox" name="checkbox8" id="CompanyCheck2f" />
                                 </div>
                             </td>
                         </tr>
@@ -116,7 +112,7 @@
                             <td>a. Provide student an overview of the company structure, nature of business and work requirements.</td>
                             <td>
                                 <div class="checkbox">
-                                    <input type="checkbox" name="checkboxQ9" id="q9" />
+                                    <input type="checkbox" name="checkboxQ9" id="CompanyCheck3a" />
                                 </div>
                             </td>
                         </tr>
@@ -124,7 +120,7 @@
                             <td>b. Share about job propects, career paths and trends within the industry. This can be done through sharing of work experience, relevant resources, networking contacts, as appropriate.</td>
                             <td>
                                 <div class="checkbox">
-                                    <input type="checkbox" name="checkboxQ10" id="q10" />
+                                    <input type="checkbox" name="checkboxQ10" id="CompanyCheck3b" />
                                 </div>
                             </td>
                         </tr>
@@ -132,7 +128,7 @@
                             <td>b. Motivate the student with your work experience and career journey in the industry. This includes, but not limited to, providing the student and understanding on the right kind of professional and personal ethics, attiudes and values to adopt to be effective</td>
                             <td>
                                 <div class="checkbox">
-                                    <input type="checkbox" name="checkboxQ11" id="q11" />
+                                    <input type="checkbox" name="checkboxQ11" id="CompanyCheck3c" />
                                 </div>
                             </td>
                         </tr>
@@ -148,11 +144,171 @@
                 <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Student_Journal'">
                     Back
                 </button>
-                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                <button class="btn btn-primary pull-right" id="save">
                     Save
                 </button>
             </div>
         </div>
     </div>
-    </div>
+</div>
     &nbsp;
+
+<script>
+    loadStudents();
+    var internshipId = getCookie("selectedInternship");
+    $('#selectstudent').val(internshipId);
+
+    $('#selectstudent').change(function () {
+        setCookie("selectedInternship", $(this).val());
+        loadData(getCookie("selectedInternship"));
+    });
+
+    $('#save').click(saveData);
+
+    function loadStudents() {
+        $.ajax({
+            url: '/Api/Internship_Record/Sup_GetStudentInternship_Record',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                console.dir(data);
+                $('#selectstudent').find('option').remove();
+                for (i = 0; i < data.length; i++) {
+                    var student = data[i];
+                    var newOption = $('<option></option>').text(student.StudentName).val(student.InternshipRecordId);
+                    $('#selectstudent').append(newOption);
+                }
+                $('#selectstudent').val("" + internshipId);
+                loadData(internshipId);
+            },
+            fail: function (data) {
+                alert(data.Message);
+            }
+        });
+    }
+
+    function loadData(internshipId) {
+        $.ajax({
+            url: '/Api/Internship_Record/ViewCompanyChecklist/' + internshipId,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                console.dir(data);
+                $('input[type=checkbox]').each(function () {
+                    $(this).prop('checked', false);
+                });
+
+                if (data.CompanyCheck1a)
+                    $('#CompanyCheck1a').prop('checked', true);
+                if (data.CompanyCheck1b)
+                    $('#CompanyCheck1b').prop('checked', true);
+                if (data.CompanyCheck2a)
+                    $('#CompanyCheck2a').prop('checked', true);
+                if (data.CompanyCheck2b)
+                    $('#CompanyCheck2b').prop('checked', true);
+                if (data.CompanyCheck2c)
+                    $('#CompanyCheck2c').prop('checked', true);
+                if (data.CompanyCheck2d)
+                    $('#CompanyCheck2d').prop('checked', true);
+                if (data.CompanyCheck2e)
+                    $('#CompanyCheck2e').prop('checked', true);
+                if (data.CompanyCheck2f)
+                    $('#CompanyCheck2f').prop('checked', true);
+                if (data.CompanyCheck3a)
+                    $('#CompanyCheck3a').prop('checked', true);
+                if (data.CompanyCheck3b)
+                    $('#CompanyCheck3b').prop('checked', true);
+                if (data.CompanyCheck3c)
+                    $('#CompanyCheck3c').prop('checked', true);
+            },
+            fail: function (data) {
+                alert(data.Message);
+            }
+        });
+    }
+
+    function saveData() {
+        var webFormData = new WebFormData(
+            $('#CompanyCheck1a').prop('checked'),
+            $('#CompanyCheck1b').prop('checked'),
+            $('#CompanyCheck2a').prop('checked'),
+            $('#CompanyCheck2b').prop('checked'),
+            $('#CompanyCheck2c').prop('checked'),
+            $('#CompanyCheck2d').prop('checked'),
+            $('#CompanyCheck2e').prop('checked'),
+            $('#CompanyCheck2f').prop('checked'),
+            $('#CompanyCheck3a').prop('checked'),
+            $('#CompanyCheck3b').prop('checked'),
+            $('#CompanyCheck3c').prop('checked'),
+        );
+
+        console.dir(webFormData);
+
+        $.ajax({
+            url: '/api/Internship_Record/updateCompanyChecklist/' + internshipId,
+            method: 'PUT',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+            data: "'" + JSON.stringify(webFormData) + "'",
+            success: function (data) {
+                swal({
+                    type: 'success',
+                    title: 'Saved!',
+                    text: data.Message
+                }).then(
+                    function () {
+                        window.location.reload();
+                    });
+            },
+            error: function (data) {
+                swal({
+                    type: 'error',
+                    title: 'Error',
+                    text: data.Message
+                });
+            }
+        });
+    }
+
+    function WebFormData(onea, oneb, twoa, twob, twoc, twod, twoe, twof, threea, threeb, threec) {
+        this.CompanyCheck1a = onea;
+        this.CompanyCheck1b = oneb;
+        this.CompanyCheck2a = twoa;
+        this.CompanyCheck2b = twob;
+        this.CompanyCheck2c = twoc;
+        this.CompanyCheck2d = twod;
+        this.CompanyCheck2e = twoe;
+        this.CompanyCheck2f = twof;
+        this.CompanyCheck3a = threea;
+        this.CompanyCheck3b = threeb;
+        this.CompanyCheck3c = threec;
+    }
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+    function setCookie(inName, inValue) {
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };
+</script>

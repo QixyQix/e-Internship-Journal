@@ -29,7 +29,7 @@ namespace E_Internship_Journal.API
 
         // GET: api/values
         [HttpGet("InternshipMonthRecords/{id}")]
-        [Authorize(Roles = "STUDENT , LO")]
+        [Authorize(Roles = "STUDENT , LO, SUPERVISOR")]
         public IActionResult GetInternshipMonthRecords(int id)
         {
             var internshipRecord = _context.Internship_Records
@@ -84,6 +84,82 @@ namespace E_Internship_Journal.API
             return new OkObjectResult(monthRecordObjList);
         }
 
+        [HttpGet("getMonthsTasks/{id}")]
+        [Authorize(Roles = "STUDENT , LO, SUPERVISOR")]
+        public IActionResult GetInternshipMonthRecordsTasks(int id)
+        {
+            Internship_Record internshipRecord = _context.Internship_Records.Where(ir => ir.InternshipRecordId == id)
+                .Include(ir => ir.MonthRecords)
+                .ThenInclude(mr => mr.TaskRecords)
+                .SingleOrDefault();
+
+            if (internshipRecord == null)
+            {
+                return new BadRequestObjectResult(new { Message = "Internship record does not exist!" });
+            }
+
+            List<object> monthObjList = new List<object>();
+
+
+            foreach (var mr in internshipRecord.MonthRecords)
+            {
+                List<object> taskObjList = new List<object>();
+                foreach (var tr in mr.TaskRecords)
+                {
+                    taskObjList.Add(new
+                    {
+                        TaskRecordId = tr.TaskRecordId,
+                        Description = tr.Description,
+                        Date = tr.Date,
+                        WeekNo = tr.WeekNo,
+                        Remarks = tr.Remarks
+                    });
+                }
+                monthObjList.Add(new { TaskRecords = taskObjList});
+            }
+
+            return new OkObjectResult(monthObjList);
+        }
+
+        [HttpGet("GetMonthsAttendance/{id}")]
+        [Authorize(Roles = "STUDENT , LO, SUPERVISOR")]
+        public IActionResult GetMonthAttendance(int id) {
+            Internship_Record internshipRecord = _context.Internship_Records.Where(ir => ir.InternshipRecordId == id)
+                .Include(ir => ir.MonthRecords)
+                .ThenInclude(mr => mr.DayRecords)
+                .SingleOrDefault();
+
+            if (internshipRecord == null)
+            {
+                return new BadRequestObjectResult(new { Message = "Internship record does not exist!" });
+            }
+
+            List<object> monthObjList = new List<object>();
+
+
+            foreach (var mr in internshipRecord.MonthRecords)
+            {
+                List<object> dayObjList = new List<object>();
+                foreach (var dr in mr.DayRecords)
+                {
+                    dayObjList.Add(new
+                    {
+                        DayId = dr.DayId,
+                        Date = dr.Date,
+                        ArrivalTime = dr.ArrivalTime,
+                        DepartureTime = dr.DepartureTime,
+                        WeekNo = dr.WeekNo,
+                        IsPresent = dr.IsPresent,
+                        Remarks = dr.Remarks,
+                        SupervisorRemarks = dr.SupervisorRemarks
+                    });
+                }
+                monthObjList.Add(new { DayRecords = dayObjList });
+            }
+
+            return new OkObjectResult(monthObjList);
+        }
+
         // GET Latest month record
         [HttpGet("Latest")]
         [Authorize(Roles = "STUDENT")]
@@ -122,7 +198,8 @@ namespace E_Internship_Journal.API
 
             List<object> checkedCompetencyObjList = new List<object>();
 
-            foreach (var cc in monthRecord.CompetencyCheckeds) {
+            foreach (var cc in monthRecord.CompetencyCheckeds)
+            {
                 checkedCompetencyObjList.Add(new
                 {
                     CompentencyCheckedId = cc.CompentencyCheckedId,
@@ -155,6 +232,108 @@ namespace E_Internship_Journal.API
             return new OkObjectResult(monthRecordObj);
 
         }
+
+        [HttpGet("DataForReview/{id}")]
+        [Authorize(Roles = "SUPERVISOR")]
+        public IActionResult GetDataForReview(int id) {
+            Internship_Record internshipRecord = _context.Internship_Records.Where(ir => ir.InternshipRecordId == id)
+                .Include(ir => ir.MonthRecords)
+                .ThenInclude(mr => mr.TaskRecords)
+                .Include(ir => ir.MonthRecords)
+                .ThenInclude(mr => mr.DayRecords)
+                .Include(ir => ir.MonthRecords)
+                .ThenInclude(mr => mr.CompetencyCheckeds)
+                .Include(ir => ir.Project)
+                .SingleOrDefault();
+
+            if (internshipRecord == null)
+            {
+                return new BadRequestObjectResult(new { Message = "Day Record does not exist!" });
+            }
+            else if (!internshipRecord.Project.SupervisorId.Equals(_userManager.GetUserId(User)))
+            {
+                return new BadRequestObjectResult(new { Message = "You are not authorized to perform ths action." });
+            }
+
+            List<object> monthRecordObjs = new List<object>();
+
+            int monthnumber = 0;
+
+            foreach (var monthRecord in internshipRecord.MonthRecords) {
+                monthnumber++;
+                if (monthRecord.Approved != true) {
+                    List<object> taskRecordList = new List<object>();
+                    List<object> attendanceList = new List<object>();
+                    List<object> checkedCompetencyObjList = new List<object>();
+
+                    //Tasks
+                    foreach (var tr in monthRecord.TaskRecords) {
+                        taskRecordList.Add(new
+                        {
+                            TaskRecordId = tr.TaskRecordId,
+                            Description = tr.Description,
+                            Date = tr.Date,
+                            WeekNo = tr.WeekNo,
+                            Remarks = tr.Remarks
+                        });
+                    }
+
+                    //DayRecords
+                    foreach (var dr in monthRecord.DayRecords)
+                    {
+                        attendanceList.Add(new
+                        {
+                            DayId = dr.DayId,
+                            Date = dr.Date,
+                            ArrivalTime = dr.ArrivalTime,
+                            DepartureTime = dr.DepartureTime,
+                            WeekNo = dr.WeekNo,
+                            IsPresent = dr.IsPresent,
+                            Remarks = dr.Remarks,
+                            SupervisorRemarks = dr.SupervisorRemarks
+                        });
+                    }
+
+                    //Competencies
+                    foreach (var cc in monthRecord.CompetencyCheckeds)
+                    {
+                        checkedCompetencyObjList.Add(new
+                        {
+                            CompentencyCheckedId = cc.CompentencyCheckedId,
+                            MonthRecordId = cc.MonthRecordId,
+                            CompetencyId = cc.CompetencyId
+                        });
+                    }
+
+
+                    monthRecordObjs.Add(new
+                    {
+                        MonthNumber = monthnumber,
+                        MonthId = monthRecord.MonthId,
+                        Approved = monthRecord.Approved,
+                        SoftSkillsCompetencyDoneWell = monthRecord.SoftSkillsCompetencyDoneWell,
+                        SoftSkillsCompetencyImprove = monthRecord.SoftSkillsCompetencyImprove,
+                        TechnicalCompetencyApplied = monthRecord.TechnicalCompetencyApplied,
+                        TechnicalCompetencyDoneWell = monthRecord.TechnicalCompetencyDoneWell,
+                        TechnicalCompetencyImprove = monthRecord.TechnicalCompetencyImprove,
+                        MentorSessionDateTimeStart = monthRecord.MentorSessionDateTimeStart,
+                        MentorSessionDateTimeEnd = monthRecord.MentorSessionDateTimeEnd,
+                        MentorSessionReflection = monthRecord.MentorSessionReflection,
+                        CommunicationGrading = monthRecord.CommunicationGrading,
+                        TechnicalGrading = monthRecord.TechnicalGrading,
+                        IndependenceGrading = monthRecord.IndependenceGrading,
+                        PerformanceGrading = monthRecord.PerformanceGrading,
+                        OverallGrading = monthRecord.OverallGrading,
+                        OverallFeedback = monthRecord.OverallFeedback,
+                        TaskRecords = taskRecordList,
+                        DayRecords = attendanceList,
+                        CompetencyCheckeds = checkedCompetencyObjList
+                    });
+                }
+            }
+            return new OkObjectResult(monthRecordObjs);
+        }
+
         [HttpGet("ReviewInternshipMonth/{id}")]
         [Authorize(Roles = "LO")]
         public IActionResult GetReviewInternshipMonth(int id)
@@ -165,7 +344,7 @@ namespace E_Internship_Journal.API
                 .ThenInclude(mr => mr.CompetencyCheckeds)
                 .Include(ir => ir.MonthRecords)
                 .ThenInclude(mr => mr.DayRecords)
-                .Include(ir=> ir.MonthRecords)
+                .Include(ir => ir.MonthRecords)
                 .ThenInclude(mr => mr.TaskRecords)
                 .SingleOrDefault();
 
@@ -245,7 +424,8 @@ namespace E_Internship_Journal.API
         }
         [HttpPut("UpdateCompetencyCheckList/{id}")]
         [Authorize(Roles = "STUDENT")]
-        public IActionResult UpdateCompetencyCheckList(int id, [FromBody] string value) {
+        public IActionResult UpdateCompetencyCheckList(int id, [FromBody] string value)
+        {
             Month_Record monthRecord = _context.Month_Records
                 .Include(mr => mr.InternshipRecord)
                 .ThenInclude(ir => ir.UserBatch)
@@ -274,11 +454,13 @@ namespace E_Internship_Journal.API
             var competencyChecked = _context.Competency_Checkeds.Where(cc => cc.MonthRecordId == id)
                 .ToList();
 
-            foreach (var cc in competencyChecked) {
+            foreach (var cc in competencyChecked)
+            {
                 _context.Competency_Checkeds.Remove(cc);
             }
 
-            foreach (var competencyId in competencyInput.CompetencyIds) {
+            foreach (var competencyId in competencyInput.CompetencyIds)
+            {
                 _context.Competency_Checkeds.Add(new Competency_Checked { MonthRecord = monthRecord, CompetencyId = competencyId });
             }
 
@@ -289,7 +471,8 @@ namespace E_Internship_Journal.API
 
         [HttpPut("UpdateMentorSession/{id}")]
         [Authorize(Roles = "STUDENT")]
-        public IActionResult UpdateMentorSession(int id, [FromBody] string value) {
+        public IActionResult UpdateMentorSession(int id, [FromBody] string value)
+        {
             Month_Record monthRecord = _context.Month_Records
                 .Include(mr => mr.InternshipRecord)
                 .ThenInclude(ir => ir.UserBatch)
@@ -380,6 +563,49 @@ namespace E_Internship_Journal.API
             _context.SaveChanges();
 
             return new OkObjectResult(new { Message = "Month Record Updated Successfully!" });
+        }
+
+        [HttpPut("gradeMonth/{id}")]
+        [Authorize(Roles = "SUPERVISOR")]
+        public IActionResult gradeMonth(int id, [FromBody] string value) {
+            Month_Record monthRecord = _context.Month_Records.Where(mr => mr.MonthId == id)
+                .Include(mr => mr.InternshipRecord)
+                .ThenInclude(ir => ir.Project)
+                .SingleOrDefault();
+
+            if (monthRecord == null)
+            {
+                return BadRequest(new { Message = "This month record is not editable or does not exist." });
+            }
+            else if (!monthRecord.InternshipRecord.Project.SupervisorId.Equals(_userManager.GetUserId(User)))
+            {
+                return BadRequest(new { Message = "You are not authorized to perform this action!" });
+            }
+            else if (monthRecord.Approved == true)
+            {
+                return BadRequest(new { Message = "This month's records have already been approved and cannot be regraded!" });
+            }
+
+            var gradingInput = JsonConvert.DeserializeObject<dynamic>(value);
+
+            try
+            {
+                monthRecord.CommunicationGrading = Int32.Parse(gradingInput.CommunicationGrading.Value.ToString());
+                monthRecord.TechnicalGrading = Int32.Parse(gradingInput.TechnicalGrading.Value.ToString());
+                monthRecord.IndependenceGrading = Int32.Parse(gradingInput.IndependenceGrading.Value.ToString());
+                monthRecord.PerformanceGrading = Int32.Parse(gradingInput.PerformanceGrading.Value.ToString());
+                monthRecord.OverallGrading = (monthRecord.CommunicationGrading + monthRecord.TechnicalGrading + monthRecord.IndependenceGrading + monthRecord.PerformanceGrading) / 4;
+                monthRecord.OverallFeedback = gradingInput.OverallFeedback.Value.ToString();
+                monthRecord.Approved = true;
+                _context.SaveChanges();
+
+                return new OkObjectResult(new { Message = "Month record graded!!" });
+            }
+            catch (Exception e)
+            {
+                return new BadRequestObjectResult(new { Message = e.Message.ToString() });
+            }
+
         }
 
         // DELETE api/values/5

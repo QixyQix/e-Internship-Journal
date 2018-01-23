@@ -14,6 +14,7 @@ namespace E_Internship_Journal.Models
         public int WeekNo { get; set; }
         public Boolean IsPresent { get; set; }
         public string Remarks { get; set; }
+        public string SupervisorRemarks { get; set; }
 
         public Month_Record Month { get; set; }
         public int MonthRecordId { get; set; }

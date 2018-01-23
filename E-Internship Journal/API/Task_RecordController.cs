@@ -10,6 +10,7 @@ using E_Internship_Journal.Models;
 using Newtonsoft.Json;
 using System.Globalization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Internship_Journal.API
 {
@@ -123,7 +124,7 @@ namespace E_Internship_Journal.API
                 .Include(ir => ir.MonthRecords)
                 .ThenInclude(mr => mr.TaskRecords)
                 .Where(ir => ir.UserBatch.UserId.Equals(_userManager.GetUserId(User)))
-                .Single();
+                .SingleOrDefault();
 
             if (internshipRecord == null)
             {
@@ -291,6 +292,32 @@ namespace E_Internship_Journal.API
 
 
             }//End of Get(id) Web API method
+        }
+
+        [HttpPut("updateComment/{id}")]
+        [Authorize(Roles = "SUPERVISOR")]
+        public IActionResult updateComment(int id, [FromBody] string value) {
+            Task_Record taskRecord = _context.Tasks.Where(tr => tr.TaskRecordId == id)
+                .Include(tr => tr.MonthRecord)
+                .ThenInclude(mr => mr.InternshipRecord)
+                .ThenInclude(ir => ir.Project)
+                .SingleOrDefault();
+
+            if (taskRecord == null)
+            {
+                return new BadRequestObjectResult(new { Message = "Day Record does not exist!" });
+            }
+            else if (!taskRecord.MonthRecord.InternshipRecord.Project.SupervisorId.Equals(_userManager.GetUserId(User))) {
+                return new BadRequestObjectResult(new { Message = "You are not authorized to perform ths action." });
+            }
+
+            var commentInput = JsonConvert.DeserializeObject<dynamic>(value);
+
+            taskRecord.Remarks = commentInput.Comment.Value;
+
+            _context.SaveChanges();
+
+            return new OkObjectResult(new { Message = "Comment edited/added successfully!" });
         }
 
         //POST: api/Task_Record
