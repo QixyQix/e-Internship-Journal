@@ -15,9 +15,6 @@
                 <div class="form-group">
                     <div class="pull-left form-inline">
                         <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
-                            <option>Amelia Goh</option>
-                            <option>Cho Qi Xiang</option>
-                            <option>Tan Chia Wei</option>
                         </select>
                     </div>
                 </div>
@@ -107,4 +104,59 @@
     <!-- /.container-fluid -->
 <!-- /.content-wrapper -->
 <script>
+    loadStudents();
+    var internshipId = getCookie("selectedInternship");
+    $('#selectstudent').val(internshipId);
+
+    $('#selectstudent').change(function () {
+        setCookie("selectedInternship", $(this).val());
+    });
+
+    function loadStudents() {
+        $.ajax({
+            url: '/Api/Internship_Record/Sup_GetStudentInternship_Record',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                console.dir(data);
+                $('#selectstudent').find('option').remove();
+                for (i = 0; i < data.length; i++) {
+                    var student = data[i];
+                    var newOption = $('<option></option>').text(student.StudentName).val(student.InternshipRecordId);
+                    $('#selectstudent').append(newOption);
+                }
+                $('#selectstudent').val("" + internshipId);
+            },
+            fail: function (data) {
+                alert(data.Message);
+            }
+        });
+    }
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+    function setCookie(inName, inValue) {
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };
+
 </script>

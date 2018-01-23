@@ -13,74 +13,17 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" cellspacing="0">
+                <table class="table table-bordered" cellspacing="0" id="studenttable">
                     <thead>
                         <tr>
                             <th>Student ID</th>
                             <th>Student Name</th>
                             <th>Student Info</th>
                             <th>Student Journal</th>
-                            <th>Pending Review</th>
+                            <th>Pending Review</th> 
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>P1530247</td>
-                            <td>Amelia Goh</td>
-                            <td>
-                                <div class="text-center">
-                                    <a href="~/Home/Student_Info" style="color:black"><i class="fa fa-fw fa-info"></i></a>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="text-center">
-                                    <a href="~/Home/Student_Journal" style="color:black"><i class="fa fa-fw fa-file"></i></a>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="text-center">
-                                    <a href="~/Home/Review" style="color:black"><i class="fa fa-fw fa-exclamation-circle"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>P1550342</td>
-                            <td>Cho Qi Xiang</td>
-                            <td>
-                                <div class="text-center">
-                                    <a href="~/Home/Student_Info" style="color:black"><i class="fa fa-fw fa-info"></i></a>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="text-center">
-                                    <a href="~/Home/Student_Journal" style="color:black"><i class="fa fa-fw fa-file"></i></a>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="text-center">
-                                    <a href="~/Home/Review" style="color:black"><i class="fa fa-fw fa-exclamation-circle"></i></a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>P1551322</td>
-                            <td>Tan Chia Wei</td>
-                            <td>
-                                <div class="text-center">
-                                    <a href="~/Home/Student_Info" style="color:black"><i class="fa fa-fw fa-info"></i></a>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="text-center">
-                                    <a href="~/Home/Student_Journal" style="color:black"><i class="fa fa-fw fa-file"></i></a>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="text-center">
-                                    <a href="~/Home/Review" style="color:black"><i class="fa fa-fw fa-exclamation-circle"></i></a>
-                                </div>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -89,3 +32,64 @@
         <!-- /.container-fluid -->
     </div>
 <!-- /.content-wrapper -->
+
+<script>
+
+    $.ajax({
+        url: '/Api/Internship_Record/Sup_GetStudentInternship_Record',
+        method: 'GET',
+        dataType: 'json',
+        cache: false,
+        success: function (data) {
+
+            for (i = 0; i < data.length; i++) { 
+                var student = data[i];
+
+                var newrow = $('<tr></tr>');
+                var newcell = $('<td></td>').text(student.StudentId);
+                newrow.append(newcell);
+                newcell = $('<td></td>').text(student.StudentName);
+                newrow.append(newcell);
+                newcell = $('<td></td>');
+                newcell.append($('<a onclick="redirectStudentInfo(' + student.InternshipRecordId + ')"><i class="fa fa-info"></i> </a>'));
+                newrow.append(newcell);
+                newcell = $('<td></td>');
+                newcell.append($('<a onclick="redirectStudentJournal(' + student.InternshipRecordId + ')"><i class="fa fa-file"></i> </a>'));
+                newrow.append(newcell);
+                newcell = $('<td></td>');
+                if (student.Review) {
+                    newcell.append($('<a onclick="redirectReviewStudent(' + student.InternshipRecordId + ')"><i class="fa fa-exclamation-circle"></i> </a>'));
+                }
+                newrow.append(newcell);
+                $('#studenttable').append(newrow);
+            }
+            console.dir(data);
+        },
+        fail: function (data) {
+            alert(data.Message);
+        }
+    });
+
+    function redirectStudentInfo(internshipId) { 
+        setCookie("selectedInternship", internshipId);
+        location.href = 'http://' + window.location.host + '/home/student_info';
+    }
+
+    function redirectStudentJournal(internshipId) { 
+        setCookie("selectedInternship", internshipId);
+        location.href = 'http://' + window.location.host + '/home/student_journal';
+    }
+
+    function redirectReviewStudent(internshipId) {
+        setCookie("selectedInternship", internshipId);
+        location.href = 'http://' + window.location.host + '/home/review';
+    }
+
+    function setCookie(inName, inValue) {
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };
+</script>

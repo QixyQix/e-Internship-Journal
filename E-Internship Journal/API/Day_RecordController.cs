@@ -441,6 +441,34 @@ namespace E_Internship_Journal.API
             return new OkObjectResult(new { Message = "Saved day record successfully." });
         }
 
+        [HttpPut("updateComment/{id}")]
+        [Authorize(Roles = "SUPERVISOR")]
+        public IActionResult updateComment(int id, [FromBody] string value)
+        {
+            Day_Record dayRecord = _context.Day_Records.Where(dr => dr.DayId == id)
+                .Include(dr => dr.Month)
+                .ThenInclude(mr => mr.InternshipRecord)
+                .ThenInclude(ir => ir.Project)
+                .SingleOrDefault();
+
+            if (dayRecord == null)
+            {
+                return new BadRequestObjectResult(new { Message = "Day Record does not exist!" });
+            }
+            else if (!dayRecord.Month.InternshipRecord.Project.SupervisorId.Equals(_userManager.GetUserId(User)))
+            {
+                return new BadRequestObjectResult(new { Message = "You are not authorized to perform ths action." });
+            }
+
+            var commentInput = JsonConvert.DeserializeObject<dynamic>(value);
+
+            dayRecord.SupervisorRemarks = commentInput.Comment.Value;
+
+            _context.SaveChanges();
+
+            return new OkObjectResult(new { Message = "Comment edited successfully!" });
+        }
+
         private bool Day_RecordExists(int id)
         {
             return _context.Day_Records.Any(e => e.DayId == id);
