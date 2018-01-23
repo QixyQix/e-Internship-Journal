@@ -300,10 +300,10 @@ namespace E_Internship_Journal.Controllers
         }
 
         //SLO
-        public IActionResult Manage_Competency()
-        {
-            return View("~/Views/Home/SLO/edit_competency.cshtml");
-        }
+        //public IActionResult Manage_Competency()
+        //{
+        //    return View("~/Views/Home/SLO/edit_competency.cshtml");
+        //}
         public IActionResult Manage_Competency()
         {
             return View("~/Views/Home/SLO/manage_competency.cshtml");
