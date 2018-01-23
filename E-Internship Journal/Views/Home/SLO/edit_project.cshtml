@@ -117,6 +117,44 @@
         </div>
     </div>
 </div>
+
+<!--choose modal-->
+<div class="modal fade" id="selectChoiceModal" tabindex="1" role="dialog" aria-labelledby="selectChoiceModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="selectChoiceModalLabel">Select One</h5>
+            </div>
+            <div class="modal-body">
+
+                <div class="col-12">
+                    <table width="100%">
+                        <tr>
+                            <td style="padding-bottom:1em;text-decoration:underline;"><strong>Current Information</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="padding-bottom:2em;"><div class="control-group"><label class="control-label"><strong>Name: </strong></label><div class="control">Santhosh Kumar</div></div></td>
+                            <td style="padding-bottom:2em;"><div class="control-group"><label class="control-label"><strong>Mobile: </strong></label><div class="control">98555182</div></div></td>
+                            <td><input type="radio" name="optradio"></td>
+                        </tr>
+                        <tr>
+                            <td style="padding-bottom:1em;text-decoration:underline;"><strong>Existing Information</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="padding-bottom:2em;"><div class="control-group"><label class="control-label"><strong>Name: </strong></label><div class="control">CK Chanon</div></div></td>
+                            <td style="padding-bottom:2em;"><div class="control-group"><label class="control-label"><strong>Mobile: </strong></label><div class="control">95864582</div></div></td>
+                            <td><input type="radio" name="optradio"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer text-center">
+                <label class="mr-auto" style="color:red;">Pick one before proceeding..</label>
+                <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
 @*<script>
         $(document).ready(function () {
 
@@ -196,5 +234,8 @@
 
     function findCompanyModal() {
         $('#selectCompanyModal').modal('show');
+    }
+    function findChoiceModal() {
+        $('#selectChoiceModal').modal('show');
     }
 </script>

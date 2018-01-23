@@ -349,3 +349,9 @@ footer.sticky-footer {
 @media (min-width: 992px) {
   body.sidenav-toggled footer.sticky-footer {
     width: calc(100% - 55px); } }
+
+hr.theme {
+    max-width: 50px;
+    border-width: 3px;
+    border-color: #008B8B
+}

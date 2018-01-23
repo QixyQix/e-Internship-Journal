@@ -22,7 +22,7 @@
     <!-- Example DataTables Card-->
     <div class="card mb-3">
         <div class="card-header d-inline">
-            <i class="fa fa-table fa-2x pull-left"></i> <h3>Attendance Taking</h3>
+            <i class="fa fa-calendar-check-o fa-2x pull-left"></i> <h3>Attendance Taking</h3>
         </div>
         <div class="card-body">
             <div class="form-group">
@@ -239,6 +239,9 @@
     var dayRecords = [];
 
     $(document).ready(function () {
+        $.fn.dataTable.moment('HH:mm MMM D, YY'); //format sort date
+        $.fn.dataTable.moment('dddd, MMMM Do, YYYY'); //format sort date
+        $('#dataTable').DataTable();
         var table = $('#dataTable').DataTable({
             dom: "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",

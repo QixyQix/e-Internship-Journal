@@ -11,8 +11,8 @@
     </ol>
     <!-- Example DataTables Card-->
     <div class="card mb-3">
-        <div class="card-header">
-            <i class="fa fa-eye"></i> View Course
+        <div class="card-header d-inline">
+            <i class="fa fa-book fa-2x pull-left"></i> <h3>Course</h3>
         </div>
         <div class="card-body">
             <div class="form-inline">
@@ -151,8 +151,31 @@
             //        $(this).append('<button class="btn btn-default mr-xs pull-right" type="button">Button');
             //    });
             //},
-            dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
+            dom: "<'row'<'col-sm-6'<B>><'col-sm-6'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" + //"<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+            buttons: [
+                'copyHtml5',
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: [1, 2]
+                    }
+                },
+                {
+                    extend: 'csvHtml5',
+                    exportOptions: {
+                        columns: [1, 2]
+                    },
+                    header: true
+                },
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: [1, 2]
+                    },
+                    header: true
+                },
+            ],
             ajax: {
                 url: '/Api/Courses',
                 dataSrc: ''

@@ -39,7 +39,7 @@
   });
 
   // Configure tooltips globally
-  $('[data-toggle="tooltip"]').tooltip()
+  //$('[data-toggle="tooltip"]').tooltip()
 
   // Smooth scrolling using jQuery easing
   $(document).on('click', 'a.scroll-to-top', function(event) {
