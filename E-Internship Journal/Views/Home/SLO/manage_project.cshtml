@@ -39,7 +39,7 @@
                 <table class="table table-bordered" id="project_dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th width="5%"><input name="select_all" value="1" type="checkbox" /></th>
+                            <th width="5%"><input name="select_all" type="checkbox" /></th>
                             <th class="Proj">Project name</th>
                             <th class="Superv">Supervisor</th>
                             <th class="S_NO">Supervisor's Contact No</th>
@@ -58,42 +58,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <th></th>
-                            <th>Parliament</th>
-                            <th>Daryl Tan</th>
-                            <th>99999999</th>
-                            <th>daryl@websparks.sg</th>
-                            <th>Websparks Pte Ltd</th>
-                            <th><button class="btn btn-sm btn-primary" id="editbtn"><i class="fa fa-pencil-square-o"></i></button><button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button></th>
-                        </tr>
-                        <tr>
-                            <th></th>
-                            <th>CAAS</th>
-                            <th>Ally Tan</th>
-                            <th>99999999</th>
-                            <th>daryl@websparks.sg</th>
-                            <th>Aventure Pte Ltd</th>
-                            <th><button class="btn btn-sm btn-primary" id="editbtn"><i class="fa fa-pencil-square-o"></i></button><button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button></th>
-                        </tr>
-                        <tr>
-                            <th></th>
-                            <th>WIS</th>
-                            <th>David Loo</th>
-                            <th>99999999</th>
-                            <th>daryl@websparks.sg</th>
-                            <th>Rapid Cloud Pte Ltd</th>
-                            <th><button class="btn btn-sm btn-primary" id="editbtn"><i class="fa fa-pencil-square-o"></i></button><button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button></th>
-                        </tr>
-                        <tr>
-                            <th></th>
-                            <th>MDA</th>
-                            <th>Felicia Goh</th>
-                            <th>99999999</th>
-                            <th>daryl@websparks.sg</th>
-                            <th>TripleDots Pte Ltd</th>
-                            <th><button class="btn btn-sm btn-primary" id="editbtn"><i class="fa fa-pencil-square-o"></i></button><button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button></th>
-                        </tr>
+                
                     </tbody>
                 </table>
             </div>
@@ -113,279 +78,408 @@
 
 <style>
 
-@@media only screen and (max-width: 768px) {
-	.S_NO, tr td:nth-child(4)		{ display:none; visibility:hidden; }
-}
+    @@media only screen and (max-width: 768px) {
+        .S_NO, tr td:nth-child(4) {
+            display: none;
+            visibility: hidden;
+        }
+    }
 
-@@media only screen and (max-width: 420px) {
-	.S_NO, tr td:nth-child(4)	{ display:none; visibility:hidden; }
-	.S_Email, tr td:nth-child(5)			{ display:none; visibility:hidden; }
-}
+    @@media only screen and (max-width: 420px) {
+        .S_NO, tr td:nth-child(4) {
+            display: none;
+            visibility: hidden;
+        }
 
-@@media only screen and (max-width: 320px) {
-	.S_NO, tr td:nth-child(4)	{ display:none; visibility:hidden; }
-	.S_Email, tr td:nth-child(5)			{ display:none; visibility:hidden; }
-}
+        .S_Email, tr td:nth-child(5) {
+            display: none;
+            visibility: hidden;
+        }
+    }
+
+    @@media only screen and (max-width: 320px) {
+        .S_NO, tr td:nth-child(4) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .S_Email, tr td:nth-child(5) {
+            display: none;
+            visibility: hidden;
+        }
+    }
 </style>
 
 <script>
-       //
-       // Updates "Select all" control in a data table
-       //
-       function updateDataTableSelectAllCtrl(table) {
-           var $table = table.table().node();
-           var $chkbox_all = $('tbody input[type="checkbox"]', $table);
-           var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
-           var chkbox_select_all = $('thead input[name="select_all"]', $table).get(0);
+    //
+    // Updates "Select all" control in a data table
+    //
+    function updateDataTableSelectAllCtrl(table) {
+        var $table = table.table().node();
+        var $chkbox_all = $('tbody input[type="checkbox"]', $table);
+        var $chkbox_checked = $('tbody input[type="checkbox"]:checked', $table);
+        var chkbox_select_all = $('thead input[name="select_all"]', $table).get(0);
 
-           // If none of the checkboxes are checked
-           if ($chkbox_checked.length === 0) {
-               chkbox_select_all.checked = false;
-               if ('indeterminate' in chkbox_select_all) {
-                   chkbox_select_all.indeterminate = false;
-               }
+        // If none of the checkboxes are checked
+        if ($chkbox_checked.length === 0) {
+            chkbox_select_all.checked = false;
+            if ('indeterminate' in chkbox_select_all) {
+                chkbox_select_all.indeterminate = false;
+            }
 
-               // If all of the checkboxes are checked
-           } else if ($chkbox_checked.length === $chkbox_all.length) {
-               chkbox_select_all.checked = true;
-               if ('indeterminate' in chkbox_select_all) {
-                   chkbox_select_all.indeterminate = false;
-               }
+            // If all of the checkboxes are checked
+        } else if ($chkbox_checked.length === $chkbox_all.length) {
+            chkbox_select_all.checked = true;
+            if ('indeterminate' in chkbox_select_all) {
+                chkbox_select_all.indeterminate = false;
+            }
 
-               // If some of the checkboxes are checked
-           } else {
-               chkbox_select_all.checked = true;
-               if ('indeterminate' in chkbox_select_all) {
-                   chkbox_select_all.indeterminate = true;
-               }
-           }
-       }
+            // If some of the checkboxes are checked
+        } else {
+            chkbox_select_all.checked = true;
+            if ('indeterminate' in chkbox_select_all) {
+                chkbox_select_all.indeterminate = true;
+            }
+        }
+    }
 
-       function hideFilter1() {
-           $('#project_dataTable thead tr#filterrow').toggle();
-       }
+    function hideFilter1() {
+        $('#project_dataTable thead tr#filterrow').toggle();
+    }
 
-       function popCSV() {
-           $('#uploadcsvModal').modal('show');
-       }
-       function popbulkdel() {
-           swal({
-               title: 'Are you sure?',
-               text: "You won't be able to revert this!",
-               type: 'warning',
-               showCancelButton: true,
-               confirmButtonColor: '#3085d6',
-               cancelButtonColor: '#d33',
-               confirmButtonText: 'Yes, delete it!'
-           }).then(function (result) {
-               if (result.value) {
-                   swal(
-                       'Deleted!',
-                       'Your file has been deleted.',
-                       'success'
-                   )
-               }
-           }).catch(swal.noop);
-       }
+    function popCSV() {
+        $('#uploadcsvModal').modal('show');
+    }
+    function popbulkdel() {
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (result) {
+            if (result.value) {
+                var checkedProject = [];
+                $("#project_dataTable tbody input[type='checkbox']:checked").each(function () {
+                    checkedProject.push($(this).val());
+                });
+                if (checkedProject.length == 0) {
+                    swal({
+                        type: 'error',
+                        title: 'Error',
+                        text: 'Please select at least one project'
+                    });
+                } else {
+                    $.ajax({
+                        url: '/Api/Projects/DeleteProjects/bulk/?selectedProjects=' + checkedProject,
+                        method: 'DELETE',
+                        success: function (data) {
+                            var title = data.AlertType == 'warning' ? 'Records displayed below not removed ' : 'Selected Records removed successfully!';
+                           
+                            swal({
+                                type: data.AlertType,
+                                title: title,
+                                html: data.Messages.join('<br>')
+                                //text: data.Message
+                            }).then(function () {
+                                window.location.reload();
 
-       function stopPropagation(evt) {
-           if (evt.stopPropagation !== undefined) {
-               evt.stopPropagation();
-           } else {
-               evt.cancelBubble = true;
-           }
-       }
-       $(document).ready(function () {
+                            })
+                        },//End of success
+                        error: function (data) {
+                            swal({
+                                type: 'error',
+                                title: 'Error',
+                                text: data.Message
+                            });
+                        }
+                    })//End of ajax
+                }
 
-           $.ajax({
-               url: '/api/Projects',
-               method: 'GET',
-               dataType: 'json',
-               cache: false,
-               success: function (data) {
-                   loadDataTable(data);
-               }//End of success
-           });//End of Ajax
+            } else if (result.dismiss === 'cancel') {
+                swal(
+                    'Cancelled',
+                    'Your imaginary file is safe :)',
+                    'error'
+                )
+            }
+        }).catch(swal.noop);
+    }
 
-       });//End of document ready function
-       function loadDataTable(inData) {
+    function stopPropagation(evt) {
+        if (evt.stopPropagation !== undefined) {
+            evt.stopPropagation();
+        } else {
+            evt.cancelBubble = true;
+        }
+    }
+    $(document).ready(function () {
 
-           // Array holding selected row IDs
-           var rows_selected = [];
-           var table = $('#project_dataTable').DataTable({
-               bSortable: false,
-               //'fnDrawCallback': function (oSettings) {
-               //    $('.dataTables_filter').(function () {
-               //        $(this).append('<button class="btn btn-default mr-xs pull-right" type="button">Button');
-               //    });
-               //},
-               dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
-               "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-               data: inData,
-               columnDefs: [{
-                   'targets': 0,
-                   'searchable': false,
-                   'orderable': false,
-                   'width': '1%',
-                   'className': 'dt-body-center',
-                   'render': function (data, type, full, meta) {
-                       return '<input type="checkbox">';
-                   }
-               }],
-               select: {
-                   style: 'os',
-                   selector: 'td:first-child'
-               },
-               order: [[1, 'asc']],
-               'rowCallback': function (row, data, dataIndex) {
-                   // Get row ID
-                   var rowId = data[0];
-
-                   // If row ID is in the list of selected row IDs
-                   if ($.inArray(rowId, rows_selected) !== -1) {
-                       $(row).find('input[type="checkbox"]').prop('checked', true);
-                       $(row).addClass('selected');
-                   }
-               },
-               columns: [
-                   { data: null },
-                   { data: "ProjectName" },
-                   { data: "FullName" },
-                   { data: "PhoneNumber" },
-                   { data: "Email" },
-                   { data: "CompanyName" },
-                   {
-                       data: null,
-                       "bSortable": false,
-                       "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
-                   }
-               ],
-               language: {
-                   emptyTable: "No Project was found, please create one.",
-               },
-               initComplete: function () {
-                   $("div.toolbar")
-                       .html('<div class="col-sm-4"><button class="btn btn-xs btn-default" onclick="hideFilter1()">Filter</button></div>');
-                   $("div.toolbar").parent().children().addClass("pull-right");
-                   hideFilter1();
-               }
-           });//End of DataTable
+        $.ajax({
+            url: '/api/Projects',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                loadDataTable(data);
+            }//End of success
+        });//End of Ajax
 
 
-           // Handle click on checkbox
-           $('#project_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
-               var $row = $(this).closest('tr');
+        $('#submitcsv').on('click', function (e) {
+            var fileUpload = $("#csv_upload").get(0);
+            var files = fileUpload.files;
+            var data = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                data.append(files[i].name, files[i]);
+            }
+            $.ajax({
+                method: 'post',
+                url: '/API/Projects/MassEnrollProjects/',
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: data,
+                success: function (data) {
+                    var title = data.AlertType == 'warning' ? 'Some records has been rejected ' : 'All records saved successfully';
+                    swal({
+                        type: data.AlertType,
+                        title: title,
+                        html: data.Messages.join('<br>')
+                    });
+                },//End of success
+                error: function (data) {
+                    swal({
+                        type: 'error',
+                        title: 'Error',
+                        text: data.Message
+                    });
+                }//End of error
+            })//End of Ajax call
+        });
+    });//End of document ready function
+    function loadDataTable(inData) {
 
-               // Get row data
-               var data = table.row($row).data();
-               console.dir(data);
-               // Get row ID
-               var rowId = data[0];
+        // Array holding selected row IDs
+        var rows_selected = [];
+        var table = $('#project_dataTable').DataTable({
+            bSortable: false,
+            //'fnDrawCallback': function (oSettings) {
+            //    $('.dataTables_filter').(function () {
+            //        $(this).append('<button class="btn btn-default mr-xs pull-right" type="button">Button');
+            //    });
+            //},
+            dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+            data: inData,
+            columnDefs: [{
+                'targets': 0,
+                'searchable': false,
+                'orderable': false,
+                'width': '1%',
+                'className': 'dt-body-center',
+                'render': function (data, type, full, meta) {
+                    return '<input type="checkbox" value="' + data.ProjectId + '">';
+                }
+            }],
+            select: {
+                style: 'os',
+                selector: 'td:first-child'
+            },
+            order: [[1, 'asc']],
+            'rowCallback': function (row, data, dataIndex) {
+                // Get row ID
+                var rowId = data[0];
 
-               // Determine whether row ID is in the list of selected row IDs
-               var index = $.inArray(rowId, rows_selected);
+                // If row ID is in the list of selected row IDs
+                if ($.inArray(rowId, rows_selected) !== -1) {
+                    $(row).find('input[type="checkbox"]').prop('checked', true);
+                    $(row).addClass('selected');
+                }
+            },
+            columns: [
+                { data: null },
+                { data: "ProjectName" },
+                { data: "FullName" },
+                { data: "PhoneNumber" },
+                { data: "Email" },
+                { data: "CompanyName" },
+                {
+                    data: "ProjectId",
+                    "bSortable": false,
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary" onClick="editProject(\'' + o + '\')"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn" onClick="deleteProject(\'' + o + '\')"><i class="fa fa-trash"></i></button>' }
+                }
+            ],
+            language: {
+                emptyTable: "No Project was found, please create one.",
+            },
+            initComplete: function () {
+                $("div.toolbar")
+                    .html('<div class="col-sm-4"><button class="btn btn-xs btn-default" onclick="hideFilter1()">Filter</button></div>');
+                $("div.toolbar").parent().children().addClass("pull-right");
+                hideFilter1();
+            }
+        });//End of DataTable
 
-               // If checkbox is checked and row ID is not in list of selected row IDs
-               if (this.checked && index === -1) {
-                   rows_selected.push(rowId);
 
-                   // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
-               } else if (!this.checked && index !== -1) {
-                   rows_selected.splice(index, 1);
-               }
+        // Handle click on checkbox
+        $('#project_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
+            var $row = $(this).closest('tr');
 
-               if (this.checked) {
-                   $row.addClass('selected');
-               } else {
-                   $row.removeClass('selected');
-               }
+            // Get row data
+            var data = table.row($row).data();
+            //  console.dir(data);
+            // Get row ID
+            var rowId = data[0];
 
-               // Update state of "Select all" control
-               updateDataTableSelectAllCtrl(table);
+            // Determine whether row ID is in the list of selected row IDs
+            var index = $.inArray(rowId, rows_selected);
 
-               // Prevent click event from propagating to parent
-               e.stopPropagation();
-           });
+            // If checkbox is checked and row ID is not in list of selected row IDs
+            if (this.checked && index === -1) {
+                rows_selected.push(rowId);
 
-           // Handle click on table cells with checkboxes
-           $('#project_dataTable').on('click', 'tbody td, thead th:first-child', function (e) {
-               $(this).parent().find('input[type="checkbox"]').trigger('click');
-           });
+                // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
+            } else if (!this.checked && index !== -1) {
+                rows_selected.splice(index, 1);
+            }
 
-           // Handle click on "Select all" control
-           $('thead input[name="select_all"]', table.table().container()).on('click', function (e) {
-               if (this.checked) {
-                   $('#project_dataTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
-               } else {
-                   $('#project_dataTable tbody input[type="checkbox"]:checked').trigger('click');
-               }
+            if (this.checked) {
+                $row.addClass('selected');
+            } else {
+                $row.removeClass('selected');
+            }
 
-               // Prevent click event from propagating to parent
-               e.stopPropagation();
-           });
+            // Update state of "Select all" control
+            updateDataTableSelectAllCtrl(table);
 
-           // Handle table draw event
-           table.on('draw', function () {
-               // Update state of "Select all" control
-               updateDataTableSelectAllCtrl(table);
-           });
+            // Prevent click event from propagating to parent
+            e.stopPropagation();
+        });
 
-           //handle custom search
-           // Setup - add a text input to each footer cell
-           $('#project_dataTable thead tr#filterrow th').each(function () {
-               if ($('#project_dataTable thead tr#filterrow th').eq($(this).index()).text() != 0) {
-                   var title = $('#project_dataTable thead th').eq($(this).index()).text();
-                   $(this).html('<input type="text" onclick="stopPropagation(event);" placeholder="Search ' + title + '" />');
-               }
-           });
-           // Apply the filter
-           $("#project_dataTable thead input").on('keyup change', function () {
-               if ($(this).attr('type') == "text") {
-                   table
-                       .column($(this).parent().index() + ':visible')
-                       .search(this.value)
-                       .draw();
-               }
-           });
-           //end of handle custom search
+        // Handle click on table cells with checkboxes
+        $('#project_dataTable').on('click', 'tbody td, thead th:first-child', function (e) {
+            $(this).parent().find('input[type="checkbox"]').trigger('click');
+        });
 
-           //// Handle form submission event
-           //$('#frm-example').on('submit', function (e) {
-           //    var form = this;
+        // Handle click on "Select all" control
+        $('thead input[name="select_all"]', table.table().container()).on('click', function (e) {
+            if (this.checked) {
+                $('#project_dataTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
+            } else {
+                $('#project_dataTable tbody input[type="checkbox"]:checked').trigger('click');
+            }
 
-           //    // Iterate over all selected checkboxes
-           //    $.each(rows_selected, function (index, rowId) {
-           //        // Create a hidden element
-           //        $(form).append(
-           //            $('<input>')
-           //                .attr('type', 'hidden')
-           //                .attr('name', 'id[]')
-           //                .val(rowId)
-           //        );
-           //    });
-           //});
-           $('#project_dataTable tbody').on('click', 'button.btn-primary', function (e) {
-               location.href = 'edit_project';
-           });//End of on Click
-           $('#project_dataTable tbody').on('click', 'button.btn-danger', function (e) {
-               swal({
-                   title: 'Are you sure?',
-                   text: "You won't be able to revert this!",
-                   type: 'warning',
-                   showCancelButton: true,
-                   confirmButtonColor: '#3085d6',
-                   cancelButtonColor: '#d33',
-                   confirmButtonText: 'Yes, delete it!'
-               }).then(function (result) {
-                   if (result.value) {
-                       swal(
-                           'Deleted!',
-                           'Your file has been deleted.',
-                           'success'
-                       )
-                   }
-               }).catch(swal.noop);
-           });//End of on Click
-       }//End of function
+            // Prevent click event from propagating to parent
+            e.stopPropagation();
+        });
+
+        // Handle table draw event
+        table.on('draw', function () {
+            // Update state of "Select all" control
+            updateDataTableSelectAllCtrl(table);
+        });
+
+        //handle custom search
+        // Setup - add a text input to each footer cell
+        $('#project_dataTable thead tr#filterrow th').each(function () {
+            if ($('#project_dataTable thead tr#filterrow th').eq($(this).index()).text() != 0) {
+                var title = $('#project_dataTable thead th').eq($(this).index()).text();
+                $(this).html('<input type="text" onclick="stopPropagation(event);" placeholder="Search ' + title + '" />');
+            }
+        });
+        // Apply the filter
+        $("#project_dataTable thead input").on('keyup change', function () {
+            if ($(this).attr('type') == "text") {
+                table
+                    .column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+            }
+        });
+        //end of handle custom search
+
+        //// Handle form submission event
+        //$('#frm-example').on('submit', function (e) {
+        //    var form = this;
+
+        //    // Iterate over all selected checkboxes
+        //    $.each(rows_selected, function (index, rowId) {
+        //        // Create a hidden element
+        //        $(form).append(
+        //            $('<input>')
+        //                .attr('type', 'hidden')
+        //                .attr('name', 'id[]')
+        //                .val(rowId)
+        //        );
+        //    });
+        //});
+        $('#project_dataTable tbody').on('click', 'button.btn-primary', function (e) {
+            location.href = 'edit_project';
+        });//End of on Click
+        //$('#project_dataTable tbody').on('click', 'button.btn-danger', function (e) {
+        //    swal({
+        //        title: 'Are you sure?',
+        //        text: "You won't be able to revert this!",
+        //        type: 'warning',
+        //        showCancelButton: true,
+        //        confirmButtonColor: '#3085d6',
+        //        cancelButtonColor: '#d33',
+        //        confirmButtonText: 'Yes, delete it!'
+        //    }).then(function (result) {
+        //        if (result.value) {
+        //            swal(
+        //                'Deleted!',
+        //                'Your file has been deleted.',
+        //                'success'
+        //            )
+        //        }
+        //    }).catch(swal.noop);
+        //});//End of on Click
+    }//End of function
+    function editProject(inId) {
+        sessionStorage.setItem("editProject", inId);
+    };
+    function deleteProject(inId) {
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (result) {
+            if (result.value) {
+                var checkedProject = [];       
+                checkedProject.push(inId);
+                $.ajax({
+                    url: '/Api/Projects/DeleteProjects/bulk/?selectedProjects=' + checkedProject,
+                    method: 'DELETE',
+                    success: function (data, status, jqXHR) {
+                        var title = data.AlertType == 'warning' ? 'Records displayed below not removed ' : 'Selected Records removed successfully!';
+
+                        swal({
+                            type: data.AlertType,
+                            title: title,
+                            html: data.Messages.join('<br>')
+                            //text: data.Message
+                        }).then(function () {
+                            window.location.reload();
+                        })
+                    },//End of success
+                    error: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            text: data.Message
+                        });
+                    }//end of error
+                });//End of ajax call
+            }
+        })
+    }//End of function for deleteProject
+
 </script>
 

@@ -36,7 +36,12 @@ namespace E_Internship_Journal.API
                 companyList.Add(new
                 {
                     oneCompany.CompanyId,
-                    oneCompany.CompanyName
+                    oneCompany.CompanyName,
+                    oneCompany.CompanyAddress,
+                    oneCompany.ContactPersonNumber,
+                    oneCompany.ContactPersonEmail,
+                    oneCompany.ContactPersonName,
+                    oneCompany.ContactPersonFax
                 });
             }
             return new JsonResult(companyList);
@@ -132,24 +137,50 @@ namespace E_Internship_Journal.API
         }
 
         // DELETE: api/Companies/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCompany([FromRoute] int id)
+        [HttpDelete("DeleteCompany/bulk")]
+        public async Task<IActionResult> DeleteCompany([FromQuery]string selectedCompanies)
         {
-            if (!ModelState.IsValid)
+            var listOfId = selectedCompanies.Split(',').Select(Int32.Parse).ToList();
+            //   var project = "tr";
+            //var project = await _context.Projects.SingleOrDefaultAsync(m => m.ProjectId == id);
+            string alertType = "success";
+            List<String> messageList = new List<String>();
+            try
             {
-                return BadRequest(ModelState);
+                var foundCompanies = _context.Companies.Include(ir => ir.Projects).ToList();
+
+                foreach (var oneCompany in foundCompanies)
+                {
+                    if (listOfId.Contains(oneCompany.CompanyId) && oneCompany.Projects.Count != 0)
+                    {
+                        alertType = "warning";
+                        messageList.Add(oneCompany.CompanyName + " not removed");
+                    }
+                    else if (listOfId.Contains(oneCompany.CompanyId) && oneCompany.Projects.Count == 0)
+                    {
+                        _context.Companies.Remove(oneCompany);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                //messageList.Add("Selected Records removed successfully!");
+                var responseObject = new
+                {
+                    AlertType = alertType,
+                    Messages = messageList
+                };
+
+                return new OkObjectResult(responseObject);
+
+            }
+            catch (Exception exceptionObject)
+            {
+                object httpFailRequestResultMessage = new { Message = "Unable to Process" };
+                //Return a bad http response message to the client
+                return BadRequest(httpFailRequestResultMessage);
             }
 
-            var company = await _context.Companies.SingleOrDefaultAsync(m => m.CompanyId == id);
-            if (company == null)
-            {
-                return NotFound();
-            }
 
-            _context.Companies.Remove(company);
-            await _context.SaveChangesAsync();
-
-            return Ok(company);
         }
 
         private bool CompanyExists(int id)

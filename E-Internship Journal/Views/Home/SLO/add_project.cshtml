@@ -246,38 +246,21 @@
                         cache: false,
                         data: "'" + JSON.stringify(webFormData) + "'",
                         success: function (data, status, jqXHR) {
-                            if (jqXHR.status == 202) {
-                                swal({
-                                    type: 'warning',
-                                    title: 'Attention!',
-                                    text: "Requires your attention!"
-                                }).then(
-                                    function () {
-                                        $('#supervisorModal').modal('show');
-                                        $visibilityIdInputElement = $('#supervisorDetailsSelection');
+                            var title = 'Success';
+                            if (data.AlertType == 'error') {
+                                title = 'Error';
 
-                                       // $radioElement = $('<input>').attr('type', 'radio').val({ data.FullName , data.PhoneNumber }).attr('name', 'visibilityIdInput');
-
-                                        $visibilityIdInputElement.append($radioElement);
-                                        $labelElement = $('<span>' + data.FullName + '</span>').attr('id', 'visibilityName');
-                                        $visibilityIdInputElement.append($labelElement);
-                                        $labelElement = $('<span>' + data.PhoneNumber + '<br/>').attr('id', 'visibilityName');
-                                        $visibilityIdInputElement.append($labelElement);
-                                       // $radioElement = $('<input>').attr('type', 'radio').val(visibilityId).attr('name', 'visibilityIdInput');
-                                      //  $labelElement = $('<span>' + visibilityRadioName + '<br/>').attr('id', 'visibilityName');
-                                    });
-
-                            } else {
-                                swal({
-                                    type: 'success',
-                                    title: 'Saved!',
-                                    text: data.Message
-                                }).then(
-                                    function () {
-                                        window.location.reload();
-                                    });
-
+                            } else if (data.AlertType == 'warning') {
+                                title = 'Warning';
                             }
+                                swal({
+                                    type: data.AlertType,
+                                    title: title,
+                                    text: data.Messages
+                                }).then(
+                                    function () {
+                                        title == 'Error' ? null : window.location.reload();
+                                    });
                         },//End of success
                         error: function (data) {
                             swal({
@@ -298,7 +281,7 @@
 
             });
 
-        });
+        });//End of jqBootstrapValidation
 
     });//End of document ready.
 

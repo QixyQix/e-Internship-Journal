@@ -12,6 +12,6 @@ namespace E_Internship_Journal.Models
         public string CourseName { get; set; }
 
         public List<Batch> Batches { get; set; }
-        public List<Competency> Competencies { get; set; }
+        public List<CompetencyTitle> CompetencyTitle { get; set; }
     }
 }

@@ -54,11 +54,19 @@ namespace E_Internship_Journal.Data
             }
             db.SaveChanges();
 
+            var competencyTitle = new CompetencyTitle
+            {
+                TitleCompetency = "Domain Immersion",
+                Course = courseObject[0],
+                ViewBy = 1
+            };
+            db.CompetencyTitles.Add(competencyTitle);
+            db.SaveChanges();
             //Create Competency
             var competencyObject = new Competency[] {
-                new Competency { Description = "Able to code using Java/CSS/HTML", TitleDescription = "Able to code", Course = courseObject[1] },
-                new Competency { Description = "Able to code using Java/CSS/HTML", TitleDescription = "Able to code", Course = courseObject[1] },
-                new Competency { Description = "Able to code using Java/CSS/HTML", TitleDescription = "Able to code", Course = courseObject[1] }
+                new Competency { Description = "Able to code using Java/CSS/HTML", CompetencyTitleId = competencyTitle.CompetencyTitleId , ViewBy = 1},
+                new Competency { Description = "Able to code using Java/CSS/HTML",CompetencyTitleId = competencyTitle.CompetencyTitleId , ViewBy = 2},
+                new Competency { Description = "Able to code using Java/CSS/HTML", CompetencyTitleId = competencyTitle.CompetencyTitleId, ViewBy = 3 }
             };
             foreach (Competency c in competencyObject)
             {

@@ -1,0 +1,413 @@
+﻿﻿@{
+    ViewData["Title"] = "Manage Competency Page";
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item active">Manage Competency</li>
+    </ol>
+    <div class="card" style="border-width:0px;">
+        <div class="card-body">
+            <div class="form-group">
+                <div class="pull-left form-inline">
+                    <label>Batch Course:&nbsp</label>
+                    <select class="form-control" id="selectbatch"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-header d-inline">
+            <i class="fa fa-check-square fa-2x pull-left"></i> <h3>Manage Competency</h3>
+        </div>
+        <div class="card-body">
+            <div class="form-inline">
+                <div class="col-12">
+                    <div class="col-md-3 col-sm-3 col-xs-12">
+                        <button title="add competency" class="col-12 btn btn-primary" id="addcategory" onclick="findCategoryModal()">
+                            Add Category
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="table-responsive">
+                <table class="table table-bordered" id="competency_dataTable" cellspacing="0">
+                    @*<thead>
+                            <tr>
+                                <th>Category Title</th>
+                                <th width="10%"><div class='container'><div class='row'><button title="edit category" class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button><button title="add competency" class="btn btn-sm btn-success" onclick="findCompetencyModal()"><i class="fa fa-plus"></i></button><button title="delete category" class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button></div></div></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Competency Description</td>
+                                <th width="10%"><div class='container'><div class='row'><button title="edit description" class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button><button title="delete description" class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button></div></div></th>
+                            </tr>
+                        </tbody>*@
+                </table>
+            </div>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Index'">
+                    Back
+                </button>
+            </div>
+        </div>
+    </div>
+    &nbsp;
+</div>
+<!--add/edit competency-->
+
+<div class="modal fade" id="competencyModal" tabindex="-1" role="dialog" aria-labelledby="competencyModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="competencyModalLabel">Manage Competency</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="container">
+                    <form>
+                        <div class="form-group">
+                            <div class="form-inline">
+                                <label class="col-md-4">Category Title: &nbsp;</label>
+                                <input id="dislayCategoryTitle" class="form-control col-sm-8" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-inline">
+                                <label class="col-md-4">Display By: &nbsp;</label>
+                                <input type="number" min="1" id="inputDisplayBy" class="form-control col-sm-8">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4">Description: &nbsp;</label>
+                            <textarea class="form-control col-sm-12" rows="5" id="CateDesc"></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnCompetencySave">Save</button>
+                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--add/edit category-->
+<div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="categoryModalLabel">Manage Competency Category</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="container">
+                    <form>
+                        <div class="form-group">
+                            <div class="form-inline">
+                                <label class="col-md-3">Course: &nbsp;</label>
+                                <input id="displayCourseOnly" class="form-control col-sm-8" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-inline">
+                                <label class="col-md-3">Title: &nbsp;</label>
+                                <input class="form-control col-sm-8" id="inputTitle">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-inline">
+                                <label class="col-md-3">Display By: &nbsp;</label>
+                                <input type="number" min="1" class="form-control col-sm-8" id="inputNumber">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnCategorySave">Save</button>
+                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
+            </div>
+        </div>
+    </div>
+</div>
+@*<style>
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+            height: auto !important;
+        }
+    </style>*@
+<script>
+
+    $.ajax({
+        url: '/api/Courses/getAssignedCourse',
+        method: 'GET',
+        dataType: 'json',
+        cache: false,
+        success: function (data) {
+
+            for (i = 0; i < data.length; i++) {
+                $courseInputElement = $('#selectbatch');
+                $optionElement = $('<option>').text(data[i].CourseName).attr('value', data[i].CourseId);
+                $courseInputElement.append($optionElement);
+            }
+            loadCompetenciesData($('#selectbatch').val())
+            tinymce.init({
+                selector: 'textarea#CateDesc',
+                menubar: false,
+                height: 300,
+                plugins: [
+                    'advlist autolink lists link image charmap print preview anchor textcolor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table contextmenu paste code help wordcount'
+                ],
+                toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help'
+            });
+            //loadDataTable(data);
+        }//End of success
+    });//End of Ajax
+
+    function findCompetencyModal() {
+        console.dir($(this).closest('tr'));
+        //  $('#dislayCategoryTitle').val($('#)
+        $('#competencyModal').modal('show');
+    }
+
+    function findCategoryModal() {
+        $('#displayCourseOnly').val($('#selectbatch').text());
+        $('#btnCategorySave').attr('name', 'SaveNew');
+        $('#btnCategorySave').attr('value', ($('#selectbatch').val()));
+        $('#inputTitle').val('');
+        $('#inputNumber').val('');
+        $('#categoryModal').modal('show');
+    }
+    function WebFormData(inMethod, inId, inDescription, inViewBy) {
+        this.Method = inMethod;
+        this.Id = inId;
+        this.Description = inDescription;
+        this.ViewBy = inViewBy;
+    }
+    function WebFormData2(inMethod, inId, inTitle, inViewBy) {
+        this.Method = inMethod;
+        this.Id = inId;
+        this.Title = inTitle;
+        this.ViewBy = inViewBy;
+    }
+    function loadCompetenciesData(inId) {
+        $.ajax({
+            url: '/api/Competencies/getInternshipCompetenciesByCourse/' + inId,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                var test = data.sort(function (a, b) { return (a.ViewBy > b.ViewBy) ? 1 : ((b.ViewBy > a.ViewBy) ? -1 : 0); });
+                var competencyTable = $('#competency_dataTable');
+                //  var competencyTbody = $('#competency_tbody');
+                //<thead>
+                //    <tr>
+                //        <th>Category Title</th>
+                //        <th width="10%"><div class='container'><div class='row'><button title="edit category" class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button><button title="add competency" class="btn btn-sm btn-success" onclick="findCompetencyModal()"><i class="fa fa-plus"></i></button><button title="delete category" class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button></div></div></th>
+                //    </tr>
+                //</thead>
+                for (i = 0; i < data.length; i++) {
+                    var dataForCompetencyList = data[i].CompetencyList.sort(function (a, b) { return (a.ViewBy > b.ViewBy) ? 1 : ((b.ViewBy > a.ViewBy) ? -1 : 0); });
+                    $threadElement = $('<thead></thead>');
+                    $rowElement = $('<tr></tr>');
+                    $cellElement = $('<th></th>', { text: data[i].ViewBy + ". " + data[i].TitleCompetency }).attr('title', data[i].TitleCompetency);
+                    $rowElement.append($cellElement);
+
+                    $cellElement = $('<th width="10%"><div class="container"><div class="row"><button title="edit category" id="btnEditCategory" class="btn btn-sm btn-primary"  data-value="' + data[i].ViewBy + '" value="' + data[i].CompetencyTitleId + '"><i class="fa fa-pencil-square-o"></i></button><button title="add competency" class="btn btn-sm btn-success" id="btnAddCompetency"  value="' + data[i].CompetencyTitleId + '"><i class="fa fa-plus"></i></button><button title="delete category" class="btn btn-sm btn-danger" id="btnDeleteCategory" value="' + data[i].CompetencyTitleId + '"><i class="fa fa-trash"></i></button></div></div></th>');
+                    $rowElement.append($cellElement);
+
+                    $threadElement.append($rowElement);
+                    competencyTable.append($threadElement);
+                    //<tr>
+                    //    <td>Competency Description</td>
+                    //    <th width="10%"><div class='container'><div class='row'><button title="edit description" class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button><button title="delete description" class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button></div></div></th>
+                    //</tr>
+                    $tbodyElement = $('<tbody></tbody>')
+                    for (k = 0; k < dataForCompetencyList.length; k++) {
+
+                        $rowElement = $('<tr></tr>');
+                        $cellElement = $('<td></td>');
+                        //$cellElement = $('<td></td>', { text: data[i].CompetencyList[k].Description });
+                        $cellElement.html(dataForCompetencyList[k].Description);
+                        $rowElement.append($cellElement);
+
+                        $cellElement = $('<th width="10%"><div class="container"><div class="row"><button title="edit description" id="btnEditCompetency" class="btn btn-sm btn-primary" data-value="' + dataForCompetencyList[k].ViewBy + '" value="' + dataForCompetencyList[k].CompetencyId + '"><i class="fa fa-pencil-square-o"></i></button><button title="delete description" class="btn btn-sm btn-danger" id="btnDeleteCompetency" value="' + dataForCompetencyList[k].CompetencyId + '"><i class="fa fa-trash"></i></button></div></div></th>');
+                        $rowElement.append($cellElement);
+
+                        $tbodyElement.append($rowElement);
+                        //   $threadElement.append($tbodyElement);
+                        competencyTable.append($tbodyElement);
+                    }
+
+                    //    $cellElement = $('<th></th>', { text: data[i].TitleCompetency });
+                }
+                $('#competency_dataTable thead').on('click', 'button#btnAddCompetency', function (e) {
+                    var $row = $(this).closest('tr');
+                    //console.dir($row);
+                    $('#dislayCategoryTitle').val($row[0].textContent);
+                    tinymce.get('CateDesc').setContent('');
+                    $('#btnCompetencySave').attr('name', 'SaveNew');
+                    $('#btnCompetencySave').val($(this).val())
+                    $('#competencyModal').modal('show');
+                });
+                $('#competency_dataTable').on('click', 'button#btnEditCompetency', function (e) {
+                    var $row = $(this).closest('tr');
+                    tinymce.get('CateDesc').setContent($row[0].firstChild.innerHTML);
+                    $('#dislayCategoryTitle').val($(this).parents("table").find('thead')[0].textContent);
+                    $('#btnCompetencySave').attr('name', 'Update');
+                    $('#btnCompetencySave').val($(this).val())
+                    $('#inputDisplayBy').val($(this).attr('data-value'));
+                    $('#competencyModal').modal('show');
+                });
+                $('#competency_dataTable thead').on('click', 'button#btnEditCategory', function (e) {
+                    var $row = $(this).closest('tr');
+                    //var a = $(this).closest('tr').find('th');
+                    //console.dir($row[0]);
+                    //console.dir(a)
+                    $('#inputTitle').val($row[0].firstChild.title);
+                    $('#btnCategorySave').attr('name', 'Update');
+                    $('#inputNumber').val($(this).attr('data-value'));
+                    $('#displayCourseOnly').val($('#selectbatch').text());
+                    //$('#inputTitle').val($(this).parents("table").find('thead')[0].textContent);
+                    $('#btnCategorySave').val($(this).val());
+                    $('#categoryModal').modal('show');
+                });
+                $('#competency_dataTable').on('click', 'button#btnDeleteCompetency', function (e) {
+                    var collectedId = $(this).val();
+
+                    $.ajax({
+                        url: '/Api/Competencies/DeleteCompetencies/' + collectedId,
+                        method: 'DELETE',
+                        success: function (data, status, jqXHR) {
+                            //var title = data.AlertType == 'warning' ? 'Records displayed below not removed ' : 'Selected Records removed successfully!';
+
+                            swal({
+                                type: data.AlertType,
+                                title: 'Success',
+                                //html: data.Messages.join('<br>')
+                                text: data.Messages
+                            }).then(function () {
+                                window.location.reload();
+                            })
+                        },//End of success
+                        error: function (data) {
+                            swal({
+                                type: 'error',
+                                title: 'Error',
+                                text: data.Message
+                            });
+                        }//end of error
+                    });//End of ajax call
+
+                });//End of btnDeleteCompetency
+            },//End of success
+
+        });
+    }//End of function LoadCompetenciesData
+    $('#btnCompetencySave').on('click', function (e) {
+        //console.dir($(this));
+        var collectedMethod = $(this).attr('name');
+        var collectedDescription = tinyMCE.get('CateDesc').getContent()
+        var collectedId = $(this).val();
+        var DisplayBy = $('#inputDisplayBy').val();
+
+        var webFormData = new WebFormData(collectedMethod, collectedId, collectedDescription,
+            DisplayBy);
+        console.dir(webFormData);
+        $.ajax({
+            url: '/Api/Competencies/SaveNewCompetenciesRecord/',
+            method: 'PUT',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+            data: "'" + JSON.stringify(webFormData) + "'",
+            success: function (data, status, jqXHR) {
+                var title = 'Success';
+                if (data.AlertType == 'error') {
+                    title = 'Error';
+
+                } else if (data.AlertType == 'warning') {
+                    title = 'Warning';
+                }
+                swal({
+                    type: data.AlertType,
+                    title: title,
+                    text: data.Messages
+                }).then(
+                    function () {
+                        title == 'Error' ? null : window.location.reload();
+                    });
+            },//End of success
+            error: function (data) {
+                swal({
+                    type: 'error',
+                    title: 'Error',
+                    text: data.Message
+                });
+            }//End of error
+        });//End of ajax call
+
+    });//End of btnCompetencySave
+    $('#btnCategorySave').on('click', function (e) {
+        var collectedMethod = $(this).attr('name');
+        var collectedId = $(this).val();
+        var collectedTitle = $('#inputTitle').val();
+        var collectedNumber = $('#inputNumber').val();
+
+        var webFormData = new WebFormData2(collectedMethod, collectedId, collectedTitle,
+            collectedNumber);
+        $.ajax({
+            url: '/Api/Competencies/SaveNewCompetencyTitleRecord/',
+            method: 'PUT',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+            data: "'" + JSON.stringify(webFormData) + "'",
+            success: function (data, status, jqXHR) {
+                var title = 'Success';
+                if (data.AlertType == 'error') {
+                    title = 'Error';
+
+                } else if (data.AlertType == 'warning') {
+                    title = 'Warning';
+                }
+                swal({
+                    type: data.AlertType,
+                    title: title,
+                    text: data.Messages
+                }).then(
+                    function () {
+                        title == 'Error' ? null : window.location.reload();
+                    });
+            },//End of success
+            error: function (data) {
+                swal({
+                    type: 'error',
+                    title: 'Error',
+                    text: data.Message
+                });
+            }//End of error
+        });//End of ajax call
+    });//End of btnCategorySave
+
+</script>
