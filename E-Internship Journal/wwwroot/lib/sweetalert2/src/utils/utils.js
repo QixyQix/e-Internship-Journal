@@ -22,6 +22,10 @@ export const colorLuminance = (hex, lum) => {
   return rgb
 }
 
+/**
+ * Filter the unique values into a new array
+ * @param arr
+ */
 export const uniqueArray = (arr) => {
   const result = []
   for (var i in arr) {
@@ -47,3 +51,28 @@ export const warn = (message) => {
 export const error = (message) => {
   console.error(`${consolePrefix} ${message}`)
 }
+
+/**
+ * Private global state for `warnOnce`
+ * @type {Array}
+ * @private
+ */
+const previousWarnOnceMessages = []
+
+/**
+ * Show a console warning, but only if it hasn't already been shown
+ * @param message
+ */
+export const warnOnce = (message) => {
+  if (!previousWarnOnceMessages.includes(message)) {
+    previousWarnOnceMessages.push(message)
+    warn(message)
+  }
+}
+
+/**
+ * If `arg` is a function, call it (with no arguments or context) and return the result.
+ * Otherwise, just pass the value through
+ * @param arg
+ */
+export const callIfFunction = (arg) => typeof arg === 'function' ? arg() : arg

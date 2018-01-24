@@ -41,6 +41,7 @@
     <script src="~/js/datatables/dataTables.bootstrap4.js"></script>
     <script src="~/lib/sweetalert2/dist/sweetalert2.js"></script>
     <script src="~/lib/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
+    <script src="~/lib/tinymce/tinymce.js"></script>
     <script src="~/lib/datetime-moment/dist/datetime-moment.js"></script>
 </head>
 <body class="fixed-nav sticky-footer bg-dark sidenav-toggled" id="page-top">
@@ -450,6 +451,7 @@
                         <form id="csv_form" method="post" enctype="multipart/form-data">
                             <div class="form-group">
                                 <input class="form-control" id="csv_upload" name="files" type="file">
+
                                 Click <a href="http://www.yahoo.com" download>here</a> to download the CSV Template file.
                             </div>
 
@@ -521,7 +523,6 @@
     <script src="~/lib/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
     <script src="~/js/freelancer.js"></script>
     <script src="~/js/jqBootstrapValidation.js"></script>
-    <script src="~/js/contact_me.js"></script>
     <script>
         $(document).ready(function () {
             $.fn.dataTable.moment('HH:mm MMM D, YY'); //format sort date

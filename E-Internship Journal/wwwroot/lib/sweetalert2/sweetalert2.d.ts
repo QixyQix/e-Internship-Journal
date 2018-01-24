@@ -89,6 +89,11 @@ declare module 'sweetalert2' {
         function getButtonsWrapper(): HTMLElement;
 
         /**
+         * Get actions (buttons) wrapper.
+         */
+        function getActions(): HTMLElement;
+
+        /**
          * Enable "Confirm" and "Cancel" buttons.
          */
         function enableButtons(): void;
@@ -117,6 +122,11 @@ declare module 'sweetalert2' {
          * Enable buttons and hide loader.
          */
         function hideLoading(): void;
+
+        /**
+         * Determine if modal is in the loading state.
+         */
+        function isLoading(): boolean;
 
         /**
          * Click the "Confirm"-button programmatically.
@@ -209,10 +219,12 @@ declare module 'sweetalert2' {
     export type SweetAlertType = 'success' | 'error' | 'warning' | 'info' | 'question' | undefined;
 
     export type SweetAlertInputType =
-        | 'text' | 'email' | 'password' | 'number' | 'tel' | 'range' | 'textarea' | 'select' | 'radio' | 'checkbox'
-        | 'file' | 'url' | undefined;
+        'text' | 'email' | 'password' | 'number' | 'tel' | 'range' | 'textarea' | 'select' | 'radio' | 'checkbox' |
+        'file' | 'url' | undefined;
 
     export type SweetAlertDismissalReason = 'cancel' | 'close' | 'overlay' | 'esc' | 'timer';
+
+    export type SweetAlertBooleanFunction = () => boolean;
 
     export interface SweetAlertInputOptions {
         [inputValue: string]: string;
@@ -265,6 +277,22 @@ declare module 'sweetalert2' {
         type?: SweetAlertType;
 
         /**
+         * Whether or not SweetAlert2 should show a full screen click-to-dismiss backdrop.
+         *
+         * @default true
+         */
+        backdrop?: boolean;
+
+        /**
+         * Whether or not an alert should be treated as a toast notification.
+         * This option is normally coupled with the `position` parameter and a timer.
+         * Toasts are NEVER autofocused.
+         *
+         * @default false
+         */
+        toast?: boolean;
+
+        /**
          * The container element for adding modal into (query selector only).
          *
          * @default 'body'
@@ -305,9 +333,10 @@ declare module 'sweetalert2' {
          *
          * @default 'center'
          */
-        position?: | 'top' | 'top-left' | 'top-right'
-            | 'center' | 'center-left' | 'center-right'
-            | 'bottom' | 'bottom-left' | 'bottom-right';
+        position?:
+            'top' | 'top-start' | 'top-end' | 'top-left' | 'top-right' |
+            'center' | 'center-start' | 'center-end' | 'center-left' | 'center-right' |
+            'bottom' | 'bottom-start' | 'bottom-end' | 'bottom-left' | 'bottom-right';
 
         /**
          * Modal window grow direction
@@ -339,25 +368,30 @@ declare module 'sweetalert2' {
 
         /**
          * If set to false, the user can't dismiss the modal by clicking outside it.
+         * You can also pass a custom function returning a boolean value, e.g. if you want
+         * to disable outside clicks for the loading state of a modal.
          *
          * @default true
          */
-        allowOutsideClick?: boolean;
+        allowOutsideClick?: boolean | SweetAlertBooleanFunction;
 
         /**
          * If set to false, the user can't dismiss the modal by pressing the Escape key.
+         * You can also pass a custom function returning a boolean value, e.g. if you want
+         * to disable the escape key for the loading state of a modal.
          *
          * @default true
          */
-        allowEscapeKey?: boolean;
+        allowEscapeKey?: boolean | SweetAlertBooleanFunction;
 
         /**
          * If set to false, the user can't confirm the modal by pressing the Enter or Space keys,
          * unless they manually focus the confirm button.
+         * You can also pass a custom function returning a boolean value.
          *
          * @default true
          */
-        allowEnterKey?: boolean;
+        allowEnterKey?: boolean | SweetAlertBooleanFunction;
 
         /**
          * If set to false, a "Confirm"-button will not be shown.
@@ -481,7 +515,7 @@ declare module 'sweetalert2' {
         showLoaderOnConfirm?: boolean;
 
         /**
-         * Function to execute before confirm, should return Promise.
+         * Function to execute before confirm, may be async (Promise-returning) or sync.
          *
          * ex.
          *   swal({
@@ -490,12 +524,12 @@ declare module 'sweetalert2' {
          *      '<input id="swal-input1" class="swal2-input">' +
          *      '<input id="swal-input2" class="swal2-input">',
          *    focusConfirm: false,
-         *    preConfirm: () => Promise.resolve([$('#swal-input1').val(), $('#swal-input2').val()])
+         *    preConfirm: () => [$('#swal-input1').val(), $('#swal-input2').val()]
          *  }).then(result => swal(JSON.stringify(result));
          *
          * @default null
          */
-        preConfirm?: (inputValue: any) => Promise<any>;
+        preConfirm?: (inputValue: any) => Promise<any | void> | any | void;
 
         /**
          * Add a customized icon for the modal. Should contain a string with the path or URL to the image.
@@ -577,20 +611,18 @@ declare module 'sweetalert2' {
         inputAttributes?: SweetAlertInputAttributes;
 
         /**
-         * Validator for input field, should return a Promise.
+         * Validator for input field, may be async (Promise-returning) or sync.
          *
          * ex.
          *   swal({
          *     title: 'Select color',
          *     input: 'radio',
-         *     inputValidator: result => new Promise((resolve, reject) => {
-         *       result ? resolve() : reject('You need to select something!');
-         *     })
+         *     inputValidator: result => !result && 'You need to select something!'
          *   })
          *
          * @default null
          */
-        inputValidator?: (result: any) => Promise<void>;
+        inputValidator?: (inputValue: any) => Promise<string | null> | string | null;
 
         /**
          * A custom CSS class for the input field.
@@ -642,16 +674,22 @@ declare module 'sweetalert2' {
         onClose?: (modalElement: HTMLElement) => void;
 
         /**
-         * Determines whether dismissals (outside click, cancel button, close button, esc key) should reject, or resolve
-         * with an object of the format `{ dismiss: SweetAlertDismissalReason }`.
-         * Confirm-ed alerts will resolve too with an object of format `{ value: any }`.
+         * Determines whether dismissals (outside click, cancel button, close button, Esc key, timer) should
+         * resolve with an object of the format `{ dismiss: SweetAlertDismissalReason }` or reject the promise.
          *
-         * Set it to `false` to get a cleaner control flow when using `await`:
-         * {@link https://github.com/limonte/sweetalert2/issues/485}
-         *
-         * @default true
+         * @default false
+         * @deprecated
          */
         useRejections?: boolean;
+
+        /**
+         * Determines whether given `inputValidator` and `preConfirm` functions should be expected to to signal
+         * validation errors by rejecting, or by their respective means (see documentation for each option).
+         *
+         * @default false
+         * @deprecated
+         */
+        expectRejections?: boolean;
     }
 
     export default swal;

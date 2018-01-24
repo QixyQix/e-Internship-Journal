@@ -10,6 +10,8 @@ using E_Internship_Journal.Models;
 using Newtonsoft.Json;
 using System.IO;
 using System.Net.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace E_Internship_Journal.API
 {
@@ -18,9 +20,10 @@ namespace E_Internship_Journal.API
     public class CoursesController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public CoursesController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public CoursesController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
+            _userManager = userManager;
             _context = context;
         }
 
@@ -89,6 +92,31 @@ namespace E_Internship_Journal.API
             }
 
             return new JsonResult(response);
+        }
+        
+        [HttpGet("getAssignedCourse")]
+        [Authorize(Roles = "SLO")]
+        public IActionResult getAssignedCourse()
+        {
+            List<object> courses_List = new List<object>();
+
+            var courses = _context.UserBatches
+                .Include(b => b.Batch)
+                .ThenInclude(c => c.Course)
+                .Where(ub => ub.UserId.Equals(_userManager.GetUserId(User)))
+                .ToList();
+
+            foreach (var oneCourse in courses)
+            {
+                //   List<int> categoryIdList = new List<int>();
+                courses_List.Add(new
+                {
+                    oneCourse.Batch.Course.CourseId,
+                    oneCourse.Batch.Course.CourseName
+                });
+            }
+
+            return new JsonResult(courses_List);
         }
 
         [HttpPut("UpdateOneCourse/{id}")]

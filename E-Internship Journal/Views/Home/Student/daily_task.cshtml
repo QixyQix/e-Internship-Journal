@@ -155,10 +155,14 @@
         return event;
     }
     //------start calendar script-----
+  
     $('#calendar').fullCalendar({
         editable: false,
         eventLimit: true, // allow "more" link when too many events
         selectable: true,
+        validRange: {
+                end: new Date() + 1
+        },
         select: function (date, jsEvent, view) {
             //var title = prompt('Event Title:' + start + ' ' + end);
             //start contains the date you have selected

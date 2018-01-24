@@ -247,7 +247,7 @@
                 var collectedDate = moment($('#newDate').val() + ' ' + $('#newTimeIn').val(), ["DD/MM/YYYY h:mm A"]).toDate();
                 var collectedComments = $('#newComment').val();
                 var webFormData = new WebFormData(collectedDate, collectedComments);
-                console.dir(webFormData);
+                
                 $.ajax({
                     url: '/Api/TouchPoint/SaveTouchPointRecord/' + g_getLocalStorage,
                     method: 'POST',
