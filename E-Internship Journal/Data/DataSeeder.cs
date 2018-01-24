@@ -53,11 +53,35 @@ namespace E_Internship_Journal.Data
             }
             db.SaveChanges();
 
+            var competencyTitle = new CompetencyTitle
+            {
+                TitleCompetency = "Domain Immersion",
+                Course = courseObject[0],
+                ViewBy = 1
+            };
+            db.CompetencyTitles.Add(competencyTitle);
+            db.SaveChanges();
             //Create Competency
+            //var competencyObject = new Competency[] {
+            //    new Competency { Description = "Describe and explain respectively domain knowledge Understand existing business operations Identify roles and responsibilities of company staff members Understand a project/system business requirements", TitleDescription = "Domain Immersation", Course = courseObject[0] },
+            //    new Competency { Description = "Participate and contribute to the review, analysis and verification of business and software requirements Assist project team for project requirements gathering and analysis Assist in gathering of user requirements, which can be any activity such as design of questionnaire, logistics planning Identify and document an application problem or symptoms from users(when there is reported software bug) Propose solutions to an application problem with designated supervisors or mentors", TitleDescription = "Project / System Analysis & Design", Course = courseObject[0] },
+            //    new Competency { Description = " Prepare technical documentation and reports on requirements and analysis Report the workflow of a business requirement, in the form of UML(Sequence, State etc. diagrams) or any in company standard documentation format Report or present a problem resolution/design to the users Document constraints or possible impacts in the application, during any code or functionality changes from bugfix or change request Perform an impact analysis (i.e. what could happen to the users, like loss of what data) of the risks involved in the reported application problem/error", TitleDescription = "Project/System Analysis & Design", Course = courseObject[0] },
+            //    new Competency { Description = "Discuss with the student on the internship requirements. (This is recommended to be carried out at the start of the internship)", TitleDescription = "Project/System Analysis & Design", Course = courseObject[0] },
+            //    new Competency { Description = "Guide the student to meet requirements and learning objectives. This includes guiding the student on the tasks, setting performance expectations and encouraging student to ask questions to clarify job resposibilities.", TitleDescription = "Project/System Analysis & Design", Course = courseObject[0] },
+            //    new Competency { Description = "Provide periodic feedback to student on his/her performance", TitleDescription = "Project/System Analysis & Design", Course = courseObject[0] },
+            //    new Competency { Description = "Meet and discuss with the SP Liaison Officer on student's progress and performance during company visits.", TitleDescription = "Project/System Analysis & Design", Course = courseObject[0] },
+            //    new Competency { Description = "Provide final assessment on student's performance", TitleDescription = "Project/System Analysis & Design", Course = courseObject[0] },
+            //    new Competency { Description = "Provide student an overview of the company structure, nature of business and work requirements.", TitleDescription = "Mentorship", Course = courseObject[0] },
+            //    new Competency { Description = "Share about job propects, career paths and trends within the industry. This can be done through sharing of work experience, relevant resources, networking contacts, as appropriate.", TitleDescription = "Mentorship", Course = courseObject[0] },
+            //};
+            //foreach (Competency c in competencyObject)
+            //{
+            //    db.Competencies.Add(c);
+            //}
             var competencyObject = new Competency[] {
-                new Competency { Description = "Able to code using Java/CSS/HTML", TitleDescription = "Able to code", Course = courseObject[0] },
-                new Competency { Description = "Able to code using Java/CSS/HTML", TitleDescription = "Able to code", Course = courseObject[1] },
-                new Competency { Description = "Able to code using Java/CSS/HTML", TitleDescription = "Able to code", Course = courseObject[2] }
+                new Competency { Description = "Able to code using Java/CSS/HTML", CompetencyTitleId = competencyTitle.CompetencyTitleId , ViewBy = 1},
+                new Competency { Description = "Able to code using Java/CSS/HTML",CompetencyTitleId = competencyTitle.CompetencyTitleId , ViewBy = 2},
+                new Competency { Description = "Able to code using Java/CSS/HTML", CompetencyTitleId = competencyTitle.CompetencyTitleId, ViewBy = 3 }
             };
             foreach (Competency c in competencyObject)
             {
@@ -74,12 +98,16 @@ namespace E_Internship_Journal.Data
                 new ApplicationUser { UserName = "ADMIN@TEST.COM", FullName = "Mr Administrator", Email = "ADMIN@TEST.COM", IsEnabled = true }
             };
             PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
+            //adminUser.PasswordHash = ph.HashPassword(adminUser, "P@ssw0rd"); //More complex password
+            //await userManager.CreateAsync(adminUser);
+            //await userManager.AddToRoleAsync(adminUser, "ADMIN");
             for (int i = 0; i < adminUser.Length; i++)
             {
                 adminUser[i].PasswordHash = ph.HashPassword(adminUser[i], "P@ssw0rd"); //More complex password
                 await userManager.CreateAsync(adminUser[i]);
                 await userManager.AddToRoleAsync(adminUser[i], "ADMIN");
             }
+
             //Student
             var studentUser = new ApplicationUser[] {
                 new ApplicationUser { UserName = "P1551581@TEST.COM", FullName = "Ong Boon Ping, Klein", Email = "P1551581@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
@@ -110,7 +138,8 @@ namespace E_Internship_Journal.Data
                 new ApplicationUser { UserName = "JUNENDANIEL@COMPANY.COM", FullName = "Daniel Tan Jun En", Email = "JUNENDANIEL@COMPANY.COM", IsEnabled = true },
                 new ApplicationUser { UserName = "JESSCHOO@COMPANY.COM", FullName = "Jess Choo Li Ying", Email = "JESSCHOO@COMPANY.COM", IsEnabled = true },
                 new ApplicationUser { UserName = "TECKMING@COMPANY.COM", FullName = "Micheal Lee Teck Ming", Email = "TECKMING@COMPANY.COM", IsEnabled = true },
-                new ApplicationUser { UserName = "DESENG@COMPANY.COM", FullName = "Lee De Seng", Email = "DESENG@COMPANY.COM", IsEnabled = true }, new ApplicationUser { UserName = "SUSANPX@COMPANY.COM", FullName = "Susan Yee Pei Xuan", Email = "SUSANPX@COMPANY.COM", IsEnabled = true },
+                new ApplicationUser { UserName = "DESENG@COMPANY.COM", FullName = "Lee De Seng", Email = "DESENG@COMPANY.COM", IsEnabled = true },
+                new ApplicationUser { UserName = "SUSANPX@COMPANY.COM", FullName = "Susan Yee Pei Xuan", Email = "SUSANPX@COMPANY.COM", IsEnabled = true },
                 new ApplicationUser { UserName = "YINGYING@COMPANY.COM", FullName = "Luo Ying Ying", Email = "YINGYING@COMPANY.COM", IsEnabled = true },
                 new ApplicationUser { UserName = "SAMSOM@COMPANY.COM", FullName = "Samson Reuben", Email = "SAMSON@COMPANY.COM", IsEnabled = true },
                 new ApplicationUser { UserName = "SUPERVISOR@TEST.COM", FullName = "Santhosh Kumar", Email = "SUPERVISOR@TEST.COM", IsEnabled = true }
@@ -159,22 +188,22 @@ namespace E_Internship_Journal.Data
             //Create Batch
             var batchObject = new Batch[]
             {
-                new Batch { BatchName = "AY1718S1", Description = "Academic Yeat 2017-2018 Semester 1", StartDate = DateTime.ParseExact("14/06/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/09/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[0] },
-                new Batch { BatchName = "AY1718S2", Description = "Academic Yeat 2017-2018 Semester 2", StartDate = DateTime.ParseExact("30/10/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("24/01/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[0] },
-                new Batch { BatchName = "AY1718S1", Description = "Academic Yeat 2017-2018 Semester 1", StartDate = DateTime.ParseExact("14/06/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/09/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[1] },
-                new Batch { BatchName = "AY1718S2", Description = "Academic Yeat 2017-2018 Semester 2", StartDate = DateTime.ParseExact("30/10/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("28/01/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[1] },
-                new Batch { BatchName = "AY1718S1", Description = "Academic Yeat 2017-2018 Semester 1", StartDate = DateTime.ParseExact("14/02/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/08/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[2] },
-                new Batch { BatchName = "AY1718S2", Description = "Academic Yeat 2017-2018 Semester 2", StartDate = DateTime.ParseExact("28/09/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("28/02/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[2] },
-                new Batch { BatchName = "AY1617S1", Description = "Academic Yeat 2016-2017 Semester 1", StartDate = DateTime.ParseExact("14/06/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/09/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[0] },
-                new Batch { BatchName = "AY1617S2", Description = "Academic Yeat 2016-2017 Semester 2", StartDate = DateTime.ParseExact("28/10/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("28/01/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[0] },
-                new Batch { BatchName = "AY1617S1", Description = "Academic Yeat 2016-2017 Semester 1", StartDate = DateTime.ParseExact("14/06/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/09/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[1] },
-                new Batch { BatchName = "AY1617S2", Description = "Academic Yeat 2016-2017 Semester 2", StartDate = DateTime.ParseExact("28/10/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("28/01/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[1] },
-                new Batch { BatchName = "AY1617S1", Description = "Academic Yeat 2016-2017 Semester 1", StartDate = DateTime.ParseExact("14/02/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/08/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[2] },
-                new Batch { BatchName = "AY1617S2", Description = "Academic Yeat 2016-2017 Semester 2", StartDate = DateTime.ParseExact("28/09/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("28/02/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[2] },
-                new Batch { BatchName = "AY1516S1", Description = "Academic Yeat 2015-2016 Semester 1", StartDate = DateTime.ParseExact("14/06/2015", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/09/2015", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[0] },
-                new Batch { BatchName = "AY1516S2", Description = "Academic Yeat 2015-2016 Semester 2", StartDate = DateTime.ParseExact("28/10/2015", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("28/01/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[0] },
-                new Batch { BatchName = "AY1516S1", Description = "Academic Yeat 2015-2016 Semester 1", StartDate = DateTime.ParseExact("14/02/2015", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/08/2015", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[2] },
-                new Batch { BatchName = "AY1516S2", Description = "Academic Yeat 2015-2016 Semester 2", StartDate = DateTime.ParseExact("28/09/2015", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("28/02/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[2] },
+                new Batch { BatchName = "AY1718S1", Description = "Academic Year 2017-2018 Semester 1", StartDate = DateTime.ParseExact("14/06/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/09/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[0] },
+                new Batch { BatchName = "AY1718S2", Description = "Academic Year 2017-2018 Semester 2", StartDate = DateTime.ParseExact("30/10/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("24/01/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[0] },
+                new Batch { BatchName = "AY1718S1", Description = "Academic Year 2017-2018 Semester 1", StartDate = DateTime.ParseExact("14/06/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/09/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[1] },
+                new Batch { BatchName = "AY1718S2", Description = "Academic Year 2017-2018 Semester 2", StartDate = DateTime.ParseExact("30/10/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("28/01/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[1] },
+                new Batch { BatchName = "AY1718S1", Description = "Academic Year 2017-2018 Semester 1", StartDate = DateTime.ParseExact("14/02/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/08/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[2] },
+                new Batch { BatchName = "AY1718S2", Description = "Academic Year 2017-2018 Semester 2", StartDate = DateTime.ParseExact("28/09/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("28/02/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[2] },
+                new Batch { BatchName = "AY1617S1", Description = "Academic Year 2016-2017 Semester 1", StartDate = DateTime.ParseExact("14/06/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/09/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[0] },
+                new Batch { BatchName = "AY1617S2", Description = "Academic Year 2016-2017 Semester 2", StartDate = DateTime.ParseExact("28/10/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("28/01/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[0] },
+                new Batch { BatchName = "AY1617S1", Description = "Academic Year 2016-2017 Semester 1", StartDate = DateTime.ParseExact("14/06/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/09/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[1] },
+                new Batch { BatchName = "AY1617S2", Description = "Academic Year 2016-2017 Semester 2", StartDate = DateTime.ParseExact("28/10/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("28/01/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[1] },
+                new Batch { BatchName = "AY1617S1", Description = "Academic Year 2016-2017 Semester 1", StartDate = DateTime.ParseExact("14/02/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/08/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[2] },
+                new Batch { BatchName = "AY1617S2", Description = "Academic Year 2016-2017 Semester 2", StartDate = DateTime.ParseExact("28/09/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("28/02/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[2] },
+                new Batch { BatchName = "AY1516S1", Description = "Academic Year 2015-2016 Semester 1", StartDate = DateTime.ParseExact("14/06/2015", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/09/2015", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[0] },
+                new Batch { BatchName = "AY1516S2", Description = "Academic Year 2015-2016 Semester 2", StartDate = DateTime.ParseExact("28/10/2015", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("28/01/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[0] },
+                new Batch { BatchName = "AY1516S1", Description = "Academic Year 2015-2016 Semester 1", StartDate = DateTime.ParseExact("14/02/2015", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/08/2015", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[2] },
+                new Batch { BatchName = "AY1516S2", Description = "Academic Year 2015-2016 Semester 2", StartDate = DateTime.ParseExact("28/09/2015", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("28/02/2016", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[2] },
             };
             foreach (Batch b in batchObject)
             {
@@ -280,9 +309,9 @@ namespace E_Internship_Journal.Data
             db.SaveChanges();
 
             var monthObject = new Month_Record[] {
-                new Month_Record { InternshipRecordId = internshipObject[0].InternshipRecordId },
-                new Month_Record { InternshipRecordId = internshipObject[1].InternshipRecordId },
-                new Month_Record { InternshipRecordId = internshipObject[2].InternshipRecordId }
+                new Month_Record { InternshipRecordId = internshipObject[0].InternshipRecordId, SoftSkillsCompetencyDoneWell = "I did well in my time management manage to finish up all the task give to me on time and i did my task very carefully, did a few time of checking and troubleshoot before hand in my task to my supervisor.", SoftSkillsCompetencyImprove = "I feel that i should improve in my communication skills with my colleague so i can interact and get to know more about them, also that i will not feel awkward when having meeting and can give out opinion.", TechnicalCompetencyApplied = "i have applied things that i had learn in the school. Got to apply some simple knowledge on Design experience when creating the website do a simple survey question and post it online to let the public answer.", TechnicalCompetencyDoneWell = "I did well on how quickly i can think of an idea and suggest out by giving some idea and get accepted. As also because i have the idea i gave is something similar to what i have did in one of my assignment in school", TechnicalCompetencyImprove="I want to improve on how i can be more confident because i did hesitate not to give my idea as i thought it was bad, was very happy that got accepted." },
+                new Month_Record { InternshipRecordId = internshipObject[1].InternshipRecordId, SoftSkillsCompetencyDoneWell = "I try to finish up all the task given to me on time and i am cautious with my work, check at least twice and troubleshoot before I hand in my task to my supervisor.", SoftSkillsCompetencyImprove = "I feel that i am not good at communication skills, whenever i talk to my colleague i get nervous, i can barely present myself when we are having a meeting.", TechnicalCompetencyApplied = "i have applied things that i had learn in the school. Got to apply some simple knowledge on Design experience when creating the website do a simple survey question and post it online to let the public answer.", TechnicalCompetencyDoneWell = "i manage to excel when it comes to quick thinking and creativity. i can think of an idea and suggest out by giving some idea and get accepted. As also because i have the idea i gave is something similar to what i have did in one of my assignment in school", TechnicalCompetencyImprove="I want to improve on being more confident, as i want to convince people to accept my idea instead of being rejected because i was not convincing enough." },
+                new Month_Record { InternshipRecordId = internshipObject[2].InternshipRecordId, SoftSkillsCompetencyDoneWell = "Given the fact that i am a cautious person, i would always check to double confirm, I often give my opinion on solution to help solving an issue", SoftSkillsCompetencyImprove = "I would need to improve on by over confidence attitude, whenever i see my colleague talking, i often give my own opinion without being asked for, i can be rather rude in such ways.", TechnicalCompetencyApplied = "i have applied things i learn school. Got to apply some basic skills on programming experience when hosting a website i am able to follow up with the project.", TechnicalCompetencyDoneWell = "i manage to excel when it comes to quick thinking and creativity. i can think of an idea and suggest out by giving some idea and get accepted. As also because i have the idea i gave is something similar to what i have did in one of my assignment in school", TechnicalCompetencyImprove="I want to learn more so that I am able to improve my programming skills and with it I can help others whenever they encounter a problem." },
             };
             foreach (Month_Record mr in monthObject)
             {
@@ -413,7 +442,7 @@ namespace E_Internship_Journal.Data
 
                 new Day_Record { Month = monthObject[1], Date = DateTime.ParseExact("19/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), ArrivalTime = DateTime.Parse("9:00:00 AM"), DepartureTime = DateTime.Parse("6:00:00 PM"), WeekNo = 8, IsPresent = true },
                 new Day_Record { Month = monthObject[1], Date = DateTime.ParseExact("20/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), ArrivalTime = DateTime.Parse("9:00:00 AM"), DepartureTime = DateTime.Parse("6:00:00 PM"), WeekNo = 8, IsPresent = true },
-                                new Day_Record { Month = monthObject[1], Date = DateTime.ParseExact("21/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), ArrivalTime = DateTime.Parse("9:00:00 AM"), DepartureTime = DateTime.Parse("6:00:00 PM"), WeekNo = 8, IsPresent = true },
+                new Day_Record { Month = monthObject[1], Date = DateTime.ParseExact("21/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), ArrivalTime = DateTime.Parse("9:00:00 AM"), DepartureTime = DateTime.Parse("6:00:00 PM"), WeekNo = 8, IsPresent = true },
                 new Day_Record { Month = monthObject[1], Date = DateTime.ParseExact("22/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), ArrivalTime = DateTime.Parse("9:00:00 AM"), DepartureTime = DateTime.Parse("6:00:00 PM"), WeekNo = 8, IsPresent = true },
 
                 //new Day_Record { Month = monthObject[1], Date = DateTime.ParseExact("25/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), ArrivalTime = DateTime.Parse("9:00:00 AM"), DepartureTime = DateTime.Parse("6:00:00 PM"), WeekNo = 8, IsPresent = true },
@@ -479,7 +508,7 @@ namespace E_Internship_Journal.Data
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("06/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "add students to actual database for Mr Karl Kwan for his lesson starting week 1 of the next term. Contact him if no response from him before dateline.", WeekNo = 2 },
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("06/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Begin adding lecturer’s student view. (added controller, views, viewmodels etc. code)", WeekNo = 2 },
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("07/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Add “ghost” student account creation on login as lecturer.", WeekNo = 2 },
-                                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("07/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Research and test to see which way of coding the feature is better. ", WeekNo = 2 },
+                 new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("07/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Research and test to see which way of coding the feature is better. ", WeekNo = 2 },
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("07/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Create a “ghost/temp” student account for the lecturer to view it", WeekNo = 2 },
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("08/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Implement test assignment feature.", WeekNo = 2 },
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("08/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Figure out error of 'System.ComponentModel.Win32Exception' in System.dll ('Access is denied') System.ComponentModel.Win32Exception", WeekNo = 2 },
@@ -551,7 +580,7 @@ namespace E_Internship_Journal.Data
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("05/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Add ‘Add Lecturer test submission always show 1.", WeekNo = 6 },
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("05/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Reformat reject email code logic and message.", WeekNo = 6 },
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("06/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Meeting with Mr Low: Progress Update (Refer to Meeting 4)", WeekNo = 6 },
- new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("06/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Fix Error with consolidating database schema and code schema", WeekNo = 6 },
+                 new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("06/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Fix Error with consolidating database schema and code schema", WeekNo = 6 },
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("06/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Fix code side Database mapping issues", WeekNo = 6 },
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("07/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Class Score Excel Generation: Create Controller function to generate excel document and Figure out how to trigger download excel from controller side", WeekNo = 6 },
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("08/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Class Score Excel Generation: Redo Excel creation code logic", WeekNo = 6 },
@@ -623,7 +652,7 @@ namespace E_Internship_Journal.Data
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("04/01/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Fix/Touch up class name validation", WeekNo = 10 },
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("04/01/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Testing class name in add class", WeekNo = 10 },
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("05/01/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Add semester and acad year options (dropdown list select) for adding new class.", WeekNo = 10 },
-                new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("05/01/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Add Lec_Class association when lecturer create new class", WeekNo = 10 },
+                 new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("05/01/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Add Lec_Class association when lecturer create new class", WeekNo = 10 },
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("05/01/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Add acad year display to all views with class", WeekNo = 10 },
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("05/01/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Add acad year controls to update class controls", WeekNo = 10 },
                  new Task_Record { MonthRecord = monthObject[0], Date = DateTime.ParseExact("05/01/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Error with loop logic displaying classes in Manage Assignments, AcadID displaying on another class instead of its own.", WeekNo = 10 },
@@ -724,7 +753,7 @@ namespace E_Internship_Journal.Data
 
                  //week3
                  new Task_Record { MonthRecord = monthObject[1], Date = DateTime.ParseExact("13/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Add Nav Bar link for admins and lecturers", WeekNo = 3 },
-                new Task_Record { MonthRecord = monthObject[1], Date = DateTime.ParseExact("13/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Add Alertify.js package and use it for user button click feedback", WeekNo = 3 },
+                 new Task_Record { MonthRecord = monthObject[1], Date = DateTime.ParseExact("13/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Add Alertify.js package and use it for user button click feedback", WeekNo = 3 },
                  new Task_Record { MonthRecord = monthObject[1], Date = DateTime.ParseExact("13/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Set Students created by lecturers/admins to be already approved", WeekNo = 3 },
                  new Task_Record { MonthRecord = monthObject[1], Date = DateTime.ParseExact("13/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Fix number of accounts rejected counter", WeekNo = 3 },
                  //mc
@@ -790,7 +819,7 @@ namespace E_Internship_Journal.Data
                  new Task_Record { MonthRecord = monthObject[1], Date = DateTime.ParseExact("12/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Edit database schema for suspending student", WeekNo = 7 },
                  new Task_Record { MonthRecord = monthObject[1], Date = DateTime.ParseExact("12/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Account controller code to check if student is suspended", WeekNo = 7 },
                  new Task_Record { MonthRecord = monthObject[1], Date = DateTime.ParseExact("12/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Create view for suspended student account", WeekNo = 7 },
-                new Task_Record { MonthRecord = monthObject[1], Date = DateTime.ParseExact("12/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Explore use of DB version control and LiquiBase", WeekNo = 7 },
+                 new Task_Record { MonthRecord = monthObject[1], Date = DateTime.ParseExact("12/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Explore use of DB version control and LiquiBase", WeekNo = 7 },
                  new Task_Record { MonthRecord = monthObject[1], Date = DateTime.ParseExact("13/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Create Suspend student controls for lecturer", WeekNo = 7 },
                  new Task_Record { MonthRecord = monthObject[1], Date = DateTime.ParseExact("13/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Edit reject student email message telling student to recreate account ", WeekNo = 7 },
                  new Task_Record { MonthRecord = monthObject[1], Date = DateTime.ParseExact("14/12/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Description = "Remove Student Contact No. (Comment out/set default value 0)", WeekNo = 7 },

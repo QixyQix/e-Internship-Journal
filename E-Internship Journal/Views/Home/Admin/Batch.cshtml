@@ -12,7 +12,7 @@
     <!-- Example DataTables Card-->
     <div class="card mb-3">
         <div class="card-header d-inline">
-            <i class="fa fa-table fa-2x pull-left"></i> <h3>Batch</h3>
+            <i class="fa fa-users fa-2x pull-left"></i> <h3>Batch</h3>
         </div>
         <div class="card-body">
             <div class="form-inline">
@@ -156,6 +156,8 @@
     }
 
     function hideFilter1() {
+        $("#batch_dataTable thead input").val("");
+        $("#batch_dataTable thead input").change();
         $('#batch_dataTable thead tr#filterrow').toggle();
     }
 

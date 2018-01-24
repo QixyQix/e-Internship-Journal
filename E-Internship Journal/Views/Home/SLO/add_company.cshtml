@@ -92,7 +92,7 @@
 
         var webFormData = new WebFormData(collectedCompanyName, collectedCompanyAddress);
         var webFormDatainString = JSON.stringify(webFormData);
-        $saveBatchHandler = jQuery.ajax({
+        $saveProjectHandler = jQuery.ajax({
             url: '/API/Companies/SaveNewCompanyInformation/',
             type: 'post',
             dataType: 'json',
@@ -100,7 +100,7 @@
             data: "'" + webFormDatainString + "'"
 
         });
-        $saveBatchHandler.done(function (data, textStatus, jqXHR) {
+        $saveProjectHandler.done(function (data, textStatus, jqXHR) {
             console.dir("Success");
 
         });//End .Done

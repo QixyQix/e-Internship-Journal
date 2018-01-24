@@ -6,6 +6,11 @@
     "jquery": "2.2.0",
     "jquery-validation": "1.14.0",
     "jquery-validation-unobtrusive": "3.2.6",
-    "bootstrap-multiselect": "v0.9.13"
+    "bootstrap-multiselect": "v0.9.13",
+    "popper.js": "v1.13.0-next",
+    "datetime-moment": "*"
+  },
+  "resolutions": {
+    "moment": ">=2.10.5"
   }
 }

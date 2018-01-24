@@ -9377,7 +9377,7 @@ function Toolbar(calendar, toolbarOptions) {
 					var buttonEl;
 
 					if (buttonName == 'title') {
-						groupChildren = groupChildren.add($('<h2>&nbsp;</h2>')); // we always want it to take up height
+						groupChildren = groupChildren.add($('<h4>&nbsp;</h4>')); // we always want it to take up height
 						isOnlyButtons = false;
 					}
 					else {
@@ -9507,7 +9507,7 @@ function Toolbar(calendar, toolbarOptions) {
 
 	function updateTitle(text) {
 		if (el) {
-			el.find('h2').text(text);
+			el.find('h4').text(text);
 		}
 	}
 

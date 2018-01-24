@@ -39,7 +39,7 @@
     <!-- Example DataTables Card-->
     <div class="card mb-3">
         <div class="card-header d-inline">
-            <i class="fa fa-table fa-2x pull-left"></i> <h3>Daily Tasks</h3>
+            <i class="fa fa-calendar fa-2x pull-left"></i> <h3>Daily Tasks</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -134,11 +134,7 @@
 
         g_taskData = loadTaskData(g_getLocalStorage);
         loadWeekOption();
-        $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
-            $('#commentModal').modal('show');
-            //var review = sessionStorage.getItem($(this).val()) == null ? "No Remarks" : sessionStorage.getItem($(this).val());
-            $('#review').text(sessionStorage.getItem($(this).val()) == null ? "No Remarks" : sessionStorage.getItem($(this).val()));
-        });
+
 
         $('#selectstudent').on('change', function (e) {
             //console.dir('test');
@@ -189,11 +185,11 @@
             dataType: 'json',
             cache: false,
             success: function (data) {
-                for (i = 0; i < data.length; i++) {
-                    if (data[i].Remarks != null) {
-                        sessionStorage.setItem(data[i].TaskRecordId, data[i].Remarks);
-                    }
-                }//End of for loop
+                //for (i = 0; i < data.length; i++) {
+                //    if (data[i].Remarks != null) {
+                //        sessionStorage.setItem(data[i].TaskRecordId, data[i].Remarks);
+                //    }
+                //}//End of for loop
             }//End of success
         });//End of Ajax
     }
@@ -221,6 +217,16 @@
                 emptyTable: "No Task was found, please create one.",
             }
         });//End of DataTable
+        $('#dataTable tbody').on('click', 'button[class="btn btn-sm btn-primary"]', function (e) {
+           // console.dir("FUCK ME");
+            var $row = $(this).closest('tr');
+
+            // Get row data
+            var data = g_table.row($row).data();
+            $('#commentModal').modal('show');
+            $('#review').text(sessionStorage.getItem($(this).val()) == null ? "No Remarks" : sessionStorage.getItem($(this).val()));
+           // console.dir(data);
+        });
     }
     function loadWeekOption() {
         $("#selectWeek option").remove();

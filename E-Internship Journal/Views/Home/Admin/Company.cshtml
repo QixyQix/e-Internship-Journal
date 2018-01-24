@@ -12,7 +12,7 @@
     <!-- Example DataTables Card-->
     <div class="card mb-3">
         <div class="card-header d-inline">
-            <i class="fa fa-table fa-2x pull-left"></i> <h3>Company</h3>
+            <i class="fa fa-building fa-2x pull-left"></i> <h3>Company</h3>
         </div>
         <div class="card-body">
             <div class="form-inline">
@@ -116,29 +116,29 @@
         </div>
     </div>
     &nbsp;
-    </div>
+</div>
 
 <style>
 
-@@media only screen and (max-width: 768px) {
+    @@media only screen and (max-width: 768px) {
 	.Fax, tr td:nth-child(7)		{ display:none; visibility:hidden; }
-}
+    }
 
-@@media only screen and (max-width: 420px) {
+    @@media only screen and (max-width: 420px) {
 	.Fax, tr td:nth-child(7)		{ display:none; visibility:hidden; }
 	.E_Add, tr td:nth-child(5)			{ display:none; visibility:hidden; }
 	.CP_NO, tr td:nth-child(6)		{ display:none; visibility:hidden; }
-}
+    }
 
-@@media only screen and (max-width: 320px) {
+    @@media only screen and (max-width: 320px) {
 	.Fax, tr td:nth-child(7)		{ display:none; visibility:hidden; }
 	.E_Add, tr td:nth-child(5)			{ display:none; visibility:hidden; }
 	.CP_NO, tr td:nth-child(6)		{ display:none; visibility:hidden; }
 	.C_Add, tr td:nth-child(3)		{ display:none; visibility:hidden; }
-}
+    }
 </style>
 
-    <script>
+<script>
     //
     // Updates "Select all" control in a data table
     //
@@ -172,6 +172,8 @@
     }
 
     function hideFilter1() {
+        $("#company_dataTable thead input").val("");
+        $("#company_dataTable thead input").change();
         $('#company_dataTable thead tr#filterrow').toggle();
     }
 
@@ -386,47 +388,47 @@
             }).catch(swal.noop);
         });
     });
-    </script>
+</script>
 @*<script>
 
-    $getCompanyHandler = jQuery.ajax({
+        $getCompanyHandler = jQuery.ajax({
 
-        url: '/API/Companies/',
-        method: 'get',
-        dataType: 'json',
-        cache: false
+            url: '/API/Companies/',
+            method: 'get',
+            dataType: 'json',
+            cache: false
 
-    });
-    $getCompanyHandler.done(function (data, textStatus, jqXHR) {
-        //var test = data;
+        });
+        $getCompanyHandler.done(function (data, textStatus, jqXHR) {
+            //var test = data;
 
-        $tableBodyElement = $('#companyTableBody');
-        for (i = 0; i < data.length; i++) {
+            $tableBodyElement = $('#companyTableBody');
+            for (i = 0; i < data.length; i++) {
 
-            company = data[i];
+                company = data[i];
 
-            companyId = company.CompanyId;
-            companyName = company.CompanyName;
-            companyAddress = company.CompanyAddress;
+                companyId = company.CompanyId;
+                companyName = company.CompanyName;
+                companyAddress = company.CompanyAddress;
 
-            //courseName = batch.CourseName[0].CourseName;
+                //courseName = batch.CourseName[0].CourseName;
 
-            $rowElement = $('<tr></tr>');
-            $cellElement = $('<td></td>', { text: companyName });
-            $rowElement.append($cellElement);
+                $rowElement = $('<tr></tr>');
+                $cellElement = $('<td></td>', { text: companyName });
+                $rowElement.append($cellElement);
 
-            $cellElement = $('<td></td>', { text: companyAddress });
-            $rowElement.append($cellElement);
-           
+                $cellElement = $('<td></td>', { text: companyAddress });
+                $rowElement.append($cellElement);
 
-            $pencilElement = $('<i></i>').attr('class', 'fa fa-pencil');
-            $ahrefElement = $('<a></a>').attr('href', '~/../EditCompany/' + companyId);
-            $ahrefElement.append($pencilElement);
-            $cellElement = $('<td></td>');
-            $cellElement.append($ahrefElement);
-            $rowElement.append($cellElement);
-            
-            $tableBodyElement.append($rowElement);
-        }
-    });
-</script>*@
+
+                $pencilElement = $('<i></i>').attr('class', 'fa fa-pencil');
+                $ahrefElement = $('<a></a>').attr('href', '~/../EditCompany/' + companyId);
+                $ahrefElement.append($pencilElement);
+                $cellElement = $('<td></td>');
+                $cellElement.append($ahrefElement);
+                $rowElement.append($cellElement);
+
+                $tableBodyElement.append($rowElement);
+            }
+        });
+    </script>*@

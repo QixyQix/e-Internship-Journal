@@ -18,8 +18,9 @@
                         <tr>
                             <th>Student ID</th>
                             <th>Student Name</th>
-                            <th>Actions</th>
-                            <th>&nbsp;</th>
+                            <th>Student Info</th>
+                            <th>Student Journal</th>
+                            <th>Pending Review</th> 
                         </tr>
                     </thead>
                     <tbody>
@@ -50,13 +51,14 @@
                 newcell = $('<td></td>').text(student.StudentName);
                 newrow.append(newcell);
                 newcell = $('<td></td>');
-                newcell.append($('<button class="btn btn-sm btn-primary" onclick="redirectStudentInfo(' + student.InternshipRecordId + ')"><i class="fa fa-info"></i> Student Info</button>'));
-                newcell.append("&nbsp;")
-                newcell.append($('<button class="btn btn-sm btn-primary" onclick="redirectStudentJournal(' + student.InternshipRecordId + ')"><i class="fa fa-file"></i> Student Journal</button>'));
+                newcell.append($('<a onclick="redirectStudentInfo(' + student.InternshipRecordId + ')"><i class="fa fa-info"></i> </a>'));
+                newrow.append(newcell);
+                newcell = $('<td></td>');
+                newcell.append($('<a onclick="redirectStudentJournal(' + student.InternshipRecordId + ')"><i class="fa fa-file"></i> </a>'));
                 newrow.append(newcell);
                 newcell = $('<td></td>');
                 if (student.Review) {
-                    newcell.append($('<button class="btn btn-sm btn-warning" onclick="redirectReviewStudent(' + student.InternshipRecordId + ')"><i class="fa fa-exclamation-circle"></i> Grading Required</button>'));
+                    newcell.append($('<a onclick="redirectReviewStudent(' + student.InternshipRecordId + ')"><i class="fa fa-exclamation-circle"></i> </a>'));
                 }
                 newrow.append(newcell);
                 $('#studenttable').append(newrow);

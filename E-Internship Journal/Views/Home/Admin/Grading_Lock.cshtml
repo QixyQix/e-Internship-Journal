@@ -1,0 +1,119 @@
+﻿@{
+    ViewData["Title"] = "Manage User Page";
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs-->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/home/index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item active">Grading Lock</li>
+    </ol>
+    <!-- Example DataTables Card-->
+    <div class="card mb-3">
+        <div class="card-header d-inline">
+            <i class="fa fa-lock fa-2x pull-left"></i> <h3>Grading Lock</h3>
+        </div>
+        <div class="card-body">
+          
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th class="SLO_Name">SLO</th>
+                            <th class="Student_ID">Student ID</th>
+                            <th class="Lock_S">Lock Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Lao Kok Kok</td>
+                            <td>P1585858</td>
+                            <td width="10%"><button type="button" class="btn btn-success col-xs-12"><i class="fa fa-unlock"></i>&nbsp; Unlocked</button></td>
+                        </tr>
+                        <tr>
+                            <td>Kok Lao Lao</td>
+                            <td>P1855585</td>
+                            <td width="10%"><button type="button" class="btn btn-danger col-xs-12"><i class="fa fa-lock"></i>&nbsp; Locked</button></td>
+                        </tr>
+                    </tbody>
+                    @*<tbody>
+                            <tr>
+                                <td>Cho Qi Xiang</td>
+                                <td>Websparks Pte Ltd</td>
+                                <td>Spade</td>
+                                <td>Student</td>
+                                <td>
+                                    <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                    <a href="/mypath"><i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Klein Ong</td>
+                                <td>TripleDots Technology</td>
+                                <td>Parliament</td>
+                                <td>Student</td>
+                                <td>
+                                    <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                    <a href="/mypath"<i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Amelia Goh</td>
+                                <td>RapidCloud</td>
+                                <td>WIS</td>
+                                <td>Student</td>
+                                <td>
+                                    <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                    <a href="/mypath"<i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>JiaWei Loo</td>
+                                <td>Aventure Pte Ltd</td>
+                                <td>CAAS</td>
+                                <td>Student</td>
+                                <td>
+                                    <a href="/mypath"><i class="fa fa-pencil"></i></a>
+                                    <a href="/mypath"<i class="fa fa-trash"></i></a>
+                                </td>
+                            </tr>
+                        </tbody>*@
+                </table>
+            </div>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+</div>
+<div class="card-body">
+    <div class="form-group">
+        <div class="col-12">
+            <button class="btn btn-default" onclick="location.href='http://' + window.location.host +'/Home/Index'">
+                Back
+            </button>
+        </div>
+    </div>
+</div>
+&nbsp;
+<script>
+    $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
+            swal({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, unlocked it!'
+            }).then(function (result) {
+                if (result.value) {
+                    swal(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                }
+            }).catch(swal.noop);
+        });
+</script>

@@ -11,8 +11,8 @@
     </ol>
     <!-- Example DataTables Card-->
     <div class="card mb-3">
-        <div class="card-header">
-            <i class="fa fa-eye"></i> View Course
+        <div class="card-header d-inline">
+            <i class="fa fa-book fa-2x pull-left"></i> <h3>Course</h3>
         </div>
         <div class="card-body">
             <div class="form-inline">
@@ -41,8 +41,8 @@
                     <thead>
                         <tr>
                             <th width="5%"><input name="select_all" value="1" type="checkbox" /></th>
-                            <th>Code</th>
-                            <th>Course Name</th>
+                            <th class="exportFile">Code</th>
+                            <th class="exportFile">Course Name</th>
                             <th width="10%">Action</th>
                         </tr>
                         <tr id="filterrow">
@@ -108,6 +108,8 @@
     }
 
     function hideFilter1() {
+        $("#course_dataTable thead input").val("");
+        $("#course_dataTable thead input").change();
         $('#course_dataTable thead tr#filterrow').toggle();
     }
 
@@ -186,6 +188,29 @@
             bSortable: false,
             dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+            buttons: [
+                'copyHtml5',
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: [1, 2]
+                    }
+                },
+                {
+                    extend: 'csvHtml5',
+                    exportOptions: {
+                        columns: [1, 2]
+                    },
+                    header: true
+                },
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: [1, 2]
+                    },
+                    header: true
+                },
+            ],
             ajax: {
                 url: '/Api/Courses',
                 dataSrc: ''

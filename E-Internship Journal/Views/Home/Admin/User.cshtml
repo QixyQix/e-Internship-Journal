@@ -13,7 +13,7 @@
     <!-- Example DataTables Card-->
     <div class="card mb-3">
         <div class="card-header d-inline">
-            <i class="fa fa-table fa-2x pull-left"></i> <h3>Users</h3>
+            <i class="fa fa-user-plus fa-2x pull-left"></i> <h3>Users</h3>
         </div>
         <div class="card-body">
             <div class="form-inline">
@@ -291,9 +291,13 @@
     }
 
     function hideFilter1() {
+        $("#act_dataTable thead input").val("");
+        $("#act_dataTable thead input").change();
         $('#act_dataTable thead tr#filterrow').toggle();
     }
     function hideFilter2() {
+        $("#deact_dataTable thead input").val("");
+        $("#deact_dataTable thead input").change();
         $('#deact_dataTable thead tr#filterrow').toggle();
     }
 

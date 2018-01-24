@@ -9,6 +9,7 @@ using E_Internship_Journal.Data;
 using E_Internship_Journal.Models;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace E_Internship_Journal.API
 {
@@ -25,33 +26,63 @@ namespace E_Internship_Journal.API
         }
 
         // GET: api/Competencies
-        [HttpGet]
-        public IActionResult GetCompetencies()
+        [HttpGet("getInternshipCompetenciesByCourse/{id}")]
+        [Authorize(Roles = "SLO")]
+        public IActionResult GetInternshipCompetenciesByCourse(int id)
         {
             List<object> competencies_List = new List<object>();
-            var competencies = _context.Competencies
-
-            .AsNoTracking();
-            foreach (var oneCompetency in competencies)
+            List<CompetencyTitle> ttt = new List<CompetencyTitle>();
+            var competencies = _context.CompetencyTitles.Where(c => c.CourseId == id)
+                .Include(competency => competency.Competencies)
+                .Include(course => course.Course)
+                .ToList();
+            var aa = _context.Competencies.Include(c => c.CompetencyTitle).ThenInclude(s => s.Course)
+                .Where(qq => qq.CompetencyTitle.Course.CourseId == id);
+            try
             {
-                //   List<int> categoryIdList = new List<int>();
-                competencies_List.Add(new
+                foreach (var oneCompetency in competencies)
                 {
-                    oneCompetency.Description,
-                    oneCompetency.TitleDescription
-                });
+                    //   List<int> categoryIdList = new List<int>();
+                    competencies_List.Add(new
+                    {
+                        oneCompetency.CompetencyTitleId,
+                        oneCompetency.CourseId,
+                        oneCompetency.Course.CourseName,
+                        oneCompetency.TitleCompetency,
+                        oneCompetency.ViewBy,
+                        CompetencyList = oneCompetency.Competencies.Select(desc => new
+                        {
+                            CompetencyId = desc.CompetencyId,
+                            Description = desc.Description,
+                            CreatedBy = desc.CreatedBy,
+                            DeletedAt = desc.DeletedAt,
+                            ModifiedAt =
+                            desc.ModifiedAt,
+                            ModifiedBy = desc.ModifiedBy,
+                            ViewBy = desc.ViewBy
+                        }).Where(d=>d.DeletedAt == null)
+                    });
+                }
+
             }
+            catch (Exception ex)
+            {
+
+            }
+
 
             return new JsonResult(competencies_List);
         }
 
         [HttpGet("getInternshipCompetncies/{id}")]
-        public IActionResult GetInternshipCompetncies(int id) {
+        //Student / Supervisor / LO  Retrieve the whole Competency for the form
+        public IActionResult GetInternshipCompetncies(int id)
+        {
             Internship_Record internshipRecord = _context.Internship_Records.Where(ir => ir.InternshipRecordId == id)
                 .Include(ir => ir.UserBatch)
                 .ThenInclude(ub => ub.Batch)
                 .ThenInclude(batch => batch.Course)
-                .ThenInclude(course => course.Competencies)
+                // .ThenInclude(course => course.Competencies)
                 .Include(ir => ir.UserBatch)
                 .ThenInclude(ub => ub.User)
                 .SingleOrDefault();
@@ -63,24 +94,126 @@ namespace E_Internship_Journal.API
 
             List<object> competencyObjList = new List<object>();
 
-            foreach (var competency in internshipRecord.UserBatch.Batch.Course.Competencies) {
-                if (competency.DeletedAt == null) {
-                    competencyObjList.Add(new
-                    {
-                        CompetencyId = competency.CompetencyId,
-                        TitleDescription = competency.TitleDescription,
-                        Description = competency.Description,
-                        DeletedAt = competency.DeletedAt,
-                        ModifiedBy = competency.ModifiedBy,
-                        ModifiedAt = competency.ModifiedAt,
-                        CreatedBy = competency.CreatedBy,
-                        CourseId = competency.CourseId
-                    });
-                }
-            }
+            //foreach (var competency in internshipRecord.UserBatch.Batch.Course.Competencies) {
+            //    if (competency.DeletedAt == null) {
+            //        competencyObjList.Add(new
+            //        {
+            //            CompetencyId = competency.CompetencyId,
+            //           // TitleDescription = competency.TitleDescription,
+            //            Description = competency.Description,
+            //            DeletedAt = competency.DeletedAt,
+            //            ModifiedBy = competency.ModifiedBy,
+            //            ModifiedAt = competency.ModifiedAt,
+            //            CreatedBy = competency.CreatedBy,
+            //            CourseId = competency.CourseId
+            //        });
+            //    }
+            //}
 
             return new OkObjectResult(competencyObjList);
 
+        }
+        [HttpPut("SaveNewCompetencyTitleRecord")]
+        public async Task<IActionResult> SaveNewCompetencyTitleRecord([FromBody] string value)
+        {
+            string messageList = "";
+            string alertType = "success";
+            var CompetencyTitle_NewInput = JsonConvert.DeserializeObject<dynamic>(value);
+            try
+            {
+                if (CompetencyTitle_NewInput.Method.Value.Equals("SaveNew"))
+                {
+                    CompetencyTitle newCompetencyTitle = new CompetencyTitle
+                    {
+                        CourseId = Convert.ToInt32(CompetencyTitle_NewInput.Id.Value),
+                        TitleCompetency = CompetencyTitle_NewInput.Title.Value,
+                        ViewBy = Convert.ToInt32(CompetencyTitle_NewInput.ViewBy.Value),
+                    };
+                    _context.CompetencyTitles.Add(newCompetencyTitle);
+                    _context.SaveChanges();
+                    messageList = "Saved Competency";
+                    alertType = "success";
+                }
+                else
+                {
+                    int existingCompetencyTitleId = Convert.ToInt32(CompetencyTitle_NewInput.Id.Value);
+                    var foundCompetencyTitle = _context.CompetencyTitles.Where(ct => ct.CompetencyTitleId == existingCompetencyTitleId).SingleOrDefault();
+
+                    foundCompetencyTitle.TitleCompetency = CompetencyTitle_NewInput.Title.Value;
+                    foundCompetencyTitle.ViewBy = Convert.ToInt32(CompetencyTitle_NewInput.ViewBy.Value);
+
+
+                    _context.SaveChanges();
+                    messageList = "Saved Competency";
+                    alertType = "success";
+                }
+            }
+            catch (Exception exceptionObject)
+            {
+                object httpFailRequestResultMessage =
+                new { Message = exceptionObject };
+                return BadRequest(httpFailRequestResultMessage);
+            }
+            var responseObject = new
+            {
+                AlertType = alertType,
+                Messages = messageList
+            };
+
+            return new OkObjectResult(responseObject);
+        }
+
+        [HttpPut("SaveNewCompetenciesRecord")]
+        public async Task<IActionResult> SaveNewCompetenciesRecord([FromBody] string value)
+        {
+            string messageList = "";
+            string alertType = "success";
+            var competencies_NewInput = JsonConvert.DeserializeObject<dynamic>(value);
+            try
+            {
+                if (competencies_NewInput.Method.Value.Equals("SaveNew"))
+                {
+                    Competency newCompetencies = new Competency
+                    {
+                        CompetencyTitleId = Convert.ToInt32(competencies_NewInput.Id.Value),
+                        Description = competencies_NewInput.Description.Value,
+                        ViewBy = Convert.ToInt32(competencies_NewInput.ViewBy.Value),
+                        CreatedBy = _userManager.GetUserId(User)
+                        //TitleDescription = competencies_NewInput.TitleDescription.Value
+                    };
+                    _context.Competencies.Add(newCompetencies);
+                    _context.SaveChanges();
+                    messageList = "Saved Competency";
+                    alertType = "success";
+                }
+                else
+                {
+                    int existingCompetencyId = Convert.ToInt32(competencies_NewInput.Id.Value);
+                    var foundCompetencies = _context.Competencies.Where(cp => cp.CompetencyId == existingCompetencyId).SingleOrDefault();
+
+                    foundCompetencies.Description = competencies_NewInput.Description.Value;
+                    foundCompetencies.ViewBy = Convert.ToInt32(competencies_NewInput.ViewBy.Value);
+                    foundCompetencies.ModifiedBy = _userManager.GetUserId(User);
+                    foundCompetencies.ModifiedAt = DateTime.Now;
+
+                    _context.SaveChanges();
+                    messageList = "Saved Competency";
+                    alertType = "success";
+                }
+            }
+            catch (Exception exceptionObject)
+            {
+                object httpFailRequestResultMessage =
+                new { Message = exceptionObject };
+                return BadRequest(httpFailRequestResultMessage);
+            }
+            var responseObject = new
+            {
+                AlertType = alertType,
+                Messages = messageList
+            };
+
+            return new OkObjectResult(responseObject);
         }
 
         // GET: api/Competencies/5
@@ -102,7 +235,7 @@ namespace E_Internship_Journal.API
                     {
                         CompetencyId = foundOneCompetency.CompetencyId,
                         Description = foundOneCompetency.Description,
-                        TitleDescription = foundOneCompetency.TitleDescription
+                        //TitleDescription = foundOneCompetency.TitleDescription
                     };//end of creation of the response object
                     return new JsonResult(response);
                 }
@@ -150,7 +283,7 @@ namespace E_Internship_Journal.API
                     {
                         CompetencyId = id,
                         Description = competencies_NewInput.Description.Value,
-                        TitleDescription = competencies_NewInput.TitleDescription.Value
+                        //TitleDescription = competencies_NewInput.TitleDescription.Value
                     };
                     _context.Competencies.Update(newCompetencies);
                     await _context.SaveChangesAsync();
@@ -227,24 +360,69 @@ namespace E_Internship_Journal.API
         }
 
         // DELETE: api/Competencies/5
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteCompetencies/{id}")]
         public async Task<IActionResult> DeleteCompetency([FromRoute] int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
+            string alertType = "success";
             var competency = await _context.Competencies.SingleOrDefaultAsync(m => m.CompetencyId == id);
             if (competency == null)
             {
                 return NotFound();
             }
+            try
+            {
+                // _context.Competencies.Remove(competency);
+                // await _context.SaveChangesAsync();
+                competency.DeletedAt = DateTime.Now;
+                _context.SaveChanges();
+                var responseObject = new
+                {
+                    AlertType = alertType,
+                    Messages = "Success"
+                };
 
-            _context.Competencies.Remove(competency);
-            await _context.SaveChangesAsync();
+                return new OkObjectResult(responseObject);
+            }
+            catch (Exception exceptionObject)
+            {
+                object httpFailRequestResultMessage = new { Message = "Unable to Process" };
+                //Return a bad http response message to the client
+                return BadRequest(httpFailRequestResultMessage);
+            }
 
-            return Ok(competency);
+
+        }
+        [HttpDelete("DeleteCategory/{id}")]
+        public async Task<IActionResult> DeleteCategory([FromRoute] int id)
+        {
+            string alertType = "success";
+            var competency = await _context.Competencies.SingleOrDefaultAsync(m => m.CompetencyId == id);
+            if (competency == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                // _context.Competencies.Remove(competency);
+                // await _context.SaveChangesAsync();
+                competency.DeletedAt = DateTime.Now;
+                _context.SaveChanges();
+                var responseObject = new
+                {
+                    AlertType = alertType,
+                    Messages = "Success"
+                };
+
+                return new OkObjectResult(responseObject);
+            }
+            catch (Exception exceptionObject)
+            {
+                object httpFailRequestResultMessage = new { Message = "Unable to Process" };
+                //Return a bad http response message to the client
+                return BadRequest(httpFailRequestResultMessage);
+            }
+
+
         }
 
         private bool CompetencyExists(int id)
