@@ -50,14 +50,14 @@
                     <div class="col-md-10 col-sm-10 col-xs-12">
                         <div class="form-group">
                             <label class="control-label col-sm-8 requiredField" for="softskill1">(a) Areas you have done well.</label>
-                            <textarea class="form-control" rows="5" id="softskilldonewell" maxlength="200"></textarea>
+                            <textarea class="form-control" rows="5" id="softskilldonewell" maxlength="500"></textarea>
                             <small class="form-text text-muted pull-right" id="wordcount1"></small>
                         </div>
                     </div>
                     <div class="col-md-10 col-sm-10 col-xs-12">
                         <div class="form-group">
                             <label class="control-label col-sm-8 requiredField" for="softskill2">(b) Areas you would like to improve.</label>
-                            <textarea class="form-control" rows="5" id="softskillimprove" maxlength="200"></textarea>
+                            <textarea class="form-control" rows="5" id="softskillimprove" maxlength="500"></textarea>
                             <small class="form-text text-muted pull-right" id="wordcount2"></small>
                         </div>
                     </div>
@@ -75,21 +75,21 @@
                         <div class="col-md-10 col-sm-10 col-xs-12">
                             <div class="form-group">
                                 <label class="control-label col-sm-8 requiredField" for="hardskill1">(a) How you have applied what you have learnt in school and workplace</label>
-                                <textarea class="form-control" rows="5" id="hardskillapply" maxlength="200"></textarea>
+                                <textarea class="form-control" rows="5" id="hardskillapply" maxlength="500"></textarea>
                                 <small class="form-text text-muted pull-right" id="wordcount3"></small>
                             </div>
                         </div>
                         <div class="col-md-10 col-sm-10 col-xs-12">
                             <div class="form-group">
                                 <label class="control-label col-sm-8 requiredField" for="hardskill2">(b) Areas you have done well.</label>
-                                <textarea class="form-control" rows="5" id="hardskilldonewell" maxlength="200"></textarea>
+                                <textarea class="form-control" rows="5" id="hardskilldonewell" maxlength="500"></textarea>
                                 <small class="form-text text-muted pull-right" id="wordcount4"></small>
                             </div>
                         </div>
                         <div class="col-md-10 col-sm-10 col-xs-12">
                             <div class="form-group ">
                                 <label class="control-label col-sm-8 requiredField" for="hardskillimprove">(c) Areas you would like to improve.</label>
-                                <textarea class="form-control" rows="5" id="hardskillimprove" maxlength="200"></textarea>
+                                <textarea class="form-control" rows="5" id="hardskillimprove" maxlength="500"></textarea>
                                 <small class="form-text text-muted pull-right" id="wordcount5"></small>
                             </div>
                         </div>
@@ -116,13 +116,38 @@
 <script>
 
     var monthRecordId = null;
-    var text_max = 200;
+    var text_max = 500;
 
     $('#wordcount1').html(text_max + ' characters remaining');
     $('#wordcount2').html(text_max + ' characters remaining');
     $('#wordcount3').html(text_max + ' characters remaining');
     $('#wordcount4').html(text_max + ' characters remaining');
     $('#wordcount5').html(text_max + ' characters remaining');
+
+    $.ajax({
+        url: '/api/month_record/Latest',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            console.dir(data);
+            $('#softskilldonewell').val(data.SoftSkillsCompetencyDoneWell);
+            $('#softskillimprove').val(data.SoftSkillsCompetencyImprove);
+            $('#hardskillapply').val(data.TechnicalCompetencyApplied);
+            $('#hardskilldonewell').val(data.TechnicalCompetencyDoneWell);
+            $('#hardskillimprove').val(data.TechnicalCompetencyImprove);
+            monthRecordId = data.MonthId;
+            LoadCount($('#softskilldonewell').val().length, $('#wordcount1'));
+            LoadCount($('#softskillimprove').val().length, $('#wordcount2'));
+            LoadCount($('#hardskillapply').val().length, $('#wordcount3'));
+            LoadCount($('#hardskilldonewell').val().length, $('#wordcount4'));
+            LoadCount($('#hardskillimprove').val().length, $('#wordcount5'));
+        }
+    });
+
+    function LoadCount(text_length, output) {
+        var text_remaining = text_max - text_length;
+        output.html(text_remaining + ' characters remaining');
+    }
 
     $('#softskilldonewell').keyup(function () {
         var text_length = $('#softskilldonewell').val().length;
@@ -159,21 +184,6 @@
         $('#wordcount5').html(text_remaining + ' characters remaining');
     });
 
-    $.ajax({
-        url: '/api/month_record/Latest',
-        method: 'GET',
-        dataType: 'json',
-        success: function (data) {
-            console.dir(data);
-            $('#softskilldonewell').val(data.SoftSkillsCompetencyDoneWell);
-            $('#softskillimprove').val(data.SoftSkillsCompetencyImprove);
-            $('#hardskillapply').val(data.TechnicalCompetencyApplied);
-            $('#hardskilldonewell').val(data.TechnicalCompetencyDoneWell);
-            $('#hardskillimprove').val(data.TechnicalCompetencyImprove);
-            monthRecordId = data.MonthId;
-        }
-    });
-
     $('#btnSaveReflection').click(function () {
         if (monthRecordId != null) {
             var softskilldonewell = "" + $('#softskilldonewell').val();
@@ -182,34 +192,44 @@
             var hardskilldonewell = "" + $('#hardskilldonewell').val();
             var hardskillimprove = "" + $('#hardskillimprove').val();
 
-            var webFormData = new WebFormData(softskilldonewell, softskillimprove, hardskillapply, hardskilldonewell, hardskillimprove);
-            console.dir(webFormData);
+            if (softskilldonewell && softskillimprove && hardskillapply && hardskilldonewell && hardskillimprove) {
+                var webFormData = new WebFormData(softskilldonewell, softskillimprove, hardskillapply, hardskilldonewell, hardskillimprove);
+                console.dir(webFormData);
 
-            $.ajax({
-                url: '/api/month_record/UpdateReflection/' + monthRecordId,
-                method: 'PUT',
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                cache: false,
-                data: "'" + JSON.stringify(webFormData) + "'",
-                success: function (data) {
-                    swal({
-                        type: 'success',
-                        title: 'Saved!',
-                        text: data.Message
-                    }).then(
-                        function () {
-                            window.location.reload();
+                $.ajax({
+                    url: '/api/month_record/UpdateReflection/' + monthRecordId,
+                    method: 'PUT',
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    cache: false,
+                    data: "'" + JSON.stringify(webFormData) + "'",
+                    success: function (data) {
+                        swal({
+                            type: 'success',
+                            title: 'Saved!',
+                            text: data.Message
+                        }).then(
+                            function () {
+                                window.location.reload();
+                            });
+                    },
+                    error: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            text: data.Message
                         });
-                },
-                error: function (data) {
-                    swal({
-                        type: 'error',
-                        title: 'Error',
-                        text: data.Message
-                    });
-                }
-            });
+                    }
+                });
+            } else {
+                swal(
+                    'Oops...',
+                    'Please answer all of the questions for soft and technical skills, and do not leave it blank!',
+                    'error'
+                )
+            }
+
+            
         }
     })
 

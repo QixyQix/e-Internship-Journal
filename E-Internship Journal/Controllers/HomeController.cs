@@ -445,5 +445,10 @@ namespace E_Internship_Journal.Controllers
         {
             return View("~/Views/Home/Admin/Edit_Course.cshtml");
         }
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult GradingLock()
+        {
+            return View("~/Views/Home/Admin/Grading_Lock.cshtml");
+        }
     }
 }

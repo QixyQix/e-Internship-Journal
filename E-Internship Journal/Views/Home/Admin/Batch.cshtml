@@ -156,6 +156,8 @@
     }
 
     function hideFilter1() {
+        $("#batch_dataTable thead input").val("");
+        $("#batch_dataTable thead input").change();
         $('#batch_dataTable thead tr#filterrow').toggle();
     }
 
