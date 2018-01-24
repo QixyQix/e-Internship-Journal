@@ -33,7 +33,7 @@
                                 <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/ViewCourse'">
                                     Back
                                 </button>
-                                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                                <button class="btn btn-primary pull-right" name="submit" type="submit" id="btnSave">
                                     Update
                                 </button>
                             </div>
@@ -46,3 +46,85 @@
         </div>
     </section>
 </div>
+
+<script>
+    var courseId = getCookie("selectedCourse");
+
+    if (courseId != null) { 
+        $.ajax({
+            url: '/Api/Courses/' + courseId,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                console.dir(data);
+                $('#coursecode').val(data.CourseCode);
+                $('#coursename').val(data.CourseName);
+            },
+            fail: function (data) {
+                alert(data.Message);
+            }
+        });
+
+        $('#btnSave').click(function () { 
+            var webFormData = new WebFormData($('#coursecode').val(), $('#coursename').val());
+            console.dir(webFormData);
+
+            $.ajax({
+                url: '/api/Courses/UpdateOneCourse/' + courseId,
+                method: 'PUT',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                cache: false,
+                data: "'" + JSON.stringify(webFormData) + "'",
+                success: function (data) {
+                    swal({
+                        type: 'success',
+                        title: 'Saved!',
+                        text: data.Message
+                    }).then(
+                        function () {
+                            window.location.reload();
+                        });
+                },
+                error: function (data) {
+                    swal({
+                        type: 'error',
+                        title: 'Error',
+                        text: data.Message
+                    });
+                }
+            });
+        });
+    }
+
+    function WebFormData(courseCode, courseName) { 
+        this.CourseCode = courseCode;
+        this.CourseName = courseName;
+    }
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+    function setCookie(inName, inValue) {
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };
+</script>
