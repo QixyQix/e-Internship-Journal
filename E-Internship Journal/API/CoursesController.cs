@@ -257,12 +257,12 @@ namespace E_Internship_Journal.API
         [HttpDelete("{id}")]
         public IActionResult DeleteCourse([FromRoute] int id)
         {
-            var course = _context.Courses.Include(c => c.Competencies).Include(c => c.Batches).SingleOrDefault(c => c.CourseId == id);
+            var course = _context.Courses.Include(c => c.CompetencyTitle).Include(c => c.Batches).SingleOrDefault(c => c.CourseId == id);
             if (course == null)
             {
                 return NotFound();
             }
-            else if (course.Competencies.Count() > 0 || course.Batches.Count() > 0)
+            else if (course.CompetencyTitle.Count() > 0 || course.Batches.Count() > 0)
             {
                 return new OkObjectResult(new { Message = "Unable to delete course - This course is attached to competencies and or batches", Title = "Error", AlertType = "error" });
             }
@@ -287,12 +287,12 @@ namespace E_Internship_Journal.API
 
                     int id = Int32.Parse(idstr.ToString());
 
-                    var course = _context.Courses.Include(c => c.Competencies).Include(c => c.Batches).SingleOrDefault(c => c.CourseId == id);
+                    var course = _context.Courses.Include(c => c.CompetencyTitle).Include(c => c.Batches).SingleOrDefault(c => c.CourseId == id);
                     if (course == null)
                     {
                         return NotFound();
                     }
-                    else if (course.Competencies.Count() > 0 || course.Batches.Count() > 0)
+                    else if (course.CompetencyTitle.Count() > 0 || course.Batches.Count() > 0)
                     {
                         if (messageList.Count < 1)
                             messageList.Add("Action completed with the following errors:");
