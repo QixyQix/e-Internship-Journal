@@ -300,10 +300,10 @@ namespace E_Internship_Journal.Controllers
         }
 
         //SLO
-        //public IActionResult Manage_Competency()
-        //{
-        //    return View("~/Views/Home/SLO/edit_competency.cshtml");
-        //}
+        public IActionResult Edit_Competency()
+        {
+            return View("~/Views/Home/SLO/edit_competency.cshtml");
+        }
         public IActionResult Manage_Competency()
         {
             return View("~/Views/Home/SLO/manage_competency.cshtml");
@@ -444,6 +444,11 @@ namespace E_Internship_Journal.Controllers
         public IActionResult EditCourse()
         {
             return View("~/Views/Home/Admin/Edit_Course.cshtml");
+        }
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult GradingLock()
+        {
+            return View("~/Views/Home/Admin/Grading_Lock.cshtml");
         }
     }
 }

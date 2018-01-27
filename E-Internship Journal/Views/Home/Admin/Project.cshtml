@@ -163,6 +163,8 @@
        }
 
        function hideFilter1() {
+           $("#project_dataTable thead input").val("");
+           $("#project_dataTable thead input").change();
            $('#project_dataTable thead tr#filterrow').toggle();
        }
 

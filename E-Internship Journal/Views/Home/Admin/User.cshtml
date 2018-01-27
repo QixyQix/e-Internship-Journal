@@ -291,9 +291,13 @@
     }
 
     function hideFilter1() {
+        $("#act_dataTable thead input").val("");
+        $("#act_dataTable thead input").change();
         $('#act_dataTable thead tr#filterrow').toggle();
     }
     function hideFilter2() {
+        $("#deact_dataTable thead input").val("");
+        $("#deact_dataTable thead input").change();
         $('#deact_dataTable thead tr#filterrow').toggle();
     }
 
