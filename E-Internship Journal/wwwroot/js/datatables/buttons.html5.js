@@ -960,7 +960,7 @@ DataTable.ext.buttons.csvHtml5 = {
 
 	fieldSeparator: ',',
 
-	fieldBoundary: '"',
+	fieldBoundary: '',
 
 	escapeChar: '"',
 
@@ -1142,12 +1142,73 @@ DataTable.ext.buttons.excelHtml5 = {
 			addRow( [exportInfo.messageTop], rowPos );
 			mergeCells( rowPos, data.header.length-1 );
 		}
+        var _fnGetHeaders = function (dt) {
+            var thRows = $(dt.header()[0]).children();
+            var numRows = thRows.length;
+            var matrix = [];
 
+            // Iterate over each row of the header and add information to matrix.
+            for (var rowIdx = 0; rowIdx < numRows; rowIdx++) {
+                var $row = $(thRows[rowIdx]);
+
+                // Iterate over actual columns specified in this row.
+                //console.dir($row.children("th.export"));
+                var $ths = $row.children("th.export");
+                for (var colIdx = 0; colIdx < $ths.length; colIdx++) {
+                    var $th = $($ths.get(colIdx));
+                    var colspan = $th.attr("colspan") || 1;
+                    var rowspan = $th.attr("rowspan") || 1;
+                    var colCount = 0;
+
+                    // ----- add this cell's title to the matrix
+                    if (matrix[rowIdx] === undefined) {
+                        matrix[rowIdx] = [];  // create array for this row
+                    }
+                    // find 1st empty cell
+                    for (var j = 0; j < (matrix[rowIdx]).length; j++ , colCount++) {
+                        if (matrix[rowIdx][j] === "PLACEHOLDER") {
+                            break;
+                        }
+                    }
+                    var myColCount = colCount;
+                    matrix[rowIdx][colCount++] = $th.text();
+
+                    // ----- If title cell has colspan, add empty titles for extra cell width.
+                    for (var j = 1; j < colspan; j++) {
+                        matrix[rowIdx][colCount++] = "";
+                    }
+
+                    // ----- If title cell has rowspan, add empty titles for extra cell height.
+                    for (var i = 1; i < rowspan; i++) {
+                        var thisRow = rowIdx + i;
+                        if (matrix[thisRow] === undefined) {
+                            matrix[thisRow] = [];
+                        }
+                        // First add placeholder text for any previous columns.                 
+                        for (var j = (matrix[thisRow]).length; j < myColCount; j++) {
+                            matrix[thisRow][j] = "PLACEHOLDER";
+                        }
+                        for (var j = 0; j < colspan; j++) {  // and empty for my columns
+                            matrix[thisRow][myColCount + j] = "";
+                        }
+                    }
+                }
+            }
+
+            return matrix;
+        };
 		// Table itself
-		if ( config.header ) {
-			addRow( data.header, rowPos );
-			$('row:last c', rels).attr( 's', '2' ); // bold
-		}
+        if (config.header) {
+            /* ----- BEGIN changed Code ----- */
+            var headerMatrix = _fnGetHeaders(dt);
+            for (var rowIdx = 0; rowIdx < headerMatrix.length; rowIdx++) {
+                addRow(headerMatrix[rowIdx], rowPos);
+            }
+            /* ----- OLD Code that is replaced: ----- */
+            //addRow( data.header, rowPos );
+            /* ----- END changed Code ----- */
+            $('row c', rels).attr('s', '2'); // bold
+        }
 
 		for ( var n=0, ie=data.body.length ; n<ie ; n++ ) {
 			addRow( data.body[n], rowPos );
@@ -1378,7 +1439,6 @@ DataTable.ext.buttons.pdfHtml5 = {
 	header: true,
 
 	footer: false,
-
 	messageTop: '*',
 
 	messageBottom: '*',

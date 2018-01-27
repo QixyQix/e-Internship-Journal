@@ -167,7 +167,6 @@
                 <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
             </div>
         </div>
-    </div>
 </div>
 <script>
     $(document).ready(function () {
@@ -272,6 +271,76 @@
             $('#loModal').modal('hide');
         });//End of button submit for popup
 
+$(function () {
+
+            $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
+                preventSubmit: true,
+                submitSuccess: function ($form, event) {
+                    event.preventDefault();     // will not trigger the default submission in favor of the ajax function
+                    var collectedStudentId = $('#studentId').val();
+                    var colectedStudentName = $('#studentName').val();
+                    var collectedStudentNumber = $('#mobileNo').val();
+                    var collectedStudentEmailAddress = $('#email').val();
+                    var collectedProjectId = $('#selectproject').attr('value');
+                    var collectedLO = $('#selectlo').attr('value');
+                    var collectedAllowance = $('#allowance').val();
+                    var collectedDesignation = $('#designation').val();
+
+                    var webFormData = new WebFormData(collectedStudentId, colectedStudentName, collectedStudentNumber, collectedStudentEmailAddress, collectedProjectId,
+                        collectedLO, collectedAllowance, collectedDesignation);
+
+                    $.ajax({
+                        url: '/Api/UserBatches/SaveNewStudentRecord/' + sessionStorage.getItem('selected'),
+                        method: 'PUT',
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        data: "'" + JSON.stringify(webFormData) + "'",
+                        success: function (data, status, jqXHR) {
+                            var title = 'Success';
+                            if (data.AlertType == 'error') {
+                                title = 'Error';
+
+                            } else if (data.AlertType == 'warning') {
+                                title = 'Warning';
+                            }
+                            swal({
+                                type: data.AlertType,
+                                title: title,
+                                text: data.Messages
+                            }).then(
+                                function () {
+                                    title == 'Error' ? null : window.location.reload();
+                                });
+                        },//End of success
+                        error: function (data) {
+                            swal({
+                                type: 'error',
+                                title: 'Error',
+                                text: data.Message
+                            });
+                        }//End of error
+                    });//End of ajax call
+                },
+                submitError: function ($form, event, errors) {
+
+                }
+
+            });//End of jqBootstrapValidatio
+
+        });//end of function
+
+        function WebFormData(inStudentId, inStudentName, inStudentNumber, inStudentEmail, inProjectId, inLO, inAllowance, inDesignation) {
+
+            this.StudentId = inStudentId;
+            this.StudentName = inStudentName;
+            this.StudentNumber = inStudentNumber;
+            this.StudentEmail = inStudentEmail;
+            this.ProjectId = inProjectId;
+            this.LO = inLO;
+            this.Allowance = inAllowance;
+            this.Designation = inDesignation;
+        }
 
     });//End of document ready.
 

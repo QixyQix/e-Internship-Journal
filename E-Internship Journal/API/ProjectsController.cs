@@ -238,27 +238,6 @@ namespace E_Internship_Journal.API
                 int companyId = Convert.ToInt32(projectNewInput.Company.Value);
                 var existingProject = _context.Projects.Where(pr => pr.CompanyID == companyId).ToList();
                 var checkError = false;
-                //foreach (var oneExistingProject in existingProject)
-                //{
-                //    if (oneExistingProject.ProjectName.Equals(projectNewInput.ProjectName.Value, StringComparison.OrdinalIgnoreCase))
-                //    {
-                //        messageList = "Duplicate Project in the same company";
-                //        alertType = "error";
-                //        checkError = true;
-                //        continue;
-                //    }
-                //}
-                //if (checkError == true)
-                //{
-                //    var responseObject = new
-                //    {
-                //        AlertType = alertType,
-                //        Messages = messageList
-                //    };
-
-                //    return new OkObjectResult(responseObject);
-                //}
-
 
                 //Check if supervisor acount exist
                 if (checkSupervisorExist != null)
@@ -326,7 +305,9 @@ namespace E_Internship_Journal.API
 
                     }
                     //Check if Supervisor name & Phone Number matches with existing record in the DB
-                    if (checkSupervisorExist.FullName.Equals(projectNewInput.SupervisorName.Value, StringComparison.OrdinalIgnoreCase) && (checkSupervisorExist.PhoneNumber.Equals(projectNewInput.SupervisorNumber.Value)))
+                    //if (checkSupervisorExist.FullName.Equals(projectNewInput.SupervisorName.Value, StringComparison.OrdinalIgnoreCase) && (checkSupervisorExist.PhoneNumber.Equals(projectNewInput.SupervisorNumber.Value)))
+                    //{
+                    if (projectNewInput.SupervisorName.Value.Equals(checkSupervisorExist.FullName, StringComparison.OrdinalIgnoreCase) && (projectNewInput.SupervisorNumber.Value.Equals(checkSupervisorExist.PhoneNumber)))
                     {
                         //Do nothing
                         messageList = "Saved Project";
@@ -424,26 +405,27 @@ namespace E_Internship_Journal.API
                         projectRecord.CompanyID = Int32.Parse(projectNewInput.Company.Value);
                         projectRecord.SupervisorId = newSupervisorUser.Id;
 
-                        _context.SaveChanges();
-                    }
-                    var repeatPinGeneration = true;
-                    do
-                    {
-                        var registationPin = generateRandomString(50);
-                        if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
+                        //_context.SaveChanges();
+                        var repeatPinGeneration = true;
+                        do
                         {
-                            //Create new registration pin
-                            var newRegistrationPin = new RegistrationPin
+                            var registationPin = generateRandomString(50);
+                            if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
                             {
-                                User = newSupervisorUser,
-                                RegistrationPinId = generateRandomString(50)
-                            };
-                            _context.RegistrationPins.Add(newRegistrationPin);
-                            repeatPinGeneration = false;
-                        }
-                    } while (repeatPinGeneration);
+                                //Create new registration pin
+                                var newRegistrationPin = new RegistrationPin
+                                {
+                                    User = newSupervisorUser,
+                                    RegistrationPinId = generateRandomString(50)
+                                };
+                                _context.RegistrationPins.Add(newRegistrationPin);
+                                repeatPinGeneration = false;
+                            }
+                        } while (repeatPinGeneration);
 
-                    await _context.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
+                    }
+                 
 
                     messageList = "Saved Project & Created Supervisor Account";
                     alertType = "success";
