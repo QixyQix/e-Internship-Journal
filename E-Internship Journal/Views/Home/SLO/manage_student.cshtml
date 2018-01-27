@@ -136,27 +136,76 @@
 
 <style>
 
-@@media only screen and (max-width: 768px) {
-	.Allow, tr td:nth-child(10)		{ display:none; visibility:hidden; }
-}
+    @@media only screen and (max-width: 768px) {
+        .Allow, tr td:nth-child(10) {
+            display: none;
+            visibility: hidden;
+        }
+    }
 
-@@media only screen and (max-width: 420px) {
-	.Allow, tr td:nth-child(10)	{ display:none; visibility:hidden; }
-	.Des, tr td:nth-child(9)			{ display:none; visibility:hidden; }
-	.Comp, tr td:nth-child(8)			{ display:none; visibility:hidden; }
-	.Proj, tr td:nth-child(7)		{ display:none; visibility:hidden; }
-	.E_Add, tr td:nth-child(5)			{ display:none; visibility:hidden; }
-	.M_NO, tr td:nth-child(4)		{ display:none; visibility:hidden; }
-}
+    @@media only screen and (max-width: 420px) {
+        .Allow, tr td:nth-child(10) {
+            display: none;
+            visibility: hidden;
+        }
 
-@@media only screen and (max-width: 320px) {
-	.Allow, tr td:nth-child(10)	{ display:none; visibility:hidden; }
-	.Des, tr td:nth-child(9)			{ display:none; visibility:hidden; }
-	.Comp, tr td:nth-child(8)			{ display:none; visibility:hidden; }
-	.Proj, tr td:nth-child(7)		{ display:none; visibility:hidden; }
-	.E_Add, tr td:nth-child(5)			{ display:none; visibility:hidden; }
-	.M_NO, tr td:nth-child(4)		{ display:none; visibility:hidden; }
-}
+        .Des, tr td:nth-child(9) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .Comp, tr td:nth-child(8) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .Proj, tr td:nth-child(7) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .E_Add, tr td:nth-child(5) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .M_NO, tr td:nth-child(4) {
+            display: none;
+            visibility: hidden;
+        }
+    }
+
+    @@media only screen and (max-width: 320px) {
+        .Allow, tr td:nth-child(10) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .Des, tr td:nth-child(9) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .Comp, tr td:nth-child(8) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .Proj, tr td:nth-child(7) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .E_Add, tr td:nth-child(5) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .M_NO, tr td:nth-child(4) {
+            display: none;
+            visibility: hidden;
+        }
+    }
 </style>
 
 <script>
@@ -210,12 +259,34 @@
             confirmButtonText: 'Yes, delete it!'
         }).then(function (result) {
             if (result.value) {
-                swal(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
-            }
+                var checkedStudent = [];
+                $("#student_dataTable tbody input[type='checkbox']:checked").each(function () {
+                    checkedStudent.push($(this).val());
+                });
+                $.ajax({
+                    url: '/Api/UserBatches/DeleteStudents/bulk/?checkedStudent=' + checkedStudent + '&selectedBatch=' + $('#selectBatch').val(),
+                    method: 'DELETE',
+                    success: function (data, status, jqXHR) {
+                        var title = data.AlertType == 'warning' ? 'Records displayed below not removed ' : 'Selected Records removed successfully!';
+
+                        swal({
+                            type: data.AlertType,
+                            title: title,
+                            html: data.Messages.join('<br>')
+                            //text: data.Message
+                        }).then(function () {
+                            window.location.reload();
+                        })
+                    },//End of success
+                    error: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            text: data.Message
+                        });
+                    }//end of error
+                });//End of ajax call
+            }//end of If statement
         }).catch(swal.noop);
     }
 
@@ -228,19 +299,93 @@
     }
     $(document).ready(function () {
 
+
         for (i = 0; i < sessionStorage.length; i++) {
-            $batchInputElement = $('#selectBatch');
-            $optionElement = $('<option>').text(sessionStorage.key(i)).attr('value', sessionStorage.getItem(sessionStorage.key(i)));
-            //$optionElement = $('<option>').text(Object.keys(sessionStorage.key[i]));
-            $batchInputElement.append($optionElement);
+            if (sessionStorage.key(i) != 'selected' && sessionStorage.key(i) != 'editStudent') {
+                $batchInputElement = $('#selectBatch');
+                $optionElement = $('<option>').text(sessionStorage.key(i)).attr('value', sessionStorage.getItem(sessionStorage.key(i)));
+                //$optionElement = $('<option>').text(Object.keys(sessionStorage.key[i]));
+                $batchInputElement.append($optionElement);
             // console.log(localStorage.getItem(localStorage.key(i)));
+            }
+
         }
-        var selectedBatch = $('#selectBatch').val();
+     
+        var selectedBatch = sessionStorage.getItem('selected');
+        $('#selectBatch').val(selectedBatch);
+        loadData(selectedBatch);
+        $('#selectBatch').on('change', function (e) {
+            sessionStorage.setItem('selected', $(this).val());
+            loadData($(this).val());
+            hideFilter1();
+        });
+        //Handle click for bulk add
+
+        $('#submitcsv').on('click', function (e) {
+            var fileUpload = $("#csv_upload").get(0);
+            var files = fileUpload.files;
+            var data = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                data.append(files[i].name, files[i]);
+            }
+            //                < form asp- action="EnrollStudent"
+            //            asp - route - id="1"
+            //            asp - controller="Enrollment"
+            //            method = "post"
+            //            enctype = "multipart/form-data" >
+            //                <input type="file" name="files" multiple />
+            //                <input type="submit" value="Upload Selected File" />
+            //</form >
+            //$('#csv_form').attr('action', "/api/enroll/EnrollStudent/" + selectedBatch);
+            $saveStudentHandler = jQuery.ajax({
+                method: 'post',
+                url: '/API/Enroll/EnrollStudent/' + sessionStorage.getItem('selected'),
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: data,
+            });
+            $saveStudentHandler.done(function (data, textStatus, jqXHR) {
+                //data.Message;
+                swal({
+                    type: data.AlertType,
+                    title: 'You did it!',
+                    html: data.Messages.join('<br>')
+                }).then(
+                    function () {
+                        data.AlertType == 'error' ? null : window.location.reload();
+                    });
+            });
+            $saveStudentHandler.fail(function (data, textStatus, jqXHR) {
+                swal({
+                    type: 'error',
+                    title: 'Oops!',
+                    text: data.responseJSON.Message
+                });
+            });
+
+        });
+
+    });//End of document ready
+    function loadData(inId) {
+        $.ajax({
+            url: '/Api/Batches/getBatchStudents/' + inId,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                loadDataTable(data);
+            }//End of success
+        });//End of Ajax
+    }
+    function loadDataTable(inData) {
+
+
 
         // Array holding selected row IDs
         var rows_selected = [];
         var table = $('#student_dataTable').DataTable({
             bSortable: false,
+            destroy: true,
             //'fnDrawCallback': function (oSettings) {
             //    $('.dataTables_filter').(function () {
             //        $(this).append('<button class="btn btn-default mr-xs pull-right" type="button">Button');
@@ -248,10 +393,7 @@
             //},
             dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-            ajax: {
-                url: '/Api/Batches/getBatchStudents/' + selectedBatch,
-                dataSrc: ''
-            },
+            data: inData,
             columnDefs: [{
                 'targets': 0,
                 'searchable': false,
@@ -259,7 +401,7 @@
                 'width': '1%',
                 'className': 'dt-body-center',
                 'render': function (data, type, full, meta) {
-                    return '<input type="checkbox">';
+                    return '<input type="checkbox" value="' + data.StudentEmail + '">';
                 }
             }],
             select: {
@@ -286,12 +428,12 @@
                 { data: "LOName" },
                 { data: "ProjectName" },
                 { data: "CompanyName" },
-                { data: null },
-                { data: null },
+                { data: 'Designation' },
+                { data: 'Allowance' },
                 {
-                    data: null,
+                    data: "StudentEmail",
                     "bSortable": false,
-                    "mRender": function (o) { return '<div class="d-inline"><button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button></div>' }
+                    "mRender": function (o) { return '<div class="d-inline"><button class="btn btn-sm btn-primary" onClick="editStudent(\'' + o + '\')"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn" onClick="deleteStudent(\'' + o + '\')"><i class="fa fa-trash"></i></button></div>' }
                 }
             ],
             language: {
@@ -305,48 +447,7 @@
             }
         });//End of DataTable
 
-        //Handle click for bulk add
-
-        $('#submitcsv').on('click', function (e) {
-            var fileUpload = $("#csv_upload").get(0);
-            var files = fileUpload.files;
-            var data = new FormData();
-            for (var i = 0; i < files.length; i++) {
-                data.append(files[i].name, files[i]);
-            }
-            //                < form asp- action="EnrollStudent"
-            //            asp - route - id="1"
-            //            asp - controller="Enrollment"
-            //            method = "post"
-            //            enctype = "multipart/form-data" >
-            //                <input type="file" name="files" multiple />
-            //                <input type="submit" value="Upload Selected File" />
-            //</form >
-            //$('#csv_form').attr('action', "/api/enroll/EnrollStudent/" + selectedBatch);
-            $saveStudentHandler = jQuery.ajax({
-                method: 'post',
-                url: '/API/Enroll/EnrollStudent/' + selectedBatch,
-                contentType: false, // Not to set any content header
-                processData: false, // Not to process data
-                data: data,
-            });
-            $saveStudentHandler.done(function (data, textStatus, jqXHR) {
-                //data.Message;
-                swal({
-                    type: data.AlertType,
-                    title: 'You did it!',
-                    html: data.Messages.join('<br>')
-                });
-            });
-            $saveStudentHandler.fail(function (data, textStatus, jqXHR) {
-                swal({
-                    type: 'error',
-                    title: 'Oops!',
-                    text: data.responseJSON.Message
-                });
-            });
-
-        });
+        $('#student_dataTable tbody').off('click');
         // Handle click on checkbox
         $('#student_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
             var $row = $(this).closest('tr');
@@ -442,24 +543,69 @@
         $('#student_dataTable tbody').on('click', 'button.btn-primary', function (e) {
             location.href = 'edit_student';
         });
-        $('#student_dataTable tbody').on('click', 'button.btn-danger', function (e) {
-            swal({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then(function (result) {
-                if (result.value) {
-                    swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
-                }
-            }).catch(swal.noop);
-        });
-    });
+        //$('#student_dataTable tbody').on('click', 'button.btn-danger', function (e) {
+        //    swal({
+        //        title: 'Are you sure?',
+        //        text: "You won't be able to revert this!",
+        //        type: 'warning',
+        //        showCancelButton: true,
+        //        confirmButtonColor: '#3085d6',
+        //        cancelButtonColor: '#d33',
+        //        confirmButtonText: 'Yes, delete it!'
+        //    }).then(function (result) {
+        //        if (result.value) {
+        //            swal(
+        //                'Deleted!',
+        //                'Your file has been deleted.',
+        //                'success'
+        //            )
+        //        }
+        //    }).catch(swal.noop);
+        //});//End of on Click
+
+    }//end of function LoadDataTable()
+    function editStudent(inId) {
+        sessionStorage.setItem("editStudent", inId);
+    };
+    function deleteStudent(inId) {
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (result) {
+            if (result.value) {
+                var checkedStudent = [];
+                $("#student_dataTable tbody input[type='checkbox']:checked").each(function () {
+                    checkedStudent.push($(this).val());
+                });
+                $.ajax({
+                    url: '/Api/UserBatches/DeleteStudents/bulk/?checkedStudent=' + checkedStudent + '&selectedBatch=' + $('#selectBatch').val(),
+                    method: 'DELETE',
+                    success: function (data, status, jqXHR) {
+                        var title = data.AlertType == 'warning' ? 'Records displayed below not removed ' : 'Selected Records removed successfully!';
+
+                        swal({
+                            type: data.AlertType,
+                            title: title,
+                            html: data.Messages.join('<br>')
+                            //text: data.Message
+                        }).then(function () {
+                            window.location.reload();
+                        })
+                    },//End of success
+                    error: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            text: data.Message
+                        });
+                    }//end of error
+                });//End of ajax call
+            }//end of If statement
+        })//end of THen function
+    }//End of function for deleteProject
 </script>

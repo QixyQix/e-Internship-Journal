@@ -473,6 +473,7 @@ namespace E_Internship_Journal.Controllers
             }
             else
             {
+
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
         }

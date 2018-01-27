@@ -41,14 +41,14 @@
                     <thead>
                         <tr>
                             <th width="5%"><input name="select_all" value="1" type="checkbox" /></th>
-                            <th>Code</th>
-                            <th>Course Name</th>
+                            <th class="export">Code</th>
+                            <th class="export">Course Name</th>
                             <th width="10%">Action</th>
                         </tr>
                         <tr id="filterrow">
                             <th></th>
-                            <th>Code</th>
-                            <th>Course Name</th>
+                            <th style="tableHeader">Code</th>
+                            <th style="tableHeader">Course Name</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -166,14 +166,44 @@
                     exportOptions: {
                         columns: [1, 2]
                     },
-                    header: true
+                    customize: function (csv) {
+                        var qwqweq = $('.export');
+                        var array = ["test", "test2"];
+                        var ra = [];
+                        for (i = 0; i < qwqweq.length; i++) {
+                            ra.push(qwqweq[i].textContent);
+
+                         }
+                        //test.for(function (entry) {
+                        //    ra.push(entry.TextContent);
+                        //});
+                        // var $ths = $row.children("th.export");
+                        return ra + csv;
+                    },
+                  // header: true
                 },
                 {
                     extend: 'pdfHtml5',
                     exportOptions: {
-                        columns: [1, 2]
+                        columns: [1, 2],
+                        format: {
+                            header: function (data, column, row) {
+                                var qwqweq = $('.export');
+                                //var ra = [];
+                                //for (i = 0; i < qwqweq.length; i++) {
+                                //    ra.push(qwqweq[i].textContent);
+
+                                //}
+                                //var tt = data.substring(data.indexOf("inline-block") + 15, data.indexOf("<span"));
+                                return qwqweq[column-1].textContent;
+                            }
+                                //return data.substring(data.indexOf("inline-block") + 15, data.indexOf("<span"));
+                        }
+                       // columns: ':visible',
                     },
-                    header: true
+                    
+                
+                    //header: true
                 },
             ],
             ajax: {
@@ -237,7 +267,7 @@
         // Handle click on checkbox
         $('#course_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
             var $row = $(this).closest('tr');
-
+            
             // Get row data
             var data = table.row($row).data();
 

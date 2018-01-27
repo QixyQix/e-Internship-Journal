@@ -147,6 +147,17 @@ namespace E_Internship_Journal.Data
                 .IsRequired();
 
             modelBuilder.Entity<UserBatch>()
+                .Property(userBatches => userBatches.Designation)
+                .HasColumnName("Designation")
+                .HasColumnType("VARCHAR(100)")
+                .IsRequired(false);
+            modelBuilder.Entity<UserBatch>()
+                .Property(userBatches => userBatches.Allowance)
+                .HasColumnName("Allowance")
+                .HasColumnType("VARCHAR(15)")
+                .IsRequired(false);
+
+            modelBuilder.Entity<UserBatch>()
                 .HasOne(userBatches => userBatches.User)
                 .WithMany()
                 .HasForeignKey(userBatches => userBatches.UserId)

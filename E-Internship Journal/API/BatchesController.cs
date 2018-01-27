@@ -121,7 +121,9 @@ namespace E_Internship_Journal.API
                             LOEmail = LOEmail,
                             ProjectId = projectId,
                             ProjectName = projectName,
-                            CompanyName = companyName
+                            CompanyName = companyName,
+                            ub.Designation,
+                            ub.Allowance
                         });
                     }
                     else
@@ -137,7 +139,10 @@ namespace E_Internship_Journal.API
                             LOEmail = "",
                             ProjectId = "",
                             ProjectName = "",
-                            CompanyName = ""
+                            CompanyName = "",
+                            Designation = "",
+                            Allowance = ""
+                            
                         });
                     }
                 }
@@ -404,25 +409,7 @@ namespace E_Internship_Journal.API
         }
 
         // DELETE: api/Batches/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBatch([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var batch = await _context.Batches.SingleOrDefaultAsync(m => m.BatchId == id);
-            if (batch == null)
-            {
-                return NotFound();
-            }
-
-            _context.Batches.Remove(batch);
-            await _context.SaveChangesAsync();
-
-            return Ok(batch);
-        }
+       
 
         private bool BatchExists(int id)
         {

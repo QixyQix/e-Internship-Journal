@@ -97,43 +97,54 @@ namespace E_Internship_Journal.API
         }
 
         // POST: api/Companies
-        [HttpPost("SaveNewCompanyInformation")]
-        public async Task<IActionResult> SaveNewCompanyInformation([FromBody] string value)
+        [HttpPut("SaveNewCompanyRecord")]
+        [Authorize(Roles = "SLO")]
+        public async Task<IActionResult> SaveNewCompanyRecord([FromBody] string value)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            string customMessage = "";
+            string messageList = "";
+            string alertType = "success";
+            var companyNewInputs = JsonConvert.DeserializeObject<dynamic>(value);
 
             try
             {
-                var companyNewInput = JsonConvert.DeserializeObject<dynamic>(value);
-                Company newCompany = new Company
-                {
-                    CompanyName = companyNewInput.CompanyName.Value,
-                    CompanyAddress = companyNewInput.CompanyAddress.Value,
-                    ContactPersonName = companyNewInput.ContactName.Value,
-                    ContactPersonEmail = companyNewInput.ContactEmail.Value,
-                    ContactPersonNumber = companyNewInput.ContactNumber.Value,
-                    ContactPersonFax = ""
-                };
-                _context.Companies.Add(newCompany);
-                await _context.SaveChangesAsync();
 
+                if (companyNewInputs.CompanyId == null)
+                {
+                    //Save new Company
+                    Company newCompany = new Company
+                    {
+                        CompanyName = companyNewInputs.CompanyName.Value,
+                        CompanyAddress = companyNewInputs.CompanyAddress.Value,
+                        ContactPersonName = companyNewInputs.ContactName.Value,
+                        ContactPersonEmail = companyNewInputs.ContactEmail.Value,
+                        ContactPersonNumber = companyNewInputs.ContactNumber.Value,
+                        ContactPersonFax = companyNewInputs.ContactFax.Value
+                    };
+                    _context.Companies.Add(newCompany);
+
+                    messageList = "Saved Company";
+                    alertType = "success";
+                }
+                else
+                {
+
+                }
+
+                await _context.SaveChangesAsync();
+                var responseObject = new
+                {
+                    AlertType = alertType,
+                    Messages = messageList
+                };
+                return new OkObjectResult(responseObject);
             }
             catch (Exception exceptionObject)
             {
-                customMessage = "Unable to save to database";
-                //return 
+                return BadRequest(new
+                {
+                    exceptionObject.Message
+                });
             }
-            var successRequestResultMessage = new
-            {
-                Message = "Saved Course into database"
-            };
-
-            OkObjectResult httpOkResult = new OkObjectResult(successRequestResultMessage);
-            return httpOkResult;
         }
 
         // DELETE: api/Companies/5

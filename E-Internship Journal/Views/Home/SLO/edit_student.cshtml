@@ -192,6 +192,40 @@
     </div>
 </div>
 <script>
+
+    $(document).ready(function () {
+        var studentId = sessionStorage.getItem("editStudent");
+        var selectedBatch = sessionStorage.getItem("selected");
+        $.ajax({
+            url: '/API/UserBatches/GetStudentBatches/?BatchId=' + selectedBatch + '&StudentId=' + studentId,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                $('#studentId').val();
+                $('#studentName').val();
+                $('#mobileNo').val();
+                $('#email').val();
+                $('#selectproject').attr('value');
+                $('#selectlo').attr('value');
+                $('#allowance').val();
+                $('#designation').val();
+
+
+                $('#projectName').val(data.ProjectName);
+                //$('#selectCompany').attr('value');
+                $('#supervisorName').val(data.FullName);
+                $('#mobileNo').val(data.PhoneNumber);
+                $('#email').val(data.Email);
+
+                $('#selectCompany').val(data.CompanyName);// To set display text on input element
+                $('#selectCompany').attr('value', data.CompanyId); // To set company value id to the input element
+
+                $('#companySelect').val(data.CompanyId);
+                $('#txtSelected').val(data.CompanyName);
+            }//End of success
+        });//End of Ajax
+    });//End of document Ready  
     function findProjectModal() {
         $('#projectModal').modal('show');
         //http://www.dyn-web.com/tutorials/forms/select/multi-selected.php
