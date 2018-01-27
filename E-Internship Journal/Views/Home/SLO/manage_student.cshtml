@@ -193,6 +193,8 @@
     }
 
     function hideFilter1() {
+        $("#student_dataTable thead input").val("");
+        $("#student_dataTable thead input").change();
         $('#student_dataTable thead tr#filterrow').toggle();
     }
 

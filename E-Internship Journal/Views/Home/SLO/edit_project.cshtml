@@ -41,7 +41,7 @@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Mobile Number</label>
-                                <input class="form-control" id="mobileNo" type="number" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
+                                <input class="form-control" id="mobileNo" min="0" type="number" onkeydown="return FilterInput(event)" onpaste="handlePaste(event)" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
@@ -88,23 +88,13 @@
                 <div class="col-12">
                     <form>
                         <div class="form-group">
-                            <div class="input-group">
-                                <input class="form-control" placeholder="Search..." id="txtSearch">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-search">
-                                    </i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-
                             <select id="companySelect" size="6" style="width: 100%;"></select>
                         </div>
                         <div class="form-group">
                             <div class="col-12">
                                 <div class="form-inline">
                                     <label>Selected: &nbsp;</label>
-                                    <input class="form-control" value="Convertium" readonly id="txtSelected">
+                                    <input class="form-control" value="" readonly id="txtSelected">
                                 </div>
                             </div>
                         </div>
@@ -156,6 +146,64 @@
         </div>
     </div>
 </div>
+<script>
+     $(document).ready(function () {
+        //  console.dir($('#contactForm input'));
+        //  $('#projectName').jqBootstrapValidation();
+        $.ajax({
+            url: '/api/Companies',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                $('#companySelect').select2();
+                for (i = 0; i < data.length; i++) {
+                    //    $('#companySelect').val(data[i].)
+                    $companyInputElement = $('#companySelect');
+                    $optionElement = $('<option>').text(data[i].CompanyName).attr('value', data[i].CompanyId);
+                    $companyInputElement.append($optionElement);
+                }
+
+            }//End of success
+        });//End of Ajax
+
+        $('#txtSearch').on("keyup", function (e) {
+            console.dir($(this).val());
+            var text = $(this).val();
+            var options = $('#companySelect option');
+            //var options = $('#companySelect').option;
+            for (var i = 0; i < options.length; i++) {
+                var option = options[i];
+                var optionText = option.text;
+                var lowerOptionText = optionText.toLowerCase();
+                var lowerText = text.toLowerCase();
+                var regex = new RegExp("^" + text, "i");
+                var match = optionText.match(regex);
+                var contains = lowerOptionText.indexOf(lowerText) != -1;
+                if (match || contains) {
+
+                    //option.selected = true;
+                    return;
+                }
+                $(this).selectedIndex = 0;
+            }
+        });//End of txtSearch function
+
+        $('#companySelect').on('change', function (e) {
+            $('#txtSelected').val($('#companySelect option:selected').text());
+        });//End of Select Change
+        $('#btnSubmit').on('click', function (e) {
+
+            $('#selectCompany').val($('#companySelect option:selected').text());// To set display text on input element
+            $('#selectCompany').attr('value', ($('#companySelect option:selected').val())); // To set company value id to the input element
+
+            $('#selectCompanyModal').modal('hide');
+            });
+            });
+        function findCompanyModal() {
+        $('#selectCompanyModal').modal('show');
+    }
+</script>
 @*<script>
         $(document).ready(function () {
 
@@ -336,4 +384,4 @@
     function findChoiceModal() {
         $('#selectChoiceModal').modal('show');
     }
-</script>
+</script>*@

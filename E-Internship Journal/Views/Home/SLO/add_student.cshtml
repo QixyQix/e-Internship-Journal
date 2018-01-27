@@ -2,7 +2,7 @@
     ViewData["Title"] = "Add Student Page";
 }
 <div class="container-fluid">
-        <!-- Example DataTables Card-->
+    <!-- Example DataTables Card-->
     <section id="contact">
         <div class="container">
             <h2 class="text-center text-uppercase text-secondary mb-0">Add Student</h2>
@@ -29,7 +29,7 @@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Mobile Number</label>
-                                <input class="form-control" id="mobileNo" type="number" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
+                                <input class="form-control" id="mobileNo" min="0" type="number" onkeydown="return FilterInput(event)" onpaste="handlePaste(event)" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
@@ -54,7 +54,7 @@
                         </div>
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                <label>Project</label>
+                                <label>Liaison Officer</label>
                                 <div class='input-group' id='findlo'>
                                     <input type='text' class="form-control" id="selectlo" placeholder="Liaison Officer" required="required" style="background-color:white" onclick="findLOModal()" data-validation-required-message="Please select a liaison officer." readonly />
                                     <div class="input-group-addon" onclick="findLOModal()" style="background-color:white;border:none;">
@@ -67,20 +67,15 @@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Allowance</label>
-                                <input class="form-control" id="allowance" type="number" placeholder="Allowance" required="required" data-validation-required-message="Please enter allowance.">
+                                <input class="form-control" id="allowance" min="0" type="number" onkeydown="return FilterInput(event)" onpaste="handlePaste(event)" placeholder="Allowance" required="required" data-validation-required-message="Please enter allowance.">
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
-                        <br />
-                        <div class="form-inline">
-                            <label class="col-md-2 control-label">Designation:</label>
-                            <div class="col-sm-3">
-                                <select class="form-control" id="designation">
-                                    <option>Web Designer</option>
-                                    <option>SEO Analyze</option>
-                                    <option>Backend Coder</option>
-                                    <option>Frontend Coder</option>
-                                </select>
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Designation</label>
+                                <input class="form-control" id="designation" type="text" placeholder="Designation" required="required" data-validation-required-message="Please enter designation.">
+                                <p class="help-block text-danger"></p>
                             </div>
                         </div>
                         <br>
@@ -102,105 +97,192 @@
             </div>
         </div>
     </section>
-    </div>
-    <!-- Project Modal -->
-    <div class="modal fade" id="projectModal" tabindex="-1" role="dialog" aria-labelledby="projectModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="projectModalLabel">Project Assigned</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
+</div>
+<!-- Project Modal -->
+<div class="modal fade" id="projectModal" role="dialog" aria-labelledby="projectModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="projectModalLabel">Project Assigned</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
 
-                    <div class="col-12">
-                        <form>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input class="form-control" placeholder="Search...">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-search">
-                                        </i>
-                                    </div>
+                <div class="col-12">
+                    <form>
+                        <div class="form-group">
+                            <select id="projectSelect" size="6" style="width: 100%;"></select>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-12">
+                                <div class="form-inline">
+                                    <label>Selected: &nbsp;</label>
+                                    <input class="form-control col-9" value="" readonly id="txtSelected">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <textarea class="form-control" rows="5">Parliament</textarea>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-12">
-                                    <div class="form-inline">
-                                        <label>Selected: &nbsp;</label>
-                                        <input class="form-control" value="Parliament" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
-                    <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnSubmit">Confirm</button>
+                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
             </div>
         </div>
     </div>
+</div>
 
-    <!-- SLO Modal -->
-    <div class="modal fade" id="loModal" tabindex="-1" role="dialog" aria-labelledby="loModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="loModalLabel">LO Assigned</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
+<!-- LO Modal -->
+<div class="modal fade" id="loModal" tabindex="-1" role="dialog" aria-labelledby="loModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loModalLabel">LO Assigned</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
 
-                    <div class="col-12">
-                        <form>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input class="form-control" placeholder="Search...">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-search">
-                                        </i>
-                                    </div>
+                <div class="col-12">
+                    <form>
+                        <div class="form-group">
+                            <select id="loSelect" size="6" style="width: 100%;"></select>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-12">
+                                <div class="form-inline">
+                                    <label>Selected: &nbsp;</label>
+                                    <input class="form-control col-9" value="" readonly id="txtSelected2">
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <textarea class="form-control" rows="5">Kish Choy</textarea>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-12">
-                                    <div class="form-inline">
-                                        <label>Selected: &nbsp;</label>
-                                        <input class="form-control" value="Kish Choy" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
-                    <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btnSubmit2">Confirm</button>
+                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
             </div>
         </div>
     </div>
-    <script>
-        function findProjectModal() {
-            $('#projectModal').modal('show');
-            //http://www.dyn-web.com/tutorials/forms/select/multi-selected.php
-            //please take a look at this for reference
-        }
-        function findLOModal() {
-            $('#loModal').modal('show');
-            //http://www.dyn-web.com/tutorials/forms/select/multi-selected.php
-            //please take a look at this for reference
-        }
-    </script>
+</div>
+<script>
+    $(document).ready(function () {
+        //  console.dir($('#contactForm input'));
+        //  $('#projectName').jqBootstrapValidation();
+        $.ajax({
+            url: '/api/Projects',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                $('#projectSelect').select2();
+                for (i = 0; i < data.length; i++) {
+                    //    $('#projectSelect').val(data[i].)
+                    $projectInputElement = $('#projectSelect');
+                    $optionElement = $('<option>').text(data[i].ProjectName).attr('value', data[i].ProjectId);
+                    $projectInputElement.append($optionElement);
+                }
+            }//End of success
+        });//End of Ajax
+
+        $('#txtSearch').on("keyup", function (e) {
+            console.dir($(this).val());
+            var text = $(this).val();
+            var options = $('#projectSelect option');
+            //var options = $('#projectSelect').option;
+            for (var i = 0; i < options.length; i++) {
+                var option = options[i];
+                var optionText = option.text;
+                var lowerOptionText = optionText.toLowerCase();
+                var lowerText = text.toLowerCase();
+                var regex = new RegExp("^" + text, "i");
+                var match = optionText.match(regex);
+                var contains = lowerOptionText.indexOf(lowerText) != -1;
+                if (match || contains) {
+
+                    //option.selected = true;
+                    return;
+                }
+                $(this).selectedIndex = 0;
+            }
+        });//End of txtSearch function
+
+        $('#projectSelect').on('change', function (e) {
+            $('#txtSelected').val($('#projectSelect option:selected').text());
+        });//End of Select Change
+        $('#btnSubmit').on('click', function (e) {
+
+            $('#selectproject').val($('#projectSelect option:selected').text());// To set display text on input element
+            $('#selectproject').attr('value', ($('#projectSelect option:selected').val())); // To set project value id to the input element
+
+            $('#projectModal').modal('hide');
+        });//End of button submit for popup
+
+        //LO
+        $.ajax({
+            url: '/api/Accounts/LiaisonOfficers',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                $('#loSelect').select2();
+                for (i = 0; i < data.length; i++) {
+                    //    $('#projectSelect').val(data[i].)
+                    $loInputElement = $('#loSelect');
+                    $optionElement2 = $('<option>').text(data[i].Name).attr('value', data[i].UserId);
+                    $loInputElement.append($optionElement2);
+                }
+            }//End of success
+        });//End of Ajax
+
+        $('#txtSearch2').on("keyup", function (e) {
+            console.dir($(this).val());
+            var text = $(this).val();
+            var options = $('#loSelect option');
+            //var options = $('#projectSelect').option;
+            for (var i = 0; i < options.length; i++) {
+                var option = options[i];
+                var optionText = option.text;
+                var lowerOptionText = optionText.toLowerCase();
+                var lowerText = text.toLowerCase();
+                var regex = new RegExp("^" + text, "i");
+                var match = optionText.match(regex);
+                var contains = lowerOptionText.indexOf(lowerText) != -1;
+                if (match || contains) {
+
+                    //option.selected = true;
+                    return;
+                }
+                $(this).selectedIndex = 0;
+            }
+        });//End of txtSearch function
+
+        $('#loSelect').on('change', function (e) {
+            $('#txtSelected2').val($('#loSelect option:selected').text());
+        });//End of Select Change
+        $('#btnSubmit2').on('click', function (e) {
+
+            $('#selectlo').val($('#loSelect option:selected').text());// To set display text on input element
+            $('#selectlo').attr('value', ($('#loSelect option:selected').val())); // To set project value id to the input element
+
+            $('#loModal').modal('hide');
+        });//End of button submit for popup
+
+
+    });//End of document ready.
+
+    function findProjectModal() {
+        $('#projectModal').modal('show');
+        //http://www.dyn-web.com/tutorials/forms/select/multi-selected.php
+        //please take a look at this for reference
+    }
+    function findLOModal() {
+        $('#loModal').modal('show');
+        //http://www.dyn-web.com/tutorials/forms/select/multi-selected.php
+        //please take a look at this for reference
+    }
+</script>

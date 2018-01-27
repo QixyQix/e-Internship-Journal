@@ -99,6 +99,8 @@
 
 <script>
     function hideFilter1() {
+        $("#grade_dataTable thead input").val("");
+        $("#grade_dataTable thead input").change();
         $('#grade_dataTable thead tr#filterrow').toggle();
     }
 

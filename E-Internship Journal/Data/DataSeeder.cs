@@ -168,7 +168,15 @@ namespace E_Internship_Journal.Data
             {
                 LOUser[i].PasswordHash = ph.HashPassword(LOUser[i], "P@ssw0rd"); //More complex password
                 await userManager.CreateAsync(LOUser[i]);
-                await userManager.AddToRoleAsync(LOUser[i], "LO");
+                if (i == 1)
+                {
+                    await userManager.AddToRoleAsync(LOUser[1], "SLO");
+                    await userManager.AddToRoleAsync(LOUser[1], "LO");
+                }
+                else
+                {
+                    await userManager.AddToRoleAsync(LOUser[i], "LO");
+                }
             }
 
             //SLO

@@ -34,7 +34,7 @@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Mobile Number</label>
-                                <input class="form-control" id="mobileNo" type="number" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
+                                <input class="form-control" id="mobileNo" min="0" type="number" onkeydown="return FilterInput(event)" onpaste="handlePaste(event)" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
@@ -104,22 +104,13 @@
                 <div class="col-12">
                     <form>
                         <div class="form-group">
-                            <div class="input-group">
-                                <input class="form-control" placeholder="Search...">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-search">
-                                    </i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" rows="5" id="batchselection">AY16/17 S2\\\n AY16/17 S1</textarea>
+                            <select id="batchSelect" size="6" style="width: 100%;"></select>
                         </div>
                         <div class="form-group">
                             <div class="col-12">
                                 <div class="form-inline">
                                     <label>Selected: &nbsp;</label>
-                                    <input class="form-control" value="AY16/17 S1" readonly>
+                                    <input class="form-control col-9" value="" readonly id="txtSelected">
                                 </div>
                             </div>
                         </div>
@@ -127,13 +118,66 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
+                <button type="button" class="btn btn-secondary" id="btnSubmit">Confirm</button>
                 <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
             </div>
         </div>
     </div>
 </div>
 <script>
+        $(document).ready(function () {
+        //  console.dir($('#contactForm input'));
+        //  $('#batchName').jqBootstrapValidation();
+        $.ajax({
+            url: '/api/Batches/getAllBatches',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                $('#batchSelect').select2();
+                for (i = 0; i < data.length; i++) {
+                    //    $('#batchSelect').val(data[i].)
+                    $batchInputElement = $('#batchSelect');
+                    $optionElement = $('<option>').text(data[i].BatchName).attr('value', data[i].BatchId);
+                    $batchInputElement.append($optionElement);
+                }
+            }//End of success
+        });//End of Ajax
+
+        $('#txtSearch').on("keyup", function (e) {
+            console.dir($(this).val());
+            var text = $(this).val();
+            var options = $('#batchSelect option');
+            //var options = $('#batchSelect').option;
+            for (var i = 0; i < options.length; i++) {
+                var option = options[i];
+                var optionText = option.text;
+                var lowerOptionText = optionText.toLowerCase();
+                var lowerText = text.toLowerCase();
+                var regex = new RegExp("^" + text, "i");
+                var match = optionText.match(regex);
+                var contains = lowerOptionText.indexOf(lowerText) != -1;
+                if (match || contains) {
+
+                    //option.selected = true;
+                    return;
+                }
+                $(this).selectedIndex = 0;
+            }
+        });//End of txtSearch function
+
+        $('#batchSelect').on('change', function (e) {
+            $('#txtSelected').val($('#batchSelect option:selected').text());
+        });//End of Select Change
+        $('#btnSubmit').on('click', function (e) {
+
+            $('#selectBatch').val($('#batchSelect option:selected').text());// To set display text on input element
+            $('#selectBatch').attr('value', ($('#batchSelect option:selected').val())); // To set batch value id to the input element
+
+            $('#batchModal').modal('hide');
+        });//End of button submit for popup
+            
+    });//End of document ready.
     $(document).ready(function () {
         $('#roleid').multiselect();
     });

@@ -36,7 +36,7 @@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Contact Person's Number</label>
-                                <input class="form-control" id="contactNumber" type="number" placeholder="Contact Person's Number" required="required" data-validation-required-message="Please enter contact person's number.">
+                                <input class="form-control" id="contactNumber" min="0" type="number" onkeydown="return FilterInput(event)" onpaste="handlePaste(event)" placeholder="Contact Person's Number" required="required" data-validation-required-message="Please enter contact person's number.">
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
@@ -50,7 +50,7 @@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Fax</label>
-                                <input class="form-control" id="fax" type="number" placeholder="Fax">
+                                <input class="form-control" id="fax" min="0" type="number" onkeydown="return FilterInput(event)" onpaste="handlePaste(event)" placeholder="Fax">
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>

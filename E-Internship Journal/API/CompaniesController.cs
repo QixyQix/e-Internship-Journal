@@ -25,7 +25,7 @@ namespace E_Internship_Journal.API
 
         // GET: api/Companies
         [HttpGet]
-        [Authorize(Roles = "SLO")]
+        [Authorize(Roles = "SLO,ADMIN")]
         public IActionResult GetCompanies()
         {
             var Companies = _context.Companies
