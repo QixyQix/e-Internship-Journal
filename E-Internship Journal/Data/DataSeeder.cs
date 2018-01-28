@@ -168,7 +168,15 @@ namespace E_Internship_Journal.Data
             {
                 LOUser[i].PasswordHash = ph.HashPassword(LOUser[i], "P@ssw0rd"); //More complex password
                 await userManager.CreateAsync(LOUser[i]);
-                await userManager.AddToRoleAsync(LOUser[i], "LO");
+                if (i == 1)
+                {
+                    await userManager.AddToRoleAsync(LOUser[1], "SLO");
+                    await userManager.AddToRoleAsync(LOUser[1], "LO");
+                }
+                else
+                {
+                    await userManager.AddToRoleAsync(LOUser[i], "LO");
+                }
             }
 
             //SLO
@@ -189,7 +197,7 @@ namespace E_Internship_Journal.Data
             var batchObject = new Batch[]
             {
                 new Batch { BatchName = "AY1718S1", Description = "Academic Year 2017-2018 Semester 1", StartDate = DateTime.ParseExact("14/06/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/09/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[0] },
-                new Batch { BatchName = "AY1718S2", Description = "Academic Year 2017-2018 Semester 2", StartDate = DateTime.ParseExact("30/10/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("24/01/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[0] },
+                new Batch { BatchName = "AY1718S2", Description = "Academic Year 2017-2018 Semester 2", StartDate = DateTime.ParseExact("30/10/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("30/01/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[0] },
                 new Batch { BatchName = "AY1718S1", Description = "Academic Year 2017-2018 Semester 1", StartDate = DateTime.ParseExact("14/06/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/09/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[1] },
                 new Batch { BatchName = "AY1718S2", Description = "Academic Year 2017-2018 Semester 2", StartDate = DateTime.ParseExact("30/10/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("28/01/2018", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[1] },
                 new Batch { BatchName = "AY1718S1", Description = "Academic Year 2017-2018 Semester 1", StartDate = DateTime.ParseExact("14/02/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), EndDate = DateTime.ParseExact("15/08/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture), Course = courseObject[2] },

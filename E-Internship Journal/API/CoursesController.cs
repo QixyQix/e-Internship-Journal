@@ -80,12 +80,12 @@ namespace E_Internship_Journal.API
 
             return new JsonResult(response);
         }
-        
+
         [HttpGet("getAssignedCourse")]
         [Authorize(Roles = "SLO")]
         public IActionResult getAssignedCourse()
         {
-            List<object> courses_List = new List<object>();
+            List<Course> courses_List = new List<Course>();
 
             var courses = _context.UserBatches
                 .Include(b => b.Batch)
@@ -96,11 +96,21 @@ namespace E_Internship_Journal.API
             foreach (var oneCourse in courses)
             {
                 //   List<int> categoryIdList = new List<int>();
-                courses_List.Add(new
+                var courseId = oneCourse.Batch.CourseId;
+                if (courses_List.Any(c=>c.CourseId == oneCourse.Batch.CourseId))
                 {
-                    oneCourse.Batch.Course.CourseId,
-                    oneCourse.Batch.Course.CourseName
-                });
+
+                }
+                else
+                {
+
+                    courses_List.Add(new Course()
+                    {
+                        CourseId = oneCourse.Batch.CourseId,
+                        CourseName = oneCourse.Batch.Course.CourseName
+                    });
+                }
+
             }
 
             return new JsonResult(courses_List);

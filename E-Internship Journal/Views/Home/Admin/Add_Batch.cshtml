@@ -103,22 +103,13 @@
                 <div class="col-12">
                     <form>
                         <div class="form-group">
-                            <div class="input-group">
-                                <input class="form-control" placeholder="Search...">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-search">
-                                    </i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" rows="5" id="task">AY16/17 S2\\\n AY16/17 S1</textarea>
+                            <select id="courseSelect" size="6" style="width: 100%;"></select>
                         </div>
                         <div class="form-group">
                             <div class="col-12">
                                 <div class="form-inline">
                                     <label>Selected: &nbsp;</label>
-                                    <input class="form-control" value="AY16/17 S1" readonly>
+                                    <input class="form-control col-9" value="" readonly id="txtSelected">
                                 </div>
                             </div>
                         </div>
@@ -126,7 +117,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
+                <button type="button" class="btn btn-secondary" id="btnSubmit">Confirm</button>
                 <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
             </div>
         </div>
@@ -148,22 +139,13 @@
                 <div class="col-12">
                     <form>
                         <div class="form-group">
-                            <div class="input-group">
-                                <input class="form-control" placeholder="Search...">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-search">
-                                    </i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" rows="5" id="task">AY16/17 S2\\\n AY16/17 S1</textarea>
+                            <select id="sloSelect" size="6" style="width: 100%;"></select>
                         </div>
                         <div class="form-group">
                             <div class="col-12">
                                 <div class="form-inline">
                                     <label>Selected: &nbsp;</label>
-                                    <input class="form-control" value="AY16/17 S1" readonly>
+                                    <input class="form-control col-9" value="" readonly id="txtSelected2">
                                 </div>
                             </div>
                         </div>
@@ -171,13 +153,118 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
+                <button type="button" class="btn btn-secondary" id="btnSubmit2">Confirm</button>
                 <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
             </div>
         </div>
     </div>
 </div>
 <script>
+        $(document).ready(function () {
+        //  console.dir($('#contactForm input'));
+        //  $('#courseName').jqBootstrapValidation();
+        $.ajax({
+            url: '/api/Courses',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                $('#courseSelect').select2();
+                for (i = 0; i < data.length; i++) {
+                    //    $('#courseSelect').val(data[i].)
+                    $courseInputElement = $('#courseSelect');
+                    $optionElement = $('<option>').text(data[i].CourseName).attr('value', data[i].CourseId);
+                    $courseInputElement.append($optionElement);
+                }
+            }//End of success
+        });//End of Ajax
+
+        $('#txtSearch').on("keyup", function (e) {
+            console.dir($(this).val());
+            var text = $(this).val();
+            var options = $('#courseSelect option');
+            //var options = $('#courseSelect').option;
+            for (var i = 0; i < options.length; i++) {
+                var option = options[i];
+                var optionText = option.text;
+                var lowerOptionText = optionText.toLowerCase();
+                var lowerText = text.toLowerCase();
+                var regex = new RegExp("^" + text, "i");
+                var match = optionText.match(regex);
+                var contains = lowerOptionText.indexOf(lowerText) != -1;
+                if (match || contains) {
+
+                    //option.selected = true;
+                    return;
+                }
+                $(this).selectedIndex = 0;
+            }
+        });//End of txtSearch function
+
+        $('#courseSelect').on('change', function (e) {
+            $('#txtSelected').val($('#courseSelect option:selected').text());
+        });//End of Select Change
+        $('#btnSubmit').on('click', function (e) {
+
+            $('#selectCourse').val($('#courseSelect option:selected').text());// To set display text on input element
+            $('#selectCourse').attr('value', ($('#courseSelect option:selected').val())); // To set course value id to the input element
+
+            $('#courseModal').modal('hide');
+        });//End of button submit for popup
+
+        //SLO
+        $.ajax({
+            url: '/api/Accounts/LiaisonOfficers',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                $('#sloSelect').select2();
+                for (i = 0; i < data.length; i++) {
+                    //    $('#projectSelect').val(data[i].)
+                    $sloInputElement = $('#sloSelect');
+                    $optionElement2 = $('<option>').text(data[i].Name).attr('value', data[i].UserId);
+                    $sloInputElement.append($optionElement2);
+                }
+            }//End of success
+        });//End of Ajax
+
+        $('#txtSearch2').on("keyup", function (e) {
+            console.dir($(this).val());
+            var text = $(this).val();
+            var options = $('#sloSelect option');
+            //var options = $('#projectSelect').option;
+            for (var i = 0; i < options.length; i++) {
+                var option = options[i];
+                var optionText = option.text;
+                var lowerOptionText = optionText.toLowerCase();
+                var lowerText = text.toLowerCase();
+                var regex = new RegExp("^" + text, "i");
+                var match = optionText.match(regex);
+                var contains = lowerOptionText.indexOf(lowerText) != -1;
+                if (match || contains) {
+
+                    //option.selected = true;
+                    return;
+                }
+                $(this).selectedIndex = 0;
+            }
+        });//End of txtSearch function
+
+        $('#sloSelect').on('change', function (e) {
+            $('#txtSelected2').val($('#sloSelect option:selected').text());
+        });//End of Select Change
+        $('#btnSubmit2').on('click', function (e) {
+
+            $('#selectSLO').val($('#sloSelect option:selected').text());// To set display text on input element
+            $('#selectSLO').attr('value', ($('#sloSelect option:selected').val())); // To set project value id to the input element
+
+            $('#sloModal').modal('hide');
+        });//End of button submit for popup
+
+
+    });//End of document ready.
+
     function findCourseModal() {
         $('#courseModal').modal('show');
         //http://www.dyn-web.com/tutorials/forms/select/multi-selected.php

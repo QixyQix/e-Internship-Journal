@@ -16,5 +16,6 @@ namespace E_Internship_Journal.Models
 
         public Boolean IsEnabled { get; set; }
         public string FullName { get; set; }
+        public string StudentId { get; set; }
     }
 }

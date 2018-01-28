@@ -29,28 +29,28 @@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Supervisor's Grading (%)</label>
-                                <input class="form-control" id="supervisor_grading" type="number" placeholder="Supervisor's Grading (%)" style="background-color:white" readonly>
+                                <input class="form-control" id="supervisor_grading" min="0" type="number" onkeydown="return FilterInput(event)" onpaste="handlePaste(event)" placeholder="Supervisor's Grading (%)" style="background-color:white" readonly>
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>LO's Grading (%)</label>
-                                <input class="form-control" id="lo_grading" type="number" placeholder="LO's' Grading (%)" style="background-color:white" readonly>
+                                <input class="form-control" id="lo_grading" min="0" type="number" onkeydown="return FilterInput(event)" onpaste="handlePaste(event)" placeholder="LO's' Grading (%)" style="background-color:white" readonly>
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Final Grading (%)</label>
-                                <input class="form-control" id="final_grading" type="number" placeholder="Final Grading (%)" style="background-color:white">
+                                <input class="form-control" id="final_grading" min="0" type="number" onkeydown="return FilterInput(event)" onpaste="handlePaste(event)" placeholder="Final Grading (%)" style="background-color:white">
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Grade</label>
-                                <input class="form-control" id="grade" type="number" placeholder="Grade" style="background-color:white" readonly>
+                                <input class="form-control" id="grade" min="0" type="number" placeholder="Grade" style="background-color:white" readonly>
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>

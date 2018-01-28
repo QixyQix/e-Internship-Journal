@@ -36,6 +36,7 @@
                     &nbsp;
                 </div>
             </div>
+            <br />
             <div class="table-responsive">
                 <table class="table table-bordered" id="company_dataTable" cellspacing="0">
                     <thead>
@@ -117,28 +118,316 @@
         </div>
     </div>
     &nbsp;
-    </div>
+</div>
 
 <style>
 
-@@media only screen and (max-width: 768px) {
-	.Fax, tr td:nth-child(7)		{ display:none; visibility:hidden; }
-}
+    @@media only screen and (max-width: 768px) {
+        .Fax, tr td:nth-child(7) {
+            display: none;
+            visibility: hidden;
+        }
+    }
 
-@@media only screen and (max-width: 420px) {
-	.Fax, tr td:nth-child(7)	{ display:none; visibility:hidden; }
-	.M_NO, tr td:nth-child(6)	{ display:none; visibility:hidden; }
-	.C_Add, tr td:nth-child(3)			{ display:none; visibility:hidden; }
-}
+    @@media only screen and (max-width: 420px) {
+        .Fax, tr td:nth-child(7) {
+            display: none;
+            visibility: hidden;
+        }
 
-@@media only screen and (max-width: 320px) {
-	.Fax, tr td:nth-child(7)	{ display:none; visibility:hidden; }
-	.M_NO, tr td:nth-child(6)	{ display:none; visibility:hidden; }
-	.C_Add, tr td:nth-child(3)			{ display:none; visibility:hidden; }
-}
+        .M_NO, tr td:nth-child(6) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .C_Add, tr td:nth-child(3) {
+            display: none;
+            visibility: hidden;
+        }
+    }
+
+    @@media only screen and (max-width: 320px) {
+        .Fax, tr td:nth-child(7) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .M_NO, tr td:nth-child(6) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .C_Add, tr td:nth-child(3) {
+            display: none;
+            visibility: hidden;
+        }
+    }
 </style>
 
-    <script>
+<script>
+
+    $(document).ready(function () {
+        $.ajax({
+            url: '/api/Companies',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                loadDataTable(data);
+            }//End of success
+        });//End of Ajax
+
+        $('#submitcsv').on('click', function (e) {
+            var fileUpload = $("#csv_upload").get(0);
+            var files = fileUpload.files;
+            var data = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                data.append(files[i].name, files[i]);
+            }
+            $.ajax({
+                method: 'post',
+                url: '/API/Companies/MassEnrollCompanies/',
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: data,
+                success: function (data) {
+                    var title = data.AlertType == 'warning' ? 'Some records has been rejected ' : 'All records saved successfully';
+                    swal({
+                        type: data.AlertType,
+                        title: title,
+                        html: data.Messages.join('<br>')
+                    });
+                },//End of success
+                error: function (data) {
+                    swal({
+                        type: 'error',
+                        title: 'Error',
+                        text: data.Message
+                    });
+                }//End of error
+            })//End of Ajax call
+        });//End of submitcsv
+    });//End of document ready
+    function loadDataTable(inData) {
+        // Array holding selected row IDs
+        var rows_selected = [];
+        var table = $('#company_dataTable').DataTable({
+            bSortable: false,
+            //'fnDrawCallback': function (oSettings) {
+            //    $('.dataTables_filter').(function () {
+            //        $(this).append('<button class="btn btn-default mr-xs pull-right" type="button">Button');
+            //    });
+            //},
+            dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+            data: inData,
+            columnDefs: [{
+                'targets': 0,
+                'searchable': false,
+                'orderable': false,
+                'width': '1%',
+                'className': 'dt-body-center',
+                'render': function (data, type, full, meta) {
+                    return '<input type="checkbox" value="' + data.CompanyId + '">';
+                }
+            }],
+            select: {
+                style: 'os',
+                selector: 'td:first-child'
+            },
+            order: [[1, 'asc']],
+            'rowCallback': function (row, data, dataIndex) {
+                // Get row ID
+                var rowId = data[0];
+
+                // If row ID is in the list of selected row IDs
+                if ($.inArray(rowId, rows_selected) !== -1) {
+                    $(row).find('input[type="checkbox"]').prop('checked', true);
+                    $(row).addClass('selected');
+                }
+            },
+            columns: [
+                { data: null },
+                { data: "CompanyName" },
+                { data: "CompanyAddress" },
+                { data: "ContactPersonName" },
+                { data: "ContactPersonEmail" },
+                { data: "ContactPersonNumber" },
+                { data: "ContactPersonFax" },
+                {
+                    data: "CompanyId",
+                    "bSortable": false,
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary" onClick="editCompany(\'' + o + '\')"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn" onClick="deleteCompany(\'' + o + '\')"><i class="fa fa-trash"></i></button>' }
+                }
+            ],
+            language: {
+                emptyTable: "No Company was found, please create one.",
+            },
+            initComplete: function () {
+                $("div.toolbar")
+                    .html('<div class="col-sm-4"><button class="btn btn-xs btn-default" onclick="hideFilter1()">Filter</button></div>');
+                $("div.toolbar").parent().children().addClass("pull-right");
+                hideFilter1();
+            }
+        });
+
+        // Handle click on checkbox
+        $('#company_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
+            var $row = $(this).closest('tr');
+
+            // Get row data
+            var data = table.row($row).data();
+            // Get row ID
+            var rowId = data[0];
+
+            // Determine whether row ID is in the list of selected row IDs
+            var index = $.inArray(rowId, rows_selected);
+
+            // If checkbox is checked and row ID is not in list of selected row IDs
+            if (this.checked && index === -1) {
+                rows_selected.push(rowId);
+
+                // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
+            } else if (!this.checked && index !== -1) {
+                rows_selected.splice(index, 1);
+            }
+
+            if (this.checked) {
+                $row.addClass('selected');
+            } else {
+                $row.removeClass('selected');
+            }
+
+            // Update state of "Select all" control
+            updateDataTableSelectAllCtrl(table);
+
+            // Prevent click event from propagating to parent
+            e.stopPropagation();
+        });
+
+        // Handle click on table cells with checkboxes
+        $('#company_dataTable').on('click', 'tbody td, thead th:first-child', function (e) {
+            $(this).parent().find('input[type="checkbox"]').trigger('click');
+        });
+
+        // Handle click on "Select all" control
+        $('thead input[name="select_all"]', table.table().container()).on('click', function (e) {
+            if (this.checked) {
+                $('#company_dataTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
+            } else {
+                $('#company_dataTable tbody input[type="checkbox"]:checked').trigger('click');
+            }
+
+            // Prevent click event from propagating to parent
+            e.stopPropagation();
+        });
+
+        // Handle table draw event
+        table.on('draw', function () {
+            // Update state of "Select all" control
+            updateDataTableSelectAllCtrl(table);
+        });
+
+        //handle custom search
+        // Setup - add a text input to each footer cell
+        $('#company_dataTable thead tr#filterrow th').each(function () {
+            if ($('#company_dataTable thead tr#filterrow th').eq($(this).index()).text() != 0) {
+                var title = $('#company_dataTable thead th').eq($(this).index()).text();
+                $(this).html('<input type="text" onclick="stopPropagation(event);" placeholder="Search ' + title + '" />');
+            }
+        });
+        // Apply the filter
+        $("#company_dataTable thead input").on('keyup change', function () {
+            if ($(this).attr('type') == "text") {
+                table
+                    .column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+            }
+        });
+        //end of handle custom search
+
+        //// Handle form submission event
+        //$('#frm-example').on('submit', function (e) {
+        //    var form = this;
+
+        //    // Iterate over all selected checkboxes
+        //    $.each(rows_selected, function (index, rowId) {
+        //        // Create a hidden element
+        //        $(form).append(
+        //            $('<input>')
+        //                .attr('type', 'hidden')
+        //                .attr('name', 'id[]')
+        //                .val(rowId)
+        //        );
+        //    });
+        //});
+        $('#company_dataTable tbody').on('click', 'button.btn-primary', function (e) {
+            location.href = 'edit_company';
+        });
+        //$('#company_dataTable tbody').on('click', 'button.btn-danger', function (e) {
+        //    swal({
+        //        title: 'Are you sure?',
+        //        text: "You won't be able to revert this!",
+        //        type: 'warning',
+        //        showCancelButton: true,
+        //        confirmButtonColor: '#3085d6',
+        //        cancelButtonColor: '#d33',
+        //        confirmButtonText: 'Yes, delete it!'
+        //    }).then(function (result) {
+        //        if (result.value) {
+        //            swal(
+        //                'Deleted!',
+        //                'Your file has been deleted.',
+        //                'success'
+        //            )
+        //        }
+        //    }).catch(swal.noop);
+        //});
+
+    }//End of function LoadDataTable
+    function editCompany(inId) {
+        sessionStorage.setItem("editCompany", inId);
+    };
+    function deleteCompany(inId) {
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (result) {
+            if (result.value) {
+                var checkedCompany = [];
+                checkedCompany.push(inId);
+                $.ajax({
+                    url: '/Api/Companies/DeleteCompany/bulk/?selectedCompanies=' + checkedCompany,
+                    method: 'DELETE',
+                    success: function (data, status, jqXHR) {
+                        var title = data.AlertType == 'warning' ? 'Records displayed below not removed ' : 'Selected Records removed successfully!';
+
+                        swal({
+                            type: data.AlertType,
+                            title: title,
+                            html: data.Messages.join('<br>')
+                            //text: data.Message
+                        }).then(function () {
+                            window.location.reload();
+                        })
+                    },//End of success
+                    error: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            text: data.Message
+                        });
+                    }//end of error
+                });//End of ajax call
+            }//end of If statement
+        })//end of THen function
+    }//End of function for deleteProject
     //
     // Updates "Select all" control in a data table
     //
@@ -172,6 +461,8 @@
     }
 
     function hideFilter1() {
+        $("#company_dataTable thead input").val("");
+        $("#company_dataTable thead input").change();
         $('#company_dataTable thead tr#filterrow').toggle();
     }
 
@@ -227,281 +518,4 @@
             evt.cancelBubble = true;
         }
     }
-    $(document).ready(function () {
-        $.ajax({
-            url: '/api/Companies',
-            method: 'GET',
-            dataType: 'json',
-            cache: false,
-            success: function (data) {
-                loadDataTable(data);
-            }//End of success
-        });//End of Ajax
-
-        
-        });//End of document ready
-        function loadDataTable(inData) {
-            // Array holding selected row IDs
-            var rows_selected = [];
-            var table = $('#company_dataTable').DataTable({
-                bSortable: false,
-                //'fnDrawCallback': function (oSettings) {
-                //    $('.dataTables_filter').(function () {
-                //        $(this).append('<button class="btn btn-default mr-xs pull-right" type="button">Button');
-                //    });
-                //},
-                dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-                data: inData,
-                columnDefs: [{
-                    'targets': 0,
-                    'searchable': false,
-                    'orderable': false,
-                    'width': '1%',
-                    'className': 'dt-body-center',
-                    'render': function (data, type, full, meta) {
-                        return '<input type="checkbox" value="' + data.CompanyId + '">';
-                    }
-                }],
-                select: {
-                    style: 'os',
-                    selector: 'td:first-child'
-                },
-                order: [[1, 'asc']],
-                'rowCallback': function (row, data, dataIndex) {
-                    // Get row ID
-                    var rowId = data[0];
-
-                    // If row ID is in the list of selected row IDs
-                    if ($.inArray(rowId, rows_selected) !== -1) {
-                        $(row).find('input[type="checkbox"]').prop('checked', true);
-                        $(row).addClass('selected');
-                    }
-                },
-                columns: [
-                    { data: null },
-                    { data: "CompanyName" },
-                    { data: "CompanyAddress" },
-                    { data: "ContactPersonName" },
-                    { data: "ContactPersonEmail" },
-                    { data: "ContactPersonNumber" },
-                    { data: "ContactPersonFax" },
-                    {
-                        data: "CompanyId",
-                        "bSortable": false,
-                        "mRender": function (o) { return '<button class="btn btn-sm btn-primary" onClick="editCompany(\'' + o + '\')"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn" onClick="deleteCompany(\'' + o + '\')"><i class="fa fa-trash"></i></button>' }
-                    }
-                ],
-                language: {
-                    emptyTable: "No Company was found, please create one.",
-                },
-                initComplete: function () {
-                    $("div.toolbar")
-                        .html('<div class="col-sm-4"><button class="btn btn-xs btn-default" onclick="hideFilter1()">Filter</button></div>');
-                    $("div.toolbar").parent().children().addClass("pull-right");
-                    hideFilter1();
-                }
-            });
-
-            // Handle click on checkbox
-            $('#company_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
-                var $row = $(this).closest('tr');
-                
-                // Get row data
-                var data = table.row($row).data();
-                // Get row ID
-                var rowId = data[0];
-
-                // Determine whether row ID is in the list of selected row IDs
-                var index = $.inArray(rowId, rows_selected);
-
-                // If checkbox is checked and row ID is not in list of selected row IDs
-                if (this.checked && index === -1) {
-                    rows_selected.push(rowId);
-
-                    // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
-                } else if (!this.checked && index !== -1) {
-                    rows_selected.splice(index, 1);
-                }
-
-                if (this.checked) {
-                    $row.addClass('selected');
-                } else {
-                    $row.removeClass('selected');
-                }
-
-                // Update state of "Select all" control
-                updateDataTableSelectAllCtrl(table);
-
-                // Prevent click event from propagating to parent
-                e.stopPropagation();
-            });
-
-            // Handle click on table cells with checkboxes
-            $('#company_dataTable').on('click', 'tbody td, thead th:first-child', function (e) {
-                $(this).parent().find('input[type="checkbox"]').trigger('click');
-            });
-
-            // Handle click on "Select all" control
-            $('thead input[name="select_all"]', table.table().container()).on('click', function (e) {
-                if (this.checked) {
-                    $('#company_dataTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
-                } else {
-                    $('#company_dataTable tbody input[type="checkbox"]:checked').trigger('click');
-                }
-
-                // Prevent click event from propagating to parent
-                e.stopPropagation();
-            });
-
-            // Handle table draw event
-            table.on('draw', function () {
-                // Update state of "Select all" control
-                updateDataTableSelectAllCtrl(table);
-            });
-
-            //handle custom search
-            // Setup - add a text input to each footer cell
-            $('#company_dataTable thead tr#filterrow th').each(function () {
-                if ($('#company_dataTable thead tr#filterrow th').eq($(this).index()).text() != 0) {
-                    var title = $('#company_dataTable thead th').eq($(this).index()).text();
-                    $(this).html('<input type="text" onclick="stopPropagation(event);" placeholder="Search ' + title + '" />');
-                }
-            });
-            // Apply the filter
-            $("#company_dataTable thead input").on('keyup change', function () {
-                if ($(this).attr('type') == "text") {
-                    table
-                        .column($(this).parent().index() + ':visible')
-                        .search(this.value)
-                        .draw();
-                }
-            });
-            //end of handle custom search
-
-            //// Handle form submission event
-            //$('#frm-example').on('submit', function (e) {
-            //    var form = this;
-
-            //    // Iterate over all selected checkboxes
-            //    $.each(rows_selected, function (index, rowId) {
-            //        // Create a hidden element
-            //        $(form).append(
-            //            $('<input>')
-            //                .attr('type', 'hidden')
-            //                .attr('name', 'id[]')
-            //                .val(rowId)
-            //        );
-            //    });
-            //});
-            $('#company_dataTable tbody').on('click', 'button.btn-primary', function (e) {
-                location.href = 'edit_company';
-            });
-            //$('#company_dataTable tbody').on('click', 'button.btn-danger', function (e) {
-            //    swal({
-            //        title: 'Are you sure?',
-            //        text: "You won't be able to revert this!",
-            //        type: 'warning',
-            //        showCancelButton: true,
-            //        confirmButtonColor: '#3085d6',
-            //        cancelButtonColor: '#d33',
-            //        confirmButtonText: 'Yes, delete it!'
-            //    }).then(function (result) {
-            //        if (result.value) {
-            //            swal(
-            //                'Deleted!',
-            //                'Your file has been deleted.',
-            //                'success'
-            //            )
-            //        }
-            //    }).catch(swal.noop);
-            //});
-
-        }//End of function LoadDataTable
-        function editCompany(inId) {
-            sessionStorage.setItem("editCompany", inId);
-        };
-        function deleteCompany(inId) {
-            swal({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then(function (result) {
-                if (result.value) {
-                    var checkedCompany = [];
-                    checkedCompany.push(inId);
-                    $.ajax({
-                        url: '/Api/Companies/DeleteCompany/bulk/?selectedCompanies=' + checkedCompany,
-                        method: 'DELETE',
-                        success: function (data, status, jqXHR) {
-                            var title = data.AlertType == 'warning' ? 'Records displayed below not removed ' : 'Selected Records removed successfully!';
-
-                            swal({
-                                type: data.AlertType,
-                                title: title,
-                                html: data.Messages.join('<br>')
-                                //text: data.Message
-                            }).then(function () {
-                                window.location.reload();
-                            })
-                        },//End of success
-                        error: function (data) {
-                            swal({
-                                type: 'error',
-                                title: 'Error',
-                                text: data.Message
-                            });
-                        }//end of error
-                    });//End of ajax call
-                }//end of If statement
-                })//end of THen function
-        }//End of function for deleteProject
-
-    </script>
-@*<script>
-
-    $getCompanyHandler = jQuery.ajax({
-
-        url: '/API/Companies/',
-        method: 'get',
-        dataType: 'json',
-        cache: false
-
-    });
-    $getCompanyHandler.done(function (data, textStatus, jqXHR) {
-        //var test = data;
-
-        $tableBodyElement = $('#companyTableBody');
-        for (i = 0; i < data.length; i++) {
-
-            company = data[i];
-
-            companyId = company.CompanyId;
-            companyName = company.CompanyName;
-            companyAddress = company.CompanyAddress;
-
-            //courseName = batch.CourseName[0].CourseName;
-
-            $rowElement = $('<tr></tr>');
-            $cellElement = $('<td></td>', { text: companyName });
-            $rowElement.append($cellElement);
-
-            $cellElement = $('<td></td>', { text: companyAddress });
-            $rowElement.append($cellElement);
-           
-
-            $pencilElement = $('<i></i>').attr('class', 'fa fa-pencil');
-            $ahrefElement = $('<a></a>').attr('href', '~/../EditCompany/' + companyId);
-            $ahrefElement.append($pencilElement);
-            $cellElement = $('<td></td>');
-            $cellElement.append($ahrefElement);
-            $rowElement.append($cellElement);
-            
-            $tableBodyElement.append($rowElement);
-        }
-    });
-</script>*@
+</script>

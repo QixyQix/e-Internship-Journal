@@ -41,7 +41,7 @@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Mobile Number</label>
-                                <input class="form-control" id="mobileNo" type="number" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
+                                <input class="form-control" id="mobileNo" min="0" type="number" onkeydown="return FilterInput(event)" onpaste="handlePaste(event)" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
@@ -88,22 +88,13 @@
                 <div class="col-12">
                     <form>
                         <div class="form-group">
-                            <div class="input-group">
-                                <input class="form-control" placeholder="Search...">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-search">
-                                    </i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" rows="5">Convertium</textarea>
+                            <select id="companySelect" size="6" style="width: 100%;"></select>
                         </div>
                         <div class="form-group">
                             <div class="col-12">
                                 <div class="form-inline">
                                     <label>Selected: &nbsp;</label>
-                                    <input class="form-control" value="Convertium" readonly>
+                                    <input class="form-control col-9" value="" readonly id="txtSelected">
                                 </div>
                             </div>
                         </div>
@@ -111,7 +102,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
+                <button type="button" class="btn btn-secondary" id="btnSubmit">Confirm</button>
                 <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
             </div>
         </div>
@@ -192,14 +183,55 @@
             }
         });
 
-        //$('#addtp').on('click', function (e) {
-        //    $('#addtpModal').modal('show');
-        //});
+        $.ajax({
+            url: '/api/Companies',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                $('#companySelect').select2();
+                for (i = 0; i < data.length; i++) {
+                    //    $('#companySelect').val(data[i].)
+                    $companyInputElement = $('#companySelect');
+                    $optionElement = $('<option>').text(data[i].CompanyName).attr('value', data[i].CompanyId);
+                    $companyInputElement.append($optionElement);
+                }
+            }//End of success
+        });//End of Ajax
 
-        //$('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
-        //    $('#updatetpModal').modal('show');
-        //});
-    });
+        $('#txtSearch').on("keyup", function (e) {
+            console.dir($(this).val());
+            var text = $(this).val();
+            var options = $('#companySelect option');
+            //var options = $('#companySelect').option;
+            for (var i = 0; i < options.length; i++) {
+                var option = options[i];
+                var optionText = option.text;
+                var lowerOptionText = optionText.toLowerCase();
+                var lowerText = text.toLowerCase();
+                var regex = new RegExp("^" + text, "i");
+                var match = optionText.match(regex);
+                var contains = lowerOptionText.indexOf(lowerText) != -1;
+                if (match || contains) {
+
+                    //option.selected = true;
+                    return;
+                }
+                $(this).selectedIndex = 0;
+            }
+        });//End of txtSearch function
+
+        $('#companySelect').on('change', function (e) {
+            $('#txtSelected').val($('#companySelect option:selected').text());
+        });//End of Select Change
+        $('#btnSubmit').on('click', function (e) {
+
+            $('#selectcompany').val($('#companySelect option:selected').text());// To set display text on input element
+            $('#selectcompany').attr('value', ($('#companySelect option:selected').val())); // To set company value id to the input element
+
+            $('#selectCompanyModal').modal('hide');
+        });//End of button submit for popup
+            });
     function findCompanyModal() {
         $('#selectCompanyModal').modal('show');
     }

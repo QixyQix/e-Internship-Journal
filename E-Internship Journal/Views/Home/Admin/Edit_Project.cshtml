@@ -41,7 +41,7 @@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Mobile Number</label>
-                                <input class="form-control" id="mobileNo" type="number" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
+                                <input class="form-control" id="mobileNo" min="0" type="number" onkeydown="return FilterInput(event)" onpaste="handlePaste(event)" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>

@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Choose Role Page";
+    //Layout= "~/Views/Shared/_PublicLayout.cshtml";
+}
+<br />
+<h2 class="section-heading text-center text-primary">CHOOSE ROLE</h2>
+<hr class="theme" />
+<section id="dailyTask">
+    <div class="container">
+        <div class="row">
+            @if (User.IsInRole("SLO"))
+            {
+            <div class="col-lg-6 col-md-6 text-center">
+                <div class="service-box mt-5 mx-auto" onclick="location.href='http://' + window.location.host +'/home/index/?selected=SLO'">
+                    <i class="fa fa-4x fa-calendar text-primary mb-3 sr-icons"></i>
+                    <h3 class="mb-3" style="text-decoration:underline;">Senior Liaison Officer</h3>
+                </div>
+            </div>
+            }
+            @if (User.IsInRole("LO")) 
+            { 
+            <div class="col-lg-6 col-md-6 text-center">
+                <div class="service-box mt-5 mx-auto" onclick="location.href='http://' + window.location.host +'/home/index/?selected=LO'">
+                    @*<i class="fa fa-4x fa-clock-o text-primary mb-3 sr-icons"></i>*@
+                    <i class="fa fa-4x fa-user text-primary mb-3 sr-icons"></i>
+                    <h3 class="mb-3" style="text-decoration:underline;">Liaison Officer</h3>
+                </div>
+            </div>
+            }
+            @if (User.IsInRole("Supervisor"))
+            {
+                <div class="col-lg-6 col-md-6 text-center">
+                    <div class="service-box mt-5 mx-auto" onclick="location.href='http://' + window.location.host +'/home/index/?selected=Supervisor'">
+                        @*<i class="fa fa-4x fa-clock-o text-primary mb-3 sr-icons"></i>*@
+                        <i class="fa fa-4x fa-user text-primary mb-3 sr-icons"></i>
+                        <h3 class="mb-3" style="text-decoration:underline;">Supervisor</h3>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <br>
+    <br>
+</section>

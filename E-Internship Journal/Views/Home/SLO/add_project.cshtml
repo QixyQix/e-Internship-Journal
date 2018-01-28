@@ -14,10 +14,12 @@
                     <form name="sentMessage" id="contactForm" novalidate="novalidate">
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                <label>Project Name</label>
+                                <label>Project Nam</label>
                                 <input class="form-control" id="projectName" type="text" placeholder="Project Name" required="required" data-validation-required-message="Please enter a project name.">
+                                @*<label class="form-control-placeholder">Project Name</label>*@
                                 <p class="help-block text-danger"></p>
                             </div>
+
                         </div>
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
@@ -28,7 +30,6 @@
                                         <i class="fa fa-search"></i>
                                     </div>
                                 </div>
-                                <p class="help-block text-danger"></p>
                             </div>
                         </div>
                         <div class="control-group">
@@ -41,7 +42,7 @@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Mobile Number</label>
-                                <input class="form-control" id="mobileNo" type="number" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
+                                <input class="form-control" id="mobileNo" type="number" onkeydown="return FilterInput(event)" onpaste="handlePaste(event)" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
@@ -74,7 +75,7 @@
 </div>
 
 <!--modal-->
-<div class="modal fade" id="selectCompanyModal" tabindex="-1" role="dialog" aria-labelledby="selectCompanyModalLabel" aria-hidden="true">
+<div class="modal fade" id="selectCompanyModal" role="dialog" aria-labelledby="selectCompanyModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -88,15 +89,6 @@
                 <div class="col-12">
                     <form>
                         <div class="form-group">
-                            <div class="input-group">
-                                <input class="form-control" placeholder="Search..." id="txtSearch">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-search">
-                                    </i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
 
                             <select id="companySelect" size="6" style="width: 100%;"></select>
                         </div>
@@ -104,7 +96,7 @@
                             <div class="col-12">
                                 <div class="form-inline">
                                     <label>Selected: &nbsp;</label>
-                                    <input class="form-control" value="Convertium" readonly id="txtSelected">
+                                    <input class="form-control" value="" readonly id="txtSelected">
                                 </div>
                             </div>
                         </div>
@@ -139,7 +131,7 @@
                             </div>
                         </div>
                         <div class="form-group" id="supervisorDetailsSelection">
-                         
+
                         </div>
                     </form>
                 </div>
@@ -162,6 +154,7 @@
             dataType: 'json',
             cache: false,
             success: function (data) {
+                $('#companySelect').select2();
                 for (i = 0; i < data.length; i++) {
                     //    $('#companySelect').val(data[i].)
                     $companyInputElement = $('#companySelect');
@@ -171,28 +164,7 @@
 
             }//End of success
         });//End of Ajax
-
-        $('#txtSearch').on("keyup", function (e) {
-            console.dir($(this).val());
-            var text = $(this).val();
-            var options = $('#companySelect option');
-            //var options = $('#companySelect').option;
-            for (var i = 0; i < options.length; i++) {
-                var option = options[i];
-                var optionText = option.text;
-                var lowerOptionText = optionText.toLowerCase();
-                var lowerText = text.toLowerCase();
-                var regex = new RegExp("^" + text, "i");
-                var match = optionText.match(regex);
-                var contains = lowerOptionText.indexOf(lowerText) != -1;
-                if (match || contains) {
-
-                    //option.selected = true;
-                    return;
-                }
-                $(this).selectedIndex = 0;
-            }
-        });//End of txtSearch function
+    
 
         $('#companySelect').on('change', function (e) {
             $('#txtSelected').val($('#companySelect option:selected').text());
@@ -229,7 +201,7 @@
             $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
                 preventSubmit: true,
                 submitSuccess: function ($form, event) {
-                    event.preventDefault();
+                    event.preventDefault();     // will not trigger the default submission in favor of the ajax function
                     var collectedProjectName = $('#projectName').val();
                     var collectedCompany = $('#selectCompany').attr('value');
                     var collectedSupervisorName = $('#supervisorName').val();
@@ -253,14 +225,14 @@
                             } else if (data.AlertType == 'warning') {
                                 title = 'Warning';
                             }
-                                swal({
-                                    type: data.AlertType,
-                                    title: title,
-                                    text: data.Messages
-                                }).then(
-                                    function () {
-                                        title == 'Error' ? null : window.location.reload();
-                                    });
+                            swal({
+                                type: data.AlertType,
+                                title: title,
+                                text: data.Messages
+                            }).then(
+                                function () {
+                                    title == 'Error' ? null : window.location.reload();
+                                });
                         },//End of success
                         error: function (data) {
                             swal({
@@ -272,7 +244,7 @@
                     });//End of ajax call
 
 
-                    // will not trigger the default submission in favor of the ajax function
+
 
                 },
                 submitError: function ($form, event, errors) {

@@ -35,6 +35,7 @@
                     &nbsp;
                 </div>
             </div>
+            <br />
             <div class="table-responsive">
                 <table class="table table-bordered" id="project_dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -144,6 +145,8 @@
     }
 
     function hideFilter1() {
+        $("#project_dataTable thead input").val("");
+        $("#project_dataTable thead input").change();
         $('#project_dataTable thead tr#filterrow').toggle();
     }
 
@@ -216,7 +219,7 @@
         }
     }
     $(document).ready(function () {
-
+        sessionStorage.clear();
         $.ajax({
             url: '/api/Projects',
             method: 'GET',
@@ -257,7 +260,7 @@
                     });
                 }//End of error
             })//End of Ajax call
-        });
+        });//End of submitcsv 
     });//End of document ready function
     function loadDataTable(inData) {
 
