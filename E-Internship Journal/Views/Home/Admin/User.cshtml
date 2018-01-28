@@ -247,7 +247,7 @@
         }).catch(swal.noop);
     }
 
-    function bulkActivate(userIds) { 
+    function bulkActivate(userIds) {
         $.ajax({
             url: '/api/Accounts/BulkActivate',
             method: 'PUT',
@@ -275,7 +275,7 @@
         });
     }
 
-    function bulkDeactivate(userIds) { 
+    function bulkDeactivate(userIds) {
         $.ajax({
             url: '/api/Accounts/BulkDeactivate',
             method: 'PUT',
@@ -286,7 +286,7 @@
             success: function (data) {
                 swal({
                     type: "success",
-                    title: "Activated Users",
+                    title: "Deactivated Users",
                     html: data.Message
                 }).then(
                     function () {
@@ -303,7 +303,7 @@
         });
     }
 
-    function bulkDel(userIds) { 
+    function bulkDel(userIds) {
         $.ajax({
             url: '/api/Accounts/BulkDelete',
             method: 'DELETE',
@@ -315,7 +315,7 @@
                 var title = "";
                 if (data.Messages.length > 1) {
                     title = "Completed with errors";
-                } else { 
+                } else {
                     title = "Deleted";
                 }
                 swal({
@@ -348,7 +348,7 @@
             confirmButtonText: 'Yes, deactivate it!'
         }).then(function (result) {
             var ids = [];
-            $('input[name="checkboxSelectActivatedUser"]:checked').each(function () { 
+            $('input[name="checkboxSelectActivatedUser"]:checked').each(function () {
                 ids.push($(this).val());
             })
             bulkDeactivate(ids);
@@ -423,8 +423,10 @@
                 }
                 console.dir(activatedAccounts);
                 console.dir(deactivatedAccounts);
-                $('#act_dataTable').dataTable().fnAddData(activatedAccounts);
-                $('#deact_dataTable').dataTable().fnAddData(deactivatedAccounts);
+                if (activatedAccounts.length > 0)
+                    $('#act_dataTable').dataTable().fnAddData(activatedAccounts);
+                if (activatedAccounts.length > 0)
+                    $('#deact_dataTable').dataTable().fnAddData(deactivatedAccounts);
             },
             fail: function (data) {
                 alert(data.Message);
@@ -487,7 +489,7 @@
                 {
                     data: "Id",
                     "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary" value="' + o + '"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn" value="' + o +'"><i class="fa fa-trash"></i></button>' }
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary" value="' + o + '"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn" value="' + o + '"><i class="fa fa-trash"></i></button>' }
                 }
             ],
             language: {
@@ -633,7 +635,7 @@
                 {
                     data: "Id",
                     "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary" value="' + o + '"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn" value="' + o +'"><i class="fa fa-trash"></i></button>' }
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary" value="' + o + '"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn" value="' + o + '"><i class="fa fa-trash"></i></button>' }
                 }
             ],
             language: {
@@ -762,16 +764,16 @@
             editUser($(this).val());
         });
 
-        function editUser(userId) { 
+        function editUser(userId) {
             console.dir(userId);
             setCookie("selectedUser", userId);
             location.href = 'EditUser';
         }
 
-        function deleteUser(userId) { 
+        function deleteUser(userId) {
             console.dir(userId);
             $.ajax({
-                url: '/api/Accounts/'+userId,
+                url: '/api/Accounts/' + userId,
                 method: 'DELETE',
                 cache: false,
                 success: function (data) {
