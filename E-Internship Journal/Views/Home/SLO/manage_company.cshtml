@@ -177,7 +177,36 @@
             }//End of success
         });//End of Ajax
 
-
+        $('#submitcsv').on('click', function (e) {
+            var fileUpload = $("#csv_upload").get(0);
+            var files = fileUpload.files;
+            var data = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                data.append(files[i].name, files[i]);
+            }
+            $.ajax({
+                method: 'post',
+                url: '/API/Companies/MassEnrollCompanies/',
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: data,
+                success: function (data) {
+                    var title = data.AlertType == 'warning' ? 'Some records has been rejected ' : 'All records saved successfully';
+                    swal({
+                        type: data.AlertType,
+                        title: title,
+                        html: data.Messages.join('<br>')
+                    });
+                },//End of success
+                error: function (data) {
+                    swal({
+                        type: 'error',
+                        title: 'Error',
+                        text: data.Message
+                    });
+                }//End of error
+            })//End of Ajax call
+        });//End of submitcsv
     });//End of document ready
     function loadDataTable(inData) {
         // Array holding selected row IDs
@@ -431,10 +460,10 @@
         }
     }
 
-        function hideFilter1() {
-            $("#company_dataTable thead input").val("");
-            $("#company_dataTable thead input").change();
-            $('#company_dataTable thead tr#filterrow').toggle();
+    function hideFilter1() {
+        $("#company_dataTable thead input").val("");
+        $("#company_dataTable thead input").change();
+        $('#company_dataTable thead tr#filterrow').toggle();
     }
 
     function popCSV() {
@@ -490,46 +519,3 @@
         }
     }
 </script>
-@*<script>
-
-        $getCompanyHandler = jQuery.ajax({
-
-            url: '/API/Companies/',
-            method: 'get',
-            dataType: 'json',
-            cache: false
-
-        });
-        $getCompanyHandler.done(function (data, textStatus, jqXHR) {
-            //var test = data;
-
-            $tableBodyElement = $('#companyTableBody');
-            for (i = 0; i < data.length; i++) {
-
-                company = data[i];
-
-                companyId = company.CompanyId;
-                companyName = company.CompanyName;
-                companyAddress = company.CompanyAddress;
-
-                //courseName = batch.CourseName[0].CourseName;
-
-                $rowElement = $('<tr></tr>');
-                $cellElement = $('<td></td>', { text: companyName });
-                $rowElement.append($cellElement);
-
-                $cellElement = $('<td></td>', { text: companyAddress });
-                $rowElement.append($cellElement);
-
-
-                $pencilElement = $('<i></i>').attr('class', 'fa fa-pencil');
-                $ahrefElement = $('<a></a>').attr('href', '~/../EditCompany/' + companyId);
-                $ahrefElement.append($pencilElement);
-                $cellElement = $('<td></td>');
-                $cellElement.append($ahrefElement);
-                $rowElement.append($cellElement);
-
-                $tableBodyElement.append($rowElement);
-            }
-        });
-    </script>*@

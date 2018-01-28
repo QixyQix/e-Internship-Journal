@@ -61,7 +61,7 @@
                                 <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Manage_Company'">
                                     Back
                                 </button>
-                                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                                <button class="btn btn-primary pull-right" name="submit" type="submit" id="btnSave">
                                     Update
                                 </button>
                             </div>
@@ -75,61 +75,91 @@
     </section>
 </div>
 <script>
-  var g_companyId = getCompanyIdFromAddressBar();
-      getCompanyDetails(g_companyId);
-      function getCompanyIdFromAddressBar() {
-
-        var urlArray = window.location.href.split('/');
-        var companyId = urlArray[urlArray.length - 1];
-        return companyId;
-    }
-    function WebFormData(inCompanyName, inCompanyAddress) {
-        this.CompanyName = inCompanyName;
-        this.CompanyAddress = inCompanyAddress;
-     
-
-    }
-    $('#btnSave').on('click', function () {
-
-        var collectedCompanyName = $('#companyName').val();
-        var collectedCompanyAddress = $('#companyAddress').val();
-
-        var webFormData = new WebFormData(collectedCompanyName, collectedCompanyAddress);
-        var webFormDatainString = JSON.stringify(webFormData);
-        $saveBatchHandler = jQuery.ajax({
-            url: '/API/Companies/UpdateCompany/' + g_companyId,
-            type: 'put',
-            dataType: 'json',
-            contentType: 'application/json',
-            data: "'" + webFormDatainString + "'"
-
-        });
-        $saveBatchHandler.done(function (data, textStatus, jqXHR) {
-            console.dir("Success");
-
-        });//End .Done
-
-    });//End on Click 
-
-    function getCompanyDetails(inCompanyId) {
-
-        $loadProductHandler = jQuery.ajax({
-            method: 'get',
+    $(document).ready(function () {
+        var companyId = sessionStorage.getItem('editCompany');
+        $.ajax({
+            url: '/API/Companies/' + companyId,
+            method: 'GET',
             dataType: 'json',
             cache: false,
-            url: '/API/Companies/GetCompany/' + inCompanyId
-        })
-        $loadProductHandler.done(function (data, textStatus, jqXHR) {
+            success: function (data) {
+                $('#btnSave').val(companyId);
+                $('#companyName').val(data.CompanyName);
+                $('#companyAddress').val(data.CompanyAddress);
+                $('#contactName').val(data.ContactPersonName);
+                $('#contactEmail').val(data.ContactPersonEmail);
+                $('#contactNumber').val(data.ContactPersonNumber);
+                $('#fax').val(data.ContactPersonFax);
 
-            var oneCompany = data;
+            }//End of success
+        });//End of Ajax
 
-            companyId = oneCompany.CompanyId;
-            companyName = oneCompany.CompanyName;
-            companyAddress = oneCompany.CompanyAddress;
 
-            $('#companyName').val(companyName);
-            $('#companyAddress').val(companyAddress);
 
-        });
+        $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
+            preventSubmit: true,
+            submitSuccess: function ($form, event) {
+                event.preventDefault();
+                var collectedCompanyId = $('#btnSave').val();
+                var collectedCompanyName = $('#companyName').val();
+                var collectedCompanyAddress = $('#companyAddress').val();
+                var collectedContactName = $('#contactName').val();
+                var collectedContactEmail = $('#contactEmail').val();
+                var collectedContactNumber = $('#contactNumber').val();
+                var collectedFax = $('#fax').val();
+
+
+                var webFormData = new WebFormData(collectedCompanyId, collectedCompanyName, collectedCompanyAddress, collectedContactName, collectedContactNumber,
+                    collectedContactEmail, collectedFax);
+                var webFormDatainString = JSON.stringify(webFormData);
+                $.ajax({
+                    url: '/API/Companies/SaveNewCompanyRecord/',
+                    type: 'put',
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    cache: false,
+                    data: "'" + webFormDatainString + "'",
+                    success: function (data, status, jqXHR) {
+                        var title = 'Success';
+                        if (data.AlertType == 'error') {
+                            title = 'Error';
+
+                        } else if (data.AlertType == 'warning') {
+                            title = 'Warning';
+                        }
+                        swal({
+                            type: data.AlertType,
+                            title: title,
+                            text: data.Messages
+                        }).then(
+                            function () {
+                                title == 'Error' ? null : window.location.reload();
+                            });
+                    },//End of success
+                    error: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            text: data.Message
+                        });
+                    }//End of error
+                });
+            },
+
+            submitError: function ($form, event, errors) {
+
+            }
+        });//End of jqBootstrapValidation
+    });//End of document ready
+
+    function WebFormData(inCompanyId, inCompanyName, inCompanyAddress, inContactName, inContactNumber, inContactEmail, inContactFax) {
+        this.CompanyId = inCompanyId;
+        this.CompanyName = inCompanyName;
+        this.CompanyAddress = inCompanyAddress;
+        this.ContactName = inContactName;
+        this.ContactNumber = inContactNumber;
+        this.ContactEmail = inContactEmail;
+        this.ContactFax = inContactFax
+
     }
 </script>

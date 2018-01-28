@@ -315,10 +315,10 @@
      
         var selectedBatch = sessionStorage.getItem('selected');
         $('#selectBatch').val(selectedBatch);
-        loadData(selectedBatch);
+        loadDataTable(selectedBatch);
         $('#selectBatch').on('change', function (e) {
             sessionStorage.setItem('selected', $(this).val());
-            loadData($(this).val());
+            loadDataTable($(this).val());
             hideFilter1();
         });
         //Handle click for bulk add
@@ -368,183 +368,181 @@
         });
 
     });//End of document ready
-    function loadData(inId) {
+    function loadDataTable(inId) {
+
         $.ajax({
             url: '/Api/Batches/getBatchStudents/' + inId,
             method: 'GET',
             dataType: 'json',
             cache: false,
             success: function (data) {
-                loadDataTable(data);
-            }//End of success
-        });//End of Ajax
-    }
-    function loadDataTable(inData) {
+                // Array holding selected row IDs
+                var rows_selected = [];
+                console.dir(data);
+                var table = $('#student_dataTable').DataTable({
+                    bSortable: false,
+                     destroy: true,
+                    //'fnDrawCallback': function (oSettings) {
+                    //    $('.dataTables_filter').(function () {
+                    //        $(this).append('<button class="btn btn-default mr-xs pull-right" type="button">Button');
+                    //    });
+                    //},
+                   // destroy: true,
+                    dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+                    data: data,
+                    columnDefs: [{
+                        'targets': 0,
+                        'searchable': false,
+                        'orderable': false,
+                        'width': '1%',
+                        'className': 'dt-body-center',
+                        'render': function (data, type, full, meta) {
+                            return '<input type="checkbox" value="' + data.StudentEmail + '">';
+                        }
+                    }],
+                    select: {
+                        style: 'os',
+                        selector: 'td:first-child'
+                    },
+
+                    order: [[1, 'asc']],
+                    'rowCallback': function (row, data, dataIndex) {
+                        // Get row ID
+                        var rowId = data[0];
+
+                        // If row ID is in the list of selected row IDs
+                        if ($.inArray(rowId, rows_selected) !== -1) {
+                            $(row).find('input[type="checkbox"]').prop('checked', true);
+                            $(row).addClass('selected');
+                        }
+                    },
+                    columns: [
+                        { data: null },
+                        { data: "StudentUserId" },
+                        { data: "StudentName" },
+                        { data: "StudentPhoneNumber" },
+                        { data: "StudentEmail" },
+                        { data: "LOName" },
+                        { data: "ProjectName" },
+                        { data: "CompanyName" },
+                        { data: 'Designation' },
+                        { data: 'Allowance' },
+                        {
+                            data: null,
+                            "bSortable": false,
+                            "mRender": function (data, type, row) { return '<div class="d-inline"><button class="btn btn-sm btn-primary" onClick="editStudent(\'' + row.UserBatchId + '\')"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn" onClick="deleteStudent(\'' + row.StudentEmail + '\')"><i class="fa fa-trash"></i></button></div>' }
+                        }
+                    ],
+                    language: {
+                        emptyTable: "No Student was found, please create one.",
+                    },
+                    initComplete: function () {
+                        $("div.toolbar")
+                            .html('<div class="col-sm-4"><button class="btn btn-xs btn-default" onclick="hideFilter1()">Filter</button></div>');
+                        $("div.toolbar").parent().children().addClass("pull-right");
+                        hideFilter1();
+                    }
+                });//End of DataTable
 
 
+                $('#student_dataTable').off('click');
+                $('#student_dataTable tbody').off('click');
+                // Handle click on checkbox
+                $('#student_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
+                    var $row = $(this).closest('tr');
 
-        // Array holding selected row IDs
-        var rows_selected = [];
-        var table = $('#student_dataTable').DataTable({
-            bSortable: false,
-            destroy: true,
-            //'fnDrawCallback': function (oSettings) {
-            //    $('.dataTables_filter').(function () {
-            //        $(this).append('<button class="btn btn-default mr-xs pull-right" type="button">Button');
-            //    });
-            //},
-            dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-            data: inData,
-            columnDefs: [{
-                'targets': 0,
-                'searchable': false,
-                'orderable': false,
-                'width': '1%',
-                'className': 'dt-body-center',
-                'render': function (data, type, full, meta) {
-                    return '<input type="checkbox" value="' + data.StudentEmail + '">';
-                }
-            }],
-            select: {
-                style: 'os',
-                selector: 'td:first-child'
-            },
-            order: [[1, 'asc']],
-            'rowCallback': function (row, data, dataIndex) {
-                // Get row ID
-                var rowId = data[0];
+                    // Get row data
+                    var data = table.row($row).data();
 
-                // If row ID is in the list of selected row IDs
-                if ($.inArray(rowId, rows_selected) !== -1) {
-                    $(row).find('input[type="checkbox"]').prop('checked', true);
-                    $(row).addClass('selected');
-                }
-            },
-            columns: [
-                { data: null },
-                { data: "StudentUserId" },
-                { data: "StudentName" },
-                { data: "StudentPhoneNumber" },
-                { data: "StudentEmail" },
-                { data: "LOName" },
-                { data: "ProjectName" },
-                { data: "CompanyName" },
-                { data: 'Designation' },
-                { data: 'Allowance' },
-                {
-                    data: "StudentEmail",
-                    "bSortable": false,
-                    "mRender": function (o) { return '<div class="d-inline"><button class="btn btn-sm btn-primary" onClick="editStudent(\'' + o + '\')"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn" onClick="deleteStudent(\'' + o + '\')"><i class="fa fa-trash"></i></button></div>' }
-                }
-            ],
-            language: {
-                emptyTable: "No Batch was found, please create one.",
-            },
-            initComplete: function () {
-                $("div.toolbar")
-                    .html('<div class="col-sm-4"><button class="btn btn-xs btn-default" onclick="hideFilter1()">Filter</button></div>');
-                $("div.toolbar").parent().children().addClass("pull-right");
-                hideFilter1();
-            }
-        });//End of DataTable
+                    // Get row ID
+                    var rowId = data[0];
 
-        $('#student_dataTable tbody').off('click');
-        // Handle click on checkbox
-        $('#student_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
-            var $row = $(this).closest('tr');
+                    // Determine whether row ID is in the list of selected row IDs
+                    var index = $.inArray(rowId, rows_selected);
 
-            // Get row data
-            var data = table.row($row).data();
+                    // If checkbox is checked and row ID is not in list of selected row IDs
+                    if (this.checked && index === -1) {
+                        rows_selected.push(rowId);
 
-            // Get row ID
-            var rowId = data[0];
+                        // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
+                    } else if (!this.checked && index !== -1) {
+                        rows_selected.splice(index, 1);
+                    }
 
-            // Determine whether row ID is in the list of selected row IDs
-            var index = $.inArray(rowId, rows_selected);
+                    if (this.checked) {
+                        $row.addClass('selected');
+                    } else {
+                        $row.removeClass('selected');
+                    }
 
-            // If checkbox is checked and row ID is not in list of selected row IDs
-            if (this.checked && index === -1) {
-                rows_selected.push(rowId);
+                    // Update state of "Select all" control
+                    updateDataTableSelectAllCtrl(table);
 
-                // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
-            } else if (!this.checked && index !== -1) {
-                rows_selected.splice(index, 1);
-            }
+                    // Prevent click event from propagating to parent
+                    e.stopPropagation();
+                });
 
-            if (this.checked) {
-                $row.addClass('selected');
-            } else {
-                $row.removeClass('selected');
-            }
+                // Handle click on table cells with checkboxes
+                $('#student_dataTable').on('click', 'tbody td, thead th:first-child', function (e) {
+                    $(this).parent().find('input[type="checkbox"]').trigger('click');
+                });
 
-            // Update state of "Select all" control
-            updateDataTableSelectAllCtrl(table);
+                // Handle click on "Select all" control
+                $('thead input[name="select_all"]', $('#student_dataTable').DataTable().table().container()).on('click', function (e) {
+                    if (this.checked) {
+                        $('#student_dataTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
+                    } else {
+                        $('#student_dataTable tbody input[type="checkbox"]:checked').trigger('click');
+                    }
 
-            // Prevent click event from propagating to parent
-            e.stopPropagation();
-        });
+                    // Prevent click event from propagating to parent
+                    e.stopPropagation();
+                });
 
-        // Handle click on table cells with checkboxes
-        $('#student_dataTable').on('click', 'tbody td, thead th:first-child', function (e) {
-            $(this).parent().find('input[type="checkbox"]').trigger('click');
-        });
+                // Handle table draw event
+                $('#student_dataTable').DataTable().on('draw', function () {
+                    // Update state of "Select all" control
+                    updateDataTableSelectAllCtrl(table);
+                });
 
-        // Handle click on "Select all" control
-        $('thead input[name="select_all"]', table.table().container()).on('click', function (e) {
-            if (this.checked) {
-                $('#student_dataTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
-            } else {
-                $('#student_dataTable tbody input[type="checkbox"]:checked').trigger('click');
-            }
+                //handle custom search
+                // Setup - add a text input to each footer cell
+                $('#student_dataTable thead tr#filterrow th').each(function () {
+                    if ($('#student_dataTable thead tr#filterrow th').eq($(this).index()).text() != 0) {
+                        var title = $('#student_dataTable thead th').eq($(this).index()).text();
+                        $(this).html('<input type="text" onclick="stopPropagation(event);" placeholder="Search ' + title + '" />');
+                    }
+                });
+                // Apply the filter
+                $("#student_dataTable thead input").on('keyup change', function () {
+                    if ($(this).attr('type') == "text") {
+                        $('#student_dataTable').DataTable()
+                            .column($(this).parent().index() + ':visible')
+                            .search(this.value)
+                            .draw();
+                    }
+                });
+                //end of handle custom search
 
-            // Prevent click event from propagating to parent
-            e.stopPropagation();
-        });
+                //// Handle form submission event
+                //$('#frm-example').on('submit', function (e) {
+                //    var form = this;
 
-        // Handle table draw event
-        table.on('draw', function () {
-            // Update state of "Select all" control
-            updateDataTableSelectAllCtrl(table);
-        });
-
-        //handle custom search
-        // Setup - add a text input to each footer cell
-        $('#student_dataTable thead tr#filterrow th').each(function () {
-            if ($('#student_dataTable thead tr#filterrow th').eq($(this).index()).text() != 0) {
-                var title = $('#student_dataTable thead th').eq($(this).index()).text();
-                $(this).html('<input type="text" onclick="stopPropagation(event);" placeholder="Search ' + title + '" />');
-            }
-        });
-        // Apply the filter
-        $("#student_dataTable thead input").on('keyup change', function () {
-            if ($(this).attr('type') == "text") {
-                table
-                    .column($(this).parent().index() + ':visible')
-                    .search(this.value)
-                    .draw();
-            }
-        });
-        //end of handle custom search
-
-        //// Handle form submission event
-        //$('#frm-example').on('submit', function (e) {
-        //    var form = this;
-
-        //    // Iterate over all selected checkboxes
-        //    $.each(rows_selected, function (index, rowId) {
-        //        // Create a hidden element
-        //        $(form).append(
-        //            $('<input>')
-        //                .attr('type', 'hidden')
-        //                .attr('name', 'id[]')
-        //                .val(rowId)
-        //        );
-        //    });
-        //});
-        $('#student_dataTable tbody').on('click', 'button.btn-primary', function (e) {
-            location.href = 'edit_student';
-        });
+                //    // Iterate over all selected checkboxes
+                //    $.each(rows_selected, function (index, rowId) {
+                //        // Create a hidden element
+                //        $(form).append(
+                //            $('<input>')
+                //                .attr('type', 'hidden')
+                //                .attr('name', 'id[]')
+                //                .val(rowId)
+                //        );
+                //    });
+                //});
+                $('#student_dataTable tbody').on('click', 'button.btn-primary', function (e) {
+                    location.href = 'edit_student';
+                });
         //$('#student_dataTable tbody').on('click', 'button.btn-danger', function (e) {
         //    swal({
         //        title: 'Are you sure?',
@@ -565,7 +563,11 @@
         //    }).catch(swal.noop);
         //});//End of on Click
 
+            }//End of success
+        });//End of Ajax
+       
     }//end of function LoadDataTable()
+
     function editStudent(inId) {
         sessionStorage.setItem("editStudent", inId);
     };

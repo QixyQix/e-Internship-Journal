@@ -147,65 +147,6 @@
     </div>
 </div>
 <script>
-     $(document).ready(function () {
-        //  console.dir($('#contactForm input'));
-        //  $('#projectName').jqBootstrapValidation();
-        $.ajax({
-            url: '/api/Companies',
-            method: 'GET',
-            dataType: 'json',
-            cache: false,
-            success: function (data) {
-                $('#companySelect').select2();
-                for (i = 0; i < data.length; i++) {
-                    //    $('#companySelect').val(data[i].)
-                    $companyInputElement = $('#companySelect');
-                    $optionElement = $('<option>').text(data[i].CompanyName).attr('value', data[i].CompanyId);
-                    $companyInputElement.append($optionElement);
-                }
-
-            }//End of success
-        });//End of Ajax
-
-        $('#txtSearch').on("keyup", function (e) {
-            console.dir($(this).val());
-            var text = $(this).val();
-            var options = $('#companySelect option');
-            //var options = $('#companySelect').option;
-            for (var i = 0; i < options.length; i++) {
-                var option = options[i];
-                var optionText = option.text;
-                var lowerOptionText = optionText.toLowerCase();
-                var lowerText = text.toLowerCase();
-                var regex = new RegExp("^" + text, "i");
-                var match = optionText.match(regex);
-                var contains = lowerOptionText.indexOf(lowerText) != -1;
-                if (match || contains) {
-
-                    //option.selected = true;
-                    return;
-                }
-                $(this).selectedIndex = 0;
-            }
-        });//End of txtSearch function
-
-        $('#companySelect').on('change', function (e) {
-            $('#txtSelected').val($('#companySelect option:selected').text());
-        });//End of Select Change
-        $('#btnSubmit').on('click', function (e) {
-
-            $('#selectCompany').val($('#companySelect option:selected').text());// To set display text on input element
-            $('#selectCompany').attr('value', ($('#companySelect option:selected').val())); // To set company value id to the input element
-
-            $('#selectCompanyModal').modal('hide');
-            });
-            });
-        function findCompanyModal() {
-        $('#selectCompanyModal').modal('show');
-    }
-</script>
-@*<script>
-    // $(function () { $('#contactForm input').not('[type=submit]').jqBootstrapValidation(); });
     $(document).ready(function () {
         //  console.dir($('#contactForm input'));
         //  $('#projectName').jqBootstrapValidation();
@@ -232,7 +173,7 @@
             dataType: 'json',
             cache: false,
             success: function (data) {
-                $('#projectName').val(data.ProjectName);
+                $('#projectName').val(data.ProjectName).trigger('change');;
                 //$('#selectCompany').attr('value');
                 $('#supervisorName').val(data.FullName);
                 $('#mobileNo').val(data.PhoneNumber);
@@ -252,28 +193,6 @@
 
             }//End of success
         });//End of Ajax
-        $('#txtSearch').on("keyup", function (e) {
-            console.dir($(this).val());
-            var text = $(this).val();
-            var options = $('#companySelect option');
-            //var options = $('#companySelect').option;
-            for (var i = 0; i < options.length; i++) {
-                var option = options[i];
-                var optionText = option.text;
-                var lowerOptionText = optionText.toLowerCase();
-                var lowerText = text.toLowerCase();
-                var regex = new RegExp("^" + text, "i");
-                var match = optionText.match(regex);
-                var contains = lowerOptionText.indexOf(lowerText) != -1;
-                if (match || contains) {
-
-                    //option.selected = true;
-                    return;
-                }
-                $(this).selectedIndex = 0;
-            }
-        });//End of txtSearch function
-
         $('#companySelect').on('change', function (e) {
             $('#txtSelected').val($('#companySelect option:selected').text());
         });//End of Select Change
@@ -310,13 +229,13 @@
                 preventSubmit: true,
                 submitSuccess: function ($form, event) {
                     event.preventDefault();
-                    
+
                     var collectedProjectName = $('#projectName').val();
                     var collectedCompany = $('#selectCompany').attr('value');
                     var collectedSupervisorName = $('#supervisorName').val();
                     var collectedSupervisorNumber = $('#mobileNo').val();
                     var collectedSupervisorEmail = $('#email').val();
-                    var webFormData = new WebFormData(projectId,collectedProjectName, collectedCompany, collectedSupervisorName,
+                    var webFormData = new WebFormData(projectId, collectedProjectName, collectedCompany, collectedSupervisorName,
                         collectedSupervisorNumber, collectedSupervisorEmail);
 
                     $.ajax({
@@ -364,12 +283,17 @@
 
         });//End of jqBootstrapValidation
 
+
+        $('.floating-label-form-group input').change(function (e) {
+            $('body .floating-label-form-group').addClass("floating-label-form-group-with-value", !!$(e.target).val());
+
+        });
     });//End of document ready.
 
     function findCompanyModal() {
         $('#selectCompanyModal').modal('show');
     }
-    function WebFormData(inProjectId,inProjectName, inCompany, inSupervisorName,
+    function WebFormData(inProjectId, inProjectName, inCompany, inSupervisorName,
         inSupervisorNumber, inSupervisorEmail) {
         this.ProjectId = inProjectId;
         this.ProjectName = inProjectName;
@@ -381,4 +305,4 @@
     function findChoiceModal() {
         $('#selectChoiceModal').modal('show');
     }
-</script>*@
+</script>

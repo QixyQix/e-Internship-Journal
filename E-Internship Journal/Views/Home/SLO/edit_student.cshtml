@@ -71,7 +71,6 @@
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
-                        <br />
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Designation</label>
@@ -86,7 +85,7 @@
                                 <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Manage_Student'">
                                     Back
                                 </button>
-                                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                                <button class="btn btn-primary pull-right" name="submit" type="submit" id="btnUpdate">
                                     Update
                                 </button>
                             </div>
@@ -173,6 +172,7 @@
     $(document).ready(function () {
         //  console.dir($('#contactForm input'));
         //  $('#projectName').jqBootstrapValidation();
+
         $.ajax({
             url: '/api/Projects',
             method: 'GET',
@@ -189,27 +189,6 @@
             }//End of success
         });//End of Ajax
 
-        $('#txtSearch').on("keyup", function (e) {
-            console.dir($(this).val());
-            var text = $(this).val();
-            var options = $('#projectSelect option');
-            //var options = $('#projectSelect').option;
-            for (var i = 0; i < options.length; i++) {
-                var option = options[i];
-                var optionText = option.text;
-                var lowerOptionText = optionText.toLowerCase();
-                var lowerText = text.toLowerCase();
-                var regex = new RegExp("^" + text, "i");
-                var match = optionText.match(regex);
-                var contains = lowerOptionText.indexOf(lowerText) != -1;
-                if (match || contains) {
-
-                    //option.selected = true;
-                    return;
-                }
-                $(this).selectedIndex = 0;
-            }
-        });//End of txtSearch function
 
         $('#projectSelect').on('change', function (e) {
             $('#txtSelected').val($('#projectSelect option:selected').text());
@@ -221,7 +200,10 @@
 
             $('#projectModal').modal('hide');
         });//End of button submit for popup
+        $('.floating-label-form-group input').change(function (e) {
+            $('body .floating-label-form-group').addClass("floating-label-form-group-with-value", !!$(e.target).val());
 
+        });
         //LO
         $.ajax({
             url: '/api/Accounts/LiaisonOfficers',
@@ -233,33 +215,12 @@
                 for (i = 0; i < data.length; i++) {
                     //    $('#projectSelect').val(data[i].)
                     $loInputElement = $('#loSelect');
-                    $optionElement2 = $('<option>').text(data[i].Name).attr('value', data[i].UserId);
+                    $optionElement2 = $('<option>').text(data[i].Name).attr('value', data[i].Email);
                     $loInputElement.append($optionElement2);
                 }
             }//End of success
         });//End of Ajax
 
-        $('#txtSearch2').on("keyup", function (e) {
-            console.dir($(this).val());
-            var text = $(this).val();
-            var options = $('#loSelect option');
-            //var options = $('#projectSelect').option;
-            for (var i = 0; i < options.length; i++) {
-                var option = options[i];
-                var optionText = option.text;
-                var lowerOptionText = optionText.toLowerCase();
-                var lowerText = text.toLowerCase();
-                var regex = new RegExp("^" + text, "i");
-                var match = optionText.match(regex);
-                var contains = lowerOptionText.indexOf(lowerText) != -1;
-                if (match || contains) {
-
-                    //option.selected = true;
-                    return;
-                }
-                $(this).selectedIndex = 0;
-            }
-        });//End of txtSearch function
 
         $('#loSelect').on('change', function (e) {
             $('#txtSelected2').val($('#loSelect option:selected').text());
@@ -273,37 +234,109 @@
         });//End of button submit for popup
 
 
-        var studentId = sessionStorage.getItem("editStudent");
-        var selectedBatch = sessionStorage.getItem("selected");
+        var userBatchId = sessionStorage.getItem("editStudent");
         $.ajax({
-            url: '/API/UserBatches/GetStudentBatches/?BatchId=' + selectedBatch + '&StudentId=' + studentId,
+            url: '/API/UserBatches/GetStudentBatches/?UserBatchId=' + userBatchId,
             method: 'GET',
             dataType: 'json',
             cache: false,
             success: function (data) {
-                $('#studentId').val();
-                $('#studentName').val();
-                $('#mobileNo').val();
-                $('#email').val();
-                $('#selectproject').attr('value');
-                $('#selectlo').attr('value');
-                $('#allowance').val();
-                $('#designation').val();
+                $('#studentId').val(data.StudentId);
+                $('#studentName').val(data.FullName);
 
-                $('#projectName').val(data.ProjectName);
-                //$('#selectCompany').attr('value');
-                $('#supervisorName').val(data.FullName);
+
+                $('#allowance').val(data.Allowance);
+                $('#designation').val(data.Designation);
+
+                $('#selectproject').val(data.ProjectName);
+                $('#selectproject').attr('value', data.ProjectId);
+
+                $('#projectSelect').val(data.ProjectId).trigger('change');
+                $('#loSelect').val(data.LiaisonOfficerEmail).trigger('change');
+
+                $('#selectlo').val(data.LiaisonOfficerName);
+                $('#selectlo').attr('value', data.LiaisonOfficerEmail);
+
                 $('#mobileNo').val(data.PhoneNumber);
-                $('#email').val(data.Email);
+                $('#email').val(data.Email).trigger('change');
 
-                $('#selectCompany').val(data.CompanyName);// To set display text on input element
-                $('#selectCompany').attr('value', data.CompanyId); // To set company value id to the input element
+                $('#txtSelected').val(data.ProjectName);
+                $('#txtSelected2').val(data.LiaisonOfficerName);
 
-                $('#companySelect').val(data.CompanyId);
-                $('#txtSelected').val(data.CompanyName);
+
             }//End of success
         });//End of Ajax
-    });//End of document Ready  
+        $(function () {
+
+            $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
+                preventSubmit: true,
+                submitSuccess: function ($form, event) {
+                    event.preventDefault();     // will not trigger the default submission in favor of the ajax function
+                    var collectedStudentId = $('#studentId').val();
+                    var colectedStudentName = $('#studentName').val();
+                    var collectedStudentNumber = $('#mobileNo').val();
+                    var collectedStudentEmailAddress = $('#email').val();
+                    var collectedProjectId = $('#selectproject').attr('value');
+                    var collectedLO = $('#selectlo').attr('value');
+                    var collectedAllowance = $('#allowance').val();
+                    var collectedDesignation = $('#designation').val();
+
+                    var webFormData = new WebFormData(collectedStudentId, colectedStudentName, collectedStudentNumber, collectedStudentEmailAddress, collectedProjectId,
+                        collectedLO, collectedAllowance, collectedDesignation);
+
+                    $.ajax({
+                        url: '/Api/UserBatches/SaveNewStudentRecord/' + sessionStorage.getItem('editStudent'),
+                        method: 'PUT',
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        data: "'" + JSON.stringify(webFormData) + "'",
+                        success: function (data, status, jqXHR) {
+                            var title = 'Success';
+                            if (data.AlertType == 'error') {
+                                title = 'Error';
+
+                            } else if (data.AlertType == 'warning') {
+                                title = 'Warning';
+                            }
+                            swal({
+                                type: data.AlertType,
+                                title: title,
+                                text: data.Messages
+                            }).then(
+                                function () {
+                                    title == 'Error' || title == 'Warning' ? null : window.location.reload();
+                                });
+                        },//End of success
+                        error: function (data) {
+                            swal({
+                                type: 'error',
+                                title: 'Error',
+                                text: data.Message
+                            });
+                        }//End of error
+                    });//End of ajax call
+                },
+                submitError: function ($form, event, errors) {
+
+                }
+
+            });//End of jqBootstrapValidatio
+
+        });//end of function
+
+    });//End of document Ready
+    function WebFormData(inStudentId, inStudentName, inStudentNumber, inStudentEmail, inProjectId, inLO, inAllowance, inDesignation) {
+
+        this.StudentId = inStudentId;
+        this.StudentName = inStudentName;
+        this.StudentNumber = inStudentNumber;
+        this.StudentEmail = inStudentEmail;
+        this.ProjectId = inProjectId;
+        this.LO = inLO;
+        this.Allowance = inAllowance;
+        this.Designation = inDesignation;
+    }
     function findProjectModal() {
         $('#projectModal').modal('show');
         //http://www.dyn-web.com/tutorials/forms/select/multi-selected.php

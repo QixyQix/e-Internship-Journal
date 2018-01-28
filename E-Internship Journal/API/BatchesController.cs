@@ -112,6 +112,7 @@ namespace E_Internship_Journal.API
                         string companyName = ub.InternshipRecord.Project.Company.CompanyName;
                         studentObjects.Add(new
                         {
+                            ub.UserBatchId,
                             StudentName = studentName,
                             StudentUserId = studentUserId,
                             StudentEmail = studentEmail,
@@ -130,6 +131,7 @@ namespace E_Internship_Journal.API
                     {
                         studentObjects.Add(new
                         {
+                            ub.UserBatchId,
                             StudentName = studentName,
                             StudentUserId = studentUserId,
                             StudentEmail = studentEmail,
