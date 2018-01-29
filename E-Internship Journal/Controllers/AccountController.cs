@@ -464,6 +464,7 @@ namespace E_Internship_Journal.Controllers
 
         private IActionResult RedirectToLocal(string returnUrl)
         {
+            Startup.Configuration["_g"] = "norole";
             if (Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);

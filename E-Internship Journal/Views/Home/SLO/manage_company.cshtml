@@ -281,6 +281,10 @@
             $(this).parent().find('input[type="checkbox"]').trigger('click');
         });
 
+        $('#company_dataTable_filter').on('keyup change', 'input', function (e) {
+            $('#company_dataTable tbody input[type="checkbox"]:checked').trigger('click');
+        });
+
         // Handle click on "Select all" control
         $('thead input[name="select_all"]', table.table().container()).on('click', function (e) {
             if (this.checked) {

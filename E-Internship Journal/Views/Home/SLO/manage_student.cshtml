@@ -312,7 +312,7 @@
             }
 
         }
-     
+
         var selectedBatch = sessionStorage.getItem('selected');
         $('#selectBatch').val(selectedBatch);
         loadData(selectedBatch);
@@ -490,6 +490,10 @@
             $(this).parent().find('input[type="checkbox"]').trigger('click');
         });
 
+        $('#student_dataTable_filter').on('keyup change', 'input', function (e) {
+            $('#student_dataTable tbody input[type="checkbox"]:checked').trigger('click');
+        });
+
         // Handle click on "Select all" control
         $('thead input[name="select_all"]', table.table().container()).on('click', function (e) {
             if (this.checked) {
@@ -589,7 +593,6 @@
                     method: 'DELETE',
                     success: function (data, status, jqXHR) {
                         var title = data.AlertType == 'warning' ? 'Records displayed below not removed ' : 'Selected Records removed successfully!';
-
                         swal({
                             type: data.AlertType,
                             title: title,
