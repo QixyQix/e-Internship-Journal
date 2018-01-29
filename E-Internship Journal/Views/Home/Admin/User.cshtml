@@ -543,6 +543,10 @@
             $(this).parent().find('input[type="checkbox"]').trigger('click');
         });
 
+        $('#act_dataTable_filter').on('keyup change', 'input', function (e) {
+            $('#act_dataTable tbody input[type="checkbox"]:checked').trigger('click');
+        });
+
         // Handle click on "Select all" control
         $('thead input[name="select_all"]', table.table().container()).on('click', function (e) {
             if (this.checked) {
@@ -687,6 +691,10 @@
         // Handle click on table cells with checkboxes
         $('#deact_dataTable').on('click', 'tbody td, thead th:first-child', function (e) {
             $(this).parent().find('input[type="checkbox"]').trigger('click');
+        });
+
+        $('#deact_dataTable_filter').on('keyup change', 'input', function (e) {
+            $('#deact_dataTable tbody input[type="checkbox"]:checked').trigger('click');
         });
 
         // Handle click on "Select all" control
