@@ -29,7 +29,7 @@
     </div>
     &nbsp;
 </div>
-  <!-- View Event Modal -->
+<!-- View Event Modal -->
 <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -80,7 +80,6 @@
     </div>
 </div>
 <style>
-
     #calendar {
         max-width: 900px;
         padding: 1em;
@@ -106,8 +105,8 @@
     function loadTasksData(data) {
         console.dir(data);
 
-        for (i = 0; i < data.length; i++) {
-            var task = data[i];
+        for (i = 0; i < data.taskRecordObjs.length; i++) {
+            var task = data.taskRecordObjs[i];
 
             var source = {
                 events: [
@@ -121,6 +120,17 @@
             }
             $('#calendar').fullCalendar('addEventSource', source);
         }
+
+        var newEvent = {
+            // red areas where no events can be dropped
+            start: moment(data.studentBatch.StartDate).format('YYYY-MM-DD'),
+            end: moment(data.studentBatch.EndDate).format('YYYY-MM-DD'),
+            overlap: false,
+            rendering: 'background',
+            color: '#ff9f89'
+        }
+        $('#calendar').fullCalendar('renderEvent', newEvent, true);
+   
     }
 
     var dayRecordId;
@@ -155,13 +165,13 @@
         return event;
     }
     //------start calendar script-----
-  
+
     $('#calendar').fullCalendar({
         editable: false,
         eventLimit: true, // allow "more" link when too many events
         selectable: true,
         validRange: {
-                end: new Date() + 1
+            end: new Date() + 1
         },
         select: function (date, jsEvent, view) {
             //var title = prompt('Event Title:' + start + ' ' + end);
@@ -199,15 +209,15 @@
             //$("#divMessage").dialog("open");
 
         },
-        events: [
-            {
-                  // red areas where no events can be dropped   
-                start: '2018-01-24',
-                end: '2018-05-10',
-                overlap: false,
-                rendering: 'background',
-                color: '#ff9f89'
-            }
+        //events: [
+        //    {
+        //          // red areas where no events can be dropped
+        //        start: '2018-01-24',
+        //        end: '2018-05-10',
+        //        overlap: false,
+        //        rendering: 'background',
+        //        color: '#ff9f89'
+        //    }
         //        title: 'All Day Event',
         //        start: '2017-11-01'
         //    },
@@ -266,8 +276,8 @@
         //        title: 'Click for Google',
         //        url: 'http://google.com/',
         //        start: '2017-11-28'
-            //}
-        ],
+        //}
+        // ],
         dayClick: function (date, allDay, jsEvent, view) {
             var www = $('#eventModalLabel');
             //$('#eventModalLabel').text(date.format('DD MMMM YYYY'));

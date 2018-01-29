@@ -233,13 +233,13 @@
         g_taskData.then(function (data) {
             var g_Month = [];
             var g_MonthRecordId = [];
-            for (i = 0; i < data.length; i++) {
-                if (g_Month.includes(Math.ceil(data[i].WeekNo / 4))) {
+            for (i = 0; i < data.taskRecordObjs.length; i++) {
+                if (g_Month.includes(Math.ceil(data.taskRecordObjs[i].WeekNo / 4))) {
                     //Do nothing
                 } else {
 
-                    g_Month.push(Math.ceil(data[i].WeekNo / 4));
-                    g_MonthRecordId.push(data[i].MonthRecordId);
+                    g_Month.push(Math.ceil(data.taskRecordObjs[i].WeekNo / 4));
+                    g_MonthRecordId.push(data.taskRecordObjs[i].MonthRecordId);
                 }
 
             };
