@@ -16,15 +16,11 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="pull-left">
-                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
-
-                    </select>
+                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent"></select>
                 </div>
                 <div class="col-xs-12 pull-right">
                     <label>View By:&nbsp</label>
-                    <select class="form-control" id="selectWeek">
-             
-                    </select>
+                    <select class="form-control" id="selectMonthRecord"></select>
                 </div>
             </div>
         </div>
@@ -41,27 +37,25 @@
                         <th class="col-sm-1">Tick if performed</th>
                     </tr>
                 </thead>
-                <tbody>
-                   
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
         @*<div class="card-footer"></div>*@
     </div>
 </div>
-    <div class="card-body">
-        <div class="form-group">
-            <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Student_Journal'">
-                    Back
-                </button>
-            </div>
+<div class="card-body">
+    <div class="form-group">
+        <div class="col-12">
+            <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Student_Journal'">
+                Back
+            </button>
         </div>
     </div>
+</div>
 &nbsp;
 <script>
     $("div input").attr("disabled", "disabled");
-
+    var g_studentChecked;
     $(document).ready(function () {
         var cookies = document.cookie.split("; ");
 
@@ -83,16 +77,43 @@
 
             }
         }//End of for loop
-      
+
         var internshipRecordId = sessionStorage.getItem($('#selectstudent').val())
-   
-        loadCompetenciesData(internshipRecordId);
 
+        //loadCompetenciesData(internshipRecordId);
+        g_studentChecked = loadStudentChecked(internshipRecordId);
+        getStudentChecked(internshipRecordId);
 
+        $('#selectMonthRecord').on('change', function (e) {
+            getStudentChecked(internshipRecordId);
+
+        });
+        $('#selectstudent').on('change', function (e) {
+            getStudentChecked(internshipRecordId);
+
+        });
     });//End of document ready
+    function loadStudentChecked(inId) {
+        return $.ajax({
+            url: '/api/month_record/InternshipMonthRecords/' + inId, 
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                if (data.length > 0) {
+                    for (i = 0; i < data.length; i++) {
+                        var newOption = $('<option>').text('Month ' + (i + 1)).val(i);
+                        $('#selectMonthRecord').append(newOption);
+                    }
+                }//End of if statement
+            }//End of success
+        });//End of Ajax
+    }//End of function LoadAttendanceData
+
+    
     function loadCompetenciesData(inId) {
         $.ajax({
-            url: '/api/competencies/getInternshipCompetncies/' + inId,
+            url: '/api/competencies/getInternshipCompetncies/' + inId, 
             method: 'GET',
             dataType: 'json',
             cache: false,
@@ -105,6 +126,7 @@
                 //        <th width="10%"><div class='container'><div class='row'><button title="edit category" class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button><button title="add competency" class="btn btn-sm btn-success" onclick="findCompetencyModal()"><i class="fa fa-plus"></i></button><button title="delete category" class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button></div></div></th>
                 //    </tr>
                 //</thead>
+                $('#tblCompetencies').empty();
                 var competencyTable = $('#tblCompetencies');
                 for (i = 0; i < competencies.length; i++) {
                     var dataForCompetencyList = competencies[i].CompetencyList.sort(function (a, b) { return (a.ViewBy > b.ViewBy) ? 1 : ((b.ViewBy > a.ViewBy) ? -1 : 0); });
@@ -134,46 +156,36 @@
                     }
                 }
 
-                getStudentChecked(inId);
+                //getStudentChecked(inId);
             },//End of success
 
         });//End of Ajax
 
     }//End of function LoadCompetenciesData
     function getStudentChecked(inId) {
-
-        $.ajax({
-            url: '/api/month_record/InternshipMonthRecords/' + inId,
-            method: 'GET',
-            dataType: 'json',
-            success: function (data) {
-                console.dir(data);
-                monthRecords = data;
-                if (data.length > 0) {
-                    for (i = 0; i < data.length; i++) {
-                        var newOption = $('<option>').text('Month ' + (i + 1)).val(i);
-                        $('#selectMonthRecord').append(newOption);
-                    }
-                    var selectedMonth = monthRecords[0];
-                    var qq = $("input[name='CompetencyCheck']");
-                    $("input[name='CompetencyCheck']").each(function () {
-                        if (selectedMonth.CompetencyCheckeds.length > 0) {
-                            for (i = 0; i < selectedMonth.CompetencyCheckeds.length; i++) {
-                                var ccid = selectedMonth.CompetencyCheckeds[i].CompetencyId;
-                                if ($(this).val() == ccid) {
-                                    $(this).prop('checked', true);
-                                } else {
-                                    $(this).prop('checked', false);
-                                }
+        loadCompetenciesData(inId);
+        g_studentChecked.then(function (data) {
+            monthRecords = data;
+            if (data.length > 0) {
+            
+                //var selectedMonth = $('#selectMonthRecord').val();
+                var selectedMonth = monthRecords[$('#selectMonthRecord').val()];
+                $("input[name='CompetencyCheck']").each(function () {
+                    if (selectedMonth.CompetencyCheckeds.length > 0) {
+                        for (i = 0; i < selectedMonth.CompetencyCheckeds.length; i++) {
+                            var ccid = selectedMonth.CompetencyCheckeds[i].CompetencyId;
+                            if ($(this).val() == ccid) {
+                                $(this).prop('checked', true);
+                            } else {
+                                $(this).prop('checked', false);
                             }
-                        } else {
-                            $(this).prop('checked', false);
                         }
-                    });
-                }
-            }//End of success
-        });
-
+                    } else {
+                        $(this).prop('checked', false);
+                    }
+                });
+            }
+        });//End of success
     }
     function getCookie(name) {
         var dc = document.cookie;
