@@ -19,9 +19,9 @@
                 <div class="pull-left">
                     <label>Student Name:&nbsp</label>
                     <select class="form-control" id="selectstudent">
-                        <option>Amelia Goh</option>
+                        @*<option>Amelia Goh</option>
                         <option>Cho Qi Xiang</option>
-                        <option>Tan Chia Wei</option>
+                        <option>Tan Chia Wei</option>*@
                     </select>
                 </div>
                 <div class="col-xs-12 pull-right">
@@ -118,7 +118,7 @@
             //console.dir(getCookie(name));
             var cookievalue = getCookie(name);
 
-            if (name != "selectedStudent") {
+            if (name != "selectedStudent" && name != "InternshipRecordId") {
                 $studentInputElement = $('#selectstudent');
                 $optionElement = $('<option>').text(name).attr('value', cookievalue);
                 $studentInputElement.append($optionElement);
@@ -239,6 +239,7 @@
                 } else {
 
                     g_Month.push(Math.ceil(data.taskRecordObjs[i].WeekNo / 4));
+                    g_Month = g_Month.sort(function (a, b) { return (a > b) ? 1 : ((b > a) ? -1 : 0); });
                     g_MonthRecordId.push(data.taskRecordObjs[i].MonthRecordId);
                 }
 
@@ -259,14 +260,18 @@
     function selectedWeek() {
         g_taskData.then(function (data) {
             var finalData = [];
-            var selectedWeek = $('#selectWeek').val().split(',').map(Number);
-            for (i = 0; i < data.length; i++) {
-                if (selectedWeek.includes(data[i].MonthRecordId)) {
-                    finalData.push(data[i]);
+            console.dir($('#selectWeek').val());
+            var selectedWeek = $('#selectWeek').val() == null ? null : $('#selectWeek').val().split(',').map(Number);
+                for (i = 0; i < data.taskRecordObjs.length; i++) {
+                    if (selectedWeek.includes(data.taskRecordObjs[i].MonthRecordId)) {
+                        finalData.push(data.taskRecordObjs[i]);
 
-                }
-            }//End of for loop
-            loadDataTable(finalData);
+                    }
+                }//End of for loop
+                loadDataTable(finalData);
+          
+
+
         })
     }
 

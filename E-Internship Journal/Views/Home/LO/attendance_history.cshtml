@@ -162,7 +162,7 @@
             //console.dir(getCookie(name));
             var cookievalue = getCookie(name);
 
-            if (name != "selectedStudent") {
+            if (name != "selectedStudent" && name != "InternshipRecordId") {
                 $studentInputElement = $('#selectstudent');
                 $optionElement = $('<option>').text(name).attr('value', cookievalue);
                 $studentInputElement.append($optionElement);
@@ -305,6 +305,7 @@
                 } else {
 
                     g_Month.push(Math.ceil(data[i].WeekNo / 4));
+                    g_Month = g_Month.sort(function (a, b) { return (a > b) ? 1 : ((b > a) ? -1 : 0); });
                     g_MonthRecordId.push(data[i].MonthRecordId);
                 }
                 
