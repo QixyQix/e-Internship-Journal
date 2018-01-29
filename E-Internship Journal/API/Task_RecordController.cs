@@ -80,8 +80,9 @@ namespace E_Internship_Journal.API
 
                 });
             }
+            var studentBatch = _context.Internship_Records.Where(ir => ir.InternshipRecordId == id).Select(ir => new { ir.UserBatch.Batch.StartDate , ir.UserBatch.Batch.EndDate }).SingleOrDefault();
 
-            return new JsonResult(taskRecordObjs);
+            return new JsonResult( new { taskRecordObjs, studentBatch });
         }
 
         [HttpGet("getTasksForDay/{internrecordId}/{date}")]

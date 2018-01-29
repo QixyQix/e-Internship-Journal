@@ -32,7 +32,7 @@
                         <th class="col-sm-1">Tick if performed</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+              
             </table>
         </div>
         @*<div class="card-footer"></div>*@
@@ -82,7 +82,7 @@
                     var dataForCompetencyList = competencies[i].CompetencyList.sort(function (a, b) { return (a.ViewBy > b.ViewBy) ? 1 : ((b.ViewBy > a.ViewBy) ? -1 : 0); });
                     $threadElement = $('<thead></thead>');
                     $rowElement = $('<tr></tr>');
-                    $cellElement = $('<th></th>', { text: competencies[i].ViewBy + ". " + competencies[i].TitleCompetency }).attr('title', competencies[i].TitleCompetency);
+                    $cellElement = $('<th></th>', { text: competencies[i].ViewBy + ". " + competencies[i].TitleCompetency }).attr('title', competencies[i].TitleCompetency).attr('colspan', '2');
                     $rowElement.append($cellElement);
 
                     $threadElement.append($rowElement);
@@ -97,7 +97,7 @@
                         $cellElement.html(dataForCompetencyList[k].Description);
                         $rowElement.append($cellElement);
 
-                        $cellElement = $('<input name="CompetencyCheck" type="checkbox" value="' + dataForCompetencyList[k].CompetencyId + '">');
+                        $cellElement = $('<td style="text-align:center; vertical-align:center;"><input name="CompetencyCheck" type="checkbox" value="' + dataForCompetencyList[k].CompetencyId + '"></td>');
                         $rowElement.append($cellElement);
 
                         $tbodyElement.append($rowElement);
