@@ -11,6 +11,10 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System.Text;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace E_Internship_Journal.API
 {
@@ -56,6 +60,8 @@ namespace E_Internship_Journal.API
                 {
                     oneProject.ProjectId,
                     oneProject.ProjectName,
+                    oneProject.Supervisor.PhoneNumber,
+                    oneProject.Supervisor.Email,
                     oneProject.Supervisor.FullName,
                     oneProject.Company.CompanyName
                 });
@@ -105,7 +111,9 @@ namespace E_Internship_Journal.API
                         ProjectName = foundProject.ProjectName,
                         CompanyId = foundProject.Company.CompanyId,
                         CompanyName = foundProject.Company.CompanyName,
-                        Email = foundProject.Supervisor.Email
+                        Email = foundProject.Supervisor.Email,
+                        foundProject.Supervisor.PhoneNumber,
+                        foundProject.Supervisor.FullName
                     };//end of creation of the response object
                     return new JsonResult(response);
                 }
@@ -163,25 +171,22 @@ namespace E_Internship_Journal.API
         [HttpPost("SaveNewProjectInformation")]
         public async Task<IActionResult> SaveNewProjectInformation([FromBody] string value)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }                //string tqq = "ADMIN@TEST.com";
-                             //_userManager.
-                             //var userManager = await _userManager.FindByEmailAsync(tqq);
-                             //userManager.Id;
-                             //var qqq = userManager.Id;
-                             //var claims = _userManager.GetClaimsAsync();
-                             //_userManager.GetUserId((ClaimsPrincipal)qqq);
-                             //_userManager.
-                             //var ttt = await _userManager.GetClaimsAsync(userManager);
-                             //var qw = _userManager.GetClaimsAsync(userManager);
-                             //var user = User;
-                             //var iden = (ClaimsIdentity)User;
-                             //var claims = _userManager.GetClaimsAsync(userManager);
-                             //IEnumerable<Claim> claims = iden.Claims;
-                             //var ww = _context.ApplicationUsers.Find("ADMIN@TEST.com");
-                             //var ttt = _userManager.GetUserId(userManager);
+            //string tqq = "ADMIN@TEST.com";
+            //_userManager.
+            //var userManager = await _userManager.FindByEmailAsync(tqq);
+            //userManager.Id;
+            //var qqq = userManager.Id;
+            //var claims = _userManager.GetClaimsAsync();
+            //_userManager.GetUserId((ClaimsPrincipal)qqq);
+            //_userManager.
+            //var ttt = await _userManager.GetClaimsAsync(userManager);
+            //var qw = _userManager.GetClaimsAsync(userManager);
+            //var user = User;
+            //var iden = (ClaimsIdentity)User;
+            //var claims = _userManager.GetClaimsAsync(userManager);
+            //IEnumerable<Claim> claims = iden.Claims;
+            //var ww = _context.ApplicationUsers.Find("ADMIN@TEST.com");
+            //var ttt = _userManager.GetUserId(userManager);
             string customMessage = "";
             try
             {
@@ -215,30 +220,488 @@ namespace E_Internship_Journal.API
             return httpOkResult;
         }
 
-        // DELETE: api/Projects/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteProject([FromRoute] int id)
+        [HttpPut("SaveNewProjectRecord")]
+        [Authorize(Roles = "SLO")]
+        public async Task<IActionResult> SaveNewProjectRecord([FromBody] string value)
         {
-            if (!ModelState.IsValid)
+            string messageList = "";
+            string alertType = "success";
+            var projectNewInput = JsonConvert.DeserializeObject<dynamic>(value);
+            //var projectRecord = _context.TouchPointRecords
+            //    .Where(tr => tr.TouchPointId == id).SingleOrDefault();
+            // var www = projectNewInput.sss;
+
+            try
             {
-                return BadRequest(ModelState);
+                var checkSupervisorExist = (ApplicationUser)await _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail.Value);
+
+                int companyId = Convert.ToInt32(projectNewInput.Company.Value);
+                var existingProject = _context.Projects.Where(pr => pr.CompanyID == companyId).ToList();
+                var checkError = false;
+
+                //Check if supervisor acount exist
+                if (checkSupervisorExist != null)
+                {
+                    if (projectNewInput.ProjectId == null)
+                    {
+                        foreach (var oneExistingProject in existingProject)
+                        {
+                            if (oneExistingProject.ProjectName.Equals(projectNewInput.ProjectName.Value, StringComparison.OrdinalIgnoreCase))
+                            {
+                                messageList = "Duplicate Project in the same company";
+                                alertType = "error";
+                                checkError = true;
+                                continue;
+                            }
+                        }
+                        if (checkError == true)
+                        {
+                            return new OkObjectResult(new
+                            {
+                                AlertType = alertType,
+                                Messages = messageList
+                            });
+                        }
+                        //Save new project
+                        Project newProject = new Project
+                        {
+                            ProjectName = projectNewInput.ProjectName.Value,
+                            CompanyID = Convert.ToInt32(projectNewInput.Company.Value),
+                            SupervisorId = checkSupervisorExist.Id
+                        };
+                        _context.Projects.Add(newProject);
+
+                        messageList = "Saved Project";
+                        alertType = "success";
+
+                    }
+                    else
+                    {
+                        foreach (var oneExistingProject in existingProject)
+                        {
+                            if (oneExistingProject.ProjectName.Equals(projectNewInput.ProjectName.Value, StringComparison.OrdinalIgnoreCase) && oneExistingProject.ProjectId != Convert.ToInt32(projectNewInput.ProjectId.Value))
+                            {
+                                messageList = "Duplicate Project in the same company";
+                                alertType = "error";
+                                checkError = true;
+                                continue;
+                            }
+                        }
+                        if (checkError == true)
+                        {
+                            return new OkObjectResult(new
+                            {
+                                AlertType = alertType,
+                                Messages = messageList
+                            });
+                        }
+                        var projectId = (int)Int32.Parse(projectNewInput.ProjectId.Value);
+                        var projectRecord = _context.Projects.Where(pr => pr.ProjectId == projectId).SingleOrDefault();
+
+                        projectRecord.ProjectName = projectNewInput.ProjectName.Value;
+                        projectRecord.CompanyID = Int32.Parse(projectNewInput.Company.Value);
+                        messageList = "Saved Project";
+                        alertType = "success";
+
+                    }
+                    //Check if Supervisor name & Phone Number matches with existing record in the DB
+                    //if (checkSupervisorExist.FullName.Equals(projectNewInput.SupervisorName.Value, StringComparison.OrdinalIgnoreCase) && (checkSupervisorExist.PhoneNumber.Equals(projectNewInput.SupervisorNumber.Value)))
+                    //{
+                    if (projectNewInput.SupervisorName.Value.Equals(checkSupervisorExist.FullName, StringComparison.OrdinalIgnoreCase) && (projectNewInput.SupervisorNumber.Value.Equals(checkSupervisorExist.PhoneNumber)))
+                    {
+                        //Do nothing
+                        messageList = "Saved Project";
+                        alertType = "success";
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        checkSupervisorExist.FullName = projectNewInput.SupervisorName.Value;
+                        checkSupervisorExist.PhoneNumber = projectNewInput.SupervisorNumber.Value;
+                        messageList = "Supervisor details has been overriden";
+                        alertType = "warning";
+                        _context.SaveChanges();
+                        // Return Status code with existing Supervisor account value for further action from the user
+                        //return StatusCode(202, new { checkSupervisorExist.FullName, checkSupervisorExist.PhoneNumber });
+                    }
+                    var responseObject = new
+                    {
+                        AlertType = alertType,
+                        Messages = messageList
+                    };
+                    return new OkObjectResult(responseObject);
+                }
+                else
+                {
+                    //Create user
+                    var userStore = new UserStore<ApplicationUser>(_context);
+                    var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
+                    var newSupervisorUser = new ApplicationUser
+                    {
+                        UserName = projectNewInput.SupervisorEmail.Value,
+                        Email = projectNewInput.SupervisorEmail.Value,
+                        FullName = projectNewInput.SupervisorName.Value,
+                        PhoneNumber = projectNewInput.SupervisorNumber.Value
+                    };
+                    PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
+                    newSupervisorUser.PasswordHash = ph.HashPassword(newSupervisorUser, generateRandomString(11));
+
+                    await userManager.CreateAsync(newSupervisorUser);
+                    await userManager.AddToRoleAsync(newSupervisorUser, "SUPERVISOR");
+
+                    if (projectNewInput.ProjectId == null)
+                    {
+                        foreach (var oneExistingProject in existingProject)
+                        {
+                            if (oneExistingProject.ProjectName.Equals(projectNewInput.ProjectName.Value, StringComparison.OrdinalIgnoreCase))
+                            {
+                                messageList = "Duplicate Project in the same company";
+                                alertType = "error";
+                                checkError = true;
+                                continue;
+                            }
+                        }
+                        if (checkError == true)
+                        {
+                            return new OkObjectResult(new
+                            {
+                                AlertType = alertType,
+                                Messages = messageList
+                            });
+                        }
+                        //Save new project and assign with supervisor's new acount
+                        Project newProject = new Project
+                        {
+                            ProjectName = projectNewInput.ProjectName.Value,
+                            CompanyID = Convert.ToInt32(projectNewInput.Company.Value),
+                            SupervisorId = newSupervisorUser.Id
+                        };
+                        _context.Projects.Add(newProject);
+                    }
+                    else
+                    {
+                        foreach (var oneExistingProject in existingProject)
+                        {
+                            if (oneExistingProject.ProjectName.Equals(projectNewInput.ProjectName.Value, StringComparison.OrdinalIgnoreCase))
+                            {
+                                messageList = "Duplicate Project in the same company";
+                                alertType = "error";
+                                checkError = true;
+                                continue;
+                            }
+                        }
+                        if (checkError == true)
+                        {
+                            return new OkObjectResult(new
+                            {
+                                AlertType = alertType,
+                                Messages = messageList
+                            });
+                        }
+                        var projectId = (int)Int32.Parse(projectNewInput.ProjectId.Value);
+                        var projectRecord = _context.Projects.Where(pr => pr.ProjectId == projectId).SingleOrDefault();
+
+                        projectRecord.ProjectName = projectNewInput.ProjectName.Value;
+                        projectRecord.CompanyID = Int32.Parse(projectNewInput.Company.Value);
+                        projectRecord.SupervisorId = newSupervisorUser.Id;
+
+                        //_context.SaveChanges();
+                        var repeatPinGeneration = true;
+                        do
+                        {
+                            var registationPin = generateRandomString(50);
+                            if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
+                            {
+                                //Create new registration pin
+                                var newRegistrationPin = new RegistrationPin
+                                {
+                                    User = newSupervisorUser,
+                                    RegistrationPinId = generateRandomString(50)
+                                };
+                                _context.RegistrationPins.Add(newRegistrationPin);
+                                repeatPinGeneration = false;
+                            }
+                        } while (repeatPinGeneration);
+
+                        await _context.SaveChangesAsync();
+                    }
+                 
+
+                    messageList = "Saved Project & Created Supervisor Account";
+                    alertType = "success";
+                    var responseObject = new
+                    {
+                        AlertType = alertType,
+                        Messages = messageList
+                    };
+
+                    return new OkObjectResult(responseObject);
+
+                }
+
+
+                //var supervisorRecord = _context.Users
+                //    .Where(ur => ur.Id == exitingSupervisor);
+
+            }
+            catch (Exception exceptionObject)
+            {
+                return BadRequest(new
+                {
+                    exceptionObject.Message
+                });
             }
 
-            var project = await _context.Projects.SingleOrDefaultAsync(m => m.ProjectId == id);
-            if (project == null)
+        }//End of Http Put
+
+        // DELETE: api/Projects/5
+        [HttpDelete("DeleteProjects/bulk")]
+        public async Task<IActionResult> DeleteProject([FromQuery]string selectedProjects)
+        {
+            var listOfId = selectedProjects.Split(',').Select(Int32.Parse).ToList();
+            //   var project = "tr";
+            //var project = await _context.Projects.SingleOrDefaultAsync(m => m.ProjectId == id);
+            string alertType = "success";
+            List<String> messageList = new List<String>();
+            try
             {
-                return NotFound();
+                var foundProjects = _context.Projects.Include(ir => ir.InternshipRecords).ToList();
+
+                foreach (var oneProject in foundProjects)
+                {
+                    if (listOfId.Contains(oneProject.ProjectId) && oneProject.InternshipRecords.Count != 0)
+                    {
+                        alertType = "warning";
+                        messageList.Add(oneProject.ProjectName + " not removed");
+                    }
+                    else if (listOfId.Contains(oneProject.ProjectId) && oneProject.InternshipRecords.Count == 0)
+                    {
+                        _context.Projects.Remove(oneProject);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                //messageList.Add("Selected Records removed successfully!");
+                var responseObject = new
+                {
+                    AlertType = alertType,
+                    Messages = messageList
+                };
+
+                return new OkObjectResult(responseObject);
+
+            }
+            catch (Exception exceptionObject)
+            {
+                object httpFailRequestResultMessage = new { Message = "Unable to Process" };
+                //Return a bad http response message to the client
+                return BadRequest(httpFailRequestResultMessage);
             }
 
-            _context.Projects.Remove(project);
-            await _context.SaveChangesAsync();
 
-            return Ok(project);
         }
+        [HttpPost("MassEnrollProjects/")]
+        [Authorize(Roles = "SLO")]
+        public async Task<IActionResult> MassEnrollProjects()
+        {
+            List<string> messageList = new List<string>();
+            string alertType = "success";
+            var files = Request.Form.Files;
+            ////Get the batch & course
+            //var thisBatch = _context.Batches
+            //    .Where(batch => batch.BatchId == id)
+            //    .Include(batch => batch.Course)
+            //    .Single();
 
+            var csvFile = files[0];
+
+            using (var memoryStream = new MemoryStream())
+            {
+                List<string> csvLine = new List<string>();
+                await csvFile.CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
+                using (var streamReader = new StreamReader(memoryStream))
+                {
+                    var heading = streamReader.ReadLine();
+                    //Check if CSV file is in correct order
+                    if (!heading.Equals("Project Name,Company Name,Supervisor Name,Supervisor Contact Number,Supervisor Email"))
+                    {
+                        return BadRequest(new { Message = "CSV file does not follow correct format" });
+                    }
+
+                    //Read the file
+                    string fileLine = "";
+
+                    while ((fileLine = streamReader.ReadLine()) != null)
+                    {
+                        csvLine.Add(fileLine);
+                    }
+                }
+                //  var projects = _context.Projects.Select(c)
+                //var projects = from c in _context.Projects
+                int currentRow = 2;
+                foreach (var line in csvLine)
+                {
+
+                    if (!(line.Replace(",", "").Trim().Equals("")))
+                    {
+                        try
+                        {
+
+
+                            //Get individual data
+                            string[] oneProjectData = line.Split(',');
+                            //var www = oneProjectData[3];
+                            var company = _context.Companies.Include(pr => pr.Projects).SingleOrDefault(companyData => companyData.CompanyName.Equals(oneProjectData[1], StringComparison.OrdinalIgnoreCase));
+                            // var user = _context.ApplicationUsers.SingleOrDefault(appuser => appuser.UserName.Equals(oneStudentData[1], StringComparison.OrdinalIgnoreCase));
+                            var checkError = false;
+                            if (!Regex.IsMatch(oneProjectData[3], "^[0-9]+$"))
+                            {
+                                alertType = "warning";
+                                messageList.Add("Enter valid Phone Number at Row " + currentRow);
+                                checkError = true;
+                                // return BadRequest(FailedMessage);
+                            }
+                            if (company.Projects.Select(pr => pr.ProjectName).Contains(oneProjectData[0]))
+                            {
+                                alertType = "warning";
+                                messageList.Add("Duplicate Project Name at Row " + currentRow);
+                                checkError = true;
+                            }
+                            //Regex reference http://www.rhyous.com/2010/06/15/regular-expressions-in-cincluding-a-new-comprehensive-email-pattern/
+                            string emailPattern = @"^(([^<>()[\]\\.,;:\s@\""""]+(\.[^<>()[\]\\.,;:\s@\""""]+)*)|(\"""".+\""""))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$";
+                            if (!Regex.IsMatch(oneProjectData[4], emailPattern))
+                            {
+                                alertType = "warning";
+                                messageList.Add("Invalid Email at Row " + currentRow);
+                                checkError = true;
+                            }
+                            if (checkError == true)
+                            {
+                                continue;
+                            }
+                            if (company != null)
+                            {
+                                //Check if Supervisor is already existed
+                                var existingSupervisorAccount = await _userManager.FindByEmailAsync(oneProjectData[4]);
+                                if (existingSupervisorAccount != null)
+                                {
+                                    if (existingSupervisorAccount.FullName.Equals(oneProjectData[2], StringComparison.OrdinalIgnoreCase) && (existingSupervisorAccount.PhoneNumber.Equals(oneProjectData[3])))
+                                    {
+                                        //Save new project
+                                        Project newProject = new Project
+                                        {
+
+                                            ProjectName = oneProjectData[0],
+                                            CompanyID = company.CompanyId,
+                                            SupervisorId = existingSupervisorAccount.Id
+                                        };
+                                        _context.Projects.Add(newProject);
+                                        //  _context.SaveChanges();
+                                    }
+                                    else
+                                    {
+                                        // Return Status code with existing Supervisor account value for further action from the user
+                                        //return StatusCode(202, new { SupervisorName = oneProjectData[2], SupervisorContact = oneProjectData[3] });
+                                        existingSupervisorAccount.FullName = oneProjectData[2];
+                                        existingSupervisorAccount.PhoneNumber = oneProjectData[3];
+                                        alertType = "warning";
+                                        messageList.Add("Supervisor details for " + oneProjectData[2] + " has been overriden");
+                                    }
+                                }
+                                else
+                                {
+                                    var userStore = new UserStore<ApplicationUser>(_context);
+                                    var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
+                                    var newSupervisorUser = new ApplicationUser
+                                    {
+                                        UserName = oneProjectData[4],
+                                        Email = oneProjectData[4],
+                                        FullName = oneProjectData[2],
+                                        PhoneNumber = oneProjectData[3]
+                                    };
+
+                                    PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
+                                    newSupervisorUser.PasswordHash = ph.HashPassword(newSupervisorUser, generateRandomString(11));
+
+                                    await userManager.CreateAsync(newSupervisorUser);
+                                    await userManager.AddToRoleAsync(newSupervisorUser, "SUPERVISOR");
+
+                                    //Save new project and assign with supervisor's new acount
+                                    Project newProject = new Project
+                                    {
+                                        ProjectName = oneProjectData[0],
+                                        CompanyID = company.CompanyId,
+                                        SupervisorId = newSupervisorUser.Id
+                                    };
+                                    _context.Projects.Add(newProject);
+
+                                    var repeatPinGeneration = true;
+                                    do
+                                    {
+                                        var registationPin = generateRandomString(50);
+                                        if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
+                                        {
+                                            //Create new registration pin
+                                            var newRegistrationPin = new RegistrationPin
+                                            {
+                                                User = newSupervisorUser,
+                                                RegistrationPinId = generateRandomString(50)
+                                            };
+                                            _context.RegistrationPins.Add(newRegistrationPin);
+                                            repeatPinGeneration = false;
+                                        }
+                                    } while (repeatPinGeneration);
+
+                                    // await _context.SaveChangesAsync();
+                                }
+                                await _context.SaveChangesAsync();
+                            }
+                            else
+                            {
+                                alertType = "warning";
+                                messageList.Add("Unable to locate Company Details " + oneProjectData[1]);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            return BadRequest();
+
+                        }
+                        finally
+                        {
+                            ++currentRow;
+                        }
+                    }
+                }//End of foreach loop
+            }//End of reading files 
+
+            //messageList.Add("All Records saved successfully!");
+            var responseObject = new
+            {
+                AlertType = alertType,
+                Messages = messageList
+            };
+
+            return new OkObjectResult(responseObject);
+        }
         private bool ProjectExists(int id)
         {
             return _context.Projects.Any(e => e.ProjectId == id);
+        }
+        public string generateRandomString(int size)
+        {
+            //ACKNOWLEDGEMENT: http://azuliadesigns.com/generate-random-strings-characters/
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 1; i < size + 1; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+
+            return builder.ToString();
         }
     }
 }

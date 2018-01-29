@@ -10,24 +10,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>SB Student - Start Bootstrap Template</title>
+    <title id="tabname">SPEIJ - @ViewData["Title"]</title>
     <!-- Bootstrap core CSS -->
     <link href="~/js/bootstrap/css/bootstrap.css" rel="stylesheet">
     <!-- Custom fonts for this template -->
-    <link href="~/js/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+    <link href="~/js/font-awesome/css/font-awesome.css" rel="stylesheet" />
     <!-- Plugin CSS -->
     <link href="~/js/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+    <link href="~/lib/select2/dist/css/select2.css" rel="stylesheet" />
+    <link href="~/lib/select2-bootstrap-theme/dist/select2-bootstrap.css" rel="stylesheet" />
     <!-- Custom styles for this template -->
     <link href="~/css/sb-admin.css" rel="stylesheet">
     <link href="~/css/fullcalendar.css" rel="stylesheet">
     <link href="~/css/bootstrap-datepicker3.css" rel="stylesheet" />
     <link href="~/js/datatables/buttons.dataTables.css" rel="stylesheet" />
-    <link href="~/js/datatables/editor.dataTables.css" rel="stylesheet" />
+    @*<link href="~/js/datatables/editor.dataTables.css" rel="stylesheet" />*@
     <link href="~/lib/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet" />
     <link href="~/lib/sweetalert2/dist/sweetalert2.css" rel="stylesheet" />
     <link href="~/lib/bootstrap-switch/dist/css/bootstrap-switch.css" rel="stylesheet" />
     <link href="~/lib/bootstrap-multiselect/dist/css/bootstrap-multiselect.css" rel="stylesheet" />
     <link href="~/css/freelancer.css" rel="stylesheet" />
+    @*<link href="~/css/creative.css" rel="stylesheet" />*@
     <!-- Bootstrap core JavaScript -->
     <script src="~/js/jquery/jquery.js"></script>
     <script src="~/js/calendar/moment.min.js"></script>
@@ -40,6 +43,8 @@
     <script src="~/js/datatables/dataTables.bootstrap4.js"></script>
     <script src="~/lib/sweetalert2/dist/sweetalert2.js"></script>
     <script src="~/lib/bootstrap-multiselect/dist/js/bootstrap-multiselect.js"></script>
+    <script src="~/lib/tinymce/tinymce.js"></script>
+    <script src="~/lib/datetime-moment/dist/datetime-moment.js"></script>
 </head>
 <body class="fixed-nav sticky-footer bg-dark sidenav-toggled" id="page-top">
 
@@ -105,6 +110,14 @@
                             </span>
                         </a>
                     </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Mentoring">
+                        <a class="nav-link" href="~/Home/Mentoring">
+                            <i class="fa fa-fw fa-eye"></i>
+                            <span class="nav-link-text">
+                                Mentoring Session
+                            </span>
+                        </a>
+                    </li>
                     <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Guidelines">
                         <a class="nav-link" href="~/Home/Guide">
                             <i class="fa fa-fw fa-info"></i>
@@ -121,11 +134,11 @@
                             </span>
                         </a>
                     </li>
-                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Mentoring">
-                        <a class="nav-link" href="~/Home/Mentoring">
-                            <i class="fa fa-fw fa-eye"></i>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Touchpoint">
+                        <a class="nav-link" href="~/Home/touchpoint">
+                            <i class="fa fa-fw fa-comment-o"></i>
                             <span class="nav-link-text">
-                                Mentoring Session
+                                Touchpoint
                             </span>
                         </a>
                     </li>
@@ -140,7 +153,6 @@
                             </span>
                         </a>
                     </li>
-
                 }
                 else if (User.IsInRole("LO"))
                 {
@@ -164,12 +176,81 @@
                             </span>
                         </a>
                     </li>
-
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage Batch">
+                        <a class="nav-link" href="~/Home/Manage_Batch">
+                            <i class="fa fa-fw fa-users"></i>
+                            <span class="nav-link-text">
+                                Manage Batch
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage Competency">
+                        <a class="nav-link" href="~/Home/Manage_Competency">
+                            <i class="fa fa-fw fa-check-square-o"></i>
+                            <span class="nav-link-text">
+                                Manage Competency
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage Company">
+                        <a class="nav-link" href="~/Home/Manage_Company">
+                            <i class="fa fa-fw fa-building"></i>
+                            <span class="nav-link-text">
+                                Manage Company
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage Project">
+                        <a class="nav-link" href="~/Home/Manage_Project">
+                            <i class="fa fa-fw fa-briefcase"></i>
+                            <span class="nav-link-text">
+                                Manage Project
+                            </span>
+                        </a>
+                    </li>
                 }
                 else
                 {
-
-
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage User">
+                        <a class="nav-link" href="~/Home/ViewUser">
+                            <i class="fa fa-fw fa-user-plus"></i>
+                            <span class="nav-link-text">
+                                Manage User
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage Course">
+                        <a class="nav-link" href="~/Home/ViewCourse">
+                            <i class="fa fa-fw fa-book"></i>
+                            <span class="nav-link-text">
+                                Manage Course
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage Batch">
+                        <a class="nav-link" href="~/Home/ViewBatch">
+                            <i class="fa fa-fw fa-users"></i>
+                            <span class="nav-link-text">
+                                Manage Batch
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage Company">
+                        <a class="nav-link" href="~/Home/ViewCompany">
+                            <i class="fa fa-fw fa-building"></i>
+                            <span class="nav-link-text">
+                                Manage Company
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Manage Project">
+                        <a class="nav-link" href="~/Home/ViewProject">
+                            <i class="fa fa-fw fa-briefcase"></i>
+                            <span class="nav-link-text">
+                                Manage Project
+                            </span>
+                        </a>
+                    </li>
                 }
             </ul>
             <ul class="navbar-nav sidenav-toggler">
@@ -206,13 +287,13 @@
     <div class="content-wrapper">
         @RenderBody()
 
-        <footer class="sticky-footer">
-            <div class="container">
-                <div class="text-center">
-                    <small>Copyright &copy; your website 2017</small>
+        @*<footer class="sticky-footer">
+                <div class="container">
+                    <div class="text-center">
+                        <small>Copyright &copy; your website 2017</small>
+                    </div>
                 </div>
-            </div>
-        </footer>
+            </footer>*@
     </div>
     @RenderSection("scripts", required: false)
     <!-- /end.content-wrapper -->
@@ -299,62 +380,62 @@
 
 
     @*<!-- Edit Manage Student Modal -->
-    <div class="modal fade" id="updateManageStudentModal" tabindex="-1" role="dialog" aria-labelledby="updateManageStudentModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="updateManageStudentModalLabel">Edit Student</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="container">
-                        <form>
-                            <div class="form-group">
-                                <label class="control-label" for="studentID">Student ID:</label>
-                                <div class="col-sm-6">
-                                    <input class="form-control" id="studentID" type="text" value="">
+        <div class="modal fade" id="updateManageStudentModal" tabindex="-1" role="dialog" aria-labelledby="updateManageStudentModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateManageStudentModalLabel">Edit Student</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <form>
+                                <div class="form-group">
+                                    <label class="control-label" for="studentID">Student ID:</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" id="studentID" type="text" value="">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="name">Name:</label>
-                                <div class="col-sm-6">
-                                    <input class="form-control" id="name" type="text" value="">
+                                <div class="form-group">
+                                    <label class="control-label" for="name">Name:</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" id="name" type="text" value="">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="project">Project:</label>
-                                <div class="col-sm-6">
-                                    <select class="form-control" id="project">
-                                        <option>Parliament</option>
-                                        <option>CAAS</option>
-                                        <option>MDA</option>
-                                        <option>WIS</option>
-                                    </select>
+                                <div class="form-group">
+                                    <label class="control-label" for="project">Project:</label>
+                                    <div class="col-sm-6">
+                                        <select class="form-control" id="project">
+                                            <option>Parliament</option>
+                                            <option>CAAS</option>
+                                            <option>MDA</option>
+                                            <option>WIS</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label" for="liaisonOfficer">Liaison Officer:</label>
-                                <div class="col-sm-6">
-                                    <select class="form-control" id="liaisonOfficer">
-                                        <option>Mr Vincent Goh</option>
-                                        <option>Ms Leong Fong Sow</option>
-                                        <option>Mr Lim De Yang</option>
-                                        <option>Dr Leong</option>
-                                    </select>
+                                <div class="form-group">
+                                    <label class="control-label" for="liaisonOfficer">Liaison Officer:</label>
+                                    <div class="col-sm-6">
+                                        <select class="form-control" id="liaisonOfficer">
+                                            <option>Mr Vincent Goh</option>
+                                            <option>Ms Leong Fong Sow</option>
+                                            <option>Mr Lim De Yang</option>
+                                            <option>Dr Leong</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="submit">Submit</button>
+                        <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="submit">Submit</button>
-                    <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
-                </div>
             </div>
-        </div>
-    </div>*@
+        </div>*@
 
     <!-- uploadcsv Modal -->
     <div class="modal fade" id="uploadcsvModal" tabindex="-1" role="dialog" aria-labelledby="uploadcsvModalLabel" aria-hidden="true">
@@ -372,7 +453,8 @@
                         <form id="csv_form" method="post" enctype="multipart/form-data">
                             <div class="form-group">
                                 <input class="form-control" id="csv_upload" name="files" type="file">
-                                
+
+                                Click <a href="http://www.yahoo.com" download>here</a> to download the CSV Template file.
                             </div>
 
                         </form>
@@ -432,6 +514,9 @@
     <!-- Custom scripts for this template -->
     <script src="~/js/sb-admin.js"></script>
     <script src="~/js/datatables/dataTables.buttons.js"></script>
+    <script src="~/lib/jszip/dist/jszip.js"></script>
+    <script src="~/js/datatables/pdfmake.js"></script>
+    <script src="~/js/datatables/vfs_fonts.js"></script>
     <script src="~/js/datatables/buttons.html5.js"></script>
     <script src="~/js/datatables/buttons.print.js"></script>
     <script src="~/js/datatables/dataTables.select.js"></script>
@@ -439,10 +524,33 @@
     <script src="~/lib/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
     <script src="~/lib/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
     <script src="~/js/freelancer.js"></script>
+    <script src="~/lib/select2/dist/js/select2.full.js"></script>
     <script src="~/js/jqBootstrapValidation.js"></script>
-    <script src="~/js/contact_me.js"></script>
     <script>
+        function FilterInput(event) {
+            var keyCode = ('which' in event) ? event.which : event.keyCode;
+
+            isNotWanted = (keyCode == 69 || keyCode == 101);
+            return !isNotWanted;
+        };
+        function handlePaste(e) {
+            var clipboardData, pastedData;
+
+            // Get pasted data via clipboard API
+            clipboardData = e.clipboardData || window.clipboardData;
+            pastedData = clipboardData.getData('Text').toUpperCase();
+
+            if (pastedData.indexOf('E') > -1) {
+                //alert('found an E');
+                e.stopPropagation();
+                e.preventDefault();
+            }
+        };
         $(document).ready(function () {
+            $.fn.dataTable.moment('HH:mm MMM D, YY'); //format sort date
+            $.fn.dataTable.moment('dddd, MMMM Do, YYYY'); //format sort date
+            $.fn.select2.defaults.set("theme", "bootstrap");
+
             $("#submit").click(function () {
                 console.log(convertTime12to24($("#timeoutval").val()));
             });
@@ -469,7 +577,7 @@
                 format: 'dd/mm/yyyy',
                 todayHighlight: true,
                 autoclose: true
-             
+
             });
             //------end date script-----
             // check if this day has an event before

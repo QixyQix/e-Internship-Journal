@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Final Grading Page";
+}
+<div class="container-fluid">
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -14,17 +17,15 @@
             <div class="form-group">
                 <div class="pull-left">
                     <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
-                        <option>Amelia Goh</option>
-                        <option>Cho Qi Xiang</option>
-                        <option>Tan Chia Wei</option>
+
                     </select>
                 </div>
             </div>
         </div>
     </div>
     <div class="card">
-        <div class="card-header">
-            <i class="fa fa-pencil"></i> Grading
+        <div class="card-header d-inline">
+            <i class="fa fa-graduation-cap fa-2x pull-left"></i> <h3>Grading</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -105,7 +106,7 @@
 <div class="card-body">
     <div class="form-group">
         <div class="col-12">
-            <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+            <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Index'">
                 Back
             </button>
             <div class="pull-right">
@@ -118,4 +119,54 @@
 </div>
 &nbsp;
 <script>
+    var cookies = document.cookie.split("; ");
+
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var eqPos = cookie.indexOf("=");
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        //console.dir(getCookie(name));
+        var cookievalue = getCookie(name);
+
+        if (name != "selectedStudent") {
+            $studentInputElement = $('#selectstudent');
+            $optionElement = $('<option>').text(name).attr('value', cookievalue);
+            $studentInputElement.append($optionElement);
+
+        } else {
+            $('#selectstudent').val(cookievalue);
+            $('#studentId').text(cookievalue);
+
+        }
+    }//End of for loop
+    
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+    function setCookie() {
+        var inName = "selectedStudent";
+        var inValue = $('#selectstudent').val();
+        //setCookie("selectedStudent", ("#selectstudent").val());
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    }
+
+
 </script>

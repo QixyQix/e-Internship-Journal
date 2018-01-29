@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Manage Grade Page";
+}
+<div class="container-fluid">
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -20,8 +23,8 @@
         </div>
     </div>
     <div class="card mb-3">
-        <div class="card-header">
-            <i class="fa fa-table"></i> Manage Grades
+        <div class="card-header d-inline">
+            <i class="fa fa-graduation-cap fa-2x pull-left"></i> <h3>Manage Grades</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -82,7 +85,7 @@
     <div class="card-body">
         <div class="form-group">
             <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Manage_Batch'">
                     Back
                 </button>
                 <button class="btn btn-primary pull-right" id="submit">
@@ -96,6 +99,8 @@
 
 <script>
     function hideFilter1() {
+        $("#grade_dataTable thead input").val("");
+        $("#grade_dataTable thead input").change();
         $('#grade_dataTable thead tr#filterrow').toggle();
     }
 
@@ -141,6 +146,9 @@
             //},
             dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+            //buttons: [
+            //    'excelHtml5',
+            //],
             ajax: {
                 url: '/Api/Task_Record',
                 dataSrc: ''

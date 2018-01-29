@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Task Page";
 }
 
 <div class="container-fluid">
@@ -38,8 +38,8 @@
     </div>
     <!-- Example DataTables Card-->
     <div class="card mb-3">
-        <div class="card-header">
-            <i class="fa fa-table"></i> Attendance Taking
+        <div class="card-header d-inline">
+            <i class="fa fa-calendar fa-2x pull-left"></i> <h3>Daily Tasks</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -67,7 +67,7 @@
     <div class="card-body">
         <div class="form-group">
             <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Student_Journal'">
                     Back
                 </button>
             </div>
@@ -134,11 +134,7 @@
 
         g_taskData = loadTaskData(g_getLocalStorage);
         loadWeekOption();
-        $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
-            $('#commentModal').modal('show');
-            //var review = sessionStorage.getItem($(this).val()) == null ? "No Remarks" : sessionStorage.getItem($(this).val());
-            $('#review').text(sessionStorage.getItem($(this).val()) == null ? "No Remarks" : sessionStorage.getItem($(this).val()));
-        });
+
 
         $('#selectstudent').on('change', function (e) {
             //console.dir('test');
@@ -149,7 +145,7 @@
         });
         $('#selectWeek').on('change', function (e) {
             //console.dir('testing');
-            g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+            //g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
             selectedWeek();
         });
 
@@ -189,11 +185,11 @@
             dataType: 'json',
             cache: false,
             success: function (data) {
-                for (i = 0; i < data.length; i++) {
-                    if (data[i].Remarks != null) {
-                        sessionStorage.setItem(data[i].TaskRecordId, data[i].Remarks);
-                    }
-                }//End of for loop
+                //for (i = 0; i < data.length; i++) {
+                //    if (data[i].Remarks != null) {
+                //        sessionStorage.setItem(data[i].TaskRecordId, data[i].Remarks);
+                //    }
+                //}//End of for loop
             }//End of success
         });//End of Ajax
     }
@@ -221,28 +217,38 @@
                 emptyTable: "No Task was found, please create one.",
             }
         });//End of DataTable
+        $('#dataTable tbody').on('click', 'button[class="btn btn-sm btn-primary"]', function (e) {
+           // console.dir("FUCK ME");
+            var $row = $(this).closest('tr');
+
+            // Get row data
+            var data = g_table.row($row).data();
+            $('#commentModal').modal('show');
+            $('#review').text(sessionStorage.getItem($(this).val()) == null ? "No Remarks" : sessionStorage.getItem($(this).val()));
+           // console.dir(data);
+        });
     }
     function loadWeekOption() {
         $("#selectWeek option").remove();
         g_taskData.then(function (data) {
-            var finalData = [];
+            var g_Month = [];
+            var g_MonthRecordId = [];
             for (i = 0; i < data.length; i++) {
-                if (g_WeekNo.includes(data[i].WeekNo)) {
+                if (g_Month.includes(Math.ceil(data[i].WeekNo / 4))) {
                     //Do nothing
-
                 } else {
-                    g_WeekNo.push(data[i].WeekNo);
-                }
-            };
-            while (g_WeekNo.length) {
-                var obj = {};
-                var tempWeekVal = g_WeekNo.splice(0, 4);
-                var tempWeekText = "Week " + tempWeekVal[0] + " - " + tempWeekVal[tempWeekVal.length - 1];
 
-                //obj[tempWeekText] = tempWeekVal;
-                //qqq.push(obj);
+                    g_Month.push(Math.ceil(data[i].WeekNo / 4));
+                    g_MonthRecordId.push(data[i].MonthRecordId);
+                }
+
+            };
+            for (k = 0; k < g_Month.length; k++) {
+                var tempWeek = g_Month[k] * 4;
+
+                var tempWeekText = "Week " + (tempWeek - 3) + " - " + tempWeek;
                 $weekInputElement = $('#selectWeek');
-                $weekOptionElement = $('<option>').text(tempWeekText).attr('value', tempWeekVal);
+                $weekOptionElement = $('<option>').text(tempWeekText).attr('value', g_MonthRecordId[k]);
                 $weekInputElement.append($weekOptionElement);
 
             }
@@ -255,7 +261,7 @@
             var finalData = [];
             var selectedWeek = $('#selectWeek').val().split(',').map(Number);
             for (i = 0; i < data.length; i++) {
-                if (selectedWeek.includes(data[i].WeekNo)) {
+                if (selectedWeek.includes(data[i].MonthRecordId)) {
                     finalData.push(data[i]);
 
                 }

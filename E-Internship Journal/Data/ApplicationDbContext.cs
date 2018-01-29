@@ -20,6 +20,7 @@ namespace E_Internship_Journal.Data
         public DbSet<Course> Courses { get; set; }
         public DbSet<Competency_Checked> Competency_Checkeds { get; set; }
         public DbSet<Competency> Competencies { get; set; }
+        public DbSet<CompetencyTitle> CompetencyTitles { get; set; }
         public DbSet<Internship_Record> Internship_Records { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Company> Companies { get; set; }
@@ -28,7 +29,7 @@ namespace E_Internship_Journal.Data
         public DbSet<Task_Record> Tasks { get; set; }
         public DbSet<RegistrationPin> RegistrationPins { get; set; }
         public DbSet<TouchPoint_Record> TouchPointRecords { get; set; }
-
+        public DbSet<ScheduleInternshipRecord> ScheduleInternshipRecords { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -50,6 +51,21 @@ namespace E_Internship_Journal.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //----------- Defining Course Entity - Start --------------
+            //Make the CourseId a  Primary Key
+            modelBuilder.Entity<ScheduleInternshipRecord>()
+                .HasKey(scheduleInternshipRecord => scheduleInternshipRecord.ScheduleIntershipRecordId)
+                .HasName("PrimaryKey_ScheduleIntershipRecordId");
+
+            modelBuilder.Entity<ScheduleInternshipRecord>()
+                .Property(scheduleInternshipRecord => scheduleInternshipRecord.ScheduleIntershipRecordId)
+                .HasColumnName("ScheduleIntershipRecordId")
+                .HasColumnType("int")
+                .UseSqlServerIdentityColumn()
+                .ValueGeneratedOnAdd()
+                .IsRequired();
+
+
             //----------- Defining Course Entity - Start --------------
             //Make the CourseId a  Primary Key
             modelBuilder.Entity<Course>()
@@ -146,6 +162,17 @@ namespace E_Internship_Journal.Data
                 .IsRequired();
 
             modelBuilder.Entity<UserBatch>()
+                .Property(userBatches => userBatches.Designation)
+                .HasColumnName("Designation")
+                .HasColumnType("VARCHAR(100)")
+                .IsRequired(false);
+            modelBuilder.Entity<UserBatch>()
+                .Property(userBatches => userBatches.Allowance)
+                .HasColumnName("Allowance")
+                .HasColumnType("VARCHAR(15)")
+                .IsRequired(false);
+
+            modelBuilder.Entity<UserBatch>()
                 .HasOne(userBatches => userBatches.User)
                 .WithMany()
                 .HasForeignKey(userBatches => userBatches.UserId)
@@ -238,8 +265,46 @@ namespace E_Internship_Journal.Data
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 
+            modelBuilder.Entity<Project>()
+                .HasIndex(projects => new { projects.ProjectName, projects.CompanyID }).IsUnique()
+                .HasName("Project_ProjectNameCompanyd_UniqueConstraint");
 
             //----------- Defining Project Entity - End --------------
+
+            //----------- Defining CompetencyTitle Entity - Start --------------
+            modelBuilder.Entity<CompetencyTitle>()
+                .HasKey(compenties => compenties.CompetencyTitleId)
+                .HasName("PrimaryKey_CompetencyTitleId");
+
+            modelBuilder.Entity<CompetencyTitle>()
+                .Property(compenties => compenties.CompetencyTitleId)
+                .HasColumnName("CompetencyTitleId")
+                .HasColumnType("int")
+                .UseSqlServerIdentityColumn()
+                .ValueGeneratedOnAdd()
+                .IsRequired();
+
+            modelBuilder.Entity<CompetencyTitle>()
+                .Property(compenties => compenties.TitleCompetency)
+                .HasColumnName("TitleCompetency")
+                .HasColumnType("VARCHAR(50)")
+                .IsRequired();
+            modelBuilder.Entity<CompetencyTitle>()
+                .Property(compenties => compenties.ViewBy)
+                .HasColumnName("ViewBy")
+                .HasColumnType("int")
+                .IsRequired();
+            modelBuilder.Entity<CompetencyTitle>()
+                .Property(compenties => compenties.CourseId)
+                .HasColumnName("CourseId")
+                .HasColumnType("int")
+                .IsRequired();
+
+            modelBuilder.Entity<CompetencyTitle>()
+                .HasIndex(compenties => compenties.TitleCompetency).IsUnique()
+                .HasName("CompetencyTitle_TitleCompetency_UniqueConstraint");
+
+            //----------- Defining CompetencyTitle Entity - End --------------
 
             //----------- Defining Competency Entity - Start --------------
             modelBuilder.Entity<Competency>()
@@ -254,18 +319,23 @@ namespace E_Internship_Journal.Data
                 .ValueGeneratedOnAdd()
                 .IsRequired();
             modelBuilder.Entity<Competency>()
-                .Property(compenties => compenties.TitleDescription)
-                .HasColumnName("TitleDescription")
-                .HasColumnType("VARCHAR(50)")
+                .Property(compenties => compenties.ViewBy)
+                .HasColumnName("ViewBy")
+                .HasColumnType("int")
                 .IsRequired();
+            //modelBuilder.Entity<Competency>()
+            //    .Property(compenties => compenties.TitleDescription)
+            //    .HasColumnName("TitleDescription")
+            //    .HasColumnType("VARCHAR(50)")
+            //    .IsRequired();
             modelBuilder.Entity<Competency>()
                 .Property(compenties => compenties.Description)
                 .HasColumnName("Description")
                 .HasColumnType("VARCHAR(MAX)")
                 .IsRequired();
             modelBuilder.Entity<Competency>()
-                .Property(compenties => compenties.CourseId)
-                .HasColumnName("CourseId")
+                .Property(compenties => compenties.CompetencyTitleId)
+                .HasColumnName("CompetencyTitleId")
                 .HasColumnType("int")
                 .IsRequired();
             modelBuilder.Entity<Competency>()
@@ -282,10 +352,18 @@ namespace E_Internship_Journal.Data
                 .HasColumnName("ModifiedAt")
                 .IsRequired(false);
             modelBuilder.Entity<Competency>()
-                .Property(competencies => competencies.CreatedBy)
-                .HasColumnName("CreatedBy")
+                .Property(competencies => competencies.DeletedBy)
+                .HasColumnName("DeletedBy")
                 .HasColumnType("VARCHAR(MAX)")
                 .IsRequired(false);
+
+            //modelbuilder.entity<product>()
+            //.hasone(productclass => productclass.createdby)
+            //.withmany()
+            //.hasforeignkey(productclass => productclass.createdbyid)
+            //.hasprincipalkey(applicationuserclass => applicationuserclass.id)
+            //.ondelete(deletebehavior.restrict)
+            //.isrequired();
             //----------- Defining Competency Entity - End --------------
 
             //----------- Defining Internship_Record Entity - Start --------------
@@ -590,7 +668,7 @@ namespace E_Internship_Journal.Data
             modelBuilder.Entity<Month_Record>()
             .Property(month_Records => month_Records.OverallGrading)
             .HasColumnName("OverallGrading")
-            .HasColumnType("int")
+            .HasColumnType("decimal")
             .IsRequired(false);
 
             modelBuilder.Entity<Month_Record>()
@@ -635,6 +713,13 @@ namespace E_Internship_Journal.Data
             modelBuilder.Entity<Day_Record>()
             .Property(day_Records => day_Records.Remarks)
             .HasColumnName("Remarks")
+            .HasColumnType("VARCHAR(MAX)")
+            .HasDefaultValue("")
+            .IsRequired(true);
+
+            modelBuilder.Entity<Day_Record>()
+            .Property(day_Records => day_Records.SupervisorRemarks)
+            .HasColumnName("SupervisorRemarks")
             .HasColumnType("VARCHAR(MAX)")
             .HasDefaultValue("")
             .IsRequired(true);
@@ -779,13 +864,21 @@ namespace E_Internship_Journal.Data
             .HasForeignKey<Internship_Record>(UserBatchObject => UserBatchObject.UserBatchId);
             //------ Relationship UserBatch-Internship_Record End -------------------/
 
-            //------ Relationship Competency-Course -------------------/
+            //------ Relationship Competency-CompetencyTitle -------------------/
             modelBuilder.Entity<Competency>()
-            .HasOne(CompetencyObject => CompetencyObject.Course)
+            .HasOne(CompetencyObject => CompetencyObject.CompetencyTitle)
             .WithMany(CourseObject => CourseObject.Competencies)
-            .HasForeignKey(CompetencyObject => CompetencyObject.CourseId);
+            .HasForeignKey(CompetencyObject => CompetencyObject.CompetencyTitleId);
 
-            //------ Relationship Competency-Course End-------------------/
+            //------ Relationship Competency-CompetencyTitle End-------------------/
+
+            //------ Relationship Course-CompetencyTitle -------------------/
+            modelBuilder.Entity<CompetencyTitle>()
+            .HasOne(CompetencyTitleObject => CompetencyTitleObject.Course)
+            .WithMany(CourseObject => CourseObject.CompetencyTitle)
+            .HasForeignKey(CompetencyTitleObject => CompetencyTitleObject.CourseId);
+
+            //------ Relationship Competency-CompetencyTitle-------------------/
 
             //modelBuilder.Entity<ApplicationUser>()
             //.HasOne(ApplicationUserObject => ApplicationUserObject.Course)

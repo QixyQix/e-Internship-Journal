@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Touchpoint Page";
+}
+<div class="container-fluid">
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -20,8 +23,8 @@
         </div>
     </div>
     <div class="card mb-3">
-        <div class="card-header">
-            <i class="fa fa-pencil"></i> Touchpoint
+        <div class="card-header d-inline">
+            <i class="fa fa-pencil fa-2x pull-left"></i> <h3>Touchpoint</h3>
         </div>
         <div class="card-body">
             <div class="form-group">
@@ -49,7 +52,7 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="col-12">
-                    <button class="btn btn-default" onclick="window.history.go(-1); return false">
+                    <button class="btn btn-default" onclick="location.href='http://' + window.location.host +'/Home/Student_Journal'">
                         Back
                     </button>
                 </div>
@@ -244,7 +247,7 @@
                 var collectedDate = moment($('#newDate').val() + ' ' + $('#newTimeIn').val(), ["DD/MM/YYYY h:mm A"]).toDate();
                 var collectedComments = $('#newComment').val();
                 var webFormData = new WebFormData(collectedDate, collectedComments);
-                console.dir(webFormData);
+                
                 $.ajax({
                     url: '/Api/TouchPoint/SaveTouchPointRecord/' + g_getLocalStorage,
                     method: 'POST',

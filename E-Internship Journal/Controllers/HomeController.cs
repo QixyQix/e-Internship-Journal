@@ -275,7 +275,14 @@ namespace E_Internship_Journal.Controllers
         //LO
         public IActionResult Touchpoint()
         {
-            return View("~/Views/Home/LO/touchpoint.cshtml");
+            if (User.IsInRole("LO"))
+            {
+                return View("~/Views/Home/LO/touchpoint.cshtml");
+            }
+            else
+            {
+                return View("~/Views/Home/Student/touchpoint.cshtml");
+            }           
         }
         public IActionResult Final_Grading()
         {
@@ -296,6 +303,10 @@ namespace E_Internship_Journal.Controllers
         public IActionResult Edit_Competency()
         {
             return View("~/Views/Home/SLO/edit_competency.cshtml");
+        }
+        public IActionResult Manage_Competency()
+        {
+            return View("~/Views/Home/SLO/manage_competency.cshtml");
         }
         public IActionResult View_Competency()
         {
@@ -433,6 +444,11 @@ namespace E_Internship_Journal.Controllers
         public IActionResult EditCourse()
         {
             return View("~/Views/Home/Admin/Edit_Course.cshtml");
+        }
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult GradingLock()
+        {
+            return View("~/Views/Home/Admin/Grading_Lock.cshtml");
         }
     }
 }

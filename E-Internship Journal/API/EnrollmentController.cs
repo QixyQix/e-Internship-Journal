@@ -83,8 +83,10 @@ namespace E_Internship_Journal.Controllers
                             if (user != null)
                             {
                                 //Check if the user is already enrolled
-                                if (!(_context.UserBatches.Any(ub => ub.UserId == user.Id && ub.BatchId == thisBatch.BatchId)))
+                                if (!(_context.UserBatches.Any(ub => ub.UserId.Equals(user.Id) && ub.BatchId == thisBatch.BatchId)))
                                 {
+
+                                    var www = (_context.UserBatches.Any(ub => ub.UserId.Equals(user.Id) && ub.BatchId == thisBatch.BatchId));
                                     //Create UserBatch objects
                                     var newUserBatch = new UserBatch
                                     {
@@ -92,6 +94,7 @@ namespace E_Internship_Journal.Controllers
                                         User = user
                                     };
                                     _context.UserBatches.Add(newUserBatch);
+                                    await _context.SaveChangesAsync();
                                 }
                                 else
                                 {
@@ -144,8 +147,9 @@ namespace E_Internship_Journal.Controllers
                                         repeatPinGeneration = false;
                                     }
                                 } while (repeatPinGeneration);
-                            }
-                            await _context.SaveChangesAsync();
+                                await _context.SaveChangesAsync();
+                            }//End of Else
+
                         }
                         catch (Exception ex)
                         {

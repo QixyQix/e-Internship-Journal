@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Manage Batch Page";
+}
+<div class="container-fluid">
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -8,8 +11,8 @@
     </ol>
     <!-- Example DataTables Card-->
     <div class="card mb-3">
-        <div class="card-header">
-            <i class="fa fa-table"></i> Batch
+        <div class="card-header d-inline">
+            <i class="fa fa-users fa-2x pull-left"></i> <h3>Batch</h3>
         </div>
         <div class="card-body">
             <div class="form-inline">
@@ -38,20 +41,20 @@
                     <thead>
                         <tr>
                             <th width="5%"><input name="select_all" value="1" type="checkbox" /></th>
-                            <th>Batch Name</th>
-                            <th>Course Name</th>
-                            <th>SLO Assigned</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
+                            <th class="B_Name">Batch Name</th>
+                            <th class="C_Name">Course Name</th>
+                            <th class="SLO_Assign">SLO Assigned</th>
+                            <th class="S_Date">Start Date</th>
+                            <th class="E_Date">End Date</th>
                             <th width="10%">Action</th>
                         </tr>
                         <tr id="filterrow">
                             <th></th>
-                            <th>Batch Name</th>
-                            <th>Course Name</th>
-                            <th>SLO Assigned</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
+                            <th class="B_Name">Batch Name</th>
+                            <th class="C_Name">Course Name</th>
+                            <th class="SLO_Assign">SLO Assigned</th>
+                            <th class="S_Date">Start Date</th>
+                            <th class="E_Date">End Date</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -91,7 +94,7 @@
     <div class="card-body">
         <div class="form-group">
             <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Index'">
                     Back
                 </button>
             </div>
@@ -99,6 +102,25 @@
     </div>
     &nbsp;
 </div>
+
+<style>
+
+@@media only screen and (max-width: 768px) {
+	.SLO_Assign, tr td:nth-child(4)		{ display:none; visibility:hidden; }
+}
+
+@@media only screen and (max-width: 420px) {
+	.SLO_Assign, tr td:nth-child(4)		{ display:none; visibility:hidden; }
+	.S_Date, tr td:nth-child(5)			{ display:none; visibility:hidden; }
+	.E_Date, tr td:nth-child(6)		{ display:none; visibility:hidden; }
+}
+
+@@media only screen and (max-width: 320px) {
+	.SLO_Assign, tr td:nth-child(4)		{ display:none; visibility:hidden; }
+	.S_Date, tr td:nth-child(5)			{ display:none; visibility:hidden; }
+	.E_Date, tr td:nth-child(6)		{ display:none; visibility:hidden; }
+}
+</style>
 
 <script>
     //
@@ -134,6 +156,8 @@
     }
 
     function hideFilter1() {
+        $("#batch_dataTable thead input").val("");
+        $("#batch_dataTable thead input").change();
         $('#batch_dataTable thead tr#filterrow').toggle();
     }
 

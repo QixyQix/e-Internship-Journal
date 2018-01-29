@@ -1,18 +1,209 @@
 // SweetAlert2
-// github.com/limonte/sweetalert2
+// github.com/sweetalert2/sweetalert2
 
-@import 'colors';
+@import 'variables';
 @import 'mixins';
 
+html,
 body {
   &.swal2-shown {
-    overflow-y: hidden;
+    @include not(
+      '.swal2-no-backdrop',
+      '.swal2-toast-shown'
+    ) {
+      overflow-y: hidden;
+      height: auto; // #781
+    }
+  }
+}
+
+body {
+  &.swal2-toast-shown {
+    &.swal2-has-input  > .swal2-container {
+      & > .swal2-toast {
+        flex-direction: column;
+
+        .swal2-icon {
+          margin: 0 0 15px;
+        }
+
+        .swal2-actions {
+          flex: 1;
+          align-self: stretch;
+          justify-content: flex-end;
+        }
+
+        .swal2-loading {
+          justify-content: center;
+        }
+
+        .swal2-input {
+          height: 32px;
+          font-size: 14px;
+          margin: 5px auto;
+        }
+      }
+    }
+
+    & > .swal2-container {
+      position: fixed;
+      background-color: transparent;
+
+      &.swal2-shown {
+        background-color: transparent;
+      }
+
+      &.swal2-top {
+        top: 0;
+        left: 50%;
+        bottom: auto;
+        right: auto;
+        transform: translateX(-50%);
+      }
+
+      &.swal2-top-end,
+      &.swal2-top-right {
+        top: 0;
+        left: auto;
+        bottom: auto;
+        right: 0;
+      }
+
+      &.swal2-top-start,
+      &.swal2-top-left {
+        top: 0;
+        left: 0;
+        bottom: auto;
+        right: auto;
+      }
+
+      &.swal2-center-start,
+      &.swal2-center-left {
+        top: 50%;
+        left: 0;
+        bottom: auto;
+        right: auto;
+        transform: translateY(-50%);
+      }
+
+      &.swal2-center {
+        top: 50%;
+        left: 50%;
+        bottom: auto;
+        right: auto;
+        transform: translate(-50%, -50%);
+      }
+
+      &.swal2-center-end,
+      &.swal2-center-right {
+        top: 50%;
+        left: auto;
+        bottom: auto;
+        right: 0;
+        transform: translateY(-50%);
+      }
+
+      &.swal2-bottom-start,
+      &.swal2-bottom-left {
+        top: auto;
+        left: 0;
+        bottom: 0;
+        right: auto;
+      }
+
+      &.swal2-bottom {
+        top: auto;
+        left: 50%;
+        bottom: 0;
+        right: auto;
+        transform: translateX(-50%);
+      }
+
+      &.swal2-bottom-end,
+      &.swal2-bottom-right {
+        top: auto;
+        left: auto;
+        bottom: 0;
+        right: 0;
+      }
+    }
   }
 
   &.swal2-iosfix {
     position: fixed;
     left: 0;
     right: 0;
+  }
+
+  &.swal2-no-backdrop {
+
+    .swal2-shown {
+      top: auto;
+      bottom: auto;
+      left: auto;
+      right: auto;
+      background-color: transparent;
+
+      & > .swal2-modal {
+        box-shadow: 0 0 10px $swal2-overlay;
+      }
+
+      &.swal2-top {
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      &.swal2-top-start,
+      &.swal2-top-left {
+        top: 0;
+        left: 0;
+      }
+
+      &.swal2-top-end,
+      &.swal2-top-right {
+        top: 0;
+        right: 0;
+      }
+
+      &.swal2-center {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      &.swal2-center-start,
+      &.swal2-center-left {
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+      }
+
+      &.swal2-center-end,
+      &.swal2-center-right {
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+      }
+
+      &.swal2-bottom {
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      &.swal2-bottom-start,
+      &.swal2-bottom-left {
+        bottom: 0;
+        left: 0;
+      }
+
+      &.swal2-bottom-end,
+      &.swal2-bottom-right {
+        bottom: 0;
+        right: 0;
+      }
+    }
   }
 }
 
@@ -23,11 +214,11 @@ body {
   align-items: center;
   justify-content: center;
   position: fixed;
+  padding: 10px;
   top: 0;
   left: 0;
-  bottom: 0;
   right: 0;
-  padding: 10px;
+  bottom: 0;
 
   // backdrop
   background-color: transparent;
@@ -38,11 +229,13 @@ body {
     align-items: flex-start;
   }
 
+  &.swal2-top-start,
   &.swal2-top-left {
     align-items: flex-start;
     justify-content: flex-start;
   }
 
+  &.swal2-top-end,
   &.swal2-top-right {
     align-items: flex-start;
     justify-content: flex-end;
@@ -52,11 +245,13 @@ body {
     align-items: center;
   }
 
+  &.swal2-center-start,
   &.swal2-center-left {
     align-items: center;
     justify-content: flex-start;
   }
 
+  &.swal2-center-end,
   &.swal2-center-right {
     align-items: center;
     justify-content: flex-end;
@@ -66,11 +261,13 @@ body {
     align-items: flex-end;
   }
 
+  &.swal2-bottom-start,
   &.swal2-bottom-left {
     align-items: flex-end;
     justify-content: flex-start;
   }
 
+  &.swal2-bottom-end,
   &.swal2-bottom-right {
     align-items: flex-end;
     justify-content: flex-end;
@@ -100,12 +297,18 @@ body {
       align-items: center;
     }
 
+    &.swal2-top-start,
+    &.swal2-center-start,
+    &.swal2-bottom-start,
     &.swal2-top-left,
     &.swal2-center-left,
     &.swal2-bottom-left {
       align-items: flex-start;
     }
 
+    &.swal2-top-end,
+    &.swal2-center-end,
+    &.swal2-bottom-end,
     &.swal2-top-right,
     &.swal2-center-right,
     &.swal2-bottom-right {
@@ -122,11 +325,17 @@ body {
 
   @include not(
     '.swal2-top',
+    '.swal2-top-start',
+    '.swal2-top-end',
     '.swal2-top-left',
     '.swal2-top-right',
+    '.swal2-center-start',
+    '.swal2-center-end',
     '.swal2-center-left',
     '.swal2-center-right',
     '.swal2-bottom',
+    '.swal2-bottom-start',
+    '.swal2-bottom-end',
     '.swal2-bottom-left',
     '.swal2-bottom-right') {
     & > .swal2-modal {
@@ -149,10 +358,11 @@ body {
   }
 }
 
-.swal2-modal {
+
+.swal2-popup {
   flex-direction: column;
   background-color: $swal2-white;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: $swal2-font;
   border-radius: 5px;
   box-sizing: border-box;
   text-align: center;
@@ -162,12 +372,162 @@ body {
   position: relative;
   max-width: 100%;
 
+  &.swal2-toast {
+    width: 300px;
+    padding: 0 15px;
+    flex-direction: row;
+    align-items: center;
+    overflow-y: hidden;
+    box-shadow: 0 0 10px $swal2-box-shadow;
+
+    .swal2-header {
+      flex-direction: row;
+    }
+
+    .swal2-title {
+      max-width: 300px;
+      font-size: 16px;
+      text-align: left;
+    }
+
+    .swal2-content {
+      font-size: 14px;
+      text-align: left;
+    }
+
+    .swal2-icon {
+      width: 32px;
+      min-width: 32px;
+      height: 32px;
+      margin: 0 15px 0 0;
+
+      &.swal2-success {
+
+        .swal2-success-ring {
+          width: 32px;
+          height: 32px;
+        }
+      }
+
+      &.swal2-info,
+      &.swal2-warning,
+      &.swal2-question {
+        font-size: 26px;
+        line-height: 32px;
+      }
+
+      &.swal2-error {
+
+        [class^='swal2-x-mark-line'] {
+          top: 14px;
+          width: 22px;
+
+          &[class$='left'] {
+            left: 5px;
+          }
+
+          &[class$='right'] {
+            right: 5px;
+          }
+        }
+      }
+    }
+
+    .swal2-actions {
+      margin: 0 0 0 5px;
+    }
+
+    .swal2-styled {
+      margin: 0 0 0 5px;
+      padding: 5px 10px;
+
+      &:focus {
+        box-shadow: 0 0 0 1px $swal2-white, 0 0 0 2px $swal2-focus-outline;
+      }
+    }
+
+    .swal2-validationerror {
+      width: 100%;
+      margin: 5px -20px;
+    }
+
+    .swal2-success {
+      border-color: $swal2-success;
+
+      [class^='swal2-success-circular-line'] { // Emulate moving circular line
+        border-radius: 50%;
+        position: absolute;
+        width: 32px;
+        height: 64px;
+        transform: rotate(45deg);
+
+        &[class$='left'] {
+          border-radius: 64px 0 0 64px;
+          top: -4px;
+          left: -15px;
+
+          transform: rotate(-45deg);
+          transform-origin: 32px 32px;
+        }
+
+        &[class$='right'] {
+          border-radius: 0 64px 64px 0;
+          top: -5px;
+          left: 14px;
+          transform-origin: 0 32px;
+        }
+      }
+
+      .swal2-success-ring {
+        width: 32px;
+        height: 32px;
+      }
+
+      .swal2-success-fix {
+        width: 7px;
+        height: 43px;
+        left: 7px;
+        top: 0;
+      }
+
+      [class^='swal2-success-line'] {
+        height: 5px;
+
+        &[class$='tip'] {
+          width: 12px;
+          left: 3px;
+          top: 18px;
+        }
+
+        &[class$='long'] {
+          width: 22px;
+          right: 3px;
+          top: 15px;
+        }
+      }
+    }
+
+    .swal2-animate-success-line-tip {
+      animation: animate-toast-success-tip .75s;
+    }
+
+    .swal2-animate-success-line-long {
+      animation: animate-toast-success-long .75s;
+    }
+  }
+
   &:focus {
     outline: none;
   }
 
   &.swal2-loading {
     overflow-y: hidden;
+  }
+
+  .swal2-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .swal2-title {
@@ -183,7 +543,9 @@ body {
     word-wrap: break-word;
   }
 
-  .swal2-buttonswrapper {
+  .swal2-actions {
+    align-items: center;
+    justify-content: center;
     margin-top: 15px;
 
     &:not(.swal2-loading) {
@@ -511,7 +873,7 @@ body {
   }
 
   &.swal2-warning {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: $swal2-font;
     color: $swal2-warning;
     border-color: lighten($swal2-warning, 7);
     font-size: 60px;
@@ -520,7 +882,7 @@ body {
   }
 
   &.swal2-info {
-    font-family: 'Open Sans', sans-serif;
+    font-family: $swal2-font;
     color: $swal2-info;
     border-color: lighten($swal2-info, 20);
     font-size: 60px;
@@ -529,7 +891,7 @@ body {
   }
 
   &.swal2-question {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: $swal2-font;
     color: $swal2-question;
     border-color: lighten($swal2-question, 20);
     font-size: 60px;
@@ -584,7 +946,7 @@ body {
       height: 90px;
 
       position: absolute;
-      left: 28px;
+      left: 26px;
       top: 8px;
       z-index: 1;
 
@@ -674,14 +1036,50 @@ body {
 }
 
 
-// github.com/limonte/sweetalert2/issues/268
+// github.com/sweetalert2/sweetalert2/issues/268
 [class^='swal2'] {
   -webkit-tap-highlight-color: $swal2-transparent;
 }
 
+// Toast Animations
+@keyframes showSweetToast {
+  0% {
+    transform: translateY(-10px) rotateZ(2deg);
+    opacity: 0;
+  }
+
+  33% {
+    transform: translateY(0) rotateZ(-2deg);
+    opacity: .5;
+  }
+
+  66% {
+    transform: translateY(5px) rotateZ(2deg);
+    opacity: .7;
+  }
+
+  100% {
+    transform: translateY(0) rotateZ(0);
+    opacity: 1;
+  }
+}
+
+@keyframes hideSweetToast {
+  0% {
+    opacity: 1;
+  }
+
+  33% {
+    opacity: .5;
+  }
+
+  100% {
+    transform: rotateZ(1deg);
+    opacity: 0;
+  }
+}
 
 // Modal animations
-
 @keyframes showSweetAlert {
   0% {
     transform: scale(.7);
@@ -715,6 +1113,10 @@ body {
 .swal2-show {
   animation: showSweetAlert .3s;
 
+  &.swal2-toast {
+    animation: showSweetToast .5s;
+  }
+
   &.swal2-noanimation {
     animation: none;
   }
@@ -723,11 +1125,23 @@ body {
 .swal2-hide {
   animation: hideSweetAlert .15s forwards;
 
+  &.swal2-toast {
+    animation: hideSweetToast .2s forwards;
+  }
+
   &.swal2-noanimation {
     animation: none;
   }
 }
 
+
+// Right-to-left support
+[dir='rtl'] {
+  .swal2-close {
+    left: 8px;
+    right: auto;
+  }
+}
 
 
 // Success icon animation
@@ -741,14 +1155,14 @@ body {
 
   54% {
     width: 0;
-    left: 1px;
-    top: 19px;
+    left: 2px;
+    top: 17px;
   }
 
   70% {
     width: 50px;
-    left: -8px;
-    top: 37px;
+    left: -6px;
+    top: 35px;
   }
 
   84% {
@@ -787,6 +1201,64 @@ body {
     width: 47px;
     right: 8px;
     top: 38px;
+  }
+}
+
+@keyframes animate-toast-success-tip {
+  0% {
+    width: 0;
+    left: 1px;
+    top: 9px;
+  }
+
+  54% {
+    width: 0;
+    left: 2px;
+    top: 2px;
+  }
+
+  70% {
+    width: 26px;
+    left: -4px;
+    top: 10px;
+  }
+
+  84% {
+    width: 8px;
+    left: 12px;
+    top: 17px;
+  }
+
+  100% {
+    width: 12px;
+    left: 3px;
+    top: 18px;
+  }
+}
+
+@keyframes animate-toast-success-long {
+  0% {
+    width: 0;
+    right: 22px;
+    top: 26px;
+  }
+
+  65% {
+    width: 0;
+    right: 15px;
+    top: 20px;
+  }
+
+  84% {
+    width: 18px;
+    right: 0;
+    top: 15px;
+  }
+
+  100% {
+    width: 22px;
+    right: 3px;
+    top: 15px;
   }
 }
 

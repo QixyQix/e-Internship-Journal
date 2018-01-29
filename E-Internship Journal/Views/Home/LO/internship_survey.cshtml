@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Student Survey Page";
+}
+<div class="container-fluid">
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -109,7 +112,7 @@
 <div class="card-body">
     <div class="form-group">
         <div class="col-12">
-            <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+            <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Student_Journal'">
                 Back
             </button>
         </div>

@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Internship Survey Page";
+}
+<div class="container-fluid">
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -95,7 +98,7 @@
 <div class="card-body">
     <div class="form-group">
         <div class="col-12">
-            <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+            <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Index'">
                 Back
             </button>
             <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
@@ -142,34 +145,42 @@
             var FeedbackTakeaway = "" + $('#FeedbackTakeaway').val().toString();
             var FeedbackCareer = "" + $('#FeedbackCareer').val().toString();
 
-            var webFormData = new WebFormData(FeedbackUseful, FeedbackImproved, FeedbackExperiences, FeedbackRecommend, FeedbackEnjoy, FeedbackLeastEnjoy, FeedbackTakeaway, FeedbackCareer);
-            console.dir(webFormData);
+            if (FeedbackUseful && FeedbackImproved && FeedbackExperiences && FeedbackRecommend && FeedbackEnjoy && FeedbackLeastEnjoy && FeedbackTakeaway && FeedbackCareer) {
+                var webFormData = new WebFormData(FeedbackUseful, FeedbackImproved, FeedbackExperiences, FeedbackRecommend, FeedbackEnjoy, FeedbackLeastEnjoy, FeedbackTakeaway, FeedbackCareer);
+                console.dir(webFormData);
 
-            $.ajax({
-                url: '/api/Internship_Record/updateInternshipSurvey/' + internshipRecordId,
-                method: 'PUT',
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                cache: false,
-                data: "'" + JSON.stringify(webFormData) + "'",
-                success: function (data) {
-                    swal({
-                        type: 'success',
-                        title: 'Saved!',
-                        text: data.Message
-                    }).then(
-                        function () {
-                            window.location.reload();
+                $.ajax({
+                    url: '/api/Internship_Record/updateInternshipSurvey/' + internshipRecordId,
+                    method: 'PUT',
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    cache: false,
+                    data: "'" + JSON.stringify(webFormData) + "'",
+                    success: function (data) {
+                        swal({
+                            type: 'success',
+                            title: 'Saved!',
+                            text: data.Message
+                        }).then(
+                            function () {
+                                window.location.reload();
+                            });
+                    },
+                    error: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            text: data.Message
                         });
-                },
-                error: function (data) {
-                    swal({
-                        type: 'error',
-                        title: 'Error',
-                        text: data.Message
-                    });
-                }
-            });
+                    }
+                });
+            } else {
+                swal(
+                    'Oops...',
+                    'Please answer all of the questions for this survey, and do not leave it blank!',
+                    'error'
+                )
+            }
         }
 
     });

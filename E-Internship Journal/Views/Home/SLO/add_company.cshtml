@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Add Company Page";
+}
+<div class="container-fluid">
     <!-- Example DataTables Card-->
     <section id="contact">
         <div class="container">
@@ -33,7 +36,7 @@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Contact Person's Number</label>
-                                <input class="form-control" id="contactNumber" type="number" placeholder="Contact Person's Number" required="required" data-validation-required-message="Please enter contact person's number.">
+                                <input class="form-control" id="contactNumber" min="0" type="number" onkeydown="return FilterInput(event)" onpaste="handlePaste(event)" placeholder="Contact Person's Number" required="required" data-validation-required-message="Please enter contact person's number.">
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
@@ -47,7 +50,7 @@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Fax</label>
-                                <input class="form-control" id="fax" type="number" placeholder="Fax">
+                                <input class="form-control" id="fax" min="0" type="number" onkeydown="return FilterInput(event)" onpaste="handlePaste(event)" placeholder="Fax">
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
@@ -55,10 +58,10 @@
                         <div id="success"></div>
                         <div class="form-group">
                             <div class="col-12">
-                                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Manage_Company'">
                                     Back
                                 </button>
-                                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                                <button class="btn btn-primary pull-right" name="submit" type="submit" id="btnSave">
                                     Save
                                 </button>
                             </div>
@@ -72,36 +75,71 @@
     </section>
 </div>
 <script>
-    function WebFormData(inCompanyName, inCompanyAddress) {
+   
+    $(document).ready(function () {
+        $(function () {
+            $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
+                preventSubmit: true,
+                submitSuccess: function ($form, event) {
+                    event.preventDefault();
+                    var collectedCompanyName = $('#companyName').val();
+                    var collectedCompanyAddress = $('#companyAddress').val();
+                    var collectedContactName = $('#contactName').val();
+                    var collectedContactEmail = $('#contactEmail').val();
+                    var collectedContactNumber = $('#contactNumber').val();
+                    var collectedFax = $('#fax').val();
+
+
+                    var webFormData = new WebFormData(collectedCompanyName, collectedCompanyAddress, collectedContactName, collectedContactNumber,
+                        collectedContactEmail, collectedFax);
+                    var webFormDatainString = JSON.stringify(webFormData);
+                    $.ajax({
+                        url: '/API/Companies/SaveNewCompanyRecord/',
+                        type: 'put',
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        data: "'" + webFormDatainString + "'",
+                        success: function (data, status, jqXHR) {
+                            var title = 'Success';
+                            if (data.AlertType == 'error') {
+                                title = 'Error';
+
+                            } else if (data.AlertType == 'warning') {
+                                title = 'Warning';
+                            }
+                            swal({
+                                type: data.AlertType,
+                                title: title,
+                                text: data.Messages
+                            }).then(
+                                function () {
+                                    title == 'Error' ? null : window.location.reload();
+                                });
+                        },//End of success
+                        error: function (data) {
+                            swal({
+                                type: 'error',
+                                title: 'Error',
+                                text: data.Message
+                            });
+                        }//End of error
+                    });
+                },
+                
+                submitError: function ($form, event, errors) {
+
+                }
+            });//End of jqBootstrapValidation
+        });//End of function()
+    });//End of document ready.
+    function WebFormData(inCompanyName, inCompanyAddress, inContactName, inContactNumber, inContactEmail, inContactFax) {
         this.CompanyName = inCompanyName;
         this.CompanyAddress = inCompanyAddress;
-     
+        this.ContactName = inContactName;
+        this.ContactNumber = inContactNumber;
+        this.ContactEmail = inContactEmail;
+        this.ContactFax = inContactFax
 
     }
-    $('#btnSave').on('click', function () {
-
-        var collectedCompanyName = $('#companyName').val();
-        var collectedCompanyAddress = $('#companyAddress').val();
-        var collectedContactName = $('#contactName').val();
-        var collectedContactEmail = $('#contactEmail').val();
-        var collectedContactNumber = $('#contactNumber').val();
-
-
-        var webFormData = new WebFormData(collectedCompanyName, collectedCompanyAddress);
-        var webFormDatainString = JSON.stringify(webFormData);
-        $saveBatchHandler = jQuery.ajax({
-            url: '/API/Companies/SaveNewCompanyInformation/',
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            data: "'" + webFormDatainString + "'"
-
-        });
-        $saveBatchHandler.done(function (data, textStatus, jqXHR) {
-            console.dir("Success");
-
-        });//End .Done
-
-    });
-
 </script>

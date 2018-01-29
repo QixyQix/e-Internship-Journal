@@ -10,61 +10,72 @@
             </li>*@
         <li class="breadcrumb-item active">Homepage</li>
     </ol>
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-4">
-                <div class="card text-center">
-                    <div class="card-header">
-                        <i class="fa fa-users fa-5x"></i>
-                    </div>
-                    <div class="card-body">
-                        <h2>Batch</h2>
-                        @*<p>View Daily <strong>Tasks</strong></p>*@
-                        <a href="~/Home/Manage_Batch" class="btn btn-primary">Manage Batch</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="card text-center">
-                    <div class="card-header">
-                        <i class="fa fa-check-square fa-5x"></i>
-                    </div>
-                    <div class="card-body">
-                        <h2>Competency</h2>
-                        @*<p>View Daily <strong>Tasks</strong></p>*@
-                        <a href="~/Home/Manage_Competency" class="btn btn-primary">Manage Competency</a>
+    <hr />
+    <h2 class="section-heading text-center text-primary">SCHOOL DATA</h2>
+    <hr class="theme" />
+    <section id="schoolData">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box mt-5 mx-auto" onclick="location.href='http://' + window.location.host +'/home/Manage_Batch'">
+                        <i class="fa fa-4x fa-users text-primary mb-3 sr-icons"></i>
+                        <h3 class="mb-3" style="text-decoration:underline;">Manage Batch</h3>
+                        <p class="text-muted mb-0">Click to manage</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="card text-center">
-                    <div class="card-header">
-                        <i class="fa fa-building fa-5x"></i>
-                    </div>
-                    <div class="card-body">
-                        <h2>Company</h2>
-                        @*<p>View Daily <strong>Tasks</strong></p>*@
-                        <a href="~/Home/Manage_Company" class="btn btn-primary">Manage Company</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="card text-center">
-                    <div class="card-header">
-                        <i class="fa fa-briefcase fa-5x"></i>
-                    </div>
-                    <div class="card-body">
-                        <h2>Project</h2>
-                        @*<p>View Daily <strong>Tasks</strong></p>*@
-                        <a href="~/Home/Manage_Project" class="btn btn-primary">Manage Project</a>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box mt-5 mx-auto" onclick="location.href='http://' + window.location.host +'/home/Manage_Competency'">
+                        <i class="fa fa-4x fa-check-square text-primary mb-3 sr-icons"></i>
+                        <h3 class="mb-3" style="text-decoration:underline;">Manage Competency</h3>
+                        <p class="text-muted mb-0">Click to manage</p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <br>
+        <br>
+        <br>
+    </section>
+    <h2 class="section-heading text-center text-primary">INDUSTRIAL DATA</h2>
+    <hr class="theme" />
+    <section id="industrialData">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box mt-5 mx-auto" onclick="location.href='http://' + window.location.host +'/home/Manage_Company'">
+                        <i class="fa fa-4x fa-building text-primary mb-3 sr-icons"></i>
+                        <h3 class="mb-3" style="text-decoration:underline;">Manage Company</h3>
+                        <p class="text-muted mb-0">Click to manage</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 text-center">
+                    <div class="service-box mt-5 mx-auto" onclick="location.href='http://' + window.location.host +'/home/Manage_Project'">
+                        <i class="fa fa-4x fa-briefcase text-primary mb-3 sr-icons"></i>
+                        <h3 class="mb-3" style="text-decoration:underline;">Manage Project</h3>
+                        <p class="text-muted mb-0">Click to manage</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <hr />
+    <br />
 </div>
 <!-- /.container-fluid -->
 <!-- /.content-wrapper -->
 <script>
+    //$.ajax({
+    //    url: '/Api/Internship_Record/getCurrentInternshipRecord',
+    //    method: 'GET',
+    //    dataType: 'json',
+    //    cache: false,
+    //    success: function (data) {
+
+    //        console.dir(data);
+    //        document.cookie = "InternshipRecordId = " + data.InternshipRecordId + ";";
+    //    },
+    //    fail: function (data) {
+    //        alert(data.Message);
+    //    }
+    //});
+    sessionStorage.clear();
 </script>

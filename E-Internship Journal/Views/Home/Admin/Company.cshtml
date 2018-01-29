@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Manage Company Page";
+}
+<div class="container-fluid">
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -8,8 +11,8 @@
     </ol>
     <!-- Example DataTables Card-->
     <div class="card mb-3">
-        <div class="card-header">
-            <i class="fa fa-table"></i> Company
+        <div class="card-header d-inline">
+            <i class="fa fa-building fa-2x pull-left"></i> <h3>Company</h3>
         </div>
         <div class="card-body">
             <div class="form-inline">
@@ -32,27 +35,28 @@
                     &nbsp;
                 </div>
             </div>
+            <br />
             <div class="table-responsive">
                 <table class="table table-bordered" id="company_dataTable" cellspacing="0">
                     <thead>
                         <tr>
                             <th width="5%"><input name="select_all" value="1" type="checkbox" /></th>
-                            <th>Company Name</th>
-                            <th>Address</th>
-                            <th>Contact Person</th>
-                            <th>Email Address</th>
-                            <th>Mobile No.</th>
-                            <th>Fax</th>
+                            <th class="C_Name">Company Name</th>
+                            <th class="C_Add">Address</th>
+                            <th class="CP_Name">Contact Person</th>
+                            <th class="E_Add">Email Address</th>
+                            <th class="CP_NO">Mobile No.</th>
+                            <th class="Fax">Fax</th>
                             <th width="10%">Action</th>
                         </tr>
                         <tr id="filterrow">
                             <th></th>
-                            <th>Company Name</th>
-                            <th>Address</th>
-                            <th>Contact Person</th>
-                            <th>Email Address</th>
-                            <th>Mobile No.</th>
-                            <th>Fax</th>
+                            <th class="C_Name">Company Name</th>
+                            <th class="C_Add">Address</th>
+                            <th class="CP_Name">Contact Person</th>
+                            <th class="E_Add">Email Address</th>
+                            <th class="CP_NO">Mobile No.</th>
+                            <th class="Fax">Fax</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -106,15 +110,36 @@
     <div class="card-body">
         <div class="form-group">
             <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Index'">
                     Back
                 </button>
             </div>
         </div>
     </div>
     &nbsp;
-    </div>
-    <script>
+</div>
+
+<style>
+
+    @@media only screen and (max-width: 768px) {
+	.Fax, tr td:nth-child(7)		{ display:none; visibility:hidden; }
+    }
+
+    @@media only screen and (max-width: 420px) {
+	.Fax, tr td:nth-child(7)		{ display:none; visibility:hidden; }
+	.E_Add, tr td:nth-child(5)			{ display:none; visibility:hidden; }
+	.CP_NO, tr td:nth-child(6)		{ display:none; visibility:hidden; }
+    }
+
+    @@media only screen and (max-width: 320px) {
+	.Fax, tr td:nth-child(7)		{ display:none; visibility:hidden; }
+	.E_Add, tr td:nth-child(5)			{ display:none; visibility:hidden; }
+	.CP_NO, tr td:nth-child(6)		{ display:none; visibility:hidden; }
+	.C_Add, tr td:nth-child(3)		{ display:none; visibility:hidden; }
+    }
+</style>
+
+<script>
     //
     // Updates "Select all" control in a data table
     //
@@ -148,6 +173,8 @@
     }
 
     function hideFilter1() {
+        $("#company_dataTable thead input").val("");
+        $("#company_dataTable thead input").change();
         $('#company_dataTable thead tr#filterrow').toggle();
     }
 
@@ -362,47 +389,47 @@
             }).catch(swal.noop);
         });
     });
-    </script>
+</script>
 @*<script>
 
-    $getCompanyHandler = jQuery.ajax({
+        $getCompanyHandler = jQuery.ajax({
 
-        url: '/API/Companies/',
-        method: 'get',
-        dataType: 'json',
-        cache: false
+            url: '/API/Companies/',
+            method: 'get',
+            dataType: 'json',
+            cache: false
 
-    });
-    $getCompanyHandler.done(function (data, textStatus, jqXHR) {
-        //var test = data;
+        });
+        $getCompanyHandler.done(function (data, textStatus, jqXHR) {
+            //var test = data;
 
-        $tableBodyElement = $('#companyTableBody');
-        for (i = 0; i < data.length; i++) {
+            $tableBodyElement = $('#companyTableBody');
+            for (i = 0; i < data.length; i++) {
 
-            company = data[i];
+                company = data[i];
 
-            companyId = company.CompanyId;
-            companyName = company.CompanyName;
-            companyAddress = company.CompanyAddress;
+                companyId = company.CompanyId;
+                companyName = company.CompanyName;
+                companyAddress = company.CompanyAddress;
 
-            //courseName = batch.CourseName[0].CourseName;
+                //courseName = batch.CourseName[0].CourseName;
 
-            $rowElement = $('<tr></tr>');
-            $cellElement = $('<td></td>', { text: companyName });
-            $rowElement.append($cellElement);
+                $rowElement = $('<tr></tr>');
+                $cellElement = $('<td></td>', { text: companyName });
+                $rowElement.append($cellElement);
 
-            $cellElement = $('<td></td>', { text: companyAddress });
-            $rowElement.append($cellElement);
-           
+                $cellElement = $('<td></td>', { text: companyAddress });
+                $rowElement.append($cellElement);
 
-            $pencilElement = $('<i></i>').attr('class', 'fa fa-pencil');
-            $ahrefElement = $('<a></a>').attr('href', '~/../EditCompany/' + companyId);
-            $ahrefElement.append($pencilElement);
-            $cellElement = $('<td></td>');
-            $cellElement.append($ahrefElement);
-            $rowElement.append($cellElement);
-            
-            $tableBodyElement.append($rowElement);
-        }
-    });
-</script>*@
+
+                $pencilElement = $('<i></i>').attr('class', 'fa fa-pencil');
+                $ahrefElement = $('<a></a>').attr('href', '~/../EditCompany/' + companyId);
+                $ahrefElement.append($pencilElement);
+                $cellElement = $('<td></td>');
+                $cellElement.append($ahrefElement);
+                $rowElement.append($cellElement);
+
+                $tableBodyElement.append($rowElement);
+            }
+        });
+    </script>*@

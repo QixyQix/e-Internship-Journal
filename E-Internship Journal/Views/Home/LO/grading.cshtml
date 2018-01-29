@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Grading Page";
+}
+<div class="container-fluid">
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -13,15 +16,11 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="pull-left">
-                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
-                        <option>Amelia Goh</option>
-                        <option>Cho Qi Xiang</option>
-                        <option>Tan Chia Wei</option>
-                    </select>
+                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent"></select>
                 </div>
                 <div class="pull-right">
                     <label>View By:&nbsp</label>
-                    <select class="form-control" id="exampleSelect1">
+                    <select class="form-control" id="selectWeek">
                         <option>Week 1 - 4</option>
                         <option>Week 4 - 8</option>
                         <option>Week 8 - 12</option>
@@ -32,8 +31,8 @@
         </div>
     </div>
     <div class="card">
-        <div class="card-header">
-            <i class="fa fa-pencil"></i> Grading
+        <div class="card-header d-inline">
+            <i class="fa fa-graduation-cap fa-2x pull-left"></i> <h3>Grading</h3>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -47,13 +46,13 @@
                     </div>
 
                     <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne">
-                        <ul class="card-block">
-                            <li>Exceeds expectations in the area assessed </li>
-                            <li>Very good in the area assessed</li>
-                            <li>Good in the area assessed</li>
-                            <li>Generally effective in the area assessed</li>
+                        <ol class="card-block">
                             <li>Does not meet expectations in the area accessed</li>
-                        </ul>
+                            <li>Generally effective in the area assessed</li>
+                            <li>Good in the area assessed</li>
+                            <li>Very good in the area assessed</li>
+                            <li>Exceeds expectations in the area assessed </li>
+                        </ol>
                     </div>
                 </div>
                 <table class="table table-bordered" cellspacing="0">
@@ -86,7 +85,7 @@
                                 </div>
                             </td>
                             <td>
-                                <select class="form-control" id="rating1" disabled>
+                                <select class="form-control" id="CommunicationGrading" disabled>
                                     <option>1</option>
                                     <option>2</option>
                                     <option>3</option>
@@ -115,7 +114,7 @@
                                 </div>
                             </td>
                             <td>
-                                <select class="form-control" id="rating2" disabled>
+                                <select class="form-control" id="TechnicalGrading" disabled>
                                     <option>1</option>
                                     <option>2</option>
                                     <option>3</option>
@@ -143,7 +142,7 @@
                                 </div>
                             </td>
                             <td>
-                                <select class="form-control" id="rating3" disabled>
+                                <select class="form-control" id="IndependenceGrading" disabled>
                                     <option>1</option>
                                     <option>2</option>
                                     <option>3</option>
@@ -157,58 +156,66 @@
                                 <div class="card">
                                     <div class="card-header" role="tab" id="headingFive">
                                         <h6 class="mb-0">
-                                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseThree" style="color:black;">
-                                                4. Average rating to overall grade
+                                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseThree">
+                                                4. Overall Performance
                                             </a>
                                         </h6>
                                     </div>
                                     <div id="collapseFive" class="collapse" role="tabpanel" aria-labelledby="headingFive">
                                         <ul class="card-block">
-                                            <li>Higher or equal to 4.5 -- Distinction</li>
-                                            <li>Higher or equal to 4.0 -- A (Excellent)</li>
-                                            <li>Higher or equal to 3.5 -- B+ (Very good)</li>
-                                            <li>Higher or equal to 3.0 -- B (Good)</li>
-                                            <li>Higher or equal to 2.5 -- C+ (Good Credit)</li>
-                                            <li>Higher or equal to 2.0 -- C (Credit)</li>
-                                            <li>Higher or equal to 1.5 -- D (Pass)</li>
-                                            <li>Less than 1.5 -- F (Fail)</li>
+                                            <li>I am satisfied with the overall performance and contributions of this stdent</li>
                                         </ul>
                                     </div>
                                 </div>
                             </td>
                             <td>
-                                <select class="form-control" id="grading" disabled>
-                                    <option>Dist</option>
-                                    <option>A</option>
-                                    <option>B+</option>
-                                    <option>B</option>
-                                    <option>C+</option>
-                                    <option>C</option>
-                                    <option>D</option>
-                                    <option>F</option>
+                                <select class="form-control" id="PerformanceGrading" disabled>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
                                 </select>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                <div>
-
+                <div class="card">
+                    <div class="card-header" role="tab" id="headingFive">
+                        <h6 class="mb-0">
+                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseSix" aria-expanded="false" aria-controls="collapseThree">
+                                Average rating to overall grade
+                            </a>
+                        </h6>
+                    </div>
+                    <div id="collapseSix" class="collapse" role="tabpanel" aria-labelledby="headingFive">
+                        <ul class="card-block">
+                            <li>Higher or equal to 4.5 -- Distinction</li>
+                            <li>Higher or equal to 4.0 -- A (Excellent)</li>
+                            <li>Higher or equal to 3.5 -- B+ (Very good)</li>
+                            <li>Higher or equal to 3.0 -- B (Good)</li>
+                            <li>Higher or equal to 2.5 -- C+ (Good Credit)</li>
+                            <li>Higher or equal to 2.0 -- C (Credit)</li>
+                            <li>Higher or equal to 1.5 -- D (Pass)</li>
+                            <li>Less than 1.5 -- F (Fail)</li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="col-md-8 control-label">Average rating based on the above four assessment criteria:</label>
                     <div class="col-sm-5">
-                        <input class="form-control" id="assessmentCriteria" type="text" value="" readonly>
+                        <input class="form-control" id="OverallGrading" type="text" value="" readonly>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-2 control-label">Overall Grade:</label>
                     <div class="col-sm-5">
-                        <input class="form-control" id="overallGrade" type="text" value="" readonly>
+                        <input class="form-control" id="OverallGrade" type="text" value="" readonly>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-sm-3" for="overallComment">Overall Comments:</label>
-                    <textarea class="form-control" rows="5" id="overallComment" readonly></textarea>
+                    <label class="control-label col-sm-3" for="OverallFeedback">Overall Comments:</label>
+                    <textarea class="form-control" rows="5" id="OverallFeedback" readonly></textarea>
                 </div>
             </div>
         </div>
@@ -217,7 +224,7 @@
 <div class="card-body">
     <div class="form-group">
         <div class="col-12">
-            <button class="btn btn-default" onclick="window.history.go(-1); return false">
+            <button class="btn btn-default" onclick="location.href='http://' + window.location.host +'/Home/Student_Journal'">
                 Back
             </button>
         </div>
@@ -225,4 +232,143 @@
 </div>
 &nbsp;
 <script>
+    var monthRecords;
+    var cookies = document.cookie.split("; ");
+
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var eqPos = cookie.indexOf("=");
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        //console.dir(getCookie(name));
+        var cookievalue = getCookie(name);
+
+        if (name != "selectedStudent") {
+            $studentInputElement = $('#selectstudent');
+            $optionElement = $('<option>').text(name).attr('value', cookievalue);
+            $studentInputElement.append($optionElement);
+
+        } else {
+            $('#selectstudent').val(cookievalue);
+            $('#studentId').text(cookievalue);
+
+        }
+    }//End of for loop
+    g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+    monthRecords = getGradingHistory(g_getLocalStorage);
+
+    $('#selectstudent').on('change', function (e) {
+        setCookie();
+        g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+        monthRecords = getGradingHistory(g_getLocalStorage);
+        
+    });
+    $('#selectWeek').on('change', function (e) {
+        g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+        selectedGrading();
+    });
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+    function setCookie() {
+        var inName = "selectedStudent";
+        var inValue = $('#selectstudent').val();
+        //setCookie("selectedStudent", ("#selectstudent").val());
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    }
+    function getGradingHistory(inStudentId) {
+        return $.ajax({
+            url: '/api/month_record/InternshipMonthRecords/' + inStudentId,
+            method: 'GET',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+            success: function (data) {
+                var g_Month = [];
+                var g_MonthRecordId = [];
+                $("#selectWeek option").remove();
+                for (i = 0; i < data.length; i++) {
+                    if (g_Month.includes((i + 1) * 4)) {
+
+                    } else {
+                        g_Month.push((i + 1) * 4);
+                        g_MonthRecordId.push(data[i].MonthId);
+                    }
+                }
+                for (k = 0; k < g_Month.length; k++) {
+                    var tempWeek = g_Month[k];
+
+                    var tempWeekText = "Week " + (tempWeek - 3) + " to Week " + tempWeek;
+                    $weekInputElement = $('#selectWeek');
+                    $weekOptionElement = $('<option>').text(tempWeekText).attr('value', g_MonthRecordId[k]);
+                    $weekInputElement.append($weekOptionElement);
+
+                }
+                selectedGrading();
+            },//End of success
+            error: function (data) {
+                swal({
+                    type: 'error',
+                    title: 'Error',
+                    text: data.Message
+                });
+            }//End of error
+        });//End of ajax call
+    }//end of getReflectionHistory function
+    function selectedGrading() {
+        monthRecords.then(function (data) {
+
+            var selectedWeek = $('#selectWeek').val();
+            var selectedGrade = data[selectedWeek];            $('#CommunicationGrading').val(selectedGrade.CommunicationGrading);            $('#TechnicalGrading').val(selectedGrade.TechnicalGrading);            $('#IndependenceGrading').val(selectedGrade.IndependenceGrading);            $('#PerformanceGrading').val(selectedGrade.PerformanceGrading);            $('#OverallGrading').val(selectedGrade.OverallGrading);
+            if (selectedGrade.Approved) {
+                $('#OverallGrade').val(getGrade(selectedGrade.OverallGrading));
+            } else {
+                $('#OverallGrade').val("Not Graded Yet");
+            }
+            $('#OverallFeedback').val(selectedGrade.OverallFeedback);
+            //selectedSession.MentorSessionDateTimeStart == null ? $('#MentorSessionDate').val("") : $('#MentorSessionDate').val(moment(new Date(selectedSession.MentorSessionDateTimeStart)).format('DD/MM/YYYY'));
+            //selectedSession.MentorSessionDateTimeStart == null ? $('#MentorSessionDateTimeStart').val("") : $('#MentorSessionDateTimeStart').val(moment(new Date(selectedSession.MentorSessionDateTimeStart)).format('hh:mm A'));
+            //selectedSession.MentorSessionDateTimeEnd == null ? $('#MentorSessionDateTimeEnd').val("") : $('#MentorSessionDateTimeEnd').val(moment(new Date(selectedSession.MentorSessionDateTimeEnd)).format('hh:mm A'));
+            //$('#MentorSessionReflection').val(selectedSession.MentorSessionReflection);
+        })
+     
+
+    }
+    function getGrade(average) {
+        console.dir(average);
+        if (average >= 4.5)
+            return 'DIST';
+        else if (average >= 4.0)
+            return 'A';
+        else if (average >= 3.5)
+            return 'B+';
+        else if (average >= 3.0)
+            return 'B';
+        else if (average >= 2.5)
+            return 'C+';
+        else if (average >= 2.0)
+            return 'C';
+        else if (average >= 1.5)
+            return 'D';
+        else if (average < 1.5)
+            return 'F';
+    }
+
 </script>

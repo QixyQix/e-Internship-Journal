@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Edit Project Page";
+}
+<div class="container-fluid">
     <!-- Example DataTables Card-->
     <section id="contact">
         <div class="container">
@@ -38,7 +41,7 @@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Mobile Number</label>
-                                <input class="form-control" id="mobileNo" type="number" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
+                                <input class="form-control" id="mobileNo" min="0" type="number" onkeydown="return FilterInput(event)" onpaste="handlePaste(event)" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
@@ -53,7 +56,7 @@
                         <div id="success"></div>
                         <div class="form-group">
                             <div class="col-12">
-                                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/ViewProject'">
                                     Back
                                 </button>
                                 <button class="btn btn-primary pull-right" name="submit" type="submit">

@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Manage Batch Page";
 }
 
 <div class="container-fluid">
@@ -71,7 +71,7 @@
     <div class="card-body">
         <div class="form-group">
             <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Index'">
                     Back
                 </button>
             </div>
@@ -95,7 +95,8 @@
                 {
                     data: null,
                     "bSortable": false,
-                    "mRender": function (data, type, dataToSet) { return '<a href="/home/manage_student" id="manageBatch" style="color:black;" onClick="manageBatch(\'' + dataToSet.BatchName + '\' , \'' + dataToSet.BatchId + '\')"><i class="fa fa-fw fa-user-plus""></i></a>' }
+                    "mRender": function (data, type, dataToSet) {
+                        return '<a href="/home/manage_student" id="manageBatch" style="color:black;" value="' + dataToSet.BatchId + '" onClick="manageBatch(\'' + dataToSet.BatchName + '\' , \'' + dataToSet.BatchId + '\')" > <i class="fa fa-fw fa-user-plus""></i></a>' }
                 },
                 {
                     data: null,
@@ -118,11 +119,10 @@
             //setCookie($(this).closest('td').next('td').text(), $(this).text());
         //});
         $.each($('table tbody tr td #manageBatch'), function (index) {
-            sessionStorage.setItem(inName, inId);
-            //console.log(Object.keys(sessionStorage));
-            //console.dir('test');
-           // sessionStorage.setItem($(this).closest('td').prev('td').prev('td').prev('td').text(), $(this).attr('value'));
+           // console.dir($(this).closest('td').prev('td').prev('td').text(), $(this).attr('value'));
+            sessionStorage.setItem($(this).closest('td').prev('td').prev('td').text(), $(this).attr('value'));
         });
+        sessionStorage.setItem('selected', inId);
         //$.each($('table tbody tr td.StudentName'), function (index) {
         //    console.dir($(this).text());
 

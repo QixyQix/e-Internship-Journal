@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Student Info Page";
+}
+<div class="container-fluid">
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -8,8 +11,8 @@
     </ol>
     <!-- Example DataTables Card-->
     <div class="card mb-3">
-        <div class="card-header">
-            <i class="fa fa-table"></i> Student's Particular
+        <div class="card-header d-inline">
+            <i class="fa fa-user fa-2x pull-left"></i> <h3>Student's Particular</h3>
         </div>
         <div class="container">
             <form>
@@ -39,8 +42,8 @@
         </div>
     </div>
     <div class="card mb-3">
-        <div class="card-header">
-            <i class="fa fa-table"></i> Company's Particulars
+        <div class="card-header d-inline">
+            <i class="fa fa-building fa-2x pull-left"></i> <h3>Company's Particulars</h3>
         </div>
         <div class="container">
             <form class="form-group">
@@ -75,7 +78,7 @@
     <div class="card-body">
         <div class="form-group">
             <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Index'">
                     Back
                 </button>
             </div>

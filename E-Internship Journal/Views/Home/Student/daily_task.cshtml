@@ -1,4 +1,35 @@
-﻿  <!-- View Event Modal -->
+﻿@{
+    ViewData["Title"] = "Daily Task Page";
+}
+
+<div class="container-fluid">
+    <!-- Breadcrumbs -->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="~/Home/Index">Homepage</a>
+        </li>
+        <li class="breadcrumb-item active">Daily Task</li>
+    </ol>
+    <div class="card">
+        <div class="card-header d-inline">
+            <i class="fa fa-calendar fa-2x pull-left"></i> <h3>Daily Task</h3>
+        </div>
+        <div class="card-block">
+            <div id='calendar'></div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Index'">
+                    Back
+                </button>
+            </div>
+        </div>
+    </div>
+    &nbsp;
+</div>
+  <!-- View Event Modal -->
 <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -47,33 +78,6 @@
             </div>
         </div>
     </div>
-</div>
-<div class="container-fluid">
-    <!-- Breadcrumbs -->
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a href="~/Home/Index">Homepage</a>
-        </li>
-        <li class="breadcrumb-item active">Daily Task</li>
-    </ol>
-    <div class="card">
-        <div class="card-header">
-            <i class="fa fa-pencil"></i> Daily Task
-        </div>
-        <div class="card-block">
-            <div id='calendar'></div>
-        </div>
-    </div>
-    <div class="card-body">
-        <div class="form-group">
-            <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
-                    Back
-                </button>
-            </div>
-        </div>
-    </div>
-    &nbsp;
 </div>
 <style>
 
@@ -151,10 +155,14 @@
         return event;
     }
     //------start calendar script-----
+  
     $('#calendar').fullCalendar({
         editable: false,
         eventLimit: true, // allow "more" link when too many events
         selectable: true,
+        validRange: {
+                end: new Date() + 1
+        },
         select: function (date, jsEvent, view) {
             //var title = prompt('Event Title:' + start + ' ' + end);
             //start contains the date you have selected

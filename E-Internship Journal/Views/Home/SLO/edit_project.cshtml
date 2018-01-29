@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Edit Project Page";
+}
+<div class="container-fluid">
     <!-- Example DataTables Card-->
     <section id="contact">
         <div class="container">
@@ -20,7 +23,7 @@
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Company</label>
                                 <div class='input-group' id='findcompany'>
-                                    <input type='text' class="form-control" id="selectcompany" placeholder="Company" required="required" style="background-color:white" onclick="findCompanyModal()" data-validation-required-message="Please select a company." readonly />
+                                    <input type='text' class="form-control" id="selectCompany" placeholder="Company" required="required" style="background-color:white" onclick="findCompanyModal()" data-validation-required-message="Please select a company." readonly />
                                     <div class="input-group-addon" onclick="findCompanyModal()" style="background-color:white;border:none;">
                                         <i class="fa fa-search"></i>
                                     </div>
@@ -38,7 +41,7 @@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Mobile Number</label>
-                                <input class="form-control" id="mobileNo" type="number" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
+                                <input class="form-control" id="mobileNo" min="0" type="number" onkeydown="return FilterInput(event)" onpaste="handlePaste(event)" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
@@ -53,7 +56,7 @@
                         <div id="success"></div>
                         <div class="form-group">
                             <div class="col-12">
-                                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Manage_Project'">
                                     Back
                                 </button>
                                 <button class="btn btn-primary pull-right" name="submit" type="submit">
@@ -85,22 +88,13 @@
                 <div class="col-12">
                     <form>
                         <div class="form-group">
-                            <div class="input-group">
-                                <input class="form-control" placeholder="Search...">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-search">
-                                    </i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" rows="5">Convertium</textarea>
+                            <select id="companySelect" size="6" style="width: 100%;"></select>
                         </div>
                         <div class="form-group">
                             <div class="col-12">
                                 <div class="form-inline">
                                     <label>Selected: &nbsp;</label>
-                                    <input class="form-control" value="Convertium" readonly>
+                                    <input class="form-control" value="" readonly id="txtSelected">
                                 </div>
                             </div>
                         </div>
@@ -108,90 +102,207 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
+                <button type="button" class="btn btn-secondary" id="btnSubmit">Confirm</button>
                 <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
             </div>
         </div>
     </div>
 </div>
-@*<script>
-        $(document).ready(function () {
 
-            var editor = new $.fn.dataTable.Editor(table);
+<!--choose modal-->
+<div class="modal fade" id="selectChoiceModal" tabindex="1" role="dialog" aria-labelledby="selectChoiceModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="selectChoiceModalLabel">Select One</h5>
+            </div>
+            <div class="modal-body">
 
-            //var t = $('#dataTable').DataTable();
-            var counter = 1;
-
-            var table = $('#dataTable').DataTable({
-                ajax: {
-                    url: '/Api/Task_Record',
-                    dataSrc: ''
-                },
-                "bPaginate": false,
-                "bLengthChange": false,
-                "bFilter": false,
-                "bSort": false,
-                "bInfo": false,
-                "bAutoWidth": false,
-                "asStripClasses": null,
-                //--disable the sorting--
-                dom: 'lrt',
-                "aoColumns": [
-                    { "mData": "DayRecordId", "sWidth": "10%" },
-                    { "mData": "Description", "sTitle": "Description", "sWidth": "80%" },
-                    {
-                        "mData": null,
-                        "bSortable": false,
-                        "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button>' }
-                    }
-                ],
-                language: {
-                    emptyTable: "No task was found, please create one.",
-                }
-            });
-            $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
-                console.log("button 1 is click");
-            });
-        });
-    </script>*@
+                <div class="col-12">
+                    <table width="100%">
+                        <tr>
+                            <td style="padding-bottom:1em;text-decoration:underline;"><strong>Current Information</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="padding-bottom:2em;"><div class="control-group"><label class="control-label"><strong>Name: </strong></label><div class="control">Santhosh Kumar</div></div></td>
+                            <td style="padding-bottom:2em;"><div class="control-group"><label class="control-label"><strong>Mobile: </strong></label><div class="control">98555182</div></div></td>
+                            <td><input type="radio" name="optradio"></td>
+                        </tr>
+                        <tr>
+                            <td style="padding-bottom:1em;text-decoration:underline;"><strong>Existing Information</strong></td>
+                        </tr>
+                        <tr>
+                            <td style="padding-bottom:2em;"><div class="control-group"><label class="control-label"><strong>Name: </strong></label><div class="control">CK Chanon</div></div></td>
+                            <td style="padding-bottom:2em;"><div class="control-group"><label class="control-label"><strong>Mobile: </strong></label><div class="control">95864582</div></div></td>
+                            <td><input type="radio" name="optradio"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer text-center">
+                <label class="mr-auto" style="color:red;">Pick one before proceeding..</label>
+                <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
-    var editor;
     $(document).ready(function () {
-        var table = $('#dataTable').DataTable({
-            "scrollY": '250px',
-            "scrollCollapse": true,
-            "paging": false,
-            "bPaginate": false,
-            "bLengthChange": false,
-            "bFilter": false,
-            "bSort": false,
-            "bInfo": false,
-            "bAutoWidth": false,
-            "asStripClasses": null,
-            //--disable the sorting--
-            dom: 'rti',
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
-            },
-            order: [[1, 'asc']],
-            columns: [
-                { data: "DayRecordId" },
-                { data: "Description" },
-                {
-                    data: null,
-                    "sWidth": "10%",
-                    "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
+        //  console.dir($('#contactForm input'));
+        //  $('#projectName').jqBootstrapValidation();
+        var projectId = sessionStorage.getItem("editProject");
+        $.ajax({
+            url: '/api/Companies',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                for (i = 0; i < data.length; i++) {
+                    //    $('#companySelect').val(data[i].)
+                    $companyInputElement = $('#companySelect');
+                    $optionElement = $('<option>').text(data[i].CompanyName).attr('value', data[i].CompanyId);
+                    $companyInputElement.append($optionElement);
                 }
-            ],
-            language: {
-                emptyTable: "No task was found, please create one.",
-            }
+
+            }//End of success
+        });//End of Ajax
+
+        $.ajax({
+            url: '/API/Projects/' + projectId,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                $('#projectName').val(data.ProjectName).trigger('change');;
+                //$('#selectCompany').attr('value');
+                $('#supervisorName').val(data.FullName);
+                $('#mobileNo').val(data.PhoneNumber);
+                $('#email').val(data.Email);
+
+                $('#selectCompany').val(data.CompanyName);// To set display text on input element
+                $('#selectCompany').attr('value', data.CompanyId); // To set company value id to the input element
+
+                $('#companySelect').val(data.CompanyId);
+                $('#txtSelected').val(data.CompanyName);
+                //for (i = 0; i < data.length; i++) {
+                //    //    $('#companySelect').val(data[i].)
+                //    $companyInputElement = $('#companySelect');
+                //    $optionElement = $('<option>').text(data[i].CompanyName).attr('value', data[i].CompanyId);
+                //    $companyInputElement.append($optionElement);
+                //}
+
+            }//End of success
+        });//End of Ajax
+        $('#companySelect').on('change', function (e) {
+            $('#txtSelected').val($('#companySelect option:selected').text());
+        });//End of Select Change
+        $('#btnSubmit').on('click', function (e) {
+
+            $('#selectCompany').val($('#companySelect option:selected').text());// To set display text on input element
+            $('#selectCompany').attr('value', ($('#companySelect option:selected').val())); // To set company value id to the input element
+
+            $('#selectCompanyModal').modal('hide');
+        });//End of button submit for popup
+
+        //$('#btnSave').on('click', function (e) {
+        //    var errorMessages = [];
+        //    $('#contactForm input').each(function (i, el) {
+        //        errorMessages = errorMessages.concat(
+        //            $(this).triggerHandler("validation.validation")
+        //        );
+        //    });
+        //    var errors = $('#contactForm').jqBootstrapValidation("collectErrors");
+        //    console.dir(errorMessages);
+        //    console.dir(errors);
+        //    console.dir('test');
+        //    var collectedProjectName = $('#projectName').val();
+        //    var collectedCompany = $('#selectCompany').attr('value');
+        //    var collectedSupervisorName = $('#supervisorName').val();
+        //    var collectedSupervisorNumber = $('#mobileNo').val();
+        //    var collectedSupervsorEmail = $('#email').val();
+
+
+        //});
+        $(function () {
+
+            $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
+                preventSubmit: true,
+                submitSuccess: function ($form, event) {
+                    event.preventDefault();
+
+                    var collectedProjectName = $('#projectName').val();
+                    var collectedCompany = $('#selectCompany').attr('value');
+                    var collectedSupervisorName = $('#supervisorName').val();
+                    var collectedSupervisorNumber = $('#mobileNo').val();
+                    var collectedSupervisorEmail = $('#email').val();
+                    var webFormData = new WebFormData(projectId, collectedProjectName, collectedCompany, collectedSupervisorName,
+                        collectedSupervisorNumber, collectedSupervisorEmail);
+
+                    $.ajax({
+                        url: '/Api/Projects/SaveNewProjectRecord/',
+                        method: 'PUT',
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        data: "'" + JSON.stringify(webFormData) + "'",
+                        success: function (data, status, jqXHR) {
+                            var title = 'Success';
+                            if (data.AlertType == 'error') {
+                                title = 'Error';
+
+                            } else if (data.AlertType == 'warning') {
+                                title = 'Warning';
+                            }
+                            swal({
+                                type: data.AlertType,
+                                title: title,
+                                text: data.Messages
+                            }).then(
+                                function () {
+                                    title == 'Error' ? null : window.location.reload();
+                                });
+                        },//End of success
+                        error: function (data) {
+                            swal({
+                                type: 'error',
+                                title: 'Error',
+                                text: data.Message
+                            });
+                        }//End of error
+                    });//End of ajax call
+
+
+                    // will not trigger the default submission in favor of the ajax function
+
+                },
+                submitError: function ($form, event, errors) {
+
+                }
+
+            });
+
+        });//End of jqBootstrapValidation
+
+
+        $('.floating-label-form-group input').change(function (e) {
+            $('body .floating-label-form-group').addClass("floating-label-form-group-with-value", !!$(e.target).val());
+
         });
-    });
+    });//End of document ready.
 
     function findCompanyModal() {
         $('#selectCompanyModal').modal('show');
+    }
+    function WebFormData(inProjectId, inProjectName, inCompany, inSupervisorName,
+        inSupervisorNumber, inSupervisorEmail) {
+        this.ProjectId = inProjectId;
+        this.ProjectName = inProjectName;
+        this.Company = inCompany;
+        this.SupervisorName = inSupervisorName;
+        this.SupervisorNumber = inSupervisorNumber;
+        this.SupervisorEmail = inSupervisorEmail;
+    }
+    function findChoiceModal() {
+        $('#selectChoiceModal').modal('show');
     }
 </script>

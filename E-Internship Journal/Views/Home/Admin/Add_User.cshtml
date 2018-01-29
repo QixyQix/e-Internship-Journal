@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Add User Page";
+}
+<div class="container-fluid">
     <!-- Example DataTables Card-->
     <section id="contact">
         <div class="container">
@@ -9,18 +12,18 @@
                     <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
                     <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
                     <form name="sentMessage" id="contactForm" novalidate="novalidate">
-                        <div class="control-group">
-                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                <label>Batch</label>
-                                <div class='input-group' id='findbatch'>
-                                    <input type='text' class="form-control" id="selectBatch" placeholder="Batch" required="required" style="background-color:white" onclick="findBatchModal()" data-validation-required-message="Please select a batch." readonly />
-                                    <div class="input-group-addon" onclick="findBatchModal()" style="background-color:white;border:none;">
-                                        <i class="fa fa-search"></i>
+                        @*<div class="control-group">
+                                <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                    <label>Batch</label>
+                                    <div class='input-group' id='findbatch'>
+                                        <input type='text' class="form-control" id="selectBatch" placeholder="Batch" required="required" style="background-color:white" onclick="findBatchModal()" data-validation-required-message="Please select a batch." readonly />
+                                        <div class="input-group-addon" onclick="findBatchModal()" style="background-color:white;border:none;">
+                                            <i class="fa fa-search"></i>
+                                        </div>
                                     </div>
+                                    <p class="help-block text-danger"></p>
                                 </div>
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
+                            </div>*@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Full Name</label>
@@ -31,7 +34,7 @@
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls mb-0 pb-2">
                                 <label>Mobile Number</label>
-                                <input class="form-control" id="mobileNo" type="number" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
+                                <input class="form-control" id="mobileNo" min="0" type="number" onkeydown="return FilterInput(event)" onpaste="handlePaste(event)" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
@@ -42,37 +45,68 @@
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Password</label>
+                                <input class="form-control" id="password" type="password" placeholder="Password" required="required" data-validation-required-message="Please enter email address.">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
                         <br>
                         <div class="control-group">
                             <div class="form-inline">
                                 <label>Role:</label>
                                 &nbsp;
-                                <select class="form-control" id="roleid" multiple="multiple">
-                                    <option value="student">Student</option>
-                                    <option value="supervisor">Supervisor</option>
-                                    <option value="lo">LO</option>
-                                    <option value="slo">SLO</option>
-                                </select>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="roleSelect" value="ADMIN" id="chkAdmin">
+                                    <label class="form-check-label" for="chkAdmin">
+                                        Admin
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="roleSelect" value="SLO" id="chkSLO">
+                                    <label class="form-check-label" for="chkSLO">
+                                        Senior Liaison Officer (SLO)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="roleSelect" value="LO" id="chkLO">
+                                    <label class="form-check-label" for="chkLO">
+                                        Liaison Officer (LO)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="roleSelect" value="SUPERVISOR" id="chkSupervisor">
+                                    <label class="form-check-label" for="chkSupervisor">
+                                        Supervisor
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="roleSelect" value="STUDENT" id="chkStudent">
+                                    <label class="form-check-label" for="chkStudent">
+                                        Student
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <br>
                         <div class="control-group">
                             <label class="radio-inline">
-                                <input type="radio" name="optradio"> Activate
+                                <input type="radio" name="optradio" value="true"> Activate
                             </label>
                             &nbsp;
                             <label class="radio-inline">
-                                <input type="radio" name="optradio"> Deactivate
+                                <input type="radio" name="optradio" value="false"> Deactivate
                             </label>
                         </div>
                         <br>
                         <div id="success"></div>
                         <div class="form-group">
                             <div class="col-12">
-                                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/ViewUser'">
                                     Back
                                 </button>
-                                <button class="btn btn-primary pull-right" name="submit" type="submit">
+                                <button class="btn btn-primary pull-right" name="submit" type="submit" id="btnSave">
                                     Save
                                 </button>
                             </div>
@@ -85,7 +119,6 @@
         </div>
     </section>
 </div>
-
 <!-- Batch Modal -->
 <div class="modal fade" id="batchModal" tabindex="-1" role="dialog" aria-labelledby="batchModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -97,26 +130,16 @@
                 </button>
             </div>
             <div class="modal-body">
-
                 <div class="col-12">
                     <form>
                         <div class="form-group">
-                            <div class="input-group">
-                                <input class="form-control" placeholder="Search...">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-search">
-                                    </i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" rows="5" id="batchselection">AY16/17 S2\\\n AY16/17 S1</textarea>
+                            <select id="batchSelect" size="6" style="width: 100%;"></select>
                         </div>
                         <div class="form-group">
                             <div class="col-12">
                                 <div class="form-inline">
                                     <label>Selected: &nbsp;</label>
-                                    <input class="form-control" value="AY16/17 S1" readonly>
+                                    <input class="form-control col-9" value="" readonly id="txtSelected">
                                 </div>
                             </div>
                         </div>
@@ -124,19 +147,121 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
+                <button type="button" class="btn btn-secondary" id="btnSubmit">Confirm</button>
                 <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
             </div>
         </div>
     </div>
 </div>
 <script>
-    $(document).ready(function () {
-        $('#roleid').multiselect();
+    $(function () {
+        $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
+            preventSubmit: true,
+                submitSuccess: function ($form, event) {
+                    event.preventDefault();     // will not trigger the default submission in favor of the ajax function
+                    var collectedFullName = $('#fullname').val();
+                    var collectedMobileNumber = $('#mobileNo').val();
+                    var collectedEmail = $('#email').val();
+                    var collectedPassword = $('#password').val();
+                    var collectedRoles = [];
+                    var collectedActivate = $('input[name=optradio]:checked').val();
+                    $('input[name=roleSelect]').each(function () {
+                        if ($(this).prop('checked'))
+                            collectedRoles.push($(this).val());
+                    });
+
+                    var webFormData = new WebFormData(collectedFullName, collectedMobileNumber, collectedEmail, collectedPassword, collectedRoles, collectedActivate);
+
+                    console.dir(webFormData);
+
+                    $.ajax({
+                        url: '/api/Accounts',
+                        method: 'POST',
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        data: "'" + JSON.stringify(webFormData) + "'",
+                        success: function (data) {
+                            swal({
+                                type: 'success',
+                                title: 'Saved!',
+                                text: data.Message
+                            }).then(
+                                function () {
+                                    location.href = 'http://' + window.location.host + '/home/ViewUser';
+                                });
+                        },
+                        error: function (data) {
+                            swal({
+                                type: 'error',
+                                title: 'Error',
+                                text: data.Message
+                            });
+                        }
+                    });
+                },
+            submitError: function ($form, event, errors) {
+
+            }
+
+            });
+
+        });//End of jqBootstrapValidatio
+
+    $('input[name=roleSelect]').change(function () {
+        $('input[name=roleSelect]').each(function () {
+            $(this).prop('disabled', false);
+        });
+        if ($('input[name=roleSelect]').is(':checked')) {
+            if ($(this).val() == "ADMIN") {
+                $('#chkSLO').prop('checked', false).prop('disabled', true);
+                $('#chkLO').prop('checked', false).prop('disabled', true);
+                $('#chkSupervisor').prop('checked', false).prop('disabled', true);
+                $('#chkStudent').prop('checked', false).prop('disabled', true);
+            } else if ($(this).val() == "STUDENT") {
+                $('#chkSLO').prop('checked', false).prop('disabled', true);
+                $('#chkLO').prop('checked', false).prop('disabled', true);
+                $('#chkSupervisor').prop('checked', false).prop('disabled', true);
+                $('#chkAdmin').prop('checked', false).prop('disabled', true);
+            } else {
+                $('#chkStudent').prop('checked', false).prop('disabled', true);
+                $('#chkAdmin').prop('checked', false).prop('disabled', true);
+            }
+        }
     });
-    function findBatchModal() {
-        $('#batchModal').modal('show');
-        //http://www.dyn-web.com/tutorials/forms/select/multi-selected.php
-        //please take a look at this for reference
+
+    function WebFormData(fullname, mobilenumber, email, password, roles, activated) {
+        this.FullName = fullname;
+        this.PhoneNumber = mobilenumber;
+        this.Email = email;
+        this.Roles = roles;
+        this.Password = password;
+        this.PasswordRepeat = password;
+        this.Enabled = activated;
     }
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+    function setCookie(inName, inValue) {
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };
 </script>

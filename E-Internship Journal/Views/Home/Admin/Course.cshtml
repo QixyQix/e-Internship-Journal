@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Manage Course Page";
+}
+<div class="container-fluid">
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -8,8 +11,8 @@
     </ol>
     <!-- Example DataTables Card-->
     <div class="card mb-3">
-        <div class="card-header">
-            <i class="fa fa-eye"></i> View Course
+        <div class="card-header d-inline">
+            <i class="fa fa-book fa-2x pull-left"></i> <h3>Course</h3>
         </div>
         <div class="card-body">
             <div class="form-inline">
@@ -38,14 +41,14 @@
                     <thead>
                         <tr>
                             <th width="5%"><input name="select_all" value="1" type="checkbox" /></th>
-                            <th>Code</th>
-                            <th>Course Name</th>
+                            <th class="export">Code</th>
+                            <th class="export">Course Name</th>
                             <th width="10%">Action</th>
                         </tr>
                         <tr id="filterrow">
                             <th></th>
-                            <th>Code</th>
-                            <th>Course Name</th>
+                            <th style="tableHeader">Code</th>
+                            <th style="tableHeader">Course Name</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -64,7 +67,7 @@
     <div class="card-body">
         <div class="form-group">
             <div class="col-12">
-                <button class="btn btn-default" onclick="window.history.go(-1); return false">
+                <button class="btn btn-default" onclick="location.href='http://' + window.location.host +'/Home/Index'">
                     Back
                 </button>
             </div>
@@ -105,32 +108,71 @@
     }
 
     function hideFilter1() {
+        $("#course_dataTable thead input").val("");
+        $("#course_dataTable thead input").change();
         $('#course_dataTable thead tr#filterrow').toggle();
     }
 
     function popCSV() {
         $('#uploadcsvModal').modal('show');
     }
+
     function popbulkdel() {
         swal({
-            title: 'Are you sure?',
+            title: 'Bulk delete courses?',
             text: "You won't be able to revert this!",
             type: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'Delete'
         }).then(function (result) {
-            if (result.value) {
-                swal(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
-            }
+            var ids = [];
+            $('input[name="checkboxSelectCourse"]').each(function () {
+                if ($(this).prop('checked'))
+                    ids.push($(this).val());
+            });
+
+            var webFormData = new WebFormData(ids);
+
+            $.ajax({
+                url: '/api/Courses/bulkDelete',
+                method: 'PUT',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                cache: false,
+                data: "'" + JSON.stringify(webFormData) + "'",
+                success: function (data) {
+
+                    var message = ""
+
+                    if (data.Messages.length > 0) {
+                        for (i = 0; i < data.Messages.length; i++) {
+                            message += data.Messages[i] + '<br/><br/>';
+                        }
+                    } else { 
+                        message = "Deleted selected courses";
+                    }
+
+                    swal({
+                        type: data.AlertType,
+                        title: 'Completed!',
+                        html: message
+                    }).then(
+                        function () {
+                            window.location.reload();
+                        });
+                },
+                error: function (data) {
+                    swal({
+                        type: 'error',
+                        title: 'Error',
+                        text: data.Message
+                    });
+                }
+            });
         }).catch(swal.noop);
     }
-    
+
     function stopPropagation(evt) {
         if (evt.stopPropagation !== undefined) {
             evt.stopPropagation();
@@ -138,32 +180,71 @@
             evt.cancelBubble = true;
         }
     }
+
     $(document).ready(function () {
         // Array holding selected row IDs
         var rows_selected = [];
         var table = $('#course_dataTable').DataTable({
             bSortable: false,
-            //'fnDrawCallback': function (oSettings) {
-            //    $('.dataTables_filter').(function () {
-            //        $(this).append('<button class="btn btn-default mr-xs pull-right" type="button">Button');
-            //    });
-            //},
             dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+            buttons: [
+                'copyHtml5',
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: [1, 2]
+                    }
+                },
+                {
+                    extend: 'csvHtml5',
+                    exportOptions: {
+                        columns: [1, 2]
+                    },
+                    customize: function (csv) {
+                        var qwqweq = $('.export');
+                        var array = ["test", "test2"];
+                        var ra = [];
+                        for (i = 0; i < qwqweq.length; i++) {
+                            ra.push(qwqweq[i].textContent);
+
+                         }
+                        //test.for(function (entry) {
+                        //    ra.push(entry.TextContent);
+                        //});
+                        // var $ths = $row.children("th.export");
+                        return ra + csv;
+                    },
+                  // header: true
+                },
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: [1, 2],
+                        format: {
+                            header: function (data, column, row) {
+                                var qwqweq = $('.export');
+                                //var ra = [];
+                                //for (i = 0; i < qwqweq.length; i++) {
+                                //    ra.push(qwqweq[i].textContent);
+
+                                //}
+                                //var tt = data.substring(data.indexOf("inline-block") + 15, data.indexOf("<span"));
+                                return qwqweq[column-1].textContent;
+                            }
+                                //return data.substring(data.indexOf("inline-block") + 15, data.indexOf("<span"));
+                        }
+                       // columns: ':visible',
+                    },
+                    
+                
+                    //header: true
+                },
+            ],
             ajax: {
-                url: '/Api/Task_Record',
+                url: '/Api/Courses',
                 dataSrc: ''
             },
-            columnDefs: [{
-                'targets': 0,
-                'searchable': false,
-                'orderable': false,
-                'width': '1%',
-                'className': 'dt-body-center',
-                'render': function (data, type, full, meta) {
-                    return '<input type="checkbox">';
-                }
-            }],
             select: {
                 style: 'os',
                 selector: 'td:first-child'
@@ -180,13 +261,17 @@
                 }
             },
             columns: [
-                { data: null },
-                { data: "DayRecordId" },
-                { data: "Description" },
                 {
-                    data: null,
+                    data: "CourseId",
                     "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
+                    "mRender": function (o) { return '<input type="checkbox" name="checkboxSelectCourse" value="' + o + '"/>'; }
+                },
+                { data: "CourseCode" },
+                { data: "CourseName" },
+                {
+                    data: "CourseId",
+                    "bSortable": false,
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary" onClick="editCourse(' + o + ')"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" onClick="deleteCourse(' + o + ')"><i class="fa fa-trash"></i></button>' }
                 }
             ],
             language: {
@@ -200,10 +285,43 @@
             }
         });
 
+        $('#submitcsv').click(function (e) {
+            console.dir("Uploding CSV...");
+            var fileUpload = $("#csv_upload").get(0);
+            var files = fileUpload.files;
+            var data = new FormData();
+            for (var i = 0; i < files.length; i++) {
+                data.append(files[i].name, files[i]);
+            }
+            $.ajax({
+                method: 'POST',
+                url: '/API/Courses/BulkAddCourse',
+                contentType: false, // Not to set any content header
+                processData: false, // Not to process data
+                data: data,
+                success: function (data) {
+                    swal({
+                        type: data.AlertType,
+                        title: data.Title,
+                        html: data.Messages.join('<br/><br/>')
+                    }).then(function () {
+                        window.location.reload();
+                    });
+                },
+                fail: function (data) {
+                    swal({
+                        type: 'error',
+                        title: 'Oops!',
+                        text: data.responseJSON.Message
+                    });
+                }
+            });
+        });
+
         // Handle click on checkbox
         $('#course_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
             var $row = $(this).closest('tr');
-
+            
             // Get row data
             var data = table.row($row).data();
 
@@ -276,7 +394,7 @@
             }
         });
         //end of handle custom search
-        
+
         //// Handle form submission event
         //$('#frm-example').on('submit', function (e) {
         //    var form = this;
@@ -292,27 +410,79 @@
         //        );
         //    });
         //});
-        $('#course_dataTable tbody').on('click', 'button.btn-primary', function (e) {
-            location.href = 'EditCourse';
-        });
-        $('#course_dataTable tbody').on('click', 'button.btn-danger', function (e) {
+
+    });
+
+    function WebFormData(courseIds) {
+        this.CourseIds = courseIds;
+    }
+
+    function editCourse(courseId) {
+        console.dir("EDIT COURSE:" + courseId);
+        setCookie("selectedCourse", courseId);
+        location.href = 'EditCourse';
+    }
+
+    function deleteCourse(courseId) {
+        if (courseId != "") {
+            console.dir("DELETE COURSE:" + courseId);
             swal({
                 title: 'Are you sure?',
-                text: "You won't be able to revert this!",
+                text: "This cannot be undone!",
                 type: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then(function (result) {
-                if (result.value) {
-                    swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
-                }
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Delete'
+            }).then(function () {
+                console.dir("Deleting course");
+                $.ajax({
+                    url: '/Api/Courses/' + courseId,
+                    method: 'DELETE',
+                    dataType: 'json',
+                    cache: false,
+                    success: function (data) {
+                        swal({
+                            type: data.AlertType,
+                            title: data.Title,
+                            text: data.Message
+                        }).then(function () {
+                            window.location.reload();
+                        });
+                    },
+                    fail: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Oops!',
+                            text: data.Message
+                        });
+                    }
+                });
             }).catch(swal.noop);
-        });
-    });
+        }
+    }
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+    function setCookie(inName, inValue) {
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };
 </script>

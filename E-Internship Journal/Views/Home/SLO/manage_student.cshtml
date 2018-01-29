@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Manage User Page";
+}
+<div class="container-fluid">
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -19,8 +22,8 @@
         </div>
     </div>
     <div class="card mb-3">
-        <div class="card-header">
-            <i class="fa fa-table"></i> Manage Students
+        <div class="card-header d-inline">
+            <i class="fa fa-table fa-2x pull-left"></i> <h3>Manage Students</h3>
         </div>
         <div class="card-body">
             <div class="form-inline">
@@ -49,28 +52,28 @@
                     <thead>
                         <tr>
                             <th width="5%"><input name="select_all" value="1" type="checkbox" /></th>
-                            <th>Student ID</th>
-                            <th>Student Name</th>
-                            <th>Mobile No</th>
-                            <th>Email Address</th>
-                            <th>Liason Officer</th>
-                            <th>Project</th>
-                            <th>Company</th>
-                            <th>Designation</th>
-                            <th>Allowance</th>
+                            <th class="S_ID" width="5%">Student ID</th>
+                            <th class="S_Name" width="10%">Student Name</th>
+                            <th class="M_NO" width="8%">Mobile No</th>
+                            <th class="E_Add" width="10%">Email Address</th>
+                            <th class="L_O" width="10%">Liason Officer</th>
+                            <th class="Proj" width="5%">Project</th>
+                            <th class="Comp" width="15%">Company</th>
+                            <th class="Des" width="5%">Designation</th>
+                            <th class="Allow" width="8%">Allowance</th>
                             <th width="10%">Action</th>
                         </tr>
                         <tr id="filterrow">
                             <th></th>
-                            <th>Student ID</th>
-                            <th>Student Name</th>
-                            <th>Mobile No</th>
-                            <th>Email Address</th>
-                            <th>Liason Officer</th>
-                            <th>Project</th>
-                            <th>Company</th>
-                            <th>Designation</th>
-                            <th>Allowance</th>
+                            <th class="S_ID">Student ID</th>
+                            <th class="S_Name">Student Name</th>
+                            <th class="M_NO">Mobile No</th>
+                            <th class="E_Add">Email Address</th>
+                            <th class="L_O">Liason Officer</th>
+                            <th class="Proj">Project</th>
+                            <th class="Comp">Company</th>
+                            <th class="Des">Designation</th>
+                            <th class="Allow">Allowance</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -86,6 +89,7 @@
                             <td>Web Designer</td>
                             <td>600</td>
                             <td></td>
+                            <td></td>
                         </tr>
                         <tr>
                             <td></td>
@@ -97,6 +101,7 @@
                             <td>Rapid Cloud Pte Ltd</td>
                             <td>SEO analyze</td>
                             <td>600</td>
+                            <td></td>
                             <td></td>
                         </tr>
                         <tr>
@@ -110,6 +115,7 @@
                             <td>Backend Coder</td>
                             <td>750</td>
                             <td></td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
@@ -119,7 +125,7 @@
     <div class="card-body">
         <div class="form-group">
             <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Manage_Batch'">
                     Back
                 </button>
             </div>
@@ -127,6 +133,80 @@
     </div>
     &nbsp;
 </div>
+
+<style>
+
+    @@media only screen and (max-width: 768px) {
+        .Allow, tr td:nth-child(10) {
+            display: none;
+            visibility: hidden;
+        }
+    }
+
+    @@media only screen and (max-width: 420px) {
+        .Allow, tr td:nth-child(10) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .Des, tr td:nth-child(9) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .Comp, tr td:nth-child(8) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .Proj, tr td:nth-child(7) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .E_Add, tr td:nth-child(5) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .M_NO, tr td:nth-child(4) {
+            display: none;
+            visibility: hidden;
+        }
+    }
+
+    @@media only screen and (max-width: 320px) {
+        .Allow, tr td:nth-child(10) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .Des, tr td:nth-child(9) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .Comp, tr td:nth-child(8) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .Proj, tr td:nth-child(7) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .E_Add, tr td:nth-child(5) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .M_NO, tr td:nth-child(4) {
+            display: none;
+            visibility: hidden;
+        }
+    }
+</style>
 
 <script>
     //
@@ -162,6 +242,8 @@
     }
 
     function hideFilter1() {
+        $("#student_dataTable thead input").val("");
+        $("#student_dataTable thead input").change();
         $('#student_dataTable thead tr#filterrow').toggle();
     }
 
@@ -179,12 +261,34 @@
             confirmButtonText: 'Yes, delete it!'
         }).then(function (result) {
             if (result.value) {
-                swal(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
-            }
+                var checkedStudent = [];
+                $("#student_dataTable tbody input[type='checkbox']:checked").each(function () {
+                    checkedStudent.push($(this).val());
+                });
+                $.ajax({
+                    url: '/Api/UserBatches/DeleteStudents/bulk/?checkedStudent=' + checkedStudent + '&selectedBatch=' + $('#selectBatch').val(),
+                    method: 'DELETE',
+                    success: function (data, status, jqXHR) {
+                        var title = data.AlertType == 'warning' ? 'Records displayed below not removed ' : 'Selected Records removed successfully!';
+
+                        swal({
+                            type: data.AlertType,
+                            title: title,
+                            html: data.Messages.join('<br>')
+                            //text: data.Message
+                        }).then(function () {
+                            window.location.reload();
+                        })
+                    },//End of success
+                    error: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            text: data.Message
+                        });
+                    }//end of error
+                });//End of ajax call
+            }//end of If statement
         }).catch(swal.noop);
     }
 
@@ -197,83 +301,26 @@
     }
     $(document).ready(function () {
 
+
         for (i = 0; i < sessionStorage.length; i++) {
-            $batchInputElement = $('#selectBatch');
-            $optionElement = $('<option>').text(sessionStorage.key(i)).attr('value', sessionStorage.getItem(sessionStorage.key(i)));
-            //$optionElement = $('<option>').text(Object.keys(sessionStorage.key[i]));
-            $batchInputElement.append($optionElement);
+            if (sessionStorage.key(i) != 'selected' && sessionStorage.key(i) != 'editStudent') {
+                $batchInputElement = $('#selectBatch');
+                $optionElement = $('<option>').text(sessionStorage.key(i)).attr('value', sessionStorage.getItem(sessionStorage.key(i)));
+                //$optionElement = $('<option>').text(Object.keys(sessionStorage.key[i]));
+                $batchInputElement.append($optionElement);
             // console.log(localStorage.getItem(localStorage.key(i)));
-        }
-        var selectedBatch = $('#selectBatch').val();
-
-        // Array holding selected row IDs
-        var rows_selected = [];
-        var table = $('#student_dataTable').DataTable({
-            bSortable: false,
-            //'fnDrawCallback': function (oSettings) {
-            //    $('.dataTables_filter').(function () {
-            //        $(this).append('<button class="btn btn-default mr-xs pull-right" type="button">Button');
-            //    });
-            //},
-            dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-            ajax: {
-                url: '/Api/Batches/getBatchStudents/' + selectedBatch,
-                dataSrc: ''
-            },
-            columnDefs: [{
-                'targets': 0,
-                'searchable': false,
-                'orderable': false,
-                'width': '1%',
-                'className': 'dt-body-center',
-                'render': function (data, type, full, meta) {
-                    return '<input type="checkbox">';
-                }
-            }],
-            select: {
-                style: 'os',
-                selector: 'td:first-child'
-            },
-            order: [[1, 'asc']],
-            'rowCallback': function (row, data, dataIndex) {
-                // Get row ID
-                var rowId = data[0];
-
-                // If row ID is in the list of selected row IDs
-                if ($.inArray(rowId, rows_selected) !== -1) {
-                    $(row).find('input[type="checkbox"]').prop('checked', true);
-                    $(row).addClass('selected');
-                }
-            },
-            columns: [
-                { data: null },
-                { data: "StudentEmail" },
-                { data: "StudentName" },
-                { data: "StudentPhoneNumber" },
-                { data: "StudentEmail" },
-                { data: "LOName" },
-                { data: "ProjectName" },
-                { data: "CompanyName" },
-                { data: null },
-                { data: null },
-                {
-                    data: null,
-                    "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
-                }
-            ],
-            language: {
-                emptyTable: "No Batch was found, please create one.",
-            },
-            initComplete: function () {
-                $("div.toolbar")
-                    .html('<div class="col-sm-4"><button class="btn btn-xs btn-default" onclick="hideFilter1()">Filter</button></div>');
-                $("div.toolbar").parent().children().addClass("pull-right");
-                hideFilter1();
             }
-        });//End of DataTable
 
+        }
+     
+        var selectedBatch = sessionStorage.getItem('selected');
+        $('#selectBatch').val(selectedBatch);
+        loadDataTable(selectedBatch);
+        $('#selectBatch').on('change', function (e) {
+            sessionStorage.setItem('selected', $(this).val());
+            loadDataTable($(this).val());
+            hideFilter1();
+        });
         //Handle click for bulk add
 
         $('#submitcsv').on('click', function (e) {
@@ -294,7 +341,7 @@
             //$('#csv_form').attr('action', "/api/enroll/EnrollStudent/" + selectedBatch);
             $saveStudentHandler = jQuery.ajax({
                 method: 'post',
-                url: '/API/Enroll/EnrollStudent/' + selectedBatch,
+                url: '/API/Enroll/EnrollStudent/' + sessionStorage.getItem('selected'),
                 contentType: false, // Not to set any content header
                 processData: false, // Not to process data
                 data: data,
@@ -305,7 +352,10 @@
                     type: data.AlertType,
                     title: 'You did it!',
                     html: data.Messages.join('<br>')
-                });
+                }).then(
+                    function () {
+                        data.AlertType == 'error' ? null : window.location.reload();
+                    });
             });
             $saveStudentHandler.fail(function (data, textStatus, jqXHR) {
                 swal({
@@ -316,119 +366,250 @@
             });
 
         });
-        // Handle click on checkbox
-        $('#student_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
-            var $row = $(this).closest('tr');
 
-            // Get row data
-            var data = table.row($row).data();
+    });//End of document ready
+    function loadDataTable(inId) {
 
-            // Get row ID
-            var rowId = data[0];
+        $.ajax({
+            url: '/Api/Batches/getBatchStudents/' + inId,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                // Array holding selected row IDs
+                var rows_selected = [];
+                console.dir(data);
+                var table = $('#student_dataTable').DataTable({
+                    bSortable: false,
+                     destroy: true,
+                    //'fnDrawCallback': function (oSettings) {
+                    //    $('.dataTables_filter').(function () {
+                    //        $(this).append('<button class="btn btn-default mr-xs pull-right" type="button">Button');
+                    //    });
+                    //},
+                   // destroy: true,
+                    dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+                    data: data,
+                    columnDefs: [{
+                        'targets': 0,
+                        'searchable': false,
+                        'orderable': false,
+                        'width': '1%',
+                        'className': 'dt-body-center',
+                        'render': function (data, type, full, meta) {
+                            return '<input type="checkbox" value="' + data.StudentEmail + '">';
+                        }
+                    }],
+                    select: {
+                        style: 'os',
+                        selector: 'td:first-child'
+                    },
 
-            // Determine whether row ID is in the list of selected row IDs
-            var index = $.inArray(rowId, rows_selected);
+                    order: [[1, 'asc']],
+                    'rowCallback': function (row, data, dataIndex) {
+                        // Get row ID
+                        var rowId = data[0];
 
-            // If checkbox is checked and row ID is not in list of selected row IDs
-            if (this.checked && index === -1) {
-                rows_selected.push(rowId);
+                        // If row ID is in the list of selected row IDs
+                        if ($.inArray(rowId, rows_selected) !== -1) {
+                            $(row).find('input[type="checkbox"]').prop('checked', true);
+                            $(row).addClass('selected');
+                        }
+                    },
+                    columns: [
+                        { data: null },
+                        { data: "StudentUserId" },
+                        { data: "StudentName" },
+                        { data: "StudentPhoneNumber" },
+                        { data: "StudentEmail" },
+                        { data: "LOName" },
+                        { data: "ProjectName" },
+                        { data: "CompanyName" },
+                        { data: 'Designation' },
+                        { data: 'Allowance' },
+                        {
+                            data: null,
+                            "bSortable": false,
+                            "mRender": function (data, type, row) { return '<div class="d-inline"><button class="btn btn-sm btn-primary" onClick="editStudent(\'' + row.UserBatchId + '\')"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn" onClick="deleteStudent(\'' + row.StudentEmail + '\')"><i class="fa fa-trash"></i></button></div>' }
+                        }
+                    ],
+                    language: {
+                        emptyTable: "No Student was found, please create one.",
+                    },
+                    initComplete: function () {
+                        $("div.toolbar")
+                            .html('<div class="col-sm-4"><button class="btn btn-xs btn-default" onclick="hideFilter1()">Filter</button></div>');
+                        $("div.toolbar").parent().children().addClass("pull-right");
+                        hideFilter1();
+                    }
+                });//End of DataTable
 
-                // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
-            } else if (!this.checked && index !== -1) {
-                rows_selected.splice(index, 1);
-            }
 
-            if (this.checked) {
-                $row.addClass('selected');
-            } else {
-                $row.removeClass('selected');
-            }
+                $('#student_dataTable').off('click');
+                $('#student_dataTable tbody').off('click');
+                // Handle click on checkbox
+                $('#student_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
+                    var $row = $(this).closest('tr');
 
-            // Update state of "Select all" control
-            updateDataTableSelectAllCtrl(table);
+                    // Get row data
+                    var data = table.row($row).data();
 
-            // Prevent click event from propagating to parent
-            e.stopPropagation();
-        });
+                    // Get row ID
+                    var rowId = data[0];
 
-        // Handle click on table cells with checkboxes
-        $('#student_dataTable').on('click', 'tbody td, thead th:first-child', function (e) {
-            $(this).parent().find('input[type="checkbox"]').trigger('click');
-        });
+                    // Determine whether row ID is in the list of selected row IDs
+                    var index = $.inArray(rowId, rows_selected);
 
-        // Handle click on "Select all" control
-        $('thead input[name="select_all"]', table.table().container()).on('click', function (e) {
-            if (this.checked) {
-                $('#student_dataTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
-            } else {
-                $('#student_dataTable tbody input[type="checkbox"]:checked').trigger('click');
-            }
+                    // If checkbox is checked and row ID is not in list of selected row IDs
+                    if (this.checked && index === -1) {
+                        rows_selected.push(rowId);
 
-            // Prevent click event from propagating to parent
-            e.stopPropagation();
-        });
+                        // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
+                    } else if (!this.checked && index !== -1) {
+                        rows_selected.splice(index, 1);
+                    }
 
-        // Handle table draw event
-        table.on('draw', function () {
-            // Update state of "Select all" control
-            updateDataTableSelectAllCtrl(table);
-        });
+                    if (this.checked) {
+                        $row.addClass('selected');
+                    } else {
+                        $row.removeClass('selected');
+                    }
 
-        //handle custom search
-        // Setup - add a text input to each footer cell
-        $('#student_dataTable thead tr#filterrow th').each(function () {
-            if ($('#student_dataTable thead tr#filterrow th').eq($(this).index()).text() != 0) {
-                var title = $('#student_dataTable thead th').eq($(this).index()).text();
-                $(this).html('<input type="text" onclick="stopPropagation(event);" placeholder="Search ' + title + '" />');
-            }
-        });
-        // Apply the filter
-        $("#student_dataTable thead input").on('keyup change', function () {
-            if ($(this).attr('type') == "text") {
-                table
-                    .column($(this).parent().index() + ':visible')
-                    .search(this.value)
-                    .draw();
-            }
-        });
-        //end of handle custom search
+                    // Update state of "Select all" control
+                    updateDataTableSelectAllCtrl(table);
 
-        //// Handle form submission event
-        //$('#frm-example').on('submit', function (e) {
-        //    var form = this;
+                    // Prevent click event from propagating to parent
+                    e.stopPropagation();
+                });
 
-        //    // Iterate over all selected checkboxes
-        //    $.each(rows_selected, function (index, rowId) {
-        //        // Create a hidden element
-        //        $(form).append(
-        //            $('<input>')
-        //                .attr('type', 'hidden')
-        //                .attr('name', 'id[]')
-        //                .val(rowId)
-        //        );
-        //    });
-        //});
-        $('#student_dataTable tbody').on('click', 'button.btn-primary', function (e) {
-            location.href = 'edit_student';
-        });
-        $('#student_dataTable tbody').on('click', 'button.btn-danger', function (e) {
-            swal({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then(function (result) {
-                if (result.value) {
-                    swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
-                }
-            }).catch(swal.noop);
-        });
-    });
+                // Handle click on table cells with checkboxes
+                $('#student_dataTable').on('click', 'tbody td, thead th:first-child', function (e) {
+                    $(this).parent().find('input[type="checkbox"]').trigger('click');
+                });
+
+                // Handle click on "Select all" control
+                $('thead input[name="select_all"]', $('#student_dataTable').DataTable().table().container()).on('click', function (e) {
+                    if (this.checked) {
+                        $('#student_dataTable tbody input[type="checkbox"]:not(:checked)').trigger('click');
+                    } else {
+                        $('#student_dataTable tbody input[type="checkbox"]:checked').trigger('click');
+                    }
+
+                    // Prevent click event from propagating to parent
+                    e.stopPropagation();
+                });
+
+                // Handle table draw event
+                $('#student_dataTable').DataTable().on('draw', function () {
+                    // Update state of "Select all" control
+                    updateDataTableSelectAllCtrl(table);
+                });
+
+                //handle custom search
+                // Setup - add a text input to each footer cell
+                $('#student_dataTable thead tr#filterrow th').each(function () {
+                    if ($('#student_dataTable thead tr#filterrow th').eq($(this).index()).text() != 0) {
+                        var title = $('#student_dataTable thead th').eq($(this).index()).text();
+                        $(this).html('<input type="text" onclick="stopPropagation(event);" placeholder="Search ' + title + '" />');
+                    }
+                });
+                // Apply the filter
+                $("#student_dataTable thead input").on('keyup change', function () {
+                    if ($(this).attr('type') == "text") {
+                        $('#student_dataTable').DataTable()
+                            .column($(this).parent().index() + ':visible')
+                            .search(this.value)
+                            .draw();
+                    }
+                });
+                //end of handle custom search
+
+                //// Handle form submission event
+                //$('#frm-example').on('submit', function (e) {
+                //    var form = this;
+
+                //    // Iterate over all selected checkboxes
+                //    $.each(rows_selected, function (index, rowId) {
+                //        // Create a hidden element
+                //        $(form).append(
+                //            $('<input>')
+                //                .attr('type', 'hidden')
+                //                .attr('name', 'id[]')
+                //                .val(rowId)
+                //        );
+                //    });
+                //});
+                $('#student_dataTable tbody').on('click', 'button.btn-primary', function (e) {
+                    location.href = 'edit_student';
+                });
+        //$('#student_dataTable tbody').on('click', 'button.btn-danger', function (e) {
+        //    swal({
+        //        title: 'Are you sure?',
+        //        text: "You won't be able to revert this!",
+        //        type: 'warning',
+        //        showCancelButton: true,
+        //        confirmButtonColor: '#3085d6',
+        //        cancelButtonColor: '#d33',
+        //        confirmButtonText: 'Yes, delete it!'
+        //    }).then(function (result) {
+        //        if (result.value) {
+        //            swal(
+        //                'Deleted!',
+        //                'Your file has been deleted.',
+        //                'success'
+        //            )
+        //        }
+        //    }).catch(swal.noop);
+        //});//End of on Click
+
+            }//End of success
+        });//End of Ajax
+       
+    }//end of function LoadDataTable()
+
+    function editStudent(inId) {
+        sessionStorage.setItem("editStudent", inId);
+    };
+    function deleteStudent(inId) {
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (result) {
+            if (result.value) {
+                var checkedStudent = [];
+                $("#student_dataTable tbody input[type='checkbox']:checked").each(function () {
+                    checkedStudent.push($(this).val());
+                });
+                $.ajax({
+                    url: '/Api/UserBatches/DeleteStudents/bulk/?checkedStudent=' + checkedStudent + '&selectedBatch=' + $('#selectBatch').val(),
+                    method: 'DELETE',
+                    success: function (data, status, jqXHR) {
+                        var title = data.AlertType == 'warning' ? 'Records displayed below not removed ' : 'Selected Records removed successfully!';
+
+                        swal({
+                            type: data.AlertType,
+                            title: title,
+                            html: data.Messages.join('<br>')
+                            //text: data.Message
+                        }).then(function () {
+                            window.location.reload();
+                        })
+                    },//End of success
+                    error: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            text: data.Message
+                        });
+                    }//end of error
+                });//End of ajax call
+            }//end of If statement
+        })//end of THen function
+    }//End of function for deleteProject
 </script>

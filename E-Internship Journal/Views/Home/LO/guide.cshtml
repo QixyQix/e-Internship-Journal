@@ -1,4 +1,7 @@
-﻿<div class="container-fluid">
+﻿@{
+    ViewData["Title"] = "Guide Page";
+}
+<div class="container-fluid">
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item">
@@ -8,8 +11,8 @@
     </ol>
     <!-- Example DataTables Card-->
     <div class="card mb-3">
-        <div class="card-header">
-            <i class="fa fa-table"></i> Guidelines
+        <div class="card-header d-inline">
+            <i class="fa fa-info-circle fa-2x pull-left"></i> <h3>Guidelines</h3>
         </div>
 
         <button class="accordion">1. Who should I turn to if i face issues in my internship</button>
@@ -61,7 +64,7 @@ It is important that you obtain the after-office hours contact number of your Li
 <div class="card-body">
     <div class="form-group">
         <div class="col-12">
-            <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+            <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Student_Journal'">
                 Back
             </button>
         </div>
