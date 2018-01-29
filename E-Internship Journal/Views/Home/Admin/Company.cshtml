@@ -61,46 +61,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td></td>
-                            <td>Websparks Pte Ltd</td>
-                            <td>52 Horne Rd</td>
-                            <td>Websparks Pte Ltd</td>
-                            <td>52 Horne Rd</td>
-                            <td>Websparks Pte Ltd</td>
-                            <td>52 Horne Rd</td>
-                            <td><a href="/mypath"><i class="fa fa-pencil"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>TripleDots Technology</td>
-                            <td>73 Ayer Rajar</td>
-                            <td>TripleDots Technology</td>
-                            <td>73 Ayer Rajar</td>
-                            <td>TripleDots Technology</td>
-                            <td>73 Ayer Rajar</td>
-                            <td><a href="/mypath"><i class="fa fa-pencil"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>RapidCloud</td>
-                            <td>RedHill Rd 14</td>
-                            <td>RapidCloud</td>
-                            <td>RedHill Rd 14</td>
-                            <td>RapidCloud</td>
-                            <td>RedHill Rd 14</td>
-                            <td><a href="/mypath"><i class="fa fa-pencil"></i></a></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td>Aventure Pte Ltd</td>
-                            <td>Commonwealth</td>
-                            <td>Aventure Pte Ltd</td>
-                            <td>Commonwealth</td>
-                            <td>Aventure Pte Ltd</td>
-                            <td>Commonwealth</td>
-                            <td><a href="/mypath"><i class="fa fa-pencil"></i></a></td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -118,27 +78,53 @@
     </div>
     &nbsp;
 </div>
-
 <style>
-
     @@media only screen and (max-width: 768px) {
-	.Fax, tr td:nth-child(7)		{ display:none; visibility:hidden; }
+        .Fax, tr td:nth-child(7) {
+            display: none;
+            visibility: hidden;
+        }
     }
 
     @@media only screen and (max-width: 420px) {
-	.Fax, tr td:nth-child(7)		{ display:none; visibility:hidden; }
-	.E_Add, tr td:nth-child(5)			{ display:none; visibility:hidden; }
-	.CP_NO, tr td:nth-child(6)		{ display:none; visibility:hidden; }
+        .Fax, tr td:nth-child(7) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .E_Add, tr td:nth-child(5) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .CP_NO, tr td:nth-child(6) {
+            display: none;
+            visibility: hidden;
+        }
     }
 
     @@media only screen and (max-width: 320px) {
-	.Fax, tr td:nth-child(7)		{ display:none; visibility:hidden; }
-	.E_Add, tr td:nth-child(5)			{ display:none; visibility:hidden; }
-	.CP_NO, tr td:nth-child(6)		{ display:none; visibility:hidden; }
-	.C_Add, tr td:nth-child(3)		{ display:none; visibility:hidden; }
+        .Fax, tr td:nth-child(7) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .E_Add, tr td:nth-child(5) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .CP_NO, tr td:nth-child(6) {
+            display: none;
+            visibility: hidden;
+        }
+
+        .C_Add, tr td:nth-child(3) {
+            display: none;
+            visibility: hidden;
+        }
     }
 </style>
-
 <script>
     //
     // Updates "Select all" control in a data table
@@ -191,13 +177,33 @@
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
         }).then(function (result) {
-            if (result.value) {
-                swal(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
-            }
+            var checkedCompany = []
+            $('input[name="selectCompany"]:checked').each(function () {
+                checkedCompany.push($(this).val());
+            });
+            $.ajax({
+                url: '/Api/Companies/DeleteCompany/bulk/?selectedCompanies=' + checkedCompany,
+                method: 'DELETE',
+                success: function (data, status, jqXHR) {
+                    var title = data.AlertType == 'warning' ? 'Records displayed below not removed ' : 'Selected Records removed successfully!';
+
+                    swal({
+                        type: data.AlertType,
+                        title: title,
+                        html: data.Messages.join('<br>')
+                        //text: data.Message
+                    }).then(function () {
+                        window.location.reload();
+                    })
+                },//End of success
+                error: function (data) {
+                    swal({
+                        type: 'error',
+                        title: 'Error',
+                        text: data.Message
+                    });
+                }//end of error
+            });//End of ajax call
         }).catch(swal.noop);
     }
 
@@ -221,7 +227,7 @@
             dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
             ajax: {
-                url: '/Api/Task_Record',
+                url: '/Api/Companies',
                 dataSrc: ''
             },
             columnDefs: [{
@@ -231,7 +237,7 @@
                 'width': '1%',
                 'className': 'dt-body-center',
                 'render': function (data, type, full, meta) {
-                    return '<input type="checkbox">';
+                    return '<input type="checkbox" name="selectCompany" value="' + data + '">';
                 }
             }],
             select: {
@@ -250,17 +256,17 @@
                 }
             },
             columns: [
-                { data: null },
-                { data: "DayRecordId" },
-                { data: "DayRecordId" },
-                { data: "Description" },
-                { data: "Description" },
-                { data: "Description" },
-                { data: "Description" },
+                { data: "CompanyId" },
+                { data: "CompanyName" },
+                { data: "CompanyAddress" },
+                { data: "ContactPersonName" },
+                { data: "ContactPersonEmail" },
+                { data: "ContactPersonNumber" },
+                { data: "ContactPersonFax" },
                 {
-                    data: null,
+                    data: "CompanyId",
                     "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary" value="' + o + '"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"  value="' + o +'"><i class="fa fa-trash"></i></button>' }
                 }
             ],
             language: {
@@ -349,27 +355,15 @@
                     .draw();
             }
         });
-        //end of handle custom search
 
-        //// Handle form submission event
-        //$('#frm-example').on('submit', function (e) {
-        //    var form = this;
-
-        //    // Iterate over all selected checkboxes
-        //    $.each(rows_selected, function (index, rowId) {
-        //        // Create a hidden element
-        //        $(form).append(
-        //            $('<input>')
-        //                .attr('type', 'hidden')
-        //                .attr('name', 'id[]')
-        //                .val(rowId)
-        //        );
-        //    });
-        //});
         $('#company_dataTable tbody').on('click', 'button.btn-primary', function (e) {
+            setCookie("selectedCompany", $(this).val());
             location.href = 'EditCompany';
         });
+
         $('#company_dataTable tbody').on('click', 'button.btn-danger', function (e) {
+            var companyid = $(this).val()
+
             swal({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -379,57 +373,55 @@
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete it!'
             }).then(function (result) {
-                if (result.value) {
-                    swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
-                }
+                console.dir()
+                $.ajax({
+                    url: '/Api/Companies/' +companyid,
+                    method: 'DELETE',
+                    dataType: 'json',
+                    cache: false,
+                    success: function (data) {
+                        swal({
+                            type: 'success',
+                            title: 'Company Deleted',
+                            text: data.Message
+                        }).then(function () {
+                            window.location.reload();
+                        });
+                    },
+                    error: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Oops!',
+                            text: data.Message
+                        });
+                    }
+                });
             }).catch(swal.noop);
         });
     });
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+    function setCookie(inName, inValue) {
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };
 </script>
-@*<script>
-
-        $getCompanyHandler = jQuery.ajax({
-
-            url: '/API/Companies/',
-            method: 'get',
-            dataType: 'json',
-            cache: false
-
-        });
-        $getCompanyHandler.done(function (data, textStatus, jqXHR) {
-            //var test = data;
-
-            $tableBodyElement = $('#companyTableBody');
-            for (i = 0; i < data.length; i++) {
-
-                company = data[i];
-
-                companyId = company.CompanyId;
-                companyName = company.CompanyName;
-                companyAddress = company.CompanyAddress;
-
-                //courseName = batch.CourseName[0].CourseName;
-
-                $rowElement = $('<tr></tr>');
-                $cellElement = $('<td></td>', { text: companyName });
-                $rowElement.append($cellElement);
-
-                $cellElement = $('<td></td>', { text: companyAddress });
-                $rowElement.append($cellElement);
-
-
-                $pencilElement = $('<i></i>').attr('class', 'fa fa-pencil');
-                $ahrefElement = $('<a></a>').attr('href', '~/../EditCompany/' + companyId);
-                $ahrefElement.append($pencilElement);
-                $cellElement = $('<td></td>');
-                $cellElement.append($ahrefElement);
-                $rowElement.append($cellElement);
-
-                $tableBodyElement.append($rowElement);
-            }
-        });
-    </script>*@
