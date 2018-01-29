@@ -17,8 +17,7 @@
             <div class="form-group">
                 <div class="col-xs-12 pull-right">
                     <label>View By:</label>
-                    <select class="form-control" id="selectMonthRecord">
-                    </select>
+                    <select class="form-control" id="selectMonthRecord"></select>
                 </div>
             </div>
         </div>
@@ -28,29 +27,28 @@
             <i class="fa fa-check-square fa-2x pull-left"></i> <h3>Competency Checklist</h3>
         </div>
         <div class="table-responsive">
-            <table class="table table-bordered" id="tblCompetencies"  cellspacing="0">
+            <table class="table table-bordered" id="tblCompetencies" cellspacing="0">
                 <thead>
                     <tr>
                         <th class="col-sm-11">Competency</th>
                         <th class="col-sm-1">Tick if performed</th>
                     </tr>
                 </thead>
-                <tbody>
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
         @*<div class="card-footer"></div>*@
     </div>
 </div>
-    <div class="card-body">
-        <div class="form-group">
-            <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/competency_checklist'">
-                    Back
-                </button>
-            </div>
+<div class="card-body">
+    <div class="form-group">
+        <div class="col-12">
+            <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/competency_checklist'">
+                Back
+            </button>
         </div>
     </div>
+</div>
 &nbsp;
 <script>
     var internshipRecordId = getCookie("InternshipRecordId");
@@ -62,34 +60,67 @@
             method: 'GET',
             dataType: 'json',
             success: function (competencies) {
+                //for (i = 0; i < competencies.length; i++) {
+                //    var competency = competencies[i];
+                //    var newRow = $('<tr></tr>');
+                //    var newCell = $('<td>');
+                //    newCell.html(competency.Description);
+                //    newRow.append(newCell);
+                //    var newCell = $('<td>');
+                //    var newCheckboxItem = $('<input name="CompetencyCheck" type="checkbox" value="' + competency.CompetencyId + '" disabled>');
+                //    newCell.append(newCheckboxItem);
+                //    newRow.append(newCell);
+                //    $('#tblCompetencies').append(newRow);
+                //}
+                var competencyTable = $('#tblCompetencies');
                 for (i = 0; i < competencies.length; i++) {
-                    var competency = competencies[i];
-                    var newRow = $('<tr></tr>');
-                    var newCell = $('<td>');
-                    newCell.html(competency.Description);
-                    newRow.append(newCell);
-                    var newCell = $('<td>');
-                    var newCheckboxItem = $('<input name="CompetencyCheck" type="checkbox" value="' + competency.CompetencyId + '" disabled>');
-                    newCell.append(newCheckboxItem);
-                    newRow.append(newCell);
-                    $('#tblCompetencies').append(newRow);
+                    var dataForCompetencyList = competencies[i].CompetencyList.sort(function (a, b) { return (a.ViewBy > b.ViewBy) ? 1 : ((b.ViewBy > a.ViewBy) ? -1 : 0); });
+                    $threadElement = $('<thead></thead>');
+                    $rowElement = $('<tr></tr>');
+                    $cellElement = $('<th></th>', { text: competencies[i].ViewBy + ". " + competencies[i].TitleCompetency }).attr('title', competencies[i].TitleCompetency).attr('colspan', '2');
+                    $rowElement.append($cellElement);
+
+                    $threadElement.append($rowElement);
+                    competencyTable.append($threadElement);
+
+                    $tbodyElement = $('<tbody></tbody>')
+                    for (k = 0; k < dataForCompetencyList.length; k++) {
+
+                        $rowElement = $('<tr></tr>');
+                        $cellElement = $('<td></td>');
+                        //$cellElement = $('<td></td>', { text: data[i].CompetencyList[k].Description });
+                        $cellElement.html(dataForCompetencyList[k].Description);
+                        $rowElement.append($cellElement);
+
+                        $cellElement = $('<td style="text-align:center; vertical-align:center;"><input name="CompetencyCheck" type="checkbox"  disabled value="' + dataForCompetencyList[k].CompetencyId + '"></td>');
+                        $rowElement.append($cellElement);
+
+                        $tbodyElement.append($rowElement);
+                        //   $threadElement.append($tbodyElement);
+                        competencyTable.append($tbodyElement);
+                    }
                 }
-            }
+                getStudentChecked();
+            }//End of success
         });
 
+    }
+    function getStudentChecked() {
+
         $.ajax({
-            url: '/api/month_record/InternshipMonthRecords/'+internshipRecordId,
+            url: '/api/month_record/InternshipMonthRecords/' + internshipRecordId,
             method: 'GET',
             dataType: 'json',
             success: function (data) {
                 console.dir(data);
                 monthRecords = data;
-                if (data.length > 0) { 
+                if (data.length > 0) {
                     for (i = 0; i < data.length; i++) {
                         var newOption = $('<option>').text('Month ' + (i + 1)).val(i);
                         $('#selectMonthRecord').append(newOption);
                     }
                     var selectedMonth = monthRecords[0];
+                    var qq = $("input[name='CompetencyCheck']");
                     $("input[name='CompetencyCheck']").each(function () {
                         if (selectedMonth.CompetencyCheckeds.length > 0) {
                             for (i = 0; i < selectedMonth.CompetencyCheckeds.length; i++) {
@@ -105,10 +136,10 @@
                         }
                     });
                 }
-            }
+            }//End of success
         });
-    }
 
+    }
     $('#selectMonthRecord').change(function () {
         var selectedMonth = monthRecords[$(this).val()];
         for (i = 0; i < selectedMonth.CompetencyCheckeds.length; i++) {
@@ -116,7 +147,7 @@
             $("input[name='CompetencyCheck']").each(function () {
                 if ($(this).val() == ccid) {
                     $(this).prop('checked', true);
-                } else { 
+                } else {
                     $(this).prop('checked', false);
                 }
             });

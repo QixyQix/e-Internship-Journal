@@ -32,25 +32,24 @@
                         <th class="col-sm-1">Tick if performed</th>
                     </tr>
                 </thead>
-                <tbody>
-                </tbody>
+              
             </table>
         </div>
         @*<div class="card-footer"></div>*@
     </div>
 </div>
-    <div class="card-body">
-        <div class="form-group">
-            <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Index'">
-                    Back
-                </button>
-                <button class="btn btn-primary pull-right" name="submit" id="submit">
-                    Save
-                </button>
-            </div>
+<div class="card-body">
+    <div class="form-group">
+        <div class="col-12">
+            <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Index'">
+                Back
+            </button>
+            <button class="btn btn-primary pull-right" name="submit" id="submit">
+                Save
+            </button>
         </div>
     </div>
+</div>
 </div>
 &nbsp;
 <script>
@@ -64,17 +63,47 @@
             method: 'GET',
             dataType: 'json',
             success: function (competencies) {
+                //for (i = 0; i < competencies.length; i++) {
+                //    var competency = competencies[i];
+                //    var newRow = $('<tr></tr>');
+                //    var newCell = $('<td>');
+                //    newCell.html(competency.Description);
+                //    newRow.append(newCell);
+                //    var newCell = $('<td>');
+                //    var newCheckboxItem = $('<input name="CompetencyCheck" type="checkbox" value="' + competency.CompetencyId + '">');
+                //    newCell.append(newCheckboxItem);
+                //    newRow.append(newCell);
+                //    $('#tblCompetencies').append(newRow);
+                //}
+
+                var competencyTable = $('#tblCompetencies');
+
                 for (i = 0; i < competencies.length; i++) {
-                    var competency = competencies[i];
-                    var newRow = $('<tr></tr>');
-                    var newCell = $('<td>');
-                    newCell.html(competency.Description);
-                    newRow.append(newCell);
-                    var newCell = $('<td>');
-                    var newCheckboxItem = $('<input name="CompetencyCheck" type="checkbox" value="' + competency.CompetencyId + '">');
-                    newCell.append(newCheckboxItem);
-                    newRow.append(newCell);
-                    $('#tblCompetencies').append(newRow);
+                    var dataForCompetencyList = competencies[i].CompetencyList.sort(function (a, b) { return (a.ViewBy > b.ViewBy) ? 1 : ((b.ViewBy > a.ViewBy) ? -1 : 0); });
+                    $threadElement = $('<thead></thead>');
+                    $rowElement = $('<tr></tr>');
+                    $cellElement = $('<th></th>', { text: competencies[i].ViewBy + ". " + competencies[i].TitleCompetency }).attr('title', competencies[i].TitleCompetency).attr('colspan', '2');
+                    $rowElement.append($cellElement);
+
+                    $threadElement.append($rowElement);
+                    competencyTable.append($threadElement);
+
+                    $tbodyElement = $('<tbody></tbody>')
+                    for (k = 0; k < dataForCompetencyList.length; k++) {
+
+                        $rowElement = $('<tr></tr>');
+                        $cellElement = $('<td></td>');
+                        //$cellElement = $('<td></td>', { text: data[i].CompetencyList[k].Description });
+                        $cellElement.html(dataForCompetencyList[k].Description);
+                        $rowElement.append($cellElement);
+
+                        $cellElement = $('<td style="text-align:center; vertical-align:center;"><input name="CompetencyCheck" type="checkbox" value="' + dataForCompetencyList[k].CompetencyId + '"></td>');
+                        $rowElement.append($cellElement);
+
+                        $tbodyElement.append($rowElement);
+                        //   $threadElement.append($tbodyElement);
+                        competencyTable.append($tbodyElement);
+                    }
                 }
             }
         });
@@ -138,23 +167,23 @@
     });
 
     function getCookie(name) {
-            var dc = document.cookie;
-            var prefix = name + "=";
-            var begin = dc.indexOf("; " + prefix);
-            if (begin == -1) {
-                begin = dc.indexOf(prefix);
-                if (begin != 0) return null;
-            } else {
-                begin += 2;
-            }
-            var end = document.cookie.indexOf(";", begin);
-            if (end == -1) {
-                end = dc.length;
-            }
-            return unescape(dc.substring(begin + prefix.length, end));
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
     }
 
-    function WebFormData(checkedCompetencies) { 
+    function WebFormData(checkedCompetencies) {
         this.CompetencyIds = checkedCompetencies;
     }
 

@@ -52,41 +52,44 @@ namespace E_Internship_Journal.Data
                 db.Courses.Add(c);
             }
             db.SaveChanges();
-
-            var competencyTitle = new CompetencyTitle
+            
+            var competencyTitle = new CompetencyTitle[]
             {
-                TitleCompetency = "Domain Immersion",
-                Course = courseObject[0],
-                ViewBy = 1
+                new CompetencyTitle { TitleCompetency = "Domain Immersion", Course = courseObject[0],ViewBy = 1},
+                new CompetencyTitle { TitleCompetency = "Project / System Analysis & Design", Course = courseObject[0],ViewBy = 2},
+                new CompetencyTitle { TitleCompetency = "Mentorship", Course = courseObject[0],ViewBy = 3}
             };
-            db.CompetencyTitles.Add(competencyTitle);
+            foreach (CompetencyTitle ct in competencyTitle)
+            {
+                db.CompetencyTitles.Add(ct);
+            }
             db.SaveChanges();
             //Create Competency
-            //var competencyObject = new Competency[] {
-            //    new Competency { Description = "Describe and explain respectively domain knowledge Understand existing business operations Identify roles and responsibilities of company staff members Understand a project/system business requirements", TitleDescription = "Domain Immersation", Course = courseObject[0] },
-            //    new Competency { Description = "Participate and contribute to the review, analysis and verification of business and software requirements Assist project team for project requirements gathering and analysis Assist in gathering of user requirements, which can be any activity such as design of questionnaire, logistics planning Identify and document an application problem or symptoms from users(when there is reported software bug) Propose solutions to an application problem with designated supervisors or mentors", TitleDescription = "Project / System Analysis & Design", Course = courseObject[0] },
-            //    new Competency { Description = " Prepare technical documentation and reports on requirements and analysis Report the workflow of a business requirement, in the form of UML(Sequence, State etc. diagrams) or any in company standard documentation format Report or present a problem resolution/design to the users Document constraints or possible impacts in the application, during any code or functionality changes from bugfix or change request Perform an impact analysis (i.e. what could happen to the users, like loss of what data) of the risks involved in the reported application problem/error", TitleDescription = "Project/System Analysis & Design", Course = courseObject[0] },
-            //    new Competency { Description = "Discuss with the student on the internship requirements. (This is recommended to be carried out at the start of the internship)", TitleDescription = "Project/System Analysis & Design", Course = courseObject[0] },
-            //    new Competency { Description = "Guide the student to meet requirements and learning objectives. This includes guiding the student on the tasks, setting performance expectations and encouraging student to ask questions to clarify job resposibilities.", TitleDescription = "Project/System Analysis & Design", Course = courseObject[0] },
-            //    new Competency { Description = "Provide periodic feedback to student on his/her performance", TitleDescription = "Project/System Analysis & Design", Course = courseObject[0] },
-            //    new Competency { Description = "Meet and discuss with the SP Liaison Officer on student's progress and performance during company visits.", TitleDescription = "Project/System Analysis & Design", Course = courseObject[0] },
-            //    new Competency { Description = "Provide final assessment on student's performance", TitleDescription = "Project/System Analysis & Design", Course = courseObject[0] },
-            //    new Competency { Description = "Provide student an overview of the company structure, nature of business and work requirements.", TitleDescription = "Mentorship", Course = courseObject[0] },
-            //    new Competency { Description = "Share about job propects, career paths and trends within the industry. This can be done through sharing of work experience, relevant resources, networking contacts, as appropriate.", TitleDescription = "Mentorship", Course = courseObject[0] },
-            //};
-            //foreach (Competency c in competencyObject)
-            //{
-            //    db.Competencies.Add(c);
-            //}
             var competencyObject = new Competency[] {
-                new Competency { Description = "Able to code using Java/CSS/HTML", CompetencyTitleId = competencyTitle.CompetencyTitleId , ViewBy = 1},
-                new Competency { Description = "Able to code using Java/CSS/HTML",CompetencyTitleId = competencyTitle.CompetencyTitleId , ViewBy = 2},
-                new Competency { Description = "Able to code using Java/CSS/HTML", CompetencyTitleId = competencyTitle.CompetencyTitleId, ViewBy = 3 }
+                new Competency { Description = "Describe and explain respectively domain knowledge Understand existing business operations Identify roles and responsibilities of company staff members Understand a project/system business requirements", CompetencyTitleId = competencyTitle[0].CompetencyTitleId , ViewBy = 1 },
+                new Competency { Description = "Participate and contribute to the review, analysis and verification of business and software requirements Assist project team for project requirements gathering and analysis Assist in gathering of user requirements, which can be any activity such as design of questionnaire, logistics planning Identify and document an application problem or symptoms from users(when there is reported software bug) Propose solutions to an application problem with designated supervisors or mentors", CompetencyTitleId = competencyTitle[1].CompetencyTitleId , ViewBy = 1 },
+                new Competency { Description = " Prepare technical documentation and reports on requirements and analysis Report the workflow of a business requirement, in the form of UML(Sequence, State etc. diagrams) or any in company standard documentation format Report or present a problem resolution/design to the users Document constraints or possible impacts in the application, during any code or functionality changes from bugfix or change request Perform an impact analysis (i.e. what could happen to the users, like loss of what data) of the risks involved in the reported application problem/error", CompetencyTitleId = competencyTitle[1].CompetencyTitleId , ViewBy = 2 },
+                new Competency { Description = "Discuss with the student on the internship requirements. (This is recommended to be carried out at the start of the internship)", CompetencyTitleId = competencyTitle[1].CompetencyTitleId , ViewBy = 3 },
+                new Competency { Description = "Guide the student to meet requirements and learning objectives. This includes guiding the student on the tasks, setting performance expectations and encouraging student to ask questions to clarify job resposibilities.", CompetencyTitleId = competencyTitle[1].CompetencyTitleId , ViewBy = 4},
+                new Competency { Description = "Provide periodic feedback to student on his/her performance", CompetencyTitleId = competencyTitle[1].CompetencyTitleId , ViewBy = 5 },
+                new Competency { Description = "Meet and discuss with the SP Liaison Officer on student's progress and performance during company visits.", CompetencyTitleId = competencyTitle[1].CompetencyTitleId , ViewBy = 6 },
+                new Competency { Description = "Provide final assessment on student's performance", CompetencyTitleId = competencyTitle[1].CompetencyTitleId , ViewBy = 7 },
+                new Competency { Description = "Provide student an overview of the company structure, nature of business and work requirements.", CompetencyTitleId = competencyTitle[2].CompetencyTitleId , ViewBy = 1 },
+                new Competency { Description = "Share about job propects, career paths and trends within the industry. This can be done through sharing of work experience, relevant resources, networking contacts, as appropriate.", CompetencyTitleId = competencyTitle[2].CompetencyTitleId , ViewBy = 2 },
             };
             foreach (Competency c in competencyObject)
             {
                 db.Competencies.Add(c);
             }
+            //var competencyObject = new Competency[] {
+            //    new Competency { Description = "Able to code using Java/CSS/HTML", CompetencyTitleId = competencyTitle.CompetencyTitleId , ViewBy = 1},
+            //    new Competency { Description = "Able to code using Java/CSS/HTML",CompetencyTitleId = competencyTitle.CompetencyTitleId , ViewBy = 2},
+            //    new Competency { Description = "Able to code using Java/CSS/HTML", CompetencyTitleId = competencyTitle.CompetencyTitleId, ViewBy = 3 }
+            //};
+            //foreach (Competency c in competencyObject)
+            //{
+            //    db.Competencies.Add(c);
+            //}
             db.SaveChanges();
 
             //CREATE USERS

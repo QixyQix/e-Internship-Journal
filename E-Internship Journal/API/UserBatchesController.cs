@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System.Text;
+using Hangfire;
 
 namespace E_Internship_Journal.API
 {
@@ -63,17 +64,16 @@ namespace E_Internship_Journal.API
         }
         [HttpGet("GetStudentBatches")]
         [Authorize(Roles = "SLO")]
-        public async Task<IActionResult> GetStudentBatches(int BatchId, string StudentId)
+        public IActionResult GetStudentBatches(int UserBatchId)
         {
             List<object> userBatchList = new List<object>();
-            var studentId = (await _userManager.FindByEmailAsync(StudentId)).Id;
+            //var studentId = (await _userManager.FindByEmailAsync(StudentId)).Id;
             var userBatches = _context.UserBatches
             .Include(eachUserBatchEntity => eachUserBatchEntity.User)
             .Include(eacbProjectEntity => eacbProjectEntity.Batch)
             .Include(ir => ir.InternshipRecord)
             .ThenInclude(p => p.Project)
-            .Where(ub => ub.BatchId == BatchId)
-            .Where(ub => ub.UserId.Equals(studentId))
+            .Where(ub => ub.UserBatchId == UserBatchId)
             .SingleOrDefault();
             //var courses = 
             // var response = new object();
@@ -88,8 +88,8 @@ namespace E_Internship_Journal.API
                     userBatches.User.Email,
                     userBatches.InternshipRecord.Project.ProjectName,
                     userBatches.InternshipRecord.ProjectId,
-                    SupervisorName = _context.Users.Where(input => input.Id.Equals(userBatches.InternshipRecord.LiaisonOfficerId)).Select(u => u.FullName).SingleOrDefault(),
-                    SupervisorEmail = _context.Users.Where(input => input.Id.Equals(userBatches.InternshipRecord.LiaisonOfficerId)).Select(u => u.Email).SingleOrDefault(),
+                    LiaisonOfficerName = _context.Users.Where(input => input.Id.Equals(userBatches.InternshipRecord.LiaisonOfficerId)).Select(u => u.FullName).SingleOrDefault(),
+                    LiaisonOfficerEmail = _context.Users.Where(input => input.Id.Equals(userBatches.InternshipRecord.LiaisonOfficerId)).Select(u => u.Email).SingleOrDefault(),
 
                     // SupervisorName = _context.Users.Where(input =>input.Id.Equals(userBatches.InternshipRecord.LiaisonOfficerId)
                     userBatches.Allowance,
@@ -108,8 +108,8 @@ namespace E_Internship_Journal.API
                     userBatches.User.Email,
                     ProjectName = "",
                     ProjectId = "",
-                    SupervisorName = "",
-                    SupervisorEmail = "",
+                    LiaisonOfficerName = "",
+                    LiaisonOfficerEmail = "",
 
                     // SupervisorName = _context.Users.Where(input =>input.Id.Equals(userBatches.InternshipRecord.LiaisonOfficerId)
                     userBatches.Allowance,
@@ -312,63 +312,122 @@ namespace E_Internship_Journal.API
             try
             {
                 // var checkSupervisorExist = (ApplicationUser)await _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail.Value);
-                string userEmail = userNewInput.StudentEmail.Value;
-                var user = _context.ApplicationUsers.SingleOrDefault(appuser => appuser.UserName.Equals(userEmail, StringComparison.OrdinalIgnoreCase));
-                if (user != null)
+                //if (!(_context.UserBatches.Any(ub => ub.UserId.Equals(user.Id) && ub.BatchId == thisBatch.BatchId)))
+                //{
+
+                //}
+                if ((_context.UserBatches.Any(ub => ub.UserBatchId == id)))
                 {
-                    messageList = user.FullName + " is already enrolled in this batch.";
-                    alertType = "warning";
+                    string userEmail = userNewInput.StudentEmail.Value;
+                    var user = _context.ApplicationUsers.SingleOrDefault(appuser => appuser.UserName.Equals(userEmail, StringComparison.OrdinalIgnoreCase));
+                    var userBatch = _context.UserBatches.Include(b=>b.Batch).Include(ir=>ir.InternshipRecord).Single(ub => ub.UserBatchId == id);
+
+                    user.FullName = userNewInput.StudentName.Value;
+                    user.PhoneNumber = userNewInput.StudentNumber.Value;
+                    user.StudentId = userNewInput.StudentId.Value;
+                    userBatch.Designation = userNewInput.Designation.Value;
+                    userBatch.Allowance = userNewInput.Allowance.Value;
+
+
+                    if (!user.Email.Equals(userNewInput.StudentEmail.Value))
+                    {
+                        var code = await _userManager.GenerateChangeEmailTokenAsync(user, userNewInput.StudentEmail.Value.ToString());
+                        string codeHtmlVersion = System.Net.WebUtility.UrlEncode(code);
+                    }
+                    if (_context.ScheduleInternshipRecords.Any(ub=>ub.UserBatchId == id) && userBatch.Batch.StartDate <= DateTime.Now && userBatch.InternshipRecord ==null)
+                    {
+                        var ScheduleInternshipRecord = _context.ScheduleInternshipRecords.Where(ub => ub.UserBatchId == id).Single();
+                        ScheduleInternshipRecord.ProjectId = Int32.Parse(userNewInput.ProjectId.Value);
+                        var LOEmail = (string)userNewInput.LO.Value;
+                        ScheduleInternshipRecord.LiaisonOfficerId = (await _userManager.FindByEmailAsync(LOEmail)).Id;
+                    }
+                    if(userBatch.InternshipRecord!= null)
+                    {
+                        userBatch.InternshipRecord.ProjectId = Int32.Parse(userNewInput.ProjectId.Value);
+                        var LOEmail = (string)userNewInput.LO.Value;
+                        userBatch.InternshipRecord.LiaisonOfficerId = (await _userManager.FindByEmailAsync(LOEmail)).Id;
+                        
+                    }
+                    await _context.SaveChangesAsync();
+                    messageList = "Updated Student Account";
+                    alertType = "success";
+
                 }
                 else
                 {
-                    //Create user
-                    var userStore = new UserStore<ApplicationUser>(_context);
-                    var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
-
-                    var newStudentUser = new ApplicationUser
+                    string userEmail = userNewInput.StudentEmail.Value;
+                    var user = _context.ApplicationUsers.SingleOrDefault(appuser => appuser.UserName.Equals(userEmail, StringComparison.OrdinalIgnoreCase));
+                    if (user != null)
                     {
-                        UserName = userEmail,
-                        Email = userEmail,
-                        FullName = userNewInput.StudentName.Value,
-                        PhoneNumber = userNewInput.StudentNumber.Value,
-                        StudentId = userNewInput.StudentId.Value,
-                        //Course = thisBatch.Course
-                    };
-                    PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
-                    newStudentUser.PasswordHash = ph.HashPassword(newStudentUser, generateRandomString(11));
-
-                    await userManager.CreateAsync(newStudentUser);
-                    await userManager.AddToRoleAsync(newStudentUser, "STUDENT");
-
-                    //Create UserBatch objects
-                    var newUserBatch = new UserBatch
+                        messageList = user.FullName + " is already enrolled in this batch.";
+                        alertType = "warning";
+                    }
+                    else
                     {
-                        BatchId = id,
-                        User = newStudentUser,
-                        Allowance = userNewInput.Allowance.Value,
-                        Designation = userNewInput.Designation.Value
-                    };
-                    _context.UserBatches.Add(newUserBatch);
-                    var repeatPinGeneration = true;
-                    do
-                    {
-                        var registationPin = generateRandomString(50);
-                        if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
+                        //Create user
+                        var userStore = new UserStore<ApplicationUser>(_context);
+                        var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
+
+                        var newStudentUser = new ApplicationUser
                         {
-                            //Create new registration pin
-                            var newRegistrationPin = new RegistrationPin
-                            {
-                                User = newStudentUser,
-                                RegistrationPinId = generateRandomString(50)
-                            };
-                            _context.RegistrationPins.Add(newRegistrationPin);
-                            repeatPinGeneration = false;
-                        }
-                    } while (repeatPinGeneration);
-                    await _context.SaveChangesAsync();
+                            UserName = userEmail,
+                            Email = userEmail,
+                            FullName = userNewInput.StudentName.Value,
+                            PhoneNumber = userNewInput.StudentNumber.Value,
+                            StudentId = userNewInput.StudentId.Value,
+                            //Course = thisBatch.Course
+                        };
+                        PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
+                        newStudentUser.PasswordHash = ph.HashPassword(newStudentUser, generateRandomString(11));
 
-                    messageList = "Saved Project & Created Supervisor Account";
-                    alertType = "success";
+                        await userManager.CreateAsync(newStudentUser);
+                        await userManager.AddToRoleAsync(newStudentUser, "STUDENT");
+
+                        //Create UserBatch objects
+                        var newUserBatch = new UserBatch
+                        {
+                            BatchId = id,
+                            User = newStudentUser,
+                            Allowance = userNewInput.Allowance.Value,
+                            Designation = userNewInput.Designation.Value
+                        };
+                        _context.UserBatches.Add(newUserBatch);
+                        var repeatPinGeneration = true;
+                        do
+                        {
+                            var registationPin = generateRandomString(50);
+                            if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
+                            {
+                                //Create new registration pin
+                                var newRegistrationPin = new RegistrationPin
+                                {
+                                    User = newStudentUser,
+                                    RegistrationPinId = generateRandomString(50)
+                                };
+                                _context.RegistrationPins.Add(newRegistrationPin);
+                                repeatPinGeneration = false;
+                            }
+                        } while (repeatPinGeneration);
+                        await _context.SaveChangesAsync();
+                        var LOEmail = (string)userNewInput.LO.Value;
+                        var startDate = _context.Batches.Where(b => b.BatchId == id).Select(b => b.StartDate).Single();
+
+                        var scheduleCreationRecord = new ScheduleInternshipRecord
+                        {
+                            ProjectId = Int32.Parse(userNewInput.ProjectId.Value),
+                            LiaisonOfficerId = (await _userManager.FindByEmailAsync(LOEmail)).Id,
+                            UserBatchId = newUserBatch.UserBatchId
+
+                        };
+
+                        _context.ScheduleInternshipRecords.Add(scheduleCreationRecord);
+                        await _context.SaveChangesAsync();
+                        BackgroundJob.Schedule(() => CreateInternshipJournalAsync(scheduleCreationRecord.ScheduleIntershipRecordId), startDate);
+
+                        messageList = "Created Student Account";
+                        alertType = "success";
+
+                    }//End of else statement
 
                 }//End of else statement
 
@@ -406,6 +465,29 @@ namespace E_Internship_Journal.API
             }
 
             return builder.ToString();
+        }
+        public async Task CreateInternshipJournalAsync(int ScheduledRecordId)
+        {
+
+            try
+            {
+                var foundRecord = _context.ScheduleInternshipRecords.Where(sir => sir.ScheduleIntershipRecordId == ScheduledRecordId).Single();
+                var newInternshipJournal = new Internship_Record
+                {
+                    LiaisonOfficerId = foundRecord.LiaisonOfficerId,
+                    ProjectId = foundRecord.ProjectId,
+                    UserBatchId = foundRecord.UserBatchId
+                };
+                _context.Internship_Records.Add(newInternshipJournal);
+                _context.ScheduleInternshipRecords.Remove(foundRecord);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+
         }
     }
 }

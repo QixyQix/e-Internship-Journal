@@ -26,9 +26,9 @@ namespace E_Internship_Journal.API
         }
 
         // GET: api/Competencies
-        [HttpGet("getInternshipCompetenciesByCourse/{id}")]
+        [HttpGet("getInternshipCompetenciesByCourse/")]
         [Authorize(Roles = "SLO")]
-        public IActionResult GetInternshipCompetenciesByCourse(int id)
+        public IActionResult GetInternshipCompetenciesByCourse(int id, string Deleted)
         {
             List<object> competencies_List = new List<object>();
             List<CompetencyTitle> ttt = new List<CompetencyTitle>();
@@ -40,29 +40,58 @@ namespace E_Internship_Journal.API
                 .Where(qq => qq.CompetencyTitle.Course.CourseId == id);
             try
             {
-                foreach (var oneCompetency in competencies)
+                if (Deleted.Equals("Y"))
                 {
-                    //   List<int> categoryIdList = new List<int>();
-                    competencies_List.Add(new
+                    foreach (var oneCompetency in competencies)
                     {
-                        oneCompetency.CompetencyTitleId,
-                        oneCompetency.CourseId,
-                        oneCompetency.Course.CourseName,
-                        oneCompetency.TitleCompetency,
-                        oneCompetency.ViewBy,
-                        CompetencyList = oneCompetency.Competencies.Select(desc => new
+                        //oneCompetency.Competencies
+                        competencies_List.Add(new
                         {
-                            CompetencyId = desc.CompetencyId,
-                            Description = desc.Description,
-                            CreatedBy = desc.CreatedBy,
-                            DeletedAt = desc.DeletedAt,
-                            ModifiedAt =
-                            desc.ModifiedAt,
-                            ModifiedBy = desc.ModifiedBy,
-                            ViewBy = desc.ViewBy
-                        }).Where(d=>d.DeletedAt == null)
-                    });
+                            oneCompetency.CompetencyTitleId,
+                            oneCompetency.CourseId,
+                            oneCompetency.Course.CourseName,
+                            oneCompetency.TitleCompetency,
+                            oneCompetency.ViewBy,
+                            CompetencyList = oneCompetency.Competencies.Select(desc => new
+                            {
+                                CompetencyId = desc.CompetencyId,
+                                Description = desc.Description,
+                                CreatedBy = desc.CreatedBy,
+                                DeletedAt = desc.DeletedAt,
+                                desc.DeletedBy,
+                                ViewBy = desc.ViewBy
+                            }).Where(d => d.DeletedAt != null)
+                        });
+                    }
                 }
+                else
+                {
+                    foreach (var oneCompetency in competencies)
+                    {
+                        //   List<int> categoryIdList = new List<int>();
+
+                        competencies_List.Add(new
+                        {
+                            oneCompetency.CompetencyTitleId,
+                            oneCompetency.CourseId,
+                            oneCompetency.Course.CourseName,
+                            oneCompetency.TitleCompetency,
+                            oneCompetency.ViewBy,
+                            CompetencyList = oneCompetency.Competencies.Select(desc => new
+                            {
+                                CompetencyId = desc.CompetencyId,
+                                Description = desc.Description,
+                                CreatedBy = desc.CreatedBy,
+                                DeletedAt = desc.DeletedAt,
+                                ModifiedAt =
+                                desc.ModifiedAt,
+                                ModifiedBy = desc.ModifiedBy,
+                                ViewBy = desc.ViewBy
+                            }).Where(d => d.DeletedAt == null)
+                        });
+                    }
+                }
+
 
             }
             catch (Exception ex)
@@ -82,6 +111,8 @@ namespace E_Internship_Journal.API
                 .Include(ir => ir.UserBatch)
                 .ThenInclude(ub => ub.Batch)
                 .ThenInclude(batch => batch.Course)
+                .ThenInclude(course => course.CompetencyTitle)
+
                 // .ThenInclude(course => course.Competencies)
                 .Include(ir => ir.UserBatch)
                 .ThenInclude(ub => ub.User)
@@ -93,22 +124,45 @@ namespace E_Internship_Journal.API
             }
 
             List<object> competencyObjList = new List<object>();
+            var foundCompetency = _context.CompetencyTitles.Include(c => c.Competencies).Where(ct => ct.CourseId == internshipRecord.UserBatch.Batch.Course.CourseId).ToList();
+            foreach (var oneCompetency in foundCompetency)
+            {
 
-            //foreach (var competency in internshipRecord.UserBatch.Batch.Course.Competencies) {
-            //    if (competency.DeletedAt == null) {
-            //        competencyObjList.Add(new
-            //        {
-            //            CompetencyId = competency.CompetencyId,
-            //           // TitleDescription = competency.TitleDescription,
-            //            Description = competency.Description,
-            //            DeletedAt = competency.DeletedAt,
-            //            ModifiedBy = competency.ModifiedBy,
-            //            ModifiedAt = competency.ModifiedAt,
-            //            CreatedBy = competency.CreatedBy,
-            //            CourseId = competency.CourseId
-            //        });
-            //    }
-            //}
+                //if (competency.DeletedAt == null)
+                //{
+                //    competencyObjList.Add(new
+                //    {
+                //        CompetencyId = competency.CompetencyId,
+                //        // TitleDescription = competency.TitleDescription,
+                //        Description = competency.Description,
+                //        DeletedAt = competency.DeletedAt,
+                //        ModifiedBy = competency.ModifiedBy,
+                //        ModifiedAt = competency.ModifiedAt,
+                //        CreatedBy = competency.CreatedBy,
+                //        CourseId = competency.CourseId
+                //    });
+                //}
+
+                competencyObjList.Add(new
+                {
+                    oneCompetency.CompetencyTitleId,
+                    oneCompetency.TitleCompetency,
+                    oneCompetency.ViewBy,
+                    CompetencyList = oneCompetency.Competencies.Select(desc => new
+                    {
+                        desc.CompetencyId,
+                        desc.Description,
+                        desc.CreatedBy,
+                        desc.DeletedAt,
+
+                        desc.ModifiedAt,
+                        desc.ModifiedBy,
+                        desc.ViewBy
+                    }).Where(d => d.DeletedAt == null)
+                });
+
+
+            }
 
             return new OkObjectResult(competencyObjList);
 
@@ -178,7 +232,7 @@ namespace E_Internship_Journal.API
                         CompetencyTitleId = Convert.ToInt32(competencies_NewInput.Id.Value),
                         Description = competencies_NewInput.Description.Value,
                         ViewBy = Convert.ToInt32(competencies_NewInput.ViewBy.Value),
-                        CreatedBy = _userManager.GetUserId(User)
+                        CreatedBy = _userManager.GetUserName(User)
                         //TitleDescription = competencies_NewInput.TitleDescription.Value
                     };
                     _context.Competencies.Add(newCompetencies);
@@ -193,7 +247,7 @@ namespace E_Internship_Journal.API
 
                     foundCompetencies.Description = competencies_NewInput.Description.Value;
                     foundCompetencies.ViewBy = Convert.ToInt32(competencies_NewInput.ViewBy.Value);
-                    foundCompetencies.ModifiedBy = _userManager.GetUserId(User);
+                    foundCompetencies.ModifiedBy = _userManager.GetUserName(User);
                     foundCompetencies.ModifiedAt = DateTime.Now;
 
                     _context.SaveChanges();
@@ -374,6 +428,7 @@ namespace E_Internship_Journal.API
                 // _context.Competencies.Remove(competency);
                 // await _context.SaveChangesAsync();
                 competency.DeletedAt = DateTime.Now;
+                competency.DeletedBy = (await _userManager.FindByNameAsync(_userManager.GetUserName(User))).FullName;
                 _context.SaveChanges();
                 var responseObject = new
                 {

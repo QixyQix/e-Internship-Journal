@@ -29,7 +29,7 @@ namespace E_Internship_Journal.Data
         public DbSet<Task_Record> Tasks { get; set; }
         public DbSet<RegistrationPin> RegistrationPins { get; set; }
         public DbSet<TouchPoint_Record> TouchPointRecords { get; set; }
-
+        public DbSet<ScheduleInternshipRecord> ScheduleInternshipRecords { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -51,6 +51,21 @@ namespace E_Internship_Journal.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //----------- Defining Course Entity - Start --------------
+            //Make the CourseId a  Primary Key
+            modelBuilder.Entity<ScheduleInternshipRecord>()
+                .HasKey(scheduleInternshipRecord => scheduleInternshipRecord.ScheduleIntershipRecordId)
+                .HasName("PrimaryKey_ScheduleIntershipRecordId");
+
+            modelBuilder.Entity<ScheduleInternshipRecord>()
+                .Property(scheduleInternshipRecord => scheduleInternshipRecord.ScheduleIntershipRecordId)
+                .HasColumnName("ScheduleIntershipRecordId")
+                .HasColumnType("int")
+                .UseSqlServerIdentityColumn()
+                .ValueGeneratedOnAdd()
+                .IsRequired();
+
+
             //----------- Defining Course Entity - Start --------------
             //Make the CourseId a  Primary Key
             modelBuilder.Entity<Course>()
@@ -337,10 +352,18 @@ namespace E_Internship_Journal.Data
                 .HasColumnName("ModifiedAt")
                 .IsRequired(false);
             modelBuilder.Entity<Competency>()
-                .Property(competencies => competencies.CreatedBy)
-                .HasColumnName("CreatedBy")
+                .Property(competencies => competencies.DeletedBy)
+                .HasColumnName("DeletedBy")
                 .HasColumnType("VARCHAR(MAX)")
                 .IsRequired(false);
+
+            //modelbuilder.entity<product>()
+            //.hasone(productclass => productclass.createdby)
+            //.withmany()
+            //.hasforeignkey(productclass => productclass.createdbyid)
+            //.hasprincipalkey(applicationuserclass => applicationuserclass.id)
+            //.ondelete(deletebehavior.restrict)
+            //.isrequired();
             //----------- Defining Competency Entity - End --------------
 
             //----------- Defining Internship_Record Entity - Start --------------

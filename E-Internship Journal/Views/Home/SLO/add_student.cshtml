@@ -233,33 +233,12 @@
                 for (i = 0; i < data.length; i++) {
                     //    $('#projectSelect').val(data[i].)
                     $loInputElement = $('#loSelect');
-                    $optionElement2 = $('<option>').text(data[i].Name).attr('value', data[i].UserId);
+                    $optionElement2 = $('<option>').text(data[i].Name).attr('value', data[i].Email);
                     $loInputElement.append($optionElement2);
                 }
             }//End of success
         });//End of Ajax
-
-        $('#txtSearch2').on("keyup", function (e) {
-            console.dir($(this).val());
-            var text = $(this).val();
-            var options = $('#loSelect option');
-            //var options = $('#projectSelect').option;
-            for (var i = 0; i < options.length; i++) {
-                var option = options[i];
-                var optionText = option.text;
-                var lowerOptionText = optionText.toLowerCase();
-                var lowerText = text.toLowerCase();
-                var regex = new RegExp("^" + text, "i");
-                var match = optionText.match(regex);
-                var contains = lowerOptionText.indexOf(lowerText) != -1;
-                if (match || contains) {
-
-                    //option.selected = true;
-                    return;
-                }
-                $(this).selectedIndex = 0;
-            }
-        });//End of txtSearch function
+        
 
         $('#loSelect').on('change', function (e) {
             $('#txtSelected2').val($('#loSelect option:selected').text());
@@ -272,7 +251,7 @@
             $('#loModal').modal('hide');
         });//End of button submit for popup
 
-$(function () {
+        $(function () {
 
             $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
                 preventSubmit: true,
@@ -311,7 +290,7 @@ $(function () {
                                 text: data.Messages
                             }).then(
                                 function () {
-                                    title == 'Error' ? null : window.location.reload();
+                                    title == 'Error' || title == 'Warning' ? null : window.location.reload();
                                 });
                         },//End of success
                         error: function (data) {

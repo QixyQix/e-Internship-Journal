@@ -21,13 +21,15 @@
                             </div>
 
                         </div>
-                <div class="control-group">
-                    <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                        <label>Company</label>
-                        <div class='input-group' id='findcompany'>
-                            <input type='text' class="form-control" id="selectCompany" placeholder="Company" required="required" style="background-color:white" onclick="findCompanyModal()" data-validation-required-message="Please select a company." readonly />
-                            <div class="input-group-addon" onclick="findCompanyModal()" style="background-color:white;border:none;">
-                                <i class="fa fa-search"></i>
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Company</label>
+                                <div class='input-group' id='findcompany'>
+                                    <input type='text' class="form-control" id="selectCompany" placeholder="Company" required="required" style="background-color:white" onclick="findCompanyModal()" data-validation-required-message="Please select a company." readonly />
+                                    <div class="input-group-addon" onclick="findCompanyModal()" style="background-color:white;border:none;">
+                                        <i class="fa fa-search"></i>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="control-group">
@@ -67,42 +69,6 @@
                         <br />
                     </form>
                 </div>
-                <div class="control-group">
-                    <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                        <label>Supervisor's Name</label>
-                        <input class="form-control" id="supervisorName" type="text" placeholder="Supervisor's Name" required="required" data-validation-required-message="Please enter supervisor's name.">
-                        <p class="help-block text-danger"></p>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                        <label>Mobile Number</label>
-                        <input class="form-control" id="mobileNo" type="number" placeholder="Mobile Number" required="required" data-validation-required-message="Please enter mobile number.">
-                        <p class="help-block text-danger"></p>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                        <label>Email Address</label>
-                        <input class="form-control" id="email" type="email" placeholder="Email Address" required="required" data-validation-required-message="Please enter email address.">
-                        <p class="help-block text-danger"></p>
-                    </div>
-                </div>
-                <br>
-                <div id="success"></div>
-                <div class="form-group">
-                    <div class="col-12">
-                        <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Manage_Project'">
-                            Back
-                        </button>
-                        <button class="btn btn-primary pull-right" name="submit" type="submit" id="btnSave">
-                            Save
-                        </button>
-                    </div>
-                </div>
-                <br />
-                <br />
-                </form>
             </div>
         </div>
     </section>
@@ -198,28 +164,7 @@
 
             }//End of success
         });//End of Ajax
-
-        $('#txtSearch').on("keyup", function (e) {
-            console.dir($(this).val());
-            var text = $(this).val();
-            var options = $('#companySelect option');
-            //var options = $('#companySelect').option;
-            for (var i = 0; i < options.length; i++) {
-                var option = options[i];
-                var optionText = option.text;
-                var lowerOptionText = optionText.toLowerCase();
-                var lowerText = text.toLowerCase();
-                var regex = new RegExp("^" + text, "i");
-                var match = optionText.match(regex);
-                var contains = lowerOptionText.indexOf(lowerText) != -1;
-                if (match || contains) {
-
-                    option.selected = true;
-                    return;
-                }
-                $(this).selectedIndex = 0;
-            }
-        });//End of txtSearch function
+    
 
         $('#companySelect').on('change', function (e) {
             $('#txtSelected').val($('#companySelect option:selected').text());

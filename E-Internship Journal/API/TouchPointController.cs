@@ -30,7 +30,7 @@ namespace E_Internship_Journal.API
             _context = context;
         }
         [HttpGet("getInternshipTouchPointRecords/{id}")]
-        [Authorize(Roles = "LO")]
+        [Authorize(Roles = "LO,STUDENT")]
         public IActionResult Get_TouchPoint_Records(int id)
         {
             List<object> TouchPoint_Records_List = new List<object>();

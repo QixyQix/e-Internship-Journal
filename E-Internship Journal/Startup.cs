@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
+using Hangfire;
 
 namespace E_Internship_Journal
 {
@@ -44,6 +45,9 @@ namespace E_Internship_Journal
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHangfire(config =>
+    config.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection")));
+
             services.Configure<MvcOptions>(options =>
             {
                 //Prepare for HTTPS | Reference : https://docs.microsoft.com/en-us/aspnet/core/security/enforcing-ssl
@@ -117,7 +121,8 @@ namespace E_Internship_Journal
             app.UseStaticFiles();
             app.UseSession();
             app.UseIdentity();
-
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
 
             // Redirect https port to correct port
