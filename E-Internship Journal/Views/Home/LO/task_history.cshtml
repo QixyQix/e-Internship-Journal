@@ -239,7 +239,7 @@
                 } else {
 
                     g_Month.push(Math.ceil(data.taskRecordObjs[i].WeekNo / 4));
-                    g_Month = g_Month.sort(function (a, b) { return (a > b) ? 1 : ((b > a) ? -1 : 0); });
+                 //   g_Month = g_Month.sort(function (a, b) { return (a > b) ? 1 : ((b > a) ? -1 : 0); });
                     g_MonthRecordId.push(data.taskRecordObjs[i].MonthRecordId);
                 }
 
@@ -253,6 +253,13 @@
                 $weekInputElement.append($weekOptionElement);
 
             }
+            var my_options = $("#selectWeek option");
+            var selected = $("#selectWeek").val();
+            my_options.sort(function (a, b) {
+                return (a.value > b.value) ? 1 : ((b.value > a.value) ? -1 : 0);
+            })
+            $("#selectWeek").empty().append(my_options);
+            $("#selectWeek").val(selected);
             selectedWeek();
         });//End of Then function
 

@@ -19,11 +19,11 @@
   
                 <div class="col-xs-12 pull-right">
                     <label>View By:&nbsp</label>
-                    <select class="form-control" id="exampleSelect1">
-                        <option>Week 1</option>
+                    <select class="form-control" id="selectWeek">
+                        @*<option>Week 1</option>
                         <option>Week 2</option>
                         <option>Week 3</option>
-                        <option>Week 4</option>
+                        <option>Week 4</option>*@
                     </select>
                 </div>
             </div>
@@ -151,45 +151,19 @@
 
 
 
-        g_dayData = loadAttendanceData(g_getLocalStorage);
+        g_dayData = loadAttendanceData(internshipId);
         //g_taskData.then(function (data) {
         //    loadDataTable(data);
         //});
         loadWeekOption(g_dayData)
-
-
-        //var table = $('#dataTable').DataTable({
-        //    dom: "<'row'<'col-sm-12'tr>>" +
-        //    "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-        //    ajax: {
-        //        url: '/Api/Task_Record',
-        //        dataSrc: ''
-        //    },
-        //    columns: [
-        //        { data: "DayRecordId" },
-        //        { data: "Description" },
-        //        { data: "Description" },
-        //        { data: "Description" },
-        //        {
-        //            data: null,
-        //            "bSortable": false,
-        //            "mRender": function (o) { return '<button class="btn btn-sm btn-primary">View</button>' } //note under condition if no comments was given the column would be blank
-        //        }
-        //    ],
-        //    language: {
-        //        emptyTable: "No Attendance was found, please create one.",
-        //    }
-        //});
-
+        
         // Activate an inline edit on click of a table cell
         $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
             $('#commentModal').modal('show');
         });
 
         $('#selectWeek').on('change', function (e) {
-            //console.dir('testing');
-            g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
-            selectedWeek();
+      
         });
     });// End document ready function
 
@@ -267,6 +241,7 @@
                 } else {
 
                     g_Month.push(Math.ceil(data[i].WeekNo / 4));
+                   // g_Month = g_Month.sort(function (a, b) { return (a > b) ? 1 : ((b > a) ? -1 : 0); });
                     g_MonthRecordId.push(data[i].MonthRecordId);
                 }
 
@@ -280,7 +255,13 @@
                 $weekInputElement.append($weekOptionElement);
 
             }
-
+            var my_options = $("#selectWeek option");
+            var selected = $("#selectWeek").val();
+            my_options.sort(function (a, b) {
+                return (a.value > b.value) ? 1 : ((b.value > a.value) ? -1 : 0);
+            })
+            $("#selectWeek").empty().append(my_options);
+            $("#selectWeek").val(selected);
         });//End of Then function
         selectedWeek();
     }
