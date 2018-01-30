@@ -145,6 +145,11 @@
 
         $("#survey div.card-body select").attr("disabled", "disabled"); //disable dropdown
         $("#survey div.card-body textarea").attr("readonly", "true"); //disable textarea
+        $('#selectstudent').on('change', function (e) {
+            setCookie();
+            g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+            getStudentSurvey(g_getLocalStorage);
+        });
     });//End of document ready function
 
     function getCookie(name) {

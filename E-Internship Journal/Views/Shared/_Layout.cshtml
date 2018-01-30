@@ -591,8 +591,9 @@
             }
         };
         $(document).ready(function () {
-            $.fn.dataTable.moment('HH:mm MMM D, YY'); //format sort date
-            $.fn.dataTable.moment('dddd, MMMM Do, YYYY'); //format sort date
+            $.fn.dataTable.moment('DD/MM/YYYY');
+            //$.fn.dataTable.moment('HH:mm MMM D, YY'); //format sort date
+            //$.fn.dataTable.moment('dddd, MMMM Do, YYYY'); //format sort date
             $.fn.select2.defaults.set("theme", "bootstrap");
 
             $("#submit").click(function () {

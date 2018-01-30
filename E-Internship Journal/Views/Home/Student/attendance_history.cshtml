@@ -152,19 +152,32 @@
 
 
         g_dayData = loadAttendanceData(internshipId);
+
         //g_taskData.then(function (data) {
         //    loadDataTable(data);
         //});
-        loadWeekOption(g_dayData)
-        
+       // loadWeekOption(g_dayData)
+        selectedWeek();
         // Activate an inline edit on click of a table cell
         $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
-            $('#commentModal').modal('show');
+            var selected = $(this).val();
+            g_dayData.then(function (data) {
+                for (i = 0; i < data.length; i++) {
+                    if (data[i].DayId == selected) {
+                        $('#CommentTask').val(data[i].Remarks);
+                        $('#commentModal').modal('show');
+                    }
+
+                }
+            });
+            //$('#commentModal').modal('show');
+
         });
 
         $('#selectWeek').on('change', function (e) {
-      
+            selectedWeek();
         });
+
     });// End document ready function
 
     function getCookie(name) {
@@ -186,12 +199,18 @@
 
     function loadAttendanceData(inLocalStorage) {
         return $.ajax({
-            url: '/Api/Day_Record/getStudentDayRecords/' + inLocalStorage,
+            url: '/Api/Month_Record/getMonthsAttendance/' + inLocalStorage,
+            //url: '/Api/Day_Record/getStudentDayRecords/' + inLocalStorage,
             method: 'GET',
             dataType: 'json',
             cache: false,
             success: function (data) {
-
+                $('#selectWeek').find('option').remove();
+                for (i = 0; i < data.length; i++) {
+                    var selectMonthRecord
+                    var newOption = $('<option>').text('Week ' + (((i + 1)*4)-3) + ' to Week ' + (i+1)*4).val(i);
+                    $('#selectWeek').append(newOption);
+                }
             }//End of success
         });//End of Ajax
     }//End of function LoadAttendanceData
@@ -200,7 +219,7 @@
             dom: "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
             destroy: true,
-            data: data,
+            data: data.DayRecords,
             columns: [
                 {
                     data: "Date",
@@ -220,7 +239,9 @@
                     //data: "TaskRecordId",
                     "bSortable": false,
                     "mRender": function (data, type, row) {
-                        return '<button class="btn btn-sm btn-primary" value="' + row.TaskRecordId + '">View</button>'
+                        var button = row.Remarks == "" ?  '<button class="btn btn-sm btn-danger" disabled>No Remarks</button>' :  '<button class="btn btn-sm btn-primary" id="btnViewComment" value="' + row.DayId + '">View</button>'
+                        return button;
+                        //  return '<button class="btn btn-sm btn-primary" id="btnViewComment" value="' + row.DayId + '">View</button>'
                     } //note under condition if no remarks was given the column would be blank
                 }
             ],
@@ -229,53 +250,10 @@
             }
         });//End of DataTable
     }// End of loadDataTable Function
-    function loadWeekOption() {
-        var g_Month = [];
-        var g_MonthRecordId = [];
-        $("#selectWeek option").remove();
-        g_dayData.then(function (data) {
-
-            for (i = 0; i < data.length; i++) {
-                if (g_Month.includes(Math.ceil(data[i].WeekNo / 4))) {
-                    //Do nothing
-                } else {
-
-                    g_Month.push(Math.ceil(data[i].WeekNo / 4));
-                   // g_Month = g_Month.sort(function (a, b) { return (a > b) ? 1 : ((b > a) ? -1 : 0); });
-                    g_MonthRecordId.push(data[i].MonthRecordId);
-                }
-
-            };
-            for (k = 0; k < g_Month.length; k++) {
-                var tempWeek = g_Month[k] * 4;
-
-                var tempWeekText = "Week " + (tempWeek - 3) + " - " + tempWeek;
-                $weekInputElement = $('#selectWeek');
-                $weekOptionElement = $('<option>').text(tempWeekText).attr('value', g_MonthRecordId[k]);
-                $weekInputElement.append($weekOptionElement);
-
-            }
-            var my_options = $("#selectWeek option");
-            var selected = $("#selectWeek").val();
-            my_options.sort(function (a, b) {
-                return (a.value > b.value) ? 1 : ((b.value > a.value) ? -1 : 0);
-            })
-            $("#selectWeek").empty().append(my_options);
-            $("#selectWeek").val(selected);
-        });//End of Then function
-        selectedWeek();
-    }
     function selectedWeek() {
         g_dayData.then(function (data) {
-            var finalData = [];
-            var selectedWeek = $('#selectWeek').val().split(',').map(Number);
-            for (i = 0; i < data.length; i++) {
-                if (selectedWeek.includes(data[i].MonthRecordId)) {
-                    finalData.push(data[i]);
-
-                }
-            }//End of for loop
-            loadDataTable(finalData);
+            var selectedWeek = $('#selectWeek').val();
+            loadDataTable(data[selectedWeek]);
         })
     }
 </script>

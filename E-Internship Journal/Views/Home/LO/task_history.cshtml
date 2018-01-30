@@ -92,7 +92,7 @@
                     <form>
                         <div class="form-group ">
                             <label>Comment:</label>
-                            <textarea class="form-control" rows="5" id="review" readonly>Went to meeting, and prepared meeting report.</textarea>
+                            <textarea class="form-control" rows="5" id="commentTask" readonly>Went to meeting, and prepared meeting report.</textarea>
                         </div>
                     </form>
                 </div>
@@ -133,22 +133,36 @@
         g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
 
         g_taskData = loadTaskData(g_getLocalStorage);
-        loadWeekOption();
-
+    
+        selectedWeek();
 
         $('#selectstudent').on('change', function (e) {
             //console.dir('test');
             setCookie();
             g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
             g_taskData = loadTaskData(g_getLocalStorage);
-            loadWeekOption();
+            selectedWeek
         });
         $('#selectWeek').on('change', function (e) {
             //console.dir('testing');
             //g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
             selectedWeek();
         });
+        // Activate an inline edit on click of a table cell
+        $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
+            var selected = $(this).val();
+            g_taskData.then(function (data) {
+                var task = data[$('#selectWeek').val()];
+                for (i = 0; i < task.TaskRecords.length; i++) {
+                    if (task.TaskRecords[i].TaskRecordId == selected) {
+                        $('#commentTask').val(task.TaskRecords[i].Remarks);
 
+                    }
+
+                }
+                $('#commentModal').modal('show');
+            });
+        });
     });//End of Document Ready function
 
     function getCookie(name) {
@@ -180,16 +194,17 @@
     function loadTaskData(inLocalStorage) {
         //var testAfterAjax;
         return $.ajax({
-            url: '/Api/Task_Record/getTaskRecordsUnderInternRecord/' + inLocalStorage,
+            url: '/Api/Month_Record/getMonthsTasks/' + inLocalStorage,
             method: 'GET',
             dataType: 'json',
             cache: false,
             success: function (data) {
-                //for (i = 0; i < data.length; i++) {
-                //    if (data[i].Remarks != null) {
-                //        sessionStorage.setItem(data[i].TaskRecordId, data[i].Remarks);
-                //    }
-                //}//End of for loop
+                $('#selectWeek').find('option').remove();
+                for (i = 0; i < data.length; i++) {
+                    var selectMonthRecord
+                    var newOption = $('<option>').text('Week ' + (((i + 1) * 4) - 3) + ' to Week ' + (i + 1) * 4).val(i);
+                    $('#selectWeek').append(newOption);
+                }
             }//End of success
         });//End of Ajax
     }
@@ -198,18 +213,21 @@
             dom: "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
             destroy: true,
-            data: data,
+            data: data.TaskRecords,
             columns: [
                 {
                     data: "Date",
-                    "mRender": function (o) { return moment(o).format("DD/MM/YYYY") }
+                    "mRender": function (o) {
+                        return moment(o).format("DD/MM/YYYY")
+                    }
                 },
                 { data: "Description" },
                 {
                     //data: "TaskRecordId",
                     "bSortable": false,
                     "mRender": function (data, type, row) {
-                        return '<button class="btn btn-sm btn-primary" value="' + row.TaskRecordId + '">View</button>'
+                        var button = row.Remarks == "" ? '<button class="btn btn-sm btn-danger" disabled>No Remarks</button>' : '<button class="btn btn-sm btn-primary" value="' + row.TaskRecordId + '">View</button>'
+                        return button;
                     } //note under condition if no remarks was given the column would be blank
                 }
             ],
@@ -217,66 +235,13 @@
                 emptyTable: "No Task was found, please create one.",
             }
         });//End of DataTable
-        $('#dataTable tbody').on('click', 'button[class="btn btn-sm btn-primary"]', function (e) {
-           // console.dir("FUCK ME");
-            var $row = $(this).closest('tr');
-
-            // Get row data
-            var data = g_table.row($row).data();
-            $('#commentModal').modal('show');
-            $('#review').text(sessionStorage.getItem($(this).val()) == null ? "No Remarks" : sessionStorage.getItem($(this).val()));
-           // console.dir(data);
-        });
-    }
-    function loadWeekOption() {
-        $("#selectWeek option").remove();
-        g_taskData.then(function (data) {
-            var g_Month = [];
-            var g_MonthRecordId = [];
-            for (i = 0; i < data.taskRecordObjs.length; i++) {
-                if (g_Month.includes(Math.ceil(data.taskRecordObjs[i].WeekNo / 4))) {
-                    //Do nothing
-                } else {
-
-                    g_Month.push(Math.ceil(data.taskRecordObjs[i].WeekNo / 4));
-                 //   g_Month = g_Month.sort(function (a, b) { return (a > b) ? 1 : ((b > a) ? -1 : 0); });
-                    g_MonthRecordId.push(data.taskRecordObjs[i].MonthRecordId);
-                }
-
-            };
-            for (k = 0; k < g_Month.length; k++) {
-                var tempWeek = g_Month[k] * 4;
-
-                var tempWeekText = "Week " + (tempWeek - 3) + " - " + tempWeek;
-                $weekInputElement = $('#selectWeek');
-                $weekOptionElement = $('<option>').text(tempWeekText).attr('value', g_MonthRecordId[k]);
-                $weekInputElement.append($weekOptionElement);
-
-            }
-            var my_options = $("#selectWeek option");
-            var selected = $("#selectWeek").val();
-            my_options.sort(function (a, b) {
-                return (a.value > b.value) ? 1 : ((b.value > a.value) ? -1 : 0);
-            })
-            $("#selectWeek").empty().append(my_options);
-            $("#selectWeek").val(selected);
-            selectedWeek();
-        });//End of Then function
 
     }
     function selectedWeek() {
         g_taskData.then(function (data) {
-            var finalData = [];
-            console.dir($('#selectWeek').val());
-            var selectedWeek = $('#selectWeek').val() == null ? null : $('#selectWeek').val().split(',').map(Number);
-                for (i = 0; i < data.taskRecordObjs.length; i++) {
-                    if (selectedWeek.includes(data.taskRecordObjs[i].MonthRecordId)) {
-                        finalData.push(data.taskRecordObjs[i]);
-
-                    }
-                }//End of for loop
-                loadDataTable(finalData);
-          
+            var selectedWeek = $('#selectWeek').val();
+            $('#dataTable').dataTable().fnClearTable();
+            loadDataTable(data[selectedWeek]);
 
 
         })
