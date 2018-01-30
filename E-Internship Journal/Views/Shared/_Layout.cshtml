@@ -15,7 +15,7 @@
             {
                 ViewBag.role = "SLO";
             }
-            else if (Startup.Configuration["_g"] == "Supervisor")
+            else if (Startup.Configuration["_g"] == "SUPERVISOR")
             {
                 ViewBag.role = "Supervisor";
             }
@@ -75,7 +75,7 @@
     <!-- Navigation -->
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-        <a class="navbar-brand" href="#">Welcome @ViewBag.role, @User.Identity.Name</a>
+        <a class="navbar-brand" href="#">Welcome @ViewBag.role,</a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -328,6 +328,7 @@
     </nav>
 
     <div class="content-wrapper">
+        <div class="container-fluid text-right"><small>USER: @User.Identity.Name</small></div>
         @RenderBody()
 
         @*<footer class="sticky-footer">
