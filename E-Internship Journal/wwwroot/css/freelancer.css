@@ -90,6 +90,9 @@ input .btn .btn-default {
     border-radius: 50px !important;
 }*/
 
-/*.btn-primary {
-    background-color: #67B7E9 !important;
-}*/
+.btn-primary {
+    /*background-color: #67B7E9 !important;*/
+    color: #fff !important;
+    background-color: #17a2b8 !important;
+    border-color: #17a2b8 !important;
+}

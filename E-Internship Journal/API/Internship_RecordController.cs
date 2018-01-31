@@ -358,7 +358,6 @@ namespace E_Internship_Journal.API
             {
                 StudentName = sir.UserBatch.User.FullName,
                 StudentCourse = sir.UserBatch.Batch.Course.CourseName,
-                StudentSchool = "NEED TO DO THIS",
                 StudentMobileNo = sir.UserBatch.User.PhoneNumber,
                 StudentEmail = sir.UserBatch.User.Email,
                 LOName = sir.LiaisonOfficer.FullName,
