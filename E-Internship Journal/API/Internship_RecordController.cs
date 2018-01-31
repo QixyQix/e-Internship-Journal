@@ -63,7 +63,7 @@ namespace E_Internship_Journal.API
             Internship_Record internshipRecord = _context.Internship_Records
                 .Include(ir => ir.UserBatch)
                 .ThenInclude(ub => ub.Batch)
-                .Where(ir => ir.UserBatch.UserId.Equals(userId) && ir.UserBatch.Batch.StartDate <= DateTime.Now && ir.UserBatch.Batch.EndDate >= DateTime.Now)
+                .Where(ir => ir.UserBatch.UserId.Equals(userId) && ir.UserBatch.Batch.StartDate <= DateTime.Now && ir.UserBatch.Batch.EndDate.AddDays(1) >= DateTime.Now)
                 .Single();
 
             var internshiprecordId = internshipRecord.InternshipRecordId;
