@@ -121,25 +121,25 @@
                     data: "StudentId",
                     "bSortable": false,
                     "mRender": function (o) {
-                        return '<a href="/home/Student_Info" style="color:black;" id="studentInfo" value="' + o + '" onClick="studentInfo($(this))"><i class="fa fa-fw fa-info"></i></a>'
+                        return '<a href="/home/Student_Info" style="color:black;" id="studentInfo" value="' + o + '" onClick="studentInfo($(this))"><button class="btn btn-success btn-labeled role="button"> <span class="btn-label"><i class="fa fa-info-circle"></i></span>Info</button>'
                     }
                 },
                 {
                     data: "StudentJournal",
                     "bSortable": false,
                     "mRender": function (data, type, dataToSet) {
-                        return '<a href="/home/student_journal" style="color:black;" id="studentJournal" value="' + data + '" onClick="studentJournal(\'' + dataToSet.StudentName + '\' , \'' + dataToSet.StudentId + '\')"><i class="fa fa-fw fa-file"></i></a>'
+                        return '<a href="/home/student_journal" style="color:black;" id="studentJournal" value="' + data + '" onClick="studentJournal(\'' + dataToSet.StudentName + '\' , \'' + dataToSet.StudentId + '\')"><button class="btn btn-primary btn-labeled role="button"> <span class="btn-label"><i class="fa fa-file"></i></span>Student Journal</button>'
                     }
                 },
                 {
                     data: null,
                     "bSortable": false,
-                    "mRender": function (data, type, dataToSet) { return '<a href="/home/review" style="color:black;" onClick="studentJournal(\'' + dataToSet.StudentName + '\' , \'' + dataToSet.StudentId + '\')"><i class="fa fa-fw fa-exclamation-circle"></i></a>' }
+                    "mRender": function (data, type, dataToSet) { return '<a href="/home/review" style="color:black;" onClick="studentJournal(\'' + dataToSet.StudentName + '\' , \'' + dataToSet.StudentId + '\')"><button class="btn btn-primary btn-labeled role="button"> <span class="btn-label"><i class="fa fa-spinner"></i></span>Review</button>' }
                 },
                 {
                     data: null,
                     "bSortable": false,
-                    "mRender": function (o) { return '<a href="/home/final_grading" style="color:black;"><i class="fa fa-fw fa-graduation-cap"></i></a>' }
+                    "mRender": function (o) { return '<a href="/home/final_grading" style="color:black;"><button class="btn btn-primary btn-labeled role="button"> <span class="btn-label"><i class="fa fa-graduation-cap"></i></span>Final Grading</button>' }
                 }
             ],
             language: {
