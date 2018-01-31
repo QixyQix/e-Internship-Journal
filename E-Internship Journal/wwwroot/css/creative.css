@@ -318,3 +318,8 @@ header.masthead hr {
     .btn-primary:active, .btn-primary:focus {
         box-shadow: 0 0 0 .2rem rgba(0, 139, 139, 1) !important
     }
+
+.navbar-shrink .js-scroll-trigger picture img {
+    /*display: none;*/
+    content: url("../images/e-intern.png");
+}

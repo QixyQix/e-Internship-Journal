@@ -60,6 +60,7 @@ namespace E_Internship_Journal.API
                     var foundCompany = await _context.Companies.SingleOrDefaultAsync(m => m.CompanyId == id);
                     var response = new
                     {
+                        foundCompany.CompanyId,
                         foundCompany.CompanyName,
                         foundCompany.CompanyAddress,
                         foundCompany.ContactPersonName,
@@ -81,19 +82,13 @@ namespace E_Internship_Journal.API
             {
                 return NotFound();
             }
-            
+
         }
 
         // PUT: api/Companies/5
-        [HttpPut("UpdateCompany/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCompany(int id, [FromBody] string value)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            string customMessage = "";
             if (CompanyExists(id))
             {
                 var companyNewInput = JsonConvert.DeserializeObject<dynamic>(value);
@@ -108,15 +103,15 @@ namespace E_Internship_Journal.API
             }
             else
             {
-
+                return new BadRequestObjectResult(new { Message = "Company does not exist" });
             }
 
-            return NoContent();
+            return new OkObjectResult(new { Message = "Company updated successfully" });
         }
 
         // POST: api/Companies
         [HttpPut("SaveNewCompanyRecord")]
-        [Authorize(Roles = "SLO")]
+        [Authorize(Roles = "ADMIN, SLO")]
         public async Task<IActionResult> SaveNewCompanyRecord([FromBody] string value)
         {
             string messageList = "";
@@ -129,7 +124,8 @@ namespace E_Internship_Journal.API
                 if (companyNewInputs.CompanyId == null)
                 {
                     string CompanyName = companyNewInputs.CompanyName.Value;
-                    if (_context.Companies.Any(c => c.CompanyName.Equals(CompanyName, StringComparison.OrdinalIgnoreCase))){
+                    if (_context.Companies.Any(c => c.CompanyName.Equals(CompanyName, StringComparison.OrdinalIgnoreCase)))
+                    {
                         messageList = "Duplcate Company";
                         alertType = "error";
                     }
@@ -198,6 +194,7 @@ namespace E_Internship_Journal.API
                 });
             }
         }
+
         [HttpPost("MassEnrollCompanies/")]
         [Authorize(Roles = "SLO,ADMIN")]
         public async Task<IActionResult> MassEnrollCompanies()
@@ -251,12 +248,12 @@ namespace E_Internship_Journal.API
                             //var www = oneProjectData[3];
                             var company = _context.Companies.SingleOrDefault(companyData => companyData.CompanyName.Equals(oneCompanyData[0], StringComparison.OrdinalIgnoreCase));
                             // var user = _context.ApplicationUsers.SingleOrDefault(appuser => appuser.UserName.Equals(oneStudentData[1], StringComparison.OrdinalIgnoreCase));
-                          
+
                             if (company == null)
                             {
                                 Company newCompany = new Company
                                 {
-                                    CompanyName  = oneCompanyData[0],
+                                    CompanyName = oneCompanyData[0],
                                     CompanyAddress = oneCompanyData[1],
                                     ContactPersonName = oneCompanyData[2],
                                     ContactPersonNumber = oneCompanyData[3],
@@ -331,6 +328,40 @@ namespace E_Internship_Journal.API
                 };
 
                 return new OkObjectResult(responseObject);
+
+            }
+            catch (Exception exceptionObject)
+            {
+                object httpFailRequestResultMessage = new { Message = "Unable to Process" };
+                //Return a bad http response message to the client
+                return BadRequest(httpFailRequestResultMessage);
+            }
+
+
+        }
+
+        // DELETE: api/Companies/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCompany(int id)
+        {
+            try
+            {
+                var company = _context.Companies.Include(ir => ir.Projects).Where(c => c.CompanyId == id).SingleOrDefault();
+
+                if (company != null)
+                {
+                    if (company.Projects.Count > 0)
+                    {
+                        return new BadRequestObjectResult(new { Message = "Unable to delete company record - there are projects assigned to it" });
+                    }
+                    else
+                    {
+                        _context.Companies.Remove(company);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                return new OkObjectResult(new { Message = "Removed company successfully!"});
 
             }
             catch (Exception exceptionObject)

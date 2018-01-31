@@ -843,7 +843,13 @@
 				type: "minchecked",
 				minchecked: 1,
 				message: "Check at least one option<!-- data-validation-checkone-message to override -->"
-			}
+            }
+            //text: {
+            //    name: "Text",
+            //    type: "regex",
+            //    regex: "^(?:(?!.*[ ]{2})(?!(?:.*[']){2})(?!(?:.*[-]){2})(?:[a-zA-Z0-9 \p{L}'-]{3,48}$))$",
+            //    message: "Check at least one option<!-- data-validation-checkone-message to override -->"
+            //}
 		}
 	};
 

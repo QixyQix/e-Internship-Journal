@@ -242,7 +242,7 @@
         //console.dir(getCookie(name));
         var cookievalue = getCookie(name);
 
-        if (name != "selectedStudent") {
+        if (name != "selectedStudent" && name != "InternshipRecordId") {
             $studentInputElement = $('#selectstudent');
             $optionElement = $('<option>').text(name).attr('value', cookievalue);
             $studentInputElement.append($optionElement);

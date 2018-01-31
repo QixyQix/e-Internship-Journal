@@ -16,18 +16,11 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="pull-left">
-                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
-
-                    </select>
+                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent"></select>
                 </div>
                 <div class="col-xs-12 pull-right">
                     <label>View By:&nbsp</label>
-                    <select class="form-control" id="exampleSelect1">
-                        <option>Week 1 - 4</option>
-                        <option>Week 4 - 8</option>
-                        <option>Week 8 - 12</option>
-                        <option>Week 12 - 16</option>
-                    </select>
+                    <select class="form-control" id="selectMonthRecord"></select>
                 </div>
             </div>
         </div>
@@ -37,174 +30,32 @@
             <i class="fa fa-check-square fa-2x pull-left"></i> <h3>Competency Checklist</h3>
         </div>
         <div class="table-responsive">
-            <table class="table table-bordered" cellspacing="0">
+            <table class="table table-bordered" id="tblCompetencies" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>A. Domain Immersation</th>
-                        <th>Tick if performed</th>
+                        <th class="col-sm-11">Competency</th>
+                        <th class="col-sm-1">Tick if performed</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            1. Describe and explain respectively domain knowledge
-                            <ul>
-                                <li>
-                                    Understand existing business operations
-                                </li>
-                                <li>
-                                    Identify roles and responsibilities of company staff members
-                                </li>
-                                <li>
-                                    Understand a project/system business requirements
-                                </li>
-                            </ul>
-                        </td>
-                        <td>
-                            <div class="checkbox">
-                                <input type="checkbox" name="checkboxQ1" id="q1" />
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>B. Project/System Analysis & Design</th>
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>
-                            2. Participate and contribute to the review, analysis and verification of business and software requirements
-                            <ul>
-                                <li>
-                                    Assist project team for project requirements gathering and analysis
-                                </li>
-                                <li>
-                                    Assist in gathering of user requirements, which can be any activity such as design of questionnaire, logistics planning
-                                </li>
-                                <li>
-                                    Identify and document an application problem or symptoms from users(when there is reported software bug)
-                                </li>
-                                <li>
-                                    Propose solutions to an application problem with designated supervisors or mentors
-                                </li>
-                            </ul>
-                        </td>
-                        <td>
-                            <div class="checkbox">
-                                <input type="checkbox" name="checkboxQ2" id="q2" />
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            3. Prepare technical documentation and reports on requirements and analysis
-                            <ul>
-                                <li>
-                                    Report the workflow of a business requirement, in the form of UML(Sequence, State etc. diagrams) or any in company standard documentation format
-                                </li>
-                                <li>
-                                    Report or present a problem resolution/design to the users
-                                </li>
-                                <li>
-                                    Document constraints or possible impacts in the application, during any code or functionality changes from bugfix or change request
-                                </li>
-                                <li>
-                                    Perform an impact analysis (i.e. what could happen to the users, like loss of what data) of the risks involved in the reported application problem/error
-                                </li>
-                            </ul>
-                        </td>
-                        <td>
-                            <div class="checkbox">
-                                <input type="checkbox" name="checkboxQ3" id="q3" />
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>b. Discuss with the student on the internship requirements. (This is recommended to be carried out at the start of the inrernship)</td>
-                        <td>
-                            <div class="checkbox">
-                                <input type="checkbox" name="checkboxQ4" id="q4" />
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>c. Guide the student to meet requirements and learning objectives. This includes guiding the student on the tasks, setting performance expectations and encouraging student to ask questions to clarify job resposibilities.</td>
-                        <td>
-                            <div class="checkbox">
-                                <input type="checkbox" name="checkboxQ5" id="q5" />
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>d. Provide periodic feedback to student on his/her performance</td>
-                        <td>
-                            <div class="checkbox">
-                                <input type="checkbox" name="checkboxQ6" id="q6" />
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>e. Meet and discuss with the SP Liaison Officer on student's progress and performance during company visits.</td>
-                        <td>
-                            <div class="checkbox">
-                                <input type="checkbox" name="checkboxQ7" id="q7" />
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>f. Provide final assessment on student's performance</td>
-                        <td>
-                            <div class="checkbox">
-                                <input type="checkbox" name="checkbox8" id="q8" />
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>3. Mentorship</th>
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>a. Provide student an overview of the company structure, nature of business and work requirements.</td>
-                        <td>
-                            <div class="checkbox">
-                                <input type="checkbox" name="checkboxQ9" id="q9" />
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>b. Share about job propects, career paths and trends within the industry. This can be done through sharing of work experience, relevant resources, networking contacts, as appropriate.</td>
-                        <td>
-                            <div class="checkbox">
-                                <input type="checkbox" name="checkboxQ10" id="q10" />
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>b. Motivate the student with your work experience and career journey in the industry. This includes, but not limited to, providing the student and understanding on the right kind of professional and personal ethics, attiudes and values to adopt to be effective</td>
-                        <td>
-                            <div class="checkbox">
-                                <input type="checkbox" name="checkboxQ11" id="q11" />
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
         @*<div class="card-footer"></div>*@
     </div>
 </div>
-    <div class="card-body">
-        <div class="form-group">
-            <div class="col-12">
-                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Student_Journal'">
-                    Back
-                </button>
-            </div>
+<div class="card-body">
+    <div class="form-group">
+        <div class="col-12">
+            <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Student_Journal'">
+                Back
+            </button>
         </div>
     </div>
+</div>
 &nbsp;
 <script>
     $("div input").attr("disabled", "disabled");
-
+    var g_studentChecked;
     $(document).ready(function () {
         var cookies = document.cookie.split("; ");
 
@@ -215,7 +66,7 @@
             //console.dir(getCookie(name));
             var cookievalue = getCookie(name);
 
-            if (name != "selectedStudent") {
+            if (name != "selectedStudent" && name != "InternshipRecordId") {
                 $studentInputElement = $('#selectstudent');
                 $optionElement = $('<option>').text(name).attr('value', cookievalue);
                 $studentInputElement.append($optionElement);
@@ -227,9 +78,122 @@
             }
         }//End of for loop
 
+        var internshipRecordId = sessionStorage.getItem($('#selectstudent').val())
+
+        loadCompetenciesData(internshipRecordId);
+        g_studentChecked = loadStudentChecked(internshipRecordId);
+        getStudentChecked(internshipRecordId);
+
+        $('#selectMonthRecord').on('change', function (e) {
+           // getStudentChecked(internshipRecordId);
+            //loadStudentChecked(internshipRecordId);
+        });
+        $('#selectstudent').on('change', function (e) {
+            setCookie("selectedStudent", $(this).val());
+            internshipId = getCookie("selectedStudent");
+            internshipRecordId = sessionStorage.getItem($('#selectstudent').val());
+            loadCompetenciesData(internshipRecordId);
+            
+            loadStudentChecked(internshipRecordId);
+
+        });
     });//End of document ready
+    function loadStudentChecked(inId) {
+        return $.ajax({
+            url: '/api/month_record/InternshipMonthRecords/' + inId, 
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                $('#selectMonthRecord').find('option').remove();
+                if (data.length > 0) {
+                    for (i = 0; i < data.length; i++) {
+                        var newOption = $('<option>').text('Week ' + (((i + 1) * 4) - 3) + ' to Week ' + (i + 1) * 4).val(i);
+                        $('#selectMonthRecord').append(newOption);
+                    }
+                }//End of if statement
+            }//End of success
+        });//End of Ajax
+    }//End of function LoadAttendanceData
 
+    
+    function loadCompetenciesData(inId) {
+        $.ajax({
+            url: '/api/competencies/getInternshipCompetncies/' + inId, 
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (competencies) {
 
+                //  var competencyTbody = $('#competency_tbody');
+                //<thead>
+                //    <tr>
+                //        <th>Category Title</th>
+                //        <th width="10%"><div class='container'><div class='row'><button title="edit category" class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button><button title="add competency" class="btn btn-sm btn-success" onclick="findCompetencyModal()"><i class="fa fa-plus"></i></button><button title="delete category" class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button></div></div></th>
+                //    </tr>
+                //</thead>
+                $('#tblCompetencies').empty();
+                var competencyTable = $('#tblCompetencies');
+                for (i = 0; i < competencies.length; i++) {
+                    var dataForCompetencyList = competencies[i].CompetencyList.sort(function (a, b) { return (a.ViewBy > b.ViewBy) ? 1 : ((b.ViewBy > a.ViewBy) ? -1 : 0); });
+                    $threadElement = $('<thead></thead>');
+                    $rowElement = $('<tr></tr>');
+                    $cellElement = $('<th></th>', { text: competencies[i].ViewBy + ". " + competencies[i].TitleCompetency }).attr('title', competencies[i].TitleCompetency).attr('colspan', '2');
+                    $rowElement.append($cellElement);
+
+                    $threadElement.append($rowElement);
+                    competencyTable.append($threadElement);
+
+                    $tbodyElement = $('<tbody></tbody>')
+                    for (k = 0; k < dataForCompetencyList.length; k++) {
+
+                        $rowElement = $('<tr></tr>');
+                        $cellElement = $('<td></td>');
+                        //$cellElement = $('<td></td>', { text: data[i].CompetencyList[k].Description });
+                        $cellElement.html(dataForCompetencyList[k].Description);
+                        $rowElement.append($cellElement);
+
+                        $cellElement = $('<td style="text-align:center; vertical-align:center;"><input name="CompetencyCheck" type="checkbox"  disabled value="' + dataForCompetencyList[k].CompetencyId + '"></td>');
+                        $rowElement.append($cellElement);
+
+                        $tbodyElement.append($rowElement);
+                        //   $threadElement.append($tbodyElement);
+                        competencyTable.append($tbodyElement);
+                    }
+                }
+                getStudentChecked(inId);
+                //getStudentChecked(inId);
+            },//End of success
+
+        });//End of Ajax
+
+    }//End of function LoadCompetenciesData
+    function getStudentChecked(inId) {
+
+     //   loadCompetenciesData(inId);
+        g_studentChecked.then(function (data) {
+            monthRecords = data;
+            if (data.length > 0) {
+            
+                //var selectedMonth = $('#selectMonthRecord').val();
+                var selectedMonth = monthRecords[$('#selectMonthRecord').val()];
+                $("input[name='CompetencyCheck']").each(function () {
+                    if (selectedMonth.CompetencyCheckeds.length > 0) {
+                        for (i = 0; i < selectedMonth.CompetencyCheckeds.length; i++) {
+                            var ccid = selectedMonth.CompetencyCheckeds[i].CompetencyId;
+                            if ($(this).val() == ccid) {
+                                $(this).prop('checked', true);
+                            } else {
+                                $(this).prop('checked', false);
+                            }
+                        }
+                    } else {
+                        $(this).prop('checked', false);
+                    }
+                });
+            }
+        });//End of success
+    }
     function getCookie(name) {
         var dc = document.cookie;
         var prefix = name + "=";

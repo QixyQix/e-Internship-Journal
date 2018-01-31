@@ -39,13 +39,12 @@
         <div class="card-footer"></div>
     </div>
 </div>
-
-<!-- Add Touchpoint Modal -->
-<div class="modal fade" id="addtpModal" tabindex="-1" role="dialog" aria-labelledby="addtpModalLabel" aria-hidden="true">
+<!-- comment Modal -->
+<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="touchPointModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addtpModalLabel">Add Touchpoint</h5>
+                <h5 class="modal-title" id="touchPointModalLabel">11 October 2017</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -54,253 +53,30 @@
 
                 <div class="container">
                     <form>
-                        <div class="form-group">
-                            <label class="control-label requiredField" for="date">
-                                Date
-                                <span class="asteriskField">
-                                    *
-                                </span>
-                            </label>
-                            <div class="input-group">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-calendar">
-                                    </i>
-                                </div>
-                                <input class="form-control" id="newDate" name="date" placeholder="MM/DD/YYYY" type="text" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label requiredField" for="timein">
-                                Time
-                                <span class="asteriskField">
-                                    *
-                                </span>
-                            </label>
-                            <div class='input-group date' id='timein'>
-                                <div class="input-group-addon">
-                                    <i class="fa fa-clock-o"></i>
-                                </div>
-
-                                <input type='text' class="form-control" id="newTimeIn" required />
-                            </div>
-                        </div>
                         <div class="form-group ">
-                            <label class="control-label" for="comment">
-                                Comment
-                            </label>
-                            <textarea class="form-control" rows="5" id="newComment"></textarea>
+                            <label>Comment:</label>
+                            <textarea class="form-control" rows="5" id="CommentTouchPoint" readonly>Went to meeting, and prepared meeting report.</textarea>
                         </div>
                     </form>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="btnCreate">Create</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Edit Touchpoint Modal -->
-<div class="modal fade" id="updatetpModal" tabindex="-1" role="dialog" aria-labelledby="updatetpModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addtpModalLabel">Edit Touchpoint</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <div class="container">
-                    <form>
-                        <div class="form-group">
-                            <label class="control-label requiredField" for="date">
-                                Date
-                                <span class="asteriskField">
-                                    *
-                                </span>
-                            </label>
-                            <div class="input-group">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-calendar">
-                                    </i>
-                                </div>
-                                <input class="form-control" id="updateDate" name="date" placeholder="MM/DD/YYYY" type="text">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label requiredField" for="editTimeIn">
-                                Time
-                                <span class="asteriskField">
-                                    *
-                                </span>
-                            </label>
-                            <div class='input-group date' id='editTimeIn'>
-                                <div class="input-group-addon">
-                                    <i class="fa fa-clock-o"></i>
-                                </div>
-
-                                <input type='text' class="form-control" id="updateTimeIn" />
-                            </div>
-                        </div>
-
-                        <div class="form-group ">
-                            <label class="control-label" for="comment">
-                                Comment
-                            </label>
-                            <textarea class="form-control" rows="5" id="updateComment"></textarea>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="btnUpdate">Update</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
             </div>
         </div>
     </div>
 </div>
 <script>
     var editor;
-
+    var foundTouchPointRecord;
     $(document).ready(function () {
+        var internshipId = getCookie("InternshipRecordId");
         $('#editTimeIn').datetimepicker({
             allowInputToggle: true,
             format: 'LT'
         });
-        var cookies = document.cookie.split("; ");
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = cookies[i];
-            var eqPos = cookie.indexOf("=");
-            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-            //console.dir(getCookie(name));
-            var cookievalue = getCookie(name);
 
-            if (name != "selectedStudent") {
-                $studentInputElement = $('#selectstudent');
-                $optionElement = $('<option>').text(name).attr('value', cookievalue);
-                $studentInputElement.append($optionElement);
-
-            } else {
-                $('#selectstudent').val(cookievalue);
-
-            }
-
-        }
-        g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
-        loadDataTable(g_getLocalStorage);
-
-
-        $('#addtp').on('click', function (e) {
-            $('#addtpModal').modal('show');
+        foundTouchPointRecord = loadTouchPointRecord(internshipId);
+        foundTouchPointRecord.then(function (data) {
+            loadDataTable(data);
         });
-
-        $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
-            $('#updatetpModal').modal('show');
-            //$('#editDate').val($('#Date_1').text());
-            $('#updateDate').datepicker('setDate', $('#Date_' + $(this).val()).text());
-            //$('#editTimeIn').val
-            //$('#editComment').val
-            $('#updateTimeIn').val($('#Time_' + $(this).val()).text());
-            $('#updateComment').val($('#Comments_' + $(this).val()).text());
-
-            $('#btnUpdate').val($(this).val());
-        });
-        $('#btnCreate').on('click', function (e) {
-            if ($('#newDate').val() == null || $('#newTimeIn').val() == null) {
-
-                swal({
-                    type: 'error',
-                    title: 'Oops!',
-                    //html: data.Messages.join('<br>')
-                    text: 'Please Fill All Required Field!'
-                });
-
-            }//end of If statement
-            else {
-                var collectedDate = moment($('#newDate').val() + ' ' + $('#newTimeIn').val(), ["DD/MM/YYYY h:mm A"]).toDate();
-                var collectedComments = $('#newComment').val();
-                var webFormData = new WebFormData(collectedDate, collectedComments);
-                console.dir(webFormData);
-                $.ajax({
-                    url: '/Api/TouchPoint/SaveTouchPointRecord/' + g_getLocalStorage,
-                    method: 'POST',
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8",
-                    cache: false,
-                    data: "'" + JSON.stringify(webFormData) + "'",
-                    success: function (data) {
-                        swal({
-                            type: 'success',
-                            title: 'Saved!',
-                            text: data.Message
-                        }).then(
-                            function () {
-                                window.location.reload();
-                            });
-                    },//End of success
-                    error: function (data) {
-                        swal({
-                            type: 'error',
-                            title: 'Error',
-                            text: data.Message
-                        });
-                    }//End of error
-
-
-                });//End of ajax call
-            }//End of Else statement
-
-        })//End of btnCreate on Click Function
-        $('#btnUpdate').on('click', function (e) {
-            if ($('#updateDate').val() == null || $('#updateTimeIn').val() == null) {
-
-                swal({
-                    type: 'error',
-                    title: 'Oops!',
-                    //html: data.Messages.join('<br>')
-                    text: 'Please Fill All Required Field!'
-                });
-
-            }//end of If statement
-            else {
-                var collectedDate = moment($('#updateDate').val() + ' ' + $('#updateTimeIn').val(), ["DD/MM/YYYY h:mm A"]).toDate();
-                var collectedComments = $('#updateComment').val();
-                var webFormData = new WebFormData(collectedDate, collectedComments);
-                console.dir(webFormData);
-                $.ajax({
-                    url: '/Api/TouchPoint/UpdateTouchPointRecord/' + $(this).val(),
-                    method: 'PUT',
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8",
-                    cache: false,
-                    data: "'" + JSON.stringify(webFormData) + "'",
-                    success: function (data) {
-                        swal({
-                            type: 'success',
-                            title: 'Saved!',
-                            text: data.Message
-                        }).then(
-                            function () {
-                                window.location.reload();
-                            });
-                    },//End of success
-                    error: function (data) {
-                        swal({
-                            type: 'error',
-                            title: 'Error',
-                            text: data.Message
-                        });
-                    }//End of error
-                });//End of ajax call
-            }//End of Else statement
-
-
-        })//End of btnUpdate on Click Function
 
 
     });//End of Ready function
@@ -320,32 +96,24 @@
         }
         return unescape(dc.substring(begin + prefix.length, end));
     }//End of getCookie Function
-    function setCookie() {
-        var inName = "selectedStudent";
-        var inValue = $('#selectstudent').val();
-        //setCookie("selectedStudent", ("#selectstudent").val());
-        var exdate = new Date();
-        var expiredays = 1;
-        exdate.setHours(exdate.getHours() + 4);
-        exdate.setDate(exdate.getDate());
-        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
-    };//End of setCookie
-    function WebFormData(inDate, inComments) {
-        this.TouchPointDate = inDate;
-        this.Comments = inComments;
+    function loadTouchPointRecord(inId) {
+        return $.ajax({
+            url: '/Api/TouchPoint/getInternshipTouchPointRecords/' + inId,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+
+            }//End of success
+        });//End of Ajax
+
     }
-    function deleteTouchPointRecord() {
-        console.dir("test");
-    }
-    function loadDataTable(inId) {
+    function loadDataTable(inData) {
         var g_table = $('#dataTable').DataTable({
             dom: "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
             destroy: true,
-            ajax: {
-                url: '/Api/TouchPoint/getInternshipTouchPointRecords/' + inId,
-                dataSrc: ''
-            },
+            data: inData,
             order: [[1, 'asc']],
             columns: [
                 {
@@ -362,7 +130,7 @@
                     data: "TouchPointId",
                     "sWidth": "10%",
                     "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary" value="' + o + '"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button onclick="deleteTouchPointRecord()" class="btn btn-sm btn-danger" id="deletebtn" value="' + o + '"><i class="fa fa-trash"></i></button>' }
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary" onclick="findtouchPointModal(' + o + ')"><i class="fa fa-search"></i></button>' }
                 }
             ],
             language: {
@@ -371,5 +139,19 @@
         });//End of DataTable
     }// End of loadDataTable Function
 
+    function findtouchPointModal(inId) {
+        console.dir(inId);
+        foundTouchPointRecord.then(function (data) {
+            for (i = 0; i < data.length; i++) {
+                if (data[i].TouchPointId == inId) {
+                    data[i].Comments == null ? "" : $('#CommentTouchPoint').val(data[i].Comments);
+
+                }
+
+            }
+        });
+        $('#commentModal').modal('show');
+
+    }
 
 </script>

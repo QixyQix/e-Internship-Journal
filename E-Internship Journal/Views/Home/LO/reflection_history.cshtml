@@ -93,16 +93,16 @@
             </div>
         </div>
     </div>
-        <div class="card-body">
-             <div class="form-group">
-                    <div class="col-12">
-                        <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Student_Journal'">
-                            Back
-                        </button>
-                    </div>
-                </div>
+    <div class="card-body">
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Student_Journal'">
+                    Back
+                </button>
+            </div>
         </div>
     </div>
+</div>
 <script>
     var monthRecords;
     var cookies = document.cookie.split("; ");
@@ -114,7 +114,7 @@
         //console.dir(getCookie(name));
         var cookievalue = getCookie(name);
 
-        if (name != "selectedStudent") {
+     if (name != "selectedStudent" && name != "InternshipRecordId") {
             $studentInputElement = $('#selectstudent');
             $optionElement = $('<option>').text(name).attr('value', cookievalue);
             $studentInputElement.append($optionElement);
@@ -136,7 +136,7 @@
         setCookie();
         g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
         monthRecords = getReflectionHistory(g_getLocalStorage);
-        
+
     });
     function getCookie(name) {
         var dc = document.cookie;
@@ -173,26 +173,11 @@
             contentType: "application/json; charset=utf-8",
             cache: false,
             success: function (data) {
-                var g_Month = [];
-                var g_MonthRecordId = [];
-                $("#selectWeek option").remove();
+                $('#selectWeek').find('option').remove();
                 for (i = 0; i < data.length; i++) {
-                    if (g_Month.includes((i + 1) * 4)) {
-
-                    } else {
-                        g_Month.push((i + 1) * 4);
-                        g_MonthRecordId.push(data[i].MonthId);
-                    }
-                }
-
-                for (k = 0; k < g_Month.length; k++) {
-                    var tempWeek = g_Month[k];
-
-                    var tempWeekText = "Week " + (tempWeek - 3) + " to Week " + tempWeek;
-                    $weekInputElement = $('#selectWeek');
-                    $weekOptionElement = $('<option>').text(tempWeekText).attr('value', g_MonthRecordId[k]);
-                    $weekInputElement.append($weekOptionElement);
-
+                    var selectMonthRecord
+                    var newOption = $('<option>').text('Week ' + (((i + 1) * 4) - 3) + ' to Week ' + (i + 1) * 4).val(i);
+                    $('#selectWeek').append(newOption);
                 }
                 selectedReflection();
             },//End of success
@@ -209,12 +194,12 @@
     function selectedReflection() {
         monthRecords.then(function (data) {
             var selectedWeek;
-            for (o = 0; o < data.length; o++) {
-                if (data[o].MonthId == $('#selectWeek').val())
-                    selectedWeek = data[o];
+            //for (o = 0; o < data.length; o++) {
+               // if (data[o] == $('#selectWeek').val())
+                selectedWeek = data[$('#selectWeek').val()];
 
-            }
-           // var selectedWeek = 
+            //}
+           // var selectedWeek =
            // console.dir($('#selectWeek').val());
             //var selectedWeek = data[$('#selectWeek').val()];
             console.dir(selectedWeek.SoftSkillsCompetencyDoneWell);
@@ -225,7 +210,7 @@
             $('#hardskill2').val(selectedWeek.TechnicalCompetencyDoneWell);
             $('#hardskill3').val(selectedWeek.TechnicalCompetencyImprove);
            // $('#feedback').val(selectedWeek.TechnicalCompetencyImprove);
-           
+
             //var newOption = $('<option>').text(parseInt($('#sessionNumber').val()) + 1).val(parseInt($('#sessionNumber').val()) + 1);
             //$('#MentorSessionNumber').append(newOption);
             //selectedSession.MentorSessionDateTimeStart == null ? $('#MentorSessionDate').val("") : $('#MentorSessionDate').val(moment(new Date(selectedSession.MentorSessionDateTimeStart)).format('DD/MM/YYYY'));

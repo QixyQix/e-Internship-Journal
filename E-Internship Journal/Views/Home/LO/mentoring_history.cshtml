@@ -128,7 +128,7 @@
             //console.dir(getCookie(name));
             var cookievalue = getCookie(name);
 
-            if (name != "selectedStudent") {
+            if (name != "selectedStudent" && name != "InternshipRecordId") {
                 $studentInputElement = $('#selectstudent');
                 $optionElement = $('<option>').text(name).attr('value', cookievalue);
                 $studentInputElement.append($optionElement);
@@ -195,6 +195,7 @@
             contentType: "application/json; charset=utf-8",
             cache: false,
             success: function (data) {
+                $('#sessionNumber').empty();
                 for (i = 0; i < data.length; i++) {
                     var selectMonthRecord
                     var newOption = $('<option>').text((i + 1)).val(i);

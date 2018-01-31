@@ -98,9 +98,9 @@ namespace E_Internship_Journal.API
         }
 
         // GET: api/Day_Record
-        [Authorize(Roles = "LO")]
+        [Authorize(Roles = "LO,STUDENT")]
         [HttpGet("getStudentDayRecords/{id}")]
-        public IActionResult LO_GetDay_Records(int id)
+        public IActionResult GetStudentDayRecords(int id)
         {
             List<object> Day_Records_List = new List<object>();
             var dayRecords = _context.Day_Records.Include(tr => tr.Month)
