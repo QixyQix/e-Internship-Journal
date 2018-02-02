@@ -726,6 +726,7 @@
                     var newOption = $('<option>').text('Week ' + (((i + 1) * 4) - 3) + ' to Week ' + (i + 1) * 4).val(i);
                     $('#selectWeek').append(newOption);
                 }
+               
                 selectedWeek();
             },//End of success
             error: function (data) {
@@ -865,8 +866,55 @@
             $('#OverallGrade').val("Not Graded Yet");
         }
         $('#OverallFeedback').val(inFinalData.OverallFeedback);
-    }//End of functon LoadDataTable
 
+
+        $('#tablecompetency').empty();
+        var competencyTable = $('#tablecompetency');
+        for (i = 0; i < inFinalData.ListOfCompetency.length; i++) {
+            
+            var dataForCompetencyList = inFinalData.ListOfCompetency[i].CompetencyList.sort(function (a, b) { return (a.ViewBy > b.ViewBy) ? 1 : ((b.ViewBy > a.ViewBy) ? -1 : 0); });
+            $threadElement = $('<thead></thead>');
+            $rowElement = $('<tr></tr>');
+            $cellElement = $('<th></th>', { text: inFinalData.ListOfCompetency[i].ViewBy + ". " + inFinalData.ListOfCompetency[i].TitleCompetency }).attr('title', inFinalData.ListOfCompetency[i].TitleCompetency).attr('colspan', '2');
+            $rowElement.append($cellElement);
+
+            $threadElement.append($rowElement);
+            competencyTable.append($threadElement);
+
+            $tbodyElement = $('<tbody></tbody>')
+            for (k = 0; k < dataForCompetencyList.length; k++) {
+
+                $rowElement = $('<tr></tr>');
+                $cellElement = $('<td></td>');
+                //$cellElement = $('<td></td>', { text: data[i].CompetencyList[k].Description });
+                $cellElement.html(dataForCompetencyList[k].Description);
+                $rowElement.append($cellElement);
+
+                $cellElement = $('<td style="text-align:center; vertical-align:center;"><input name="CompetencyCheck" type="checkbox"  disabled value="' + dataForCompetencyList[k].CompetencyId + '"></td>');
+                $rowElement.append($cellElement);
+
+                $tbodyElement.append($rowElement);
+                //   $threadElement.append($tbodyElement);
+                competencyTable.append($tbodyElement);
+            }
+        }//End of List competency For Loop
+   
+        $("input[name='CompetencyCheck']").each(function () {
+            if (inFinalData.CompetencyCheckeds.length > 0) {
+                for (i = 0; i < inFinalData.CompetencyCheckeds.length; i++) {
+                    var ccid = inFinalData.CompetencyCheckeds[i].CompetencyId;
+                    if ($(this).val() == ccid) {
+                        $(this).prop('checked', true);
+                    } else {
+                        $(this).prop('checked', false);
+                    }
+                }
+            } else {
+                $(this).prop('checked', false);
+            }
+        });
+    }//End of functon LoadDataTable
+  
     function getGrade(average) {
         console.dir(average);
         if (average >= 4.5)

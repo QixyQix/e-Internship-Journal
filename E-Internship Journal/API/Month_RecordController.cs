@@ -346,6 +346,12 @@ namespace E_Internship_Journal.API
                 .ThenInclude(mr => mr.DayRecords)
                 .Include(ir => ir.MonthRecords)
                 .ThenInclude(mr => mr.TaskRecords)
+                .Include(ir => ir.UserBatch)
+                .ThenInclude(ub => ub.Batch)
+                .ThenInclude(batch => batch.Course)
+                .ThenInclude(course => course.CompetencyTitle)
+
+
                 .SingleOrDefault();
 
             if (internshipRecord == null)
@@ -396,7 +402,29 @@ namespace E_Internship_Journal.API
                         dayRecord.SupervisorRemarks
                     });
                 }
+                List<object> competencyObjList = new List<object>();
+                var foundCompetency = _context.CompetencyTitles.Include(c => c.Competencies).Where(ct => ct.CourseId == internshipRecord.UserBatch.Batch.Course.CourseId).ToList();
+                foreach (var oneCompetency in foundCompetency)
+                {
 
+                    competencyObjList.Add(new
+                    {
+                        oneCompetency.CompetencyTitleId,
+                        oneCompetency.TitleCompetency,
+                        oneCompetency.ViewBy,
+                        CompetencyList = oneCompetency.Competencies.Select(desc => new
+                        {
+                            desc.CompetencyId,
+                            desc.Description,
+                            desc.CreatedBy,
+                            desc.DeletedAt,
+
+                            desc.ModifiedAt,
+                            desc.ModifiedBy,
+                            desc.ViewBy
+                        }).Where(d => d.DeletedAt == null)
+                    });
+                }
                 monthRecordObjList.Add(new
                 {
                     monthRecord.MonthId,
@@ -417,8 +445,9 @@ namespace E_Internship_Journal.API
                     monthRecord.OverallFeedback,
                     CompetencyCheckeds = checkedCompetencyObjList,
                     TaskRecords = taskRecordObjs,
-                    AttendanceRecords = Day_Records_List
-                });
+                    AttendanceRecords = Day_Records_List,
+                    ListOfCompetency = competencyObjList
+                    });
             }
 
             return new OkObjectResult(monthRecordObjList);
