@@ -392,7 +392,8 @@ namespace E_Internship_Journal.API
                         dayRecord.DepartureTime,
                         dayRecord.WeekNo,
                         dayRecord.Remarks,
-                        dayRecord.MonthRecordId
+                        dayRecord.MonthRecordId,
+                        dayRecord.SupervisorRemarks
                     });
                 }
 

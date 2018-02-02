@@ -9,15 +9,16 @@ namespace E_Internship_Journal.Models
     {
         public int InternshipRecordId { get; set; }
         public Boolean? Approved { get; set; }
+        public Boolean? SLOApproved { get; set; }
         public int? PosterGrading { get; set; }
         public int? PresentationGrading { get; set; }
         public int? JournalGrading { get; set; }
         public int? OverallPerformance { get; set; }
 
-        public int? OverallGrading { get; set; }
-        public int? FinalGrading { get; set; }
+        public decimal? OverallGrading { get; set; }
+        public decimal? FinalGrading { get; set; }
 
-        public int? SLOOverallGrading { get; set; }
+        public decimal? SLOOverallGrading { get; set; }
 
         public string Comment { get; set; }
         public string PosterUrl { get; set; }

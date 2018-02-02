@@ -620,7 +620,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="attendanceModalLabel">11 October 2017</h5>
+                <h5 class="modal-title" id="attendanceModalLabel"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -665,17 +665,10 @@
         g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
         monthRecords = getMonthlyReview(g_getLocalStorage);
 
-
-
-        $('#dataTable_attendance tbody').on('click', 'button.btn-primary', function (e) {
-            $('#commentModal').modal('show');
-        });
-        //end of attendance script
-
     
-        $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
-            $('#commentModal').modal('show');
-        });
+        //$('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
+        //    $('#commentModal').modal('show');
+        //});
 
         //$('#addattendance').on('click', function (e) {
         //    $('#attendanceModal').modal('show');
@@ -727,26 +720,11 @@
             contentType: "application/json; charset=utf-8",
             cache: false,
             success: function (data) {
-                var g_Month = [];
-                var g_MonthRecordId = [];
-                $("#selectWeek option").remove();
+                $('#selectWeek').find('option').remove();
                 for (i = 0; i < data.length; i++) {
-                    if (g_Month.includes((i + 1) * 4)) {
-
-                    } else {
-                        g_Month.push((i + 1) * 4);
-                        g_MonthRecordId.push(data[i].MonthId);
-                    }
-                }
-
-                for (k = 0; k < g_Month.length; k++) {
-                    var tempWeek = g_Month[k];
-
-                    var tempWeekText = "Week " + (tempWeek - 3) + " to Week " + tempWeek;
-                    $weekInputElement = $('#selectWeek');
-                    $weekOptionElement = $('<option>').text(tempWeekText).attr('value', g_MonthRecordId[k]);
-                    $weekInputElement.append($weekOptionElement);
-
+                    var selectMonthRecord
+                    var newOption = $('<option>').text('Week ' + (((i + 1) * 4) - 3) + ' to Week ' + (i + 1) * 4).val(i);
+                    $('#selectWeek').append(newOption);
                 }
                 selectedWeek();
             },//End of success
@@ -762,16 +740,13 @@
     }//end of getReflectionHistory function
     function selectedWeek() {
         monthRecords.then(function (data) {
-            var finalData = [];
-            var selectedWeek = $('#selectWeek').val().split(',').map(Number);
-            for (i = 0; i < data.length; i++) {
-                if (selectedWeek.includes(data[i].MonthId)) {
-                    finalData.push(data[i]);
+            var selectedWeek = $('#selectWeek').val();
+            $('#dataTable').dataTable().fnClearTable();
+            loadDataTable(data[selectedWeek]);
 
-                }
-            }//End of for loop
-            loadDataTable(finalData);
+
         })
+       
     }
     function loadDataTable(inFinalData) {
         //var tt = inFinalData[0].AttendanceRecords;
@@ -779,7 +754,7 @@
             dom: "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
             destroy: true,
-            data: inFinalData[0].AttendanceRecords,
+            data: inFinalData.AttendanceRecords,
             columns: [
                 {
                     data: "Date",
@@ -799,7 +774,8 @@
                     //data: "TaskRecordId",
                     "bSortable": false,
                     "mRender": function (data, type, row) {
-                        return '<button class="btn btn-sm btn-primary" value="' + row.TaskRecordId + '">View</button>'
+                        var button = row.SupervisorRemarks == "" ? '<button class="btn btn-sm btn-danger" disabled>No Remarks</button>' : '<button class="btn btn-sm btn-primary" value="' + row.DayId + '">View</button>'
+                        return button;
                     } //note under condition if no remarks was given the column would be blank
                 }
             ],
@@ -813,7 +789,7 @@
             dom: "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
             destroy: true,
-            data: inFinalData[0].TaskRecords,
+            data: inFinalData.TaskRecords,
             columns: [
                 {
                     data: "Date",
@@ -824,7 +800,8 @@
                     //data: "TaskRecordId",
                     "bSortable": false,
                     "mRender": function (data, type, row) {
-                        return '<button class="btn btn-sm btn-primary" value="' + row.TaskRecordId + '">View</button>'
+                        var button = row.TaskRemarks == "" ? '<button class="btn btn-sm btn-danger" disabled>No Remarks</button>' : '<button class="btn btn-sm btn-primary" value="' + row.TaskRecordId + '">View</button>'
+                        return button;
                     } //note under condition if no remarks was given the column would be blank
                 }
             ],
@@ -833,26 +810,61 @@
             }
         });//End of DataTable
 
-        $('#softskill1').val(inFinalData[0].SoftSkillsCompetencyDoneWell);
-        $('#softskill2').val(inFinalData[0].SoftSkillsCompetencyImprove);
-        $('#hardskill1').val(inFinalData[0].TechnicalCompetencyApplied);
-        $('#hardskill2').val(inFinalData[0].TechnicalCompetencyDoneWell);
-        $('#hardskill3').val(inFinalData[0].TechnicalCompetencyImprove);
+        $('#dataTable_task tbody').off('click');
+        $('#dataTable_attendance tbody').off('click');
+        $('#dataTable_task tbody').on('click', 'button.btn-primary', function (e) {
+            var selected = $(this).val();
+            monthRecords.then(function (data) {
+                var task = data[$('#selectWeek').val()];
+                for (i = 0; i < task.TaskRecords.length; i++) {
+                    if (task.TaskRecords[i].TaskRecordId == selected) {
+                        $('#attendanceModalLabel').text(moment(task.TaskRecords[i].Date).format("DD MMMM YYYY"));
+                        $('#reviewtask').val(task.TaskRecords[i].TaskRemarks);
+
+                    }
+
+                }
+                $('#commentModal').modal('show');
+            });
+        });
+    //End of Task script
+
+        $('#dataTable_attendance tbody').on('click', 'button.btn-primary', function (e) {
+            var selected = $(this).val();
+            monthRecords.then(function (data) {
+                var task = data[$('#selectWeek').val()];
+                for (i = 0; i < task.AttendanceRecords.length; i++) {
+                    if (task.AttendanceRecords[i].DayId == selected) {
+                        $('#attendanceModalLabel').text(moment(task.AttendanceRecords[i].Date).format("DD MMMM YYYY"));
+                        $('#reviewtask').val(task.AttendanceRecords[i].SupervisorRemarks);
+
+                    }
+
+                }
+                $('#commentModal').modal('show');
+            });
+        });
+        //end of attendance script
+        $('#softskill1').val(inFinalData.SoftSkillsCompetencyDoneWell);
+        $('#softskill2').val(inFinalData.SoftSkillsCompetencyImprove);
+        $('#hardskill1').val(inFinalData.TechnicalCompetencyApplied);
+        $('#hardskill2').val(inFinalData.TechnicalCompetencyDoneWell);
+        $('#hardskill3').val(inFinalData.TechnicalCompetencyImprove);
         $("#MentorSessionNumber option").remove();
         var newOption = $('<option>').text(parseInt($('#selectWeek option:selected').index()) + 1).val(parseInt($('#selectWeek option:selected').index()) + 1);
         $('#MentorSessionNumber').append(newOption);
 
-        inFinalData[0].MentorSessionDateTimeStart == null ? $('#MentorSessionDate').val("") : $('#MentorSessionDate').val(moment(new Date(inFinalData[0].MentorSessionDateTimeStart)).format('DD/MM/YYYY'));
-        inFinalData[0].MentorSessionDateTimeStart == null ? $('#MentorSessionDateTimeStart').val("") : $('#MentorSessionDateTimeStart').val(moment(new Date(inFinalData[0].MentorSessionDateTimeStart)).format('hh:mm A'));
-        inFinalData[0].MentorSessionDateTimeEnd == null ? $('#MentorSessionDateTimeEnd').val("") : $('#MentorSessionDateTimeEnd').val(moment(new Date(inFinalData[0].MentorSessionDateTimeEnd)).format('hh:mm A'));
-        $('#MentorSessionReflection').val(inFinalData[0].MentorSessionReflection);
-        $('#CommunicationGrading').val(inFinalData[0].CommunicationGrading);        $('#TechnicalGrading').val(inFinalData[0].TechnicalGrading);        $('#IndependenceGrading').val(inFinalData[0].IndependenceGrading);        $('#PerformanceGrading').val(inFinalData[0].PerformanceGrading);        $('#OverallGrading').val(inFinalData[0].OverallGrading);
-        if (inFinalData[0].Approved) {
-            $('#OverallGrade').val(getGrade(inFinalData[0].OverallGrading));
+        inFinalData.MentorSessionDateTimeStart == null ? $('#MentorSessionDate').val("") : $('#MentorSessionDate').val(moment(new Date(inFinalData.MentorSessionDateTimeStart)).format('DD/MM/YYYY'));
+        inFinalData.MentorSessionDateTimeStart == null ? $('#MentorSessionDateTimeStart').val("") : $('#MentorSessionDateTimeStart').val(moment(new Date(inFinalData.MentorSessionDateTimeStart)).format('hh:mm A'));
+        inFinalData.MentorSessionDateTimeEnd == null ? $('#MentorSessionDateTimeEnd').val("") : $('#MentorSessionDateTimeEnd').val(moment(new Date(inFinalData.MentorSessionDateTimeEnd)).format('hh:mm A'));
+        $('#MentorSessionReflection').val(inFinalData.MentorSessionReflection);
+        $('#CommunicationGrading').val(inFinalData.CommunicationGrading);        $('#TechnicalGrading').val(inFinalData.TechnicalGrading);        $('#IndependenceGrading').val(inFinalData.IndependenceGrading);        $('#PerformanceGrading').val(inFinalData.PerformanceGrading);        $('#OverallGrading').val(inFinalData.OverallGrading);
+        if (inFinalData.Approved) {
+            $('#OverallGrade').val(getGrade(inFinalData.OverallGrading));
         } else {
             $('#OverallGrade').val("Not Graded Yet");
         }
-        $('#OverallFeedback').val(inFinalData[0].OverallFeedback);
+        $('#OverallFeedback').val(inFinalData.OverallFeedback);
     }//End of functon LoadDataTable
 
     function getGrade(average) {
