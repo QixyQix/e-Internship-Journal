@@ -51,14 +51,14 @@
                 newcell = $('<td></td>').text(student.StudentName);
                 newrow.append(newcell);
                 newcell = $('<td></td>');
-                newcell.append($('<a onclick="redirectStudentInfo(' + student.InternshipRecordId + ')"><i class="fa fa-info"></i> </a>'));
+                newcell.append($('<a onclick="redirectStudentInfo(' + student.InternshipRecordId + ')"><button class="btn btn-success btn-labeled role="button"> <span class="btn-label"><i class="fa fa-info-circle"></i></span>Info</button>'));
                 newrow.append(newcell);
                 newcell = $('<td></td>');
-                newcell.append($('<a onclick="redirectStudentJournal(' + student.InternshipRecordId + ')"><i class="fa fa-file"></i> </a>'));
+                newcell.append($('<a onclick="redirectStudentJournal(' + student.InternshipRecordId + ')"><button class="btn btn-primary btn-labeled role="button"> <span class="btn-label"><i class="fa fa-folder"></i></span>Student Journal</button>'));
                 newrow.append(newcell);
                 newcell = $('<td></td>');
                 if (student.Review) {
-                    newcell.append($('<a onclick="redirectReviewStudent(' + student.InternshipRecordId + ')"><i class="fa fa-exclamation-circle"></i> </a>'));
+                    newcell.append($('<a onclick="redirectReviewStudent(' + student.InternshipRecordId + ')"><button class="btn btn-primary btn-labeled role="button"> <span class="btn-label"><i class="fa fa-spinner"></i></span>Review</button>'));
                 }
                 newrow.append(newcell);
                 $('#studenttable').append(newrow);
