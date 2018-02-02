@@ -79,13 +79,13 @@
                             <th>Leave of Absence</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
+                    <tbody id="attendanceHistoryTBody">
+                        @*<tr>
                             <td>1</td>
                             <td>0</td>
                             <td>0</td>
                             <td>0</td>
-                        </tr>
+                        </tr>*@
                     </tbody>
                 </table>
             </div>
@@ -206,11 +206,47 @@
             cache: false,
             success: function (data) {
                 $('#selectWeek').find('option').remove();
+                var MC = 0;
+                var ph = 0;
+                var off = 0;
+                var leave = 0;
                 for (i = 0; i < data.length; i++) {
                     var selectMonthRecord
                     var newOption = $('<option>').text('Week ' + (((i + 1)*4)-3) + ' to Week ' + (i+1)*4).val(i);
                     $('#selectWeek').append(newOption);
+                    for (k = 0; k < data[i].DayRecords.length; k++) {
+                      // console.dir(data[i].DayRecords[k].Remarks);
+                        if (data[i].DayRecords[k].Remarks == "MC") {
+                            MC++;
+
+                        }
+                        if (data[i].DayRecords[k].Remarks == "MC") {
+                            MC++;
+
+                        }
+                        if (data[i].DayRecords[k].Remarks == "COMPANY OFF") {
+                            off++;
+
+                        }
+                        if (data[i].DayRecords[k].Remarks == "LOA") {
+                            leave++;
+
+                        }
+
+                    }
                 }
+                $dataTable2 = $('#attendanceHistoryTBody');
+                $rowElement = $('<tr></tr>');
+                $cellElement = $('<td></td>', { text: ph });
+                $rowElement.append($cellElement);
+                $cellElement = $('<td></td>', { text: MC });
+                $rowElement.append($cellElement);
+                $cellElement = $('<td></td>', { text: off });
+                $rowElement.append($cellElement);
+                $cellElement = $('<td></td>', { text: leave });
+                $rowElement.append($cellElement);
+                $dataTable2.append($rowElement);
+
             }//End of success
         });//End of Ajax
     }//End of function LoadAttendanceData

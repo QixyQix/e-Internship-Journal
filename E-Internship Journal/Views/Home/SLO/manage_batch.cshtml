@@ -101,7 +101,7 @@
                 {
                     data: null,
                     "bSortable": false,
-                    "mRender": function (o) { return '<a href="/home/manage_grade" style="color:black;"><i class="fa fa-fw fa-graduation-cap"></i></a>' }
+                    "mRender": function (data, type, dataToSet) { return '<a href="/home/manage_grade" style="color:black;" value="' + dataToSet.BatchId + '" onClick="manageBatch(\'' + dataToSet.BatchName + '\' , \'' + dataToSet.BatchId + '\')"><i class="fa fa-fw fa-graduation-cap"></i></a>' }
                 }
             ],
             language: {

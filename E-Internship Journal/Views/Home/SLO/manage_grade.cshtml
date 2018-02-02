@@ -13,10 +13,10 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="pull-left">
-                    <label>Batch Name:&nbsp</label><select class="form-control" id="selectstudent">
-                        <option>AY16/17 S1-DIT</option>
-                        <option>AY16/17 S2-EEE</option>
-                        <option>AY15/16 S1-DBIT</option>
+                    <label>Batch Name:&nbsp</label><select class="form-control" id="selectBatch">
+                        @*<option>AY16/17 S1-DIT</option>
+                            <option>AY16/17 S2-EEE</option>
+                            <option>AY15/16 S1-DBIT</option>*@
                     </select>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                             <th>Student ID</th>
                             <th>Student Name</th>
                             <th>Supervisor's Grading (%)</th>
-                            <th>LO's Grading (%)</th>
+                            <th>LO's Grading (1-5)</th>
                             <th>Final Grading (%)</th>
                             <th>Grade</th>
                             <th width="10%">Action</th>
@@ -43,7 +43,7 @@
                             <th>Student ID</th>
                             <th>Student Name</th>
                             <th>Supervisor's Grading (%)</th>
-                            <th>LO's Grading (%)</th>
+                            <th>LO's Grading (1-5)</th>
                             <th>Final Grading (%)</th>
                             <th>Grade</th>
                             <th></th>
@@ -98,66 +98,71 @@
 </div>
 
 <script>
-    function hideFilter1() {
-        $("#grade_dataTable thead input").val("");
-        $("#grade_dataTable thead input").change();
-        $('#grade_dataTable thead tr#filterrow').toggle();
-    }
 
-    function popCSV() {
-        $('#uploadcsvModal').modal('show');
-    }
-    function popbulkdel() {
-        swal({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then(function (result) {
-            if (result.value) {
-                swal(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
-            }
-        }).catch(swal.noop);
-    }
-
-    function stopPropagation(evt) {
-        if (evt.stopPropagation !== undefined) {
-            evt.stopPropagation();
-        } else {
-            evt.cancelBubble = true;
-        }
-    }
     $(document).ready(function () {
+        for (i = 0; i < sessionStorage.length; i++) {
+            if (sessionStorage.key(i) != 'selected' && sessionStorage.key(i) != 'editStudent') {
+                $batchInputElement = $('#selectBatch');
+                $optionElement = $('<option>').text(sessionStorage.key(i)).attr('value', sessionStorage.getItem(sessionStorage.key(i)));
+                $batchInputElement.append($optionElement);
+            }
+
+        }
+        var selectedBatch = sessionStorage.getItem('selected');
+        $('#selectBatch').val(selectedBatch);
+
+        $.ajax({
+            url: '/api/Internship_Record/SLo_GetBatchGrading/' + selectedBatch,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                loadDataTable(data);
+            }//End of success
+        });//End of Ajax
+
+
+
+    });//End of document ready
+    function loadDataTable(inData) {
         // Array holding selected row IDs
         var rows_selected = [];
+      //  var finalSupervisorGrade = 0;
         var table = $('#grade_dataTable').DataTable({
             bSortable: false,
-            //'fnDrawCallback': function (oSettings) {
-            //    $('.dataTables_filter').(function () {
-            //        $(this).append('<button class="btn btn-default mr-xs pull-right" type="button">Button');
-            //    });
-            //},
             dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-            //buttons: [
-            //    'excelHtml5',
-            //],
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
-            },
+            data: inData,
             columns: [
-                { data: "DayRecordId" },
-                { data: "DayRecordId" },
-                { data: "DayRecordId" },
-                { data: "Description" },
+                { data: "StudentId" },
+                { data: "FullName" },
+                {
+                    data: "supervisorGrade",
+                    "mRender": function (o) {
+                        var finalSupervisorGrade = 0;
+                        if (o != undefined) {
+                            for (i = 0; i < o.length; i++) {
+                                //  o[]
+                                var eachSupervisor = o[i];
+                                if (eachSupervisor.Approved == true) {
+                                    var CommunicationGrading = parseFloat(eachSupervisor.CommunicationGrading);
+                                    var IndependenceGrading = parseFloat(eachSupervisor.IndependenceGrading);
+                                    var PerformanceGrading = parseFloat(eachSupervisor.PerformanceGrading);
+                                    var TechnicalGrading = parseFloat(eachSupervisor.TechnicalGrading);
+
+                                    var average = (CommunicationGrading + IndependenceGrading + PerformanceGrading + TechnicalGrading) / 4;
+                                    finalSupervisorGrade = finalSupervisorGrade + average;
+                                }
+                                //console.dir(finalSupervisorGrade);
+                            }
+
+                        }
+                        
+                        return finalSupervisorGrade
+                    }
+
+                },
+                { data: "OverallGrading" },
                 { data: "Description" },
                 { data: "Description" },
                 {
@@ -176,7 +181,8 @@
                 hideFilter1();
             }
         });
-
+        $('#grade_dataTable').off('click');
+        $('#grade_dataTable tbody').off('click');
         //handle custom search
         // Setup - add a text input to each footer cell
         $('#grade_dataTable thead tr#filterrow th').each(function () {
@@ -188,7 +194,7 @@
         // Apply the filter
         $("#grade_dataTable thead input").on('keyup change', function () {
             if ($(this).attr('type') == "text") {
-                table
+                $('#grade_dataTable').DataTable()
                     .column($(this).parent().index() + ':visible')
                     .search(this.value)
                     .draw();
@@ -233,5 +239,45 @@
                 }
             }).catch(swal.noop);
         });
-    });
+
+    }
+  
+
+
+    function hideFilter1() {
+        $("#grade_dataTable thead input").val("");
+        $("#grade_dataTable thead input").change();
+        $('#grade_dataTable thead tr#filterrow').toggle();
+    }
+
+    function popCSV() {
+        $('#uploadcsvModal').modal('show');
+    }
+    function popbulkdel() {
+        swal({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(function (result) {
+            if (result.value) {
+                swal(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                )
+            }
+        }).catch(swal.noop);
+    }
+
+    function stopPropagation(evt) {
+        if (evt.stopPropagation !== undefined) {
+            evt.stopPropagation();
+        } else {
+            evt.cancelBubble = true;
+        }
+    }
 </script>

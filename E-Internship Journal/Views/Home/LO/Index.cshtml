@@ -139,7 +139,7 @@
                 {
                     data: null,
                     "bSortable": false,
-                    "mRender": function (o) { return '<a href="/home/final_grading" style="color:black;"><i class="fa fa-fw fa-graduation-cap"></i></a>' }
+                    "mRender": function (data, type, dataToSet) { return '<a href="/home/final_grading" style="color:black;" onClick="studentJournal(\'' + dataToSet.StudentName + '\' , \'' + dataToSet.StudentId + '\')"><i class="fa fa-fw fa-graduation-cap"></i></a>' }
                 }
             ],
             language: {

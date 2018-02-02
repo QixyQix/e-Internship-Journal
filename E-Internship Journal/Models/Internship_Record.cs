@@ -8,8 +8,17 @@ namespace E_Internship_Journal.Models
     public class Internship_Record
     {
         public int InternshipRecordId { get; set; }
+        public Boolean? Approved { get; set; }
+        public int? PosterGrading { get; set; }
         public int? PresentationGrading { get; set; }
-        public int? ReflectionGrading { get; set; }
+        public int? JournalGrading { get; set; }
+        public int? OverallPerformance { get; set; }
+
+        public int? OverallGrading { get; set; }
+        public int? FinalGrading { get; set; }
+
+        public int? SLOOverallGrading { get; set; }
+
         public string Comment { get; set; }
         public string PosterUrl { get; set; }
 
@@ -35,7 +44,7 @@ namespace E_Internship_Journal.Models
         public string FeedbackCareer { get; set; }
 
         public ApplicationUser LiaisonOfficer { get; set; }
-       public string LiaisonOfficerId { get; set; }
+        public string LiaisonOfficerId { get; set; }
 
         public UserBatch UserBatch { get; set; }
         public int UserBatchId { get; set; }

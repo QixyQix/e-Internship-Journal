@@ -326,6 +326,8 @@
         });//End of DataTable
 
 
+        $('#project_dataTable').off('click');
+        $('#project_dataTable tbody').off('click');
         // Handle click on checkbox
         $('#project_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
             var $row = $(this).closest('tr');
@@ -399,7 +401,7 @@
         // Apply the filter
         $("#project_dataTable thead input").on('keyup change', function () {
             if ($(this).attr('type') == "text") {
-                table
+                $('#project_dataTable').DataTable()
                     .column($(this).parent().index() + ':visible')
                     .search(this.value)
                     .draw();

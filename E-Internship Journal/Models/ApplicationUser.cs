@@ -13,6 +13,7 @@ namespace E_Internship_Journal.Models
         public List<Project> Projects { get; set; }
         public List<Internship_Record> InternshipRecords { get; set; }
         public List<RegistrationPin> RegistrationPins { get; set; }
+        public DateTime? LastLoginDate { get; set; }
 
         public Boolean IsEnabled { get; set; }
         public string FullName { get; set; }

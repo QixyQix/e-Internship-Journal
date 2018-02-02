@@ -190,10 +190,9 @@ namespace E_Internship_Journal.API
                 //personalReord.Email = personalInput.Email;
                 personalReord.PhoneNumber = personalInput.PhoneNumber;
                 //var result = await _userManager.ChangeEmailAsync(personalReord, personalInput.Email.ToString(), code);
-                _emailSender.SendChangeEmailAsync(personalInput.Email.ToString(), "Change Email", 
-                    "http://localhost:63071/Account/ConfirmEmail?userId=" + personalReord.Email.ToString() + "&newEmail=" + personalInput.Email + "&code=" + codeHtmlVersion);
+                _emailSender.SendChangeEmailAsync(personalInput.Email.ToString(), "Change Email",
+                    "http://localhost:63071/Account/ConfirmChangeEmail?userId=" + personalReord.Email.ToString() + "&newEmail=" + personalInput.Email + "&code=" + codeHtmlVersion);
                 _context.SaveChanges();
-
                 return new OkObjectResult(new { Message = "Personal Information Updated Successfully!" });
             }
             catch (Exception execeptionObject)
