@@ -243,7 +243,7 @@ namespace E_Internship_Journal.Controllers
             {
                 return View("Error");
             }
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByEmailAsync(userId);
             if (user == null)
             {
                 return View("Error");
@@ -251,7 +251,22 @@ namespace E_Internship_Journal.Controllers
             var result = await _userManager.ConfirmEmailAsync(user, code);
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
-
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmChangeEmail(string userId, string newEmail, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return View("Error");
+            }
+            var user = await _userManager.FindByEmailAsync(userId);
+            if (user == null)
+            {
+                return View("Error");
+            }
+            var result = await _userManager.ChangeEmailAsync(user, newEmail.ToString(), code.ToString());
+            return View(result.Succeeded ? "ConfirmEmail" : "Error");
+        }
         //
         // GET: /Account/ForgotPassword
         [HttpGet]

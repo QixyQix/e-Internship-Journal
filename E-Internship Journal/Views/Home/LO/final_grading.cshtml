@@ -16,9 +16,7 @@
         <div class="card-body">
             <div class="form-group">
                 <div class="pull-left">
-                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent">
-
-                    </select>
+                    <label>Student Name:&nbsp</label><select class="form-control" id="selectstudent"></select>
                 </div>
             </div>
         </div>
@@ -34,7 +32,13 @@
                         <tr>
                             <td width="85%"><h3>Final Grading by SLO</h3></td>
                             <td>
-                                <input class="form-control" id="totaldays" type="text" readonly>
+                                <select class="form-control" id="sloGrading" disabled>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
                             </td>
                         </tr>
                     </tbody>
@@ -50,31 +54,67 @@
                         <tr>
                             <td width="85%"><h3>Supervisor's Grade</h3></td>
                             <td>
-                                <input class="form-control" id="supervisorgrade" type="text">
+                                <select class="form-control" id="supervisorGrading" disabled>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                                @*<input class="form-control" id="supervisorgrade" type="text">*@
                             </td>
                         </tr>
                         <tr>
                             <td width="85%"><h3>Poster</h3></td>
                             <td>
-                                <input class="form-control" id="postergrade" type="text">
+                                <select class="form-control" id="posterGrade">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                                @*<input class="form-control" id="postergrade" type="text">*@
                             </td>
                         </tr>
                         <tr>
                             <td width="85%"><h3>Presentation</h3></td>
                             <td>
-                                <input class="form-control" id="presentationgrade" type="text">
+                                <select class="form-control" id="presentationGrade">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                                @*<input class="form-control" id="presentationgrade" type="text">*@
                             </td>
                         </tr>
                         <tr>
                             <td width="85%"><h3>Student Journal</h3></td>
                             <td>
-                                <input class="form-control" id="studentjournalgrade" type="text">
+                                <select class="form-control" id="studentJournalGrade">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                                @* <input class="form-control" id="studentjournalgrade" type="text">*@
                             </td>
                         </tr>
                         <tr>
                             <td width="85%"><h3>Overall Performance</h3></td>
                             <td>
-                                <input class="form-control" id="overallperformancegrade" type="text">
+
+                                <select class="form-control" id="overallPerformanceGrade">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                                @*<input class="form-control" id="overallperformancegrade" type="text">*@
                             </td>
                         </tr>
                     </tbody>
@@ -83,19 +123,19 @@
                     <div class="form-group">
                         <label class="col-md-8 control-label">Average marks based on the above assessments:</label>
                         <div class="col-sm-12">
-                            <input class="form-control" id="assessment" type="text" value="" readonly>
+                            <input class="form-control" id="OverallGrading" type="text" value="" readonly>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-8 control-label">Computed Average:</label>
+                        <label class="col-md-8 control-label">Total Average:</label>
                         <div class="col-sm-12">
                             <input class="form-control" id="computedaverage" type="text" value="" readonly>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-8 control-label">Grade:</label>
+                        <label class="col-md-8 control-label">Overall Grade:</label>
                         <div class="col-sm-12">
-                            <input class="form-control" id="grade" type="text" value="" readonly>
+                            <input class="form-control" id="OverallGrade" type="text" value="" readonly>
                         </div>
                     </div>
                 </div>
@@ -110,7 +150,7 @@
                 Back
             </button>
             <div class="pull-right">
-                <button class="btn btn-primary pull-right" name="submit" id="submit">
+                <button class="btn btn-primary pull-right" name="submit" id="btnSubmit">
                     Submit
                 </button>
             </div>
@@ -139,7 +179,205 @@
 
         }
     }//End of for loop
-    
+    $('#selectstudent').change(function (e) {
+        setCookie();
+        g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+        loadStudentGrading(g_getLocalStorage);
+    });
+    $('#btnSubmit').on('click', function (e) {
+        var collectedPoster = parseFloat($('#posterGrade').val());
+        var collectedPresentation = parseFloat($('#presentationGrade').val());
+        var collectedJournal = parseFloat($('#studentJournalGrade').val());
+        var collectedPerformance = parseFloat($('#overallPerformanceGrade').val());
+        var collectedFinalGrade = parseFloat($('#computedaverage').val());
+
+        var supervisorGrade = parseFloat($('#supervisorGrading').val());
+        var average = (collectedPoster + collectedPresentation + collectedJournal + collectedPerformance) / 4;
+        var totalAverage = Math.ceil((supervisorGrade + average) / 2);
+
+        var grade = getGrade(totalAverage);
+
+        var gradingFormData = new GradingFormData(collectedPoster, collectedPresentation, collectedJournal, collectedPerformance, average, totalAverage);
+        var selectedStudent = $('#selectstudent').val();
+        swal({
+            title: 'Confirm grading?',
+            html: "You are about to submit this student grade of <strong>" + totalAverage + "(" + grade + ")</strong><br/>THIS CANNOT BE UNDONE.",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#007bff',
+            confirmButtonText: 'Submit'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: '/Api/Internship_Record/gradeStudentInternship/' + selectedStudent,
+                    method: 'PUT',
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    cache: false,
+                    data: "'" + JSON.stringify(gradingFormData) + "'",
+                    success: function (data) {
+                        swal({
+                            type: 'success',
+                            title: 'Graded!',
+                            text: 'The grade has been applied to the student!'
+                        }).then(function () {
+                            //  object.closest('tr').remove();
+                            window.location.href = "/";
+                        });
+                    },
+                    fail: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Oops!',
+                            text: data.Message
+                        });
+                    }//End of fail
+                });//End of ajax
+            } else if (result.dismiss === 'cancel') {
+                swal({
+                    type: 'warning',
+                    title: 'Canceled!',
+                    text: 'Grade not applied to the student!'
+                })
+            }
+        
+        })//End of then function
+
+    });
+    g_getLocalStorage = sessionStorage.getItem($('#selectstudent').val());
+    loadStudentGrading(g_getLocalStorage);
+    function loadStudentGrading(inId) {
+        $.ajax({
+            url: '/api/Internship_Record/Lo_GetStudentGrading/' + inId,
+            method: 'GET',
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+            success: function (data) {
+                var finalSupervisorGrade = 0;
+                for (i = 0; i < data.supervisorGrade.length; i++) {
+                    var eachSupervisor = data.supervisorGrade[i];
+                    if (eachSupervisor.Approved == true) {
+                        var CommunicationGrading = parseFloat(eachSupervisor.CommunicationGrading);
+                        var IndependenceGrading = parseFloat(eachSupervisor.IndependenceGrading);
+                        var PerformanceGrading = parseFloat(eachSupervisor.PerformanceGrading);
+                        var TechnicalGrading = parseFloat(eachSupervisor.TechnicalGrading);
+
+                        var average = (CommunicationGrading + IndependenceGrading + PerformanceGrading + TechnicalGrading) / 4;
+                        finalSupervisorGrade = finalSupervisorGrade + average;
+                    }
+
+                }
+                $('#posterGrade').prop('disabled', true);
+                $('#presentationGrade').prop('disabled', true);
+                $('#studentJournalGrade').prop('disabled', true);
+                $('#overallPerformanceGrade').prop('disabled', true);
+                if (data.Approved == false) {
+
+                    if (finalSupervisorGrade != 0) {
+                        $('#posterGrade').prop('disabled', false);
+                        $('#presentationGrade').prop('disabled', false);
+                        $('#studentJournalGrade').prop('disabled', false);
+                        $('#overallPerformanceGrade').prop('disabled', false);
+                        $('#supervisorGrading').val(Math.ceil(finalSupervisorGrade / data.supervisorGrade.length));
+                        calculateGrade();
+                    } else {
+
+                        $('#supervisorGrading').val(null);
+                        $('#presentationGrade').val(null);
+                        $('#posterGrade').val(null);
+                        $('#studentJournalGrade').val(null);
+                        $('#overallPerformanceGrade').val(null);
+
+                        $('#computedaverage').val("Not Graded yet");
+                        $('#OverallGrade').val("Not Graded yet");
+                        $('#OverallGrading').val("Not Graded yet");
+                        $('#btnSubmit').prop('disabled', true);
+                   
+                    }
+
+
+                } else {
+                  
+                    $('#posterGrade').val(data.PosterGrading);
+                    $('#presentationGrade').val(data.PresentationGrading);
+                    $('#studentJournalGrade').val(data.JournalGrading);
+                    $('#overallPerformanceGrade').val(data.OverallPerformance);
+                    $('#OverallGrading').val(data.OverallGrading);
+                    $('#btnSubmit').prop('disabled', true);
+                    $('#supervisorGrading').val(Math.ceil(finalSupervisorGrade / data.supervisorGrade.length));
+                    calculateGrade();
+                    if (data.SLOOverallGrading != null) {
+                        $('#sloGrading').val(data.SLOOverallGrading);
+                    } else {
+                        $('#sloGrading').val(null);
+
+                    }
+                }
+
+                //console.dir(finalSupervisorGrade / data.supervisorGrade.length);
+                $('#posterGrade').change(function () { calculateGrade(); });
+                $('#presentationGrade').change(function () { calculateGrade(); });
+                $('#studentJournalGrade').change(function () { calculateGrade(); });
+                $('#overallPerformanceGrade').change(function () { calculateGrade(); });
+                //  calculateSupervisorGrades(data);
+            },//End of success
+            error: function (data) {
+                swal({
+                    type: 'error',
+                    title: 'Error',
+                    text: data.Message
+                });
+            }//End of error
+        });//End of ajax call
+
+    }
+
+    function GradingFormData(posterGrade, presentationGrade, studentJournalGrade, overallPerformanceGrade, overallGrading, finalGrading) {
+        this.PosterGrade = posterGrade;
+        this.PresentationGrade = presentationGrade;
+        this.StudentJournalGrade = studentJournalGrade;
+        this.OverallPerformanceGrade = overallPerformanceGrade;
+        this.OverallGrading = overallGrading;
+        this.FinalGrading = finalGrading;
+    }
+    function calculateGrade() {
+        var a = parseFloat($('#posterGrade').val());
+        var b = parseFloat($('#presentationGrade').val());
+        var c = parseFloat($('#studentJournalGrade').val());
+        var d = parseFloat($('#overallPerformanceGrade').val());
+
+        var average = (a + b + c + d) / 4;
+        $('#OverallGrading').val(Math.ceil(average));
+
+        var supervisorGrade = parseFloat($('#supervisorGrading').val());
+        var totalAverage = (supervisorGrade + average) / 2
+        $('#computedaverage').val(Math.ceil(totalAverage));
+        // $('#OverallGrade').val(getGrade(average));
+        $('#OverallGrade').val(getGrade(Math.ceil(totalAverage)));
+    }
+
+    function getGrade(average) {
+        console.dir(average);
+        if (average >= 4.5)
+            return 'DIST';
+        else if (average >= 4.0)
+            return 'A';
+        else if (average >= 3.5)
+            return 'B+';
+        else if (average >= 3.0)
+            return 'B';
+        else if (average >= 2.5)
+            return 'C+';
+        else if (average >= 2.0)
+            return 'C';
+        else if (average >= 1.5)
+            return 'D+';
+        else if (average >= 1.0)
+            return 'D';
+        else if (average < 1.0)
+            return 'F';
+    }
     function getCookie(name) {
         var dc = document.cookie;
         var prefix = name + "=";

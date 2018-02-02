@@ -270,7 +270,8 @@
                 hideFilter1();
             }
         });
-
+        $('#company_dataTable').off('click');
+        $('#company_dataTable tbody').off('click');
         // Handle click on checkbox
         $('#company_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
             var $row = $(this).closest('tr');
@@ -343,7 +344,7 @@
         // Apply the filter
         $("#company_dataTable thead input").on('keyup change', function () {
             if ($(this).attr('type') == "text") {
-                table
+                $('#company_dataTable').DataTable()
                     .column($(this).parent().index() + ':visible')
                     .search(this.value)
                     .draw();

@@ -139,7 +139,8 @@
                 {
                     data: null,
                     "bSortable": false,
-                    "mRender": function (o) { return '<a href="/home/final_grading" style="color:black;"><button class="btn btn-primary btn-labeled role="button"> <span class="btn-label"><i class="fa fa-graduation-cap"></i></span>Final Grading</button>' }
+                    "mRender": function (data, type, dataToSet){ return '<a href="/home/final_grading" style="color:black;" onClick="studentJournal(\'' + dataToSet.StudentName + '\' , \'' + dataToSet.StudentId + '\')"><button class="btn btn-primary btn-labeled role="button"> <span class="btn-label"><i class="fa fa-graduation-cap"></i></span>Final Grading</button>' }
+                   // "mRender": function (data, type, dataToSet) { return '<a href="/home/final_grading" style="color:black;" onClick="studentJournal(\'' + dataToSet.StudentName + '\' , \'' + dataToSet.StudentId + '\')"><i class="fa fa-fw fa-graduation-cap"></i></a>' }
                 }
             ],
             language: {
