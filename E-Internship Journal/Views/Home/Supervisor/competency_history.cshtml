@@ -109,20 +109,35 @@
             method: 'GET',
             dataType: 'json',
             success: function (competencies) {
-                $('#tblCompetencies').find('tr').remove();
-                console.dir(competencies);
+                $('#tblCompetencies').empty();
+                var competencyTable = $('#tblCompetencies');
                 for (i = 0; i < competencies.length; i++) {
-                    var competency = competencies[i];
-                    var newRow = $('<tr></tr>');
-                    var newCell = $('<td>');
-                    newCell.html(competency.Description);
-                    newRow.append(newCell);
-                    var newCell = $('<td>');
-                    var newCheckboxItem = $('<input name="CompetencyCheck" type="checkbox" value="' + competency.CompetencyId + '" disabled>');
-                    newCell.append(newCheckboxItem);
-                    newRow.append(newCell);
-                    $('#tblCompetencies').append(newRow);
-                }
+                    var dataForCompetencyList = competencies[i].CompetencyList.sort(function (a, b) { return (a.ViewBy > b.ViewBy) ? 1 : ((b.ViewBy > a.ViewBy) ? -1 : 0); });
+                    $threadElement = $('<thead></thead>');
+                    $rowElement = $('<tr></tr>');
+                    $cellElement = $('<th></th>', { text: competencies[i].ViewBy + ". " + competencies[i].TitleCompetency }).attr('title', competencies[i].TitleCompetency).attr('colspan', '2');
+                    $rowElement.append($cellElement);
+
+                    $threadElement.append($rowElement);
+                    competencyTable.append($threadElement);
+
+                    $tbodyElement = $('<tbody></tbody>')
+                    for (k = 0; k < dataForCompetencyList.length; k++) {
+
+                        $rowElement = $('<tr></tr>');
+                        $cellElement = $('<td></td>');
+                        //$cellElement = $('<td></td>', { text: data[i].CompetencyList[k].Description });
+                        $cellElement.html(dataForCompetencyList[k].Description);
+                        $rowElement.append($cellElement);
+
+                        $cellElement = $('<td style="text-align:center; vertical-align:center;"><input name="CompetencyCheck" type="checkbox"  disabled value="' + dataForCompetencyList[k].CompetencyId + '"></td>');
+                        $rowElement.append($cellElement);
+
+                        $tbodyElement.append($rowElement);
+                        //   $threadElement.append($tbodyElement);
+                        competencyTable.append($tbodyElement);
+                    }
+                }//end of for loop
             }
         });
     }
