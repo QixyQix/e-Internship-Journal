@@ -18,68 +18,28 @@
         <div class="card-body">
           
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" cellspacing="0">
+                <table class="table table-bordered" id="internship_dataTable" cellspacing="0">
                     <thead>
                         <tr>
-                            <th class="SLO_Name">SLO</th>
                             <th class="Student_ID">Student ID</th>
-                            <th class="Lock_S">Lock Status</th>
+                            <th class="Student_Name">Student Name</th>
+                            <th class="Batch_Name">Batch Name</th>
+                            <th class="Course_Name">Course Name</th>
+                            <th class="Lock" width="10%">&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>Lao Kok Kok</td>
                             <td>P1585858</td>
-                            <td width="10%"><button type="button" class="btn btn-success col-xs-12"><i class="fa fa-unlock"></i>&nbsp; Unlocked</button></td>
+                            <td width="10%"><button type="button" class="btn btn-success col-xs-12"><i class="fa fa-unlock"></i>&nbsp; Unlock</button></td>
                         </tr>
                         <tr>
                             <td>Kok Lao Lao</td>
                             <td>P1855585</td>
-                            <td width="10%"><button type="button" class="btn btn-danger col-xs-12"><i class="fa fa-lock"></i>&nbsp; Locked</button></td>
+                            <td width="10%"><button type="button" class="btn btn-danger col-xs-12"><i class="fa fa-lock"></i>&nbsp; Lock</button></td>
                         </tr>
                     </tbody>
-                    @*<tbody>
-                            <tr>
-                                <td>Cho Qi Xiang</td>
-                                <td>Websparks Pte Ltd</td>
-                                <td>Spade</td>
-                                <td>Student</td>
-                                <td>
-                                    <a href="/mypath"><i class="fa fa-pencil"></i></a>
-                                    <a href="/mypath"><i class="fa fa-trash"></i></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Klein Ong</td>
-                                <td>TripleDots Technology</td>
-                                <td>Parliament</td>
-                                <td>Student</td>
-                                <td>
-                                    <a href="/mypath"><i class="fa fa-pencil"></i></a>
-                                    <a href="/mypath"<i class="fa fa-trash"></i></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Amelia Goh</td>
-                                <td>RapidCloud</td>
-                                <td>WIS</td>
-                                <td>Student</td>
-                                <td>
-                                    <a href="/mypath"><i class="fa fa-pencil"></i></a>
-                                    <a href="/mypath"<i class="fa fa-trash"></i></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>JiaWei Loo</td>
-                                <td>Aventure Pte Ltd</td>
-                                <td>CAAS</td>
-                                <td>Student</td>
-                                <td>
-                                    <a href="/mypath"><i class="fa fa-pencil"></i></a>
-                                    <a href="/mypath"<i class="fa fa-trash"></i></a>
-                                </td>
-                            </tr>
-                        </tbody>*@
                 </table>
             </div>
         </div>
@@ -97,23 +57,85 @@
 </div>
 &nbsp;
 <script>
-    $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
-            swal({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, unlocked it!'
-            }).then(function (result) {
-                if (result.value) {
-                    swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
+    var table = $('#internship_dataTable').DataTable({
+        bSortable: false,
+        //'fnDrawCallback': function (oSettings) {
+        //    $('.dataTables_filter').(function () {
+        //        $(this).append('<button class="btn btn-default mr-xs pull-right" type="button">Button');
+        //    });
+        //},
+        dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
+        "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+        ajax: {
+            url: '/Api/Internship_Record/AllInternshipRecords',
+            dataSrc: ''
+        },
+        select: {
+            style: 'os',
+            selector: 'td:first-child'
+        },
+        //order: [[1, 'asc']],
+        //'rowCallback': function (row, data, dataIndex) {
+        //    // Get row ID
+        //    var rowId = data[0];
+
+        //    // If row ID is in the list of selected row IDs
+        //    if ($.inArray(rowId, rows_selected) !== -1) {
+        //        $(row).find('input[type="checkbox"]').prop('checked', true);
+        //        $(row).addClass('selected');
+        //    }
+        //},
+        columns: [
+            { data: "StudentId" },
+            { data: "StudentName" },
+            { data:"BatchName"},
+            { data: "CourseName" },
+            {
+                mData: function (data) { 
+                    return data;
+                },
+                mRender: function (o) { 
+                    if (o.SLOApproved) {
+                        return '<button type="button" class="btn btn-success col-xs-12" value="' + o.InternshipRecordId +'"><i class="fa fa-unlock"></i>&nbsp; Unlock</button>';
+                    } else { 
+                        return '<button type="button" class="btn btn-danger col-xs-12" value="' + o.InternshipRecordId +'"><i class="fa fa-lock"></i>&nbsp; Lock</button>';
+                    }
                 }
-            }).catch(swal.noop);
+            }
+        ],
+        language: {
+            emptyTable: "No internship records was found, please create one.",
+        }
+    });
+
+    $('#internship_dataTable tbody').on('click', 'button', function (e) {
+        console.dir("clicktoggled");
+        var id = $(this).val();
+        console.dir(id);
+        var button = $(this);
+
+        $.ajax({
+            url: '/API/Internship_Record/toggleLock/' + id,
+            type: 'PUT',
+            dataType: 'json',
+            success: function (data) { 
+                console.dir(data.State);
+                if (data.State) {
+                    button.attr("class", "btn btn-success col-xs-12");
+                    button.val(id);
+                    button.html('<i class="fa fa-unlock"></i>&nbsp; Unlock');
+                } else { 
+                    button.attr("class", "btn btn-danger col-xs-12");
+                    button.val(id);
+                    button.html('<i class="fa fa-lock" ></i>&nbsp; Lock');
+                }
+            },
+            error: function () { 
+                swal({
+                    type: "error",
+                    title: "An error occured while toggling the lock of the internship record"
+                });
+            }
         });
+    });
 </script>

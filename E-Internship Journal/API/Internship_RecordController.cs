@@ -623,6 +623,56 @@ namespace E_Internship_Journal.API
             }
 
         }//End of SLOGradeStudentInternship
+
+        [HttpGet("AllInternshipRecords")]
+        [Authorize(Roles = "ADMIN")]
+        public IActionResult GetAllInternshipRecords() {
+            var internshipRecords = _context.Internship_Records.Include(ir => ir.UserBatch).ThenInclude(ub => ub.Batch).ThenInclude(b=>b.Course).Include(ir => ir.UserBatch).ThenInclude(ub => ub.User).ToList();
+
+            List<object> internshipRecordList = new List<object>();
+
+            foreach (var ir in internshipRecords) {
+                internshipRecordList.Add(new
+                {
+                    ir.InternshipRecordId,
+                    ir.Approved,
+                    ir.SLOApproved,
+                    ir.PosterGrading,
+                    ir.PresentationGrading,
+                    ir.JournalGrading,
+                    ir.OverallPerformance,
+                    ir.OverallGrading,
+                    ir.FinalGrading,
+                    ir.SLOOverallGrading,
+                    ir.Comment,
+                    ir.PosterUrl,
+                    ir.UserBatch.Batch.BatchId,
+                    ir.UserBatch.Batch.BatchName,
+                    ir.UserBatch.Batch.StartDate,
+                    ir.UserBatch.Batch.EndDate,
+                    ir.UserBatch.Batch.Course.CourseId,
+                    ir.UserBatch.Batch.Course.CourseName,
+                    ir.UserBatch.Batch.Course.CourseCode,
+                    StudentAccId = ir.UserBatch.User.Id,
+                    StudentId = ir.UserBatch.User.StudentId,
+                    StudentName = ir.UserBatch.User.FullName
+                });
+            }
+
+            return new OkObjectResult(internshipRecordList);
+        }
+
+        [HttpPut("toggleLock/{id}")]
+        public IActionResult toggleLock(int id) {
+            var internshipRecord = _context.Internship_Records.Where(ir => ir.InternshipRecordId == id).SingleOrDefault();
+
+            if (internshipRecord != null) {
+                internshipRecord.SLOApproved = !internshipRecord.SLOApproved;
+                _context.SaveChanges();
+            }
+            return new OkObjectResult(new { State = internshipRecord.SLOApproved });
+        }
+
         private bool Internship_RecordExists(int id)
         {
             return _context.Internship_Records.Any(e => e.InternshipRecordId == id);
