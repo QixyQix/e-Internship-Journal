@@ -96,12 +96,12 @@
                     data: null,
                     "bSortable": false,
                     "mRender": function (data, type, dataToSet) {
-                        return '<a href="/home/manage_student" id="manageBatch" style="color:black;" value="' + dataToSet.BatchId + '" onClick="manageBatch(\'' + dataToSet.BatchName + '\' , \'' + dataToSet.BatchId + '\')" > <i class="fa fa-fw fa-user-plus""></i></a>' }
+                        return '<a href="/home/manage_student" id="manageBatch" style="color:black;" value="' + dataToSet.BatchId + '" onClick="manageBatch(\'' + dataToSet.BatchName + '\' , \'' + dataToSet.BatchId + '\')" > <button class="btn btn-primary btn-labeled role="button"> <span class="btn-label"><i class="fa fa-fw fa-user-plus"></i></span>Manage Student</button></a>' }
                 },
                 {
                     data: null,
                     "bSortable": false,
-                    "mRender": function (data, type, dataToSet) { return '<a href="/home/manage_grade" style="color:black;" value="' + dataToSet.BatchId + '" onClick="manageBatch(\'' + dataToSet.BatchName + '\' , \'' + dataToSet.BatchId + '\')"><i class="fa fa-fw fa-graduation-cap"></i></a>' }
+                    "mRender": function (data, type, dataToSet) { return '<a href="/home/manage_grade" style="color:black;" value="' + dataToSet.BatchId + '" onClick="manageBatch(\'' + dataToSet.BatchName + '\' , \'' + dataToSet.BatchId + '\')"><button class="btn btn-primary btn-labeled role="button"> <span class="btn-label"><i class="fa fa-fw fa-graduation-cap"></i></span>Grade</button></a>' }
                 }
             ],
             language: {
