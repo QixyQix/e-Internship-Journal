@@ -226,7 +226,7 @@
                     //data: "TaskRecordId",
                     "bSortable": false,
                     "mRender": function (data, type, row) {
-                        var button = row.Remarks == "" ? '<button class="btn btn-sm btn-danger" disabled>No Remarks</button>' : '<button class="btn btn-sm btn-primary" value="' + row.TaskRecordId + '">View</button>'
+                        var button = row.SupervisorRemarks == "" ? '<button class="btn btn-sm btn-danger" disabled>No Remarks</button>' : '<button class="btn btn-sm btn-primary" value="' + row.TaskRecordId + '">View</button>'
                         return button;
                     } //note under condition if no remarks was given the column would be blank
                 }

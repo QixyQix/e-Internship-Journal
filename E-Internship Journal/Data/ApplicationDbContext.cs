@@ -405,19 +405,26 @@ namespace E_Internship_Journal.Data
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.OverallGrading)
             .HasColumnName("OverallGrading")
-            .HasColumnType("int")
+            .HasColumnType("decimal")
             .IsRequired(false);
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.FinalGrading)
             .HasColumnName("FinalGrading")
-            .HasColumnType("int")
+            .HasColumnType("decimal")
             .IsRequired(false);
 
             modelBuilder.Entity<Internship_Record>()
             .Property(Internship_Records => Internship_Records.SLOOverallGrading)
             .HasColumnName("SLOOverallGrading")
-            .HasColumnType("int")
+            .HasColumnType("decimal")
+            .IsRequired(false);
+
+            modelBuilder.Entity<Internship_Record>()
+            .Property(Internship_Records => Internship_Records.SLOApproved)
+            .HasColumnName("SLOApproved")
+            .HasColumnType("bit")
+            .HasDefaultValue(false)
             .IsRequired(false);
 
             modelBuilder.Entity<Internship_Record>()
