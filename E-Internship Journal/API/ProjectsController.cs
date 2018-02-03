@@ -113,7 +113,8 @@ namespace E_Internship_Journal.API
                         CompanyName = foundProject.Company.CompanyName,
                         Email = foundProject.Supervisor.Email,
                         foundProject.Supervisor.PhoneNumber,
-                        foundProject.Supervisor.FullName
+                        foundProject.Supervisor.FullName,
+                        foundProject.Supervisor.Id,
                     };//end of creation of the response object
                     return new JsonResult(response);
                 }
@@ -148,23 +149,53 @@ namespace E_Internship_Journal.API
                 return BadRequest(ModelState);
             }
 
-            string customMessage = "";
-            if (ProjectExists(id))
+            Project project = await _context.Projects.Where(p => p.ProjectId == id).Include(p => p.Supervisor).SingleOrDefaultAsync();
+
+            if (project != null)
             {
                 var projectNewInput = JsonConvert.DeserializeObject<dynamic>(value);
-                var foundOneProject = _context.Projects.Find(id);
 
-                foundOneProject.ProjectName = projectNewInput.ProjectName.Value;
-                foundOneProject.CompanyID = Convert.ToInt32(projectNewInput.Company.Value);
-                foundOneProject.SupervisorId = (await _userManager.FindByEmailAsync(projectNewInput.Supervisor.Value)).Id;
-                await _context.SaveChangesAsync();
+                project.ProjectName = projectNewInput.ProjectName.Value;
+                project.CompanyID = Convert.ToInt32(projectNewInput.Company.Value);
+                string email = projectNewInput.SupervisorEmail.Value.ToString().Trim();
+
+
+
+                if (project.Supervisor.Email.Equals(email, StringComparison.OrdinalIgnoreCase))
+                {
+                    //Update project
+                    project.Supervisor.FullName = projectNewInput.SupervisorName.Value.ToString().Trim();
+                    project.Supervisor.PhoneNumber = projectNewInput.SupervisorNumber.Value.ToString().Trim();
+                }
+                else
+                {
+                    var user = _userManager.Users.Any(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+
+                    if (user) {
+                        return BadRequest();
+                    }
+
+                    //Create user
+                    var userStore = new UserStore<ApplicationUser>(_context);
+                    var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
+                    var newSupervisorUser = new ApplicationUser
+                    {
+                        UserName = projectNewInput.SupervisorEmail.Value,
+                        Email = projectNewInput.SupervisorEmail.Value,
+                        FullName = projectNewInput.SupervisorName.Value,
+                        PhoneNumber = projectNewInput.SupervisorNumber.Value
+                    };
+                    PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
+                    newSupervisorUser.PasswordHash = ph.HashPassword(newSupervisorUser, generateRandomString(11));
+
+                    await userManager.CreateAsync(newSupervisorUser);
+                    await userManager.AddToRoleAsync(newSupervisorUser, "SUPERVISOR");
+                    project.Supervisor = newSupervisorUser;
+                }
+                
             }
-            else
-            {
-
-            }
-
-            return NoContent();
+            await _context.SaveChangesAsync();
+            return new OkObjectResult(new { Messages = "Updated project" , AlertType="success"});
         }
 
         // POST: api/Projects
@@ -221,7 +252,7 @@ namespace E_Internship_Journal.API
         }
 
         [HttpPut("SaveNewProjectRecord")]
-        [Authorize(Roles = "SLO")]
+        [Authorize(Roles = "SLO, ADMIN")]
         public async Task<IActionResult> SaveNewProjectRecord([FromBody] string value)
         {
             string messageList = "";
@@ -377,6 +408,7 @@ namespace E_Internship_Journal.API
                             SupervisorId = newSupervisorUser.Id
                         };
                         _context.Projects.Add(newProject);
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
@@ -425,7 +457,7 @@ namespace E_Internship_Journal.API
 
                         await _context.SaveChangesAsync();
                     }
-                 
+
 
                     messageList = "Saved Project & Created Supervisor Account";
                     alertType = "success";
@@ -456,6 +488,7 @@ namespace E_Internship_Journal.API
 
         // DELETE: api/Projects/5
         [HttpDelete("DeleteProjects/bulk")]
+        [Authorize(Roles ="SLO, ADMIN")]
         public async Task<IActionResult> DeleteProject([FromQuery]string selectedProjects)
         {
             var listOfId = selectedProjects.Split(',').Select(Int32.Parse).ToList();
@@ -497,11 +530,69 @@ namespace E_Internship_Journal.API
                 //Return a bad http response message to the client
                 return BadRequest(httpFailRequestResultMessage);
             }
-
-
         }
+
+        // DELETE: api/Projects/5
+        [HttpPut("bulkDelete")]
+        [Authorize(Roles = "SLO, ADMIN")]
+        public async Task<IActionResult> BulKDeleteProject([FromBody]string value)
+        {
+            var idList = JsonConvert.DeserializeObject<dynamic>(value);
+
+            string alertType = "success";
+            string title = "Action Completed";
+            List<String> messageList = new List<String>();
+
+            try
+            {
+                foreach (var idstr in idList) {
+                    int projId = Int32.Parse(idstr.ToString());
+
+                    var project = _context.Projects.Where(p => p.ProjectId == projId).Include(p => p.InternshipRecords).SingleOrDefault();
+
+                    if (project.InternshipRecords.Count > 0)
+                    {
+                        messageList.Add(project.ProjectName + " could not be deleted as it is attached to internship records.");
+                        alertType = "warning";
+                    }
+                    else
+                    {
+                        _context.Projects.Remove(project);
+                        
+                    }
+                }
+                if (messageList.Count < 1)
+                    messageList.Add("Deleted all projects successfully");
+                _context.SaveChanges();
+                return new OkObjectResult(new { Messages = messageList, AlertType = alertType, Title = title });
+            }
+            catch (Exception exceptionObject)
+            {
+                object httpFailRequestResultMessage = new { Message = "Unable to Process" };
+                //Return a bad http response message to the client
+                return BadRequest(httpFailRequestResultMessage);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "ADMIN, SLO")]
+        public async Task<IActionResult> DeleteAProject(int id) {
+            var project = _context.Projects.Where(p => p.ProjectId == id).Include(p => p.InternshipRecords).SingleOrDefault();
+
+            if (project.InternshipRecords.Count > 0)
+            {
+                return new OkObjectResult(new { Message = "This project could not be deleted as there are internship records attached to it", AlertType = "warning"});
+            }
+            else {
+                _context.Projects.Remove(project);
+                _context.SaveChanges();
+            }
+
+            return new OkObjectResult(new { Message = "Deleted project", AlertType = "success" });
+        }
+
         [HttpPost("MassEnrollProjects/")]
-        [Authorize(Roles = "SLO")]
+        [Authorize(Roles = "SLO, ADMIN")]
         public async Task<IActionResult> MassEnrollProjects()
         {
             List<string> messageList = new List<string>();
