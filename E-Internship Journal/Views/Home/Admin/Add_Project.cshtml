@@ -72,9 +72,8 @@
         </div>
     </section>
 </div>
-
 <!--modal-->
-<div class="modal fade" id="selectCompanyModal" tabindex="-1" role="dialog" aria-labelledby="selectCompanyModalLabel" aria-hidden="true">
+<div class="modal fade" id="selectCompanyModal" role="dialog" aria-labelledby="selectCompanyModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -84,7 +83,6 @@
                 </button>
             </div>
             <div class="modal-body">
-
                 <div class="col-12">
                     <form>
                         <div class="form-group">
@@ -94,7 +92,7 @@
                             <div class="col-12">
                                 <div class="form-inline">
                                     <label>Selected: &nbsp;</label>
-                                    <input class="form-control col-9" value="" readonly id="txtSelected">
+                                    <input class="form-control" value="" readonly id="txtSelected">
                                 </div>
                             </div>
                         </div>
@@ -109,79 +107,51 @@
     </div>
 </div>
 
-@*<script>
-        $(document).ready(function () {
-
-            var editor = new $.fn.dataTable.Editor(table);
-
-            //var t = $('#dataTable').DataTable();
-            var counter = 1;
-
-            var table = $('#dataTable').DataTable({
-                ajax: {
-                    url: '/Api/Task_Record',
-                    dataSrc: ''
-                },
-                "bPaginate": false,
-                "bLengthChange": false,
-                "bFilter": false,
-                "bSort": false,
-                "bInfo": false,
-                "bAutoWidth": false,
-                "asStripClasses": null,
-                //--disable the sorting--
-                dom: 'lrt',
-                "aoColumns": [
-                    { "mData": "DayRecordId", "sWidth": "10%" },
-                    { "mData": "Description", "sTitle": "Description", "sWidth": "80%" },
-                    {
-                        "mData": null,
-                        "bSortable": false,
-                        "mRender": function (o) { return '<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-times"></i></button>' }
-                    }
-                ],
-                language: {
-                    emptyTable: "No task was found, please create one.",
-                }
-            });
-            $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
-                console.log("button 1 is click");
-            });
-        });
-    </script>*@
 <script>
     var editor;
-    $(document).ready(function () {
-        var table = $('#dataTable').DataTable({
-            "paging": true,
-            "bPaginate": true,
-            "bLengthChange": false,
-            "bFilter": false,
-            "bSort": false,
-            "bInfo": true,
-            "bAutoWidth": false,
-            "asStripClasses": null,
-            //--disable the sorting--
-            dom: 'rtip',
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
+
+    $(function () {
+        $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
+            preventSubmit: true,
+            submitSuccess: function ($form, event) {
+                event.preventDefault();     // will not trigger the default submission in favor of the ajax function
+
+                var projectName = $('#projectName').val();
+                var company = $('#companySelect').val();
+                var supervisorName = $('#supervisorName').val();
+                var mobileNo = $('#mobileNo').val();
+                var email = $('#email').val();
+
+                var webFormData = new WebFormData(projectName, company, email, mobileNo, supervisorName);
+                var webFormDatainString = JSON.stringify(webFormData);
+                $saveBatchHandler = jQuery.ajax({
+                    url: '/API/Projects/SaveNewProjectRecord',
+                    type: 'put',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: "'" + webFormDatainString + "'"
+
+                });
+                $saveBatchHandler.done(function (data, textStatus, jqXHR) {
+                    swal({
+                        type: data.AlertType,
+                        text: data.Messages
+                    }).then(
+                        function () {
+                            location.href = 'http://' + window.location.host + '/home/ViewProject';
+                        });
+
+                });//End .Done
             },
-            order: [[1, 'asc']],
-            columns: [
-                { data: "DayRecordId" },
-                { data: "Description" },
-                {
-                    data: null,
-                    "sWidth": "10%",
-                    "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
-                }
-            ],
-            language: {
-                emptyTable: "No task was found, please create one.",
+            submitError: function ($form, event, errors) {
+
             }
+
         });
+
+    });//End of jqBootstrapValidatio
+
+    $(document).ready(function () {
 
         $.ajax({
             url: '/api/Companies',
@@ -189,13 +159,12 @@
             dataType: 'json',
             cache: false,
             success: function (data) {
-                $('#companySelect').select2();
                 for (i = 0; i < data.length; i++) {
-                    //    $('#companySelect').val(data[i].)
                     $companyInputElement = $('#companySelect');
                     $optionElement = $('<option>').text(data[i].CompanyName).attr('value', data[i].CompanyId);
                     $companyInputElement.append($optionElement);
                 }
+                $('#companySelect').select2();
             }//End of success
         });//End of Ajax
 
@@ -231,8 +200,17 @@
 
             $('#selectCompanyModal').modal('hide');
         });//End of button submit for popup
-            });
+    });
     function findCompanyModal() {
         $('#selectCompanyModal').modal('show');
     }
+
+    function WebFormData(ProjectName, Company, SupervisorEmail, SupervisorNumber, SupervisorName) { 
+        this.ProjectName = ProjectName;
+        this.Company = Company;
+        this.SupervisorEmail = SupervisorEmail;
+        this.SupervisorNumber = SupervisorNumber;
+        this.SupervisorName = SupervisorName;
+    }
+
 </script>

@@ -144,7 +144,7 @@ namespace E_Internship_Journal.API
                             CompanyName = "",
                             Designation = "",
                             Allowance = ""
-                            
+
                         });
                     }
                 }
@@ -181,7 +181,8 @@ namespace E_Internship_Journal.API
                     eachBatch.StartDate,
                     eachBatch.EndDate,
                     eachBatch.Course.CourseCode,
-                    UserList,
+                    eachBatch.Course.CourseName,
+                    UserList
                 });
 
             }
@@ -242,19 +243,19 @@ namespace E_Internship_Journal.API
                         .Where(eachBatchEntity => eachBatchEntity.BatchId == id)
                         .Include(eachCourseEntity => eachCourseEntity.Course)
                         .Include(eachUserBatchEntity => eachUserBatchEntity.UserBatches)
+                        .ThenInclude(ub => ub.User)
                         .AsNoTracking();
 
                     foreach (var eachBatch in batches)
                     {
 
-                        List<object> UserList = new List<object>();
+                        List<string> UserList = new List<string>();
 
                         foreach (var eachUserBatch in eachBatch.UserBatches)
                         {
-                            if ((await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(eachUserBatch.UserId))).Contains("SLO"))
+                            if (await _userManager.IsInRoleAsync(eachUserBatch.User, "SLO"))
                             {
-                                var user = _context.Users.Where(eachUser => eachUser.Id.Equals(eachUserBatch.UserId)).Select(selection => selection.Email).ToList<string>();
-                                UserList.Add(user);
+                                UserList.Add(eachUserBatch.User.Id);
                             }
                         }
                         response = new
@@ -266,6 +267,7 @@ namespace E_Internship_Journal.API
                             eachBatch.EndDate,
                             eachBatch.Course.CourseId,
                             eachBatch.Course.CourseCode,
+                            eachBatch.Course.CourseName,
                             UserList,
                         };
 
@@ -313,34 +315,58 @@ namespace E_Internship_Journal.API
                     var batchNewInput = JsonConvert.DeserializeObject<dynamic>(value);
                     var foundUserBatch = _context.UserBatches.Where(eachUserBatch => eachUserBatch.BatchId == id).AsNoTracking();
                     //var foundOneBatch = _context.Batches.Find(id);
-                    var foundOneBatch = _context.Batches.Where(batch => batch.BatchId == id).Include(userBatch => userBatch.UserBatches).SingleOrDefault();
-                    foreach (var eachUserBatch in foundOneBatch.UserBatches)
+                    var batch = _context.Batches
+                        .Where(b => b.BatchId == id)
+                        .Include(userBatch => userBatch.UserBatches)
+                        .ThenInclude(ub => ub.User)
+                        .SingleOrDefault();
+
+                    List<UserBatch> SloUbs = new List<UserBatch>();
+                    List<string> SloIds = new List<string>();
+
+                    foreach (var sloid in batchNewInput.SLOAssigned)
                     {
-                        if ((await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(eachUserBatch.UserId))).Contains("SLO"))
+                        SloIds.Add(sloid.ToString());
+                    }
+
+                    foreach (var eachUserBatch in batch.UserBatches)
+                    {
+                        if (await _userManager.IsInRoleAsync(eachUserBatch.User, "SLO"))
                         {
-                            _context.UserBatches.Remove(eachUserBatch);
+                            SloUbs.Add(eachUserBatch);
                         }
                     }
-                    await _context.SaveChangesAsync();
 
-                    foundOneBatch.BatchName = batchNewInput.BatchName.Value;
-                    foundOneBatch.Description = batchNewInput.BatchDescription.Value;
-                    foundOneBatch.StartDate = DateTime.ParseExact(batchNewInput.StartDate.Value, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    foundOneBatch.EndDate = DateTime.ParseExact(batchNewInput.EndDate.Value, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                    foundOneBatch.CourseId = Convert.ToInt32(batchNewInput.CourseAssigned.Value.ToString());
-
-                    var userList = batchNewInput.SLOAssigned;
-                    foreach (var eachSLO in userList)
+                    //Create userbatch for those that do not exist
+                    foreach (var sloid in SloIds)
                     {
-                        UserBatch batchUser = new UserBatch
+                        if (!SloUbs.Any(ub => ub.User.Id.Equals(sloid)))
                         {
-                            BatchId = foundOneBatch.BatchId,
-                            UserId = (await _userManager.FindByEmailAsync(eachSLO.Value)).Id
-                        };
-                        foundOneBatch.UserBatches.Add(batchUser);
+                            _context.UserBatches.Add(new UserBatch
+                            {
+                                Batch = batch,
+                                User = await _userManager.FindByIdAsync(sloid.ToString())
+                            });
+                        }
                     }
+
+                    //Delete userbatch fo those that exist
+                    foreach (var ub in SloUbs)
+                    {
+                        if (!SloIds.Contains(ub.User.Id))
+                        {
+                            _context.UserBatches.Remove(ub);
+                        }
+                    }
+
                     await _context.SaveChangesAsync();
-                    response = new { Status = "success", Message = "Saved new user record." };
+
+                    batch.BatchName = batchNewInput.BatchName.Value;
+                    batch.StartDate = DateTime.ParseExact(batchNewInput.StartDate.Value, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    batch.EndDate = DateTime.ParseExact(batchNewInput.EndDate.Value, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    batch.CourseId = Convert.ToInt32(batchNewInput.CourseAssigned.Value.ToString());
+
+                    response = new { Status = "success", Message = "Saved batch record." };
                 }
                 catch (Exception ex)
                 {
@@ -362,7 +388,113 @@ namespace E_Internship_Journal.API
             return new JsonResult(response);
         }
 
+        // POST: api/Courses
+        [HttpPost("BulkAddBatch")]
+        public async Task<IActionResult> BulkAddUsers()
+        {
+            List<string> messageList = new List<string>();
+            var alertType = "success";
+            string title = "Action Completed";
+            var files = Request.Form.Files;
 
+            var csvFile = files[0];
+
+            using (var memoryStream = new MemoryStream())
+            {
+                List<string> csvLine = new List<string>();
+                await csvFile.CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
+
+                using (var streamReader = new StreamReader(memoryStream))
+                {
+                    var heading = streamReader.ReadLine();
+                    string[] headingArray = heading.Split(',');
+                    //Check if CSV file is in correct order
+                    if (!headingArray[0].Equals("Batch Name", StringComparison.OrdinalIgnoreCase) || !headingArray[1].Equals("Course Code", StringComparison.OrdinalIgnoreCase) || !headingArray[2].Equals("SLO Email", StringComparison.OrdinalIgnoreCase) || !headingArray[3].Equals("Start Date", StringComparison.OrdinalIgnoreCase) || !headingArray[4].Equals("End Date", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return new BadRequestObjectResult(new { Message = "CSV file does not follow correct format" });
+                    }
+
+                    //Read the file
+                    string fileLine = "";
+
+                    while ((fileLine = streamReader.ReadLine()) != null)
+                    {
+                        csvLine.Add(fileLine);
+                    }
+                }
+
+                var userStore = new UserStore<ApplicationUser>(_context);
+                var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
+
+                foreach (var line in csvLine)
+                {
+                    if (!(line.Replace(",", "").Trim().Equals("")))
+                    {
+                        string batchName = "";
+                        try
+                        {
+                            //Get individual data
+                            string[] batchData = line.Split(',');
+
+                            Batch newBatch = new Batch();
+
+                            newBatch.BatchName = batchData[0];
+                            batchName = batchData[0];
+
+                            Course course = _context.Courses.Where(c => c.CourseCode.Equals(batchData[1], StringComparison.OrdinalIgnoreCase)).SingleOrDefault();
+                            newBatch.Course = course;
+
+                            if (course == null)
+                            {
+                                messageList.Add("Could not find course for " + batchData[0] + "(" + batchData[1] + ")");
+                            }
+
+                            //Start and end date
+                            newBatch.StartDate = DateTime.ParseExact(batchData[3], "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                            newBatch.EndDate = DateTime.ParseExact(batchData[4], "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                            _context.Batches.Add(newBatch);
+                            _context.SaveChanges();
+
+                            //SLO
+                            ApplicationUser slo = _userManager.Users.Where(u => u.Email.Equals(batchData[2].Trim(), StringComparison.OrdinalIgnoreCase)).SingleOrDefault();
+                            if (slo != null && await _userManager.IsInRoleAsync(slo, "SLO"))
+                            {
+                                UserBatch newUb = new UserBatch
+                                {
+                                    Batch = newBatch,
+                                    User = slo
+                                };
+                                _context.UserBatches.Add(newUb);
+                                _context.SaveChanges();
+                            }
+                            else
+                            {
+                                messageList.Add("Could not find SLO for " + batchData[0] + "(" + batchData[2] + ")");
+                            }
+
+                        }
+                        catch (Exception ex)
+                        {
+                            messageList.Add("Could not create batch due identical batch or missing course (" + batchName + ")");
+                        }
+                    }
+                }
+
+                if (messageList.Count < 1)
+                {
+                    messageList.Add("Batches created successfully");
+                }
+                else
+                {
+                    title = "Action completed with errors";
+                    alertType = "warning";
+                }
+
+
+                return new OkObjectResult(new { Title = title, Messages = messageList, AlertType = alertType });
+            }
+        }
 
         [HttpPost("SaveNewBatchInformation")]
         [Authorize(Roles = "ADMIN")]
@@ -372,37 +504,48 @@ namespace E_Internship_Journal.API
             {
                 return BadRequest(ModelState);
             }
-            string customMessage = "";
+
             var batchNewInput = JsonConvert.DeserializeObject<dynamic>(value);
             Batch newBatch = new Batch();
-            UserBatch newUserBatch = new UserBatch();
-            //var courseAssigned = batchNewInput.CourseAssigned;
+
             try
             {
-                newBatch.BatchName = batchNewInput.BatchName.Value;
-                newBatch.Description = batchNewInput.BatchDescription.Value;
-                newBatch.StartDate = batchNewInput.StartDate.Value;
-                newBatch.EndDate = batchNewInput.EndDate.Value;
+                newBatch.BatchName = batchNewInput.BatchName.Value.ToString();
+                newBatch.StartDate = DateTime.ParseExact(batchNewInput.StartDate.Value.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                newBatch.EndDate = DateTime.ParseExact(batchNewInput.EndDate.Value.ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 newBatch.CourseId = Convert.ToInt32(batchNewInput.CourseAssigned.Value.ToString());
 
                 _context.Batches.Add(newBatch);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
 
-                newUserBatch.BatchId = newBatch.BatchId;
-                newUserBatch.UserId = (await _userManager.FindByEmailAsync(batchNewInput.SLOAssigned.Value)).Id;
+                foreach (var id in batchNewInput.SLOAssigned)
+                {
+                    string SLOId = id.ToString();
+                    ApplicationUser SLOUser = await _userManager.Users.Where(u => u.Id.Equals(SLOId, StringComparison.OrdinalIgnoreCase)).SingleOrDefaultAsync();
 
-                _context.UserBatches.Add(newUserBatch);
-                await _context.SaveChangesAsync();
+                    if (SLOUser != null && await _userManager.IsInRoleAsync(SLOUser, "SLO"))
+                    {
+                        UserBatch newUserBatch = new UserBatch
+                        {
+                            Batch = newBatch,
+                            User = SLOUser
+                        };
+
+                        _context.UserBatches.Add(newUserBatch);
+                    }
+                }
+
+                _context.SaveChanges();
             }
 
             catch (Exception exceptionObject)
             {
-                customMessage = "Unable to save to database";
-                //return 
+                return new BadRequestObjectResult(new { Message = exceptionObject.Message.ToString() });
             }
             var successRequestResultMessage = new
             {
-                Message = "Saved Batches into database"
+                Message = "Saved Batch",
+                Status = "success"
             };
 
             OkObjectResult httpOkResult =
@@ -411,7 +554,91 @@ namespace E_Internship_Journal.API
         }
 
         // DELETE: api/Batches/5
-       
+        [HttpDelete("{id}")]
+        public IActionResult DeleteBatch(int id) {
+            var batch = _context.Batches.Where(b => b.BatchId == id).Include(b => b.UserBatches).SingleOrDefault();
+
+            if (batch == null)
+            {
+                return BadRequest(new { Message = "Batch does not exist!"});
+            }
+            else {
+                bool delete = true;
+                foreach (var ub in batch.UserBatches) {
+                    if (_context.Internship_Records.Any(ir => ir.UserBatchId == ub.UserBatchId)) {
+                        delete = false;
+                    }
+                }
+
+                if (delete)
+                {
+                    _context.UserBatches.RemoveRange(batch.UserBatches);
+                    _context.Batches.Remove(batch);
+                    _context.SaveChanges();
+
+                    return new OkObjectResult(new { Message = "Successfully deleted batch" , AlertType = "success", Title = "Successfully Deleted"});
+                }
+                else {
+                    return new OkObjectResult(new { Message = "Could not delete batch as there are internship records attached to this batch!", AlertType = "error", Title = "An error occured" });
+                }
+            }
+        }
+
+        [HttpPut("bulkDelete")]
+        [Authorize(Roles ="ADMIN")]
+        public IActionResult BulkDelete([FromBody] string value) {
+            var idList = JsonConvert.DeserializeObject<dynamic>(value);
+
+            string alertType = "success";
+            string title = "Action Completed";
+            List<String> messageList = new List<String>();
+
+            try
+            {
+                foreach (var idstr in idList)
+                {
+                    int id = Int32.Parse(idstr.ToString());
+                    var batch = _context.Batches.Where(b => b.BatchId == id).Include(b => b.UserBatches).SingleOrDefault();
+
+                    if (batch != null)
+                    {
+                        bool delete = true;
+                        foreach (var ub in batch.UserBatches)
+                        {
+                            if (_context.Internship_Records.Any(ir => ir.UserBatchId == ub.UserBatchId))
+                            {
+                                delete = false;
+                            }
+                        }
+
+                        if (delete)
+                        {
+                            _context.UserBatches.RemoveRange(batch.UserBatches);
+                            _context.Batches.Remove(batch);
+                            _context.SaveChanges();
+                        }
+                        else
+                        {
+                            messageList.Add(batch.BatchName + " could not be deleted as there are internship records tied to it");
+                            alertType = "warning";
+                            title = "Completed with errors";
+                        }
+                    }
+                    if (messageList.Count < 1)
+                        messageList.Add("Deleted all batches successfully");
+
+                    _context.SaveChanges();
+                }
+                return new OkObjectResult(new { Messages = messageList, AlertType = alertType, Title = title });
+            }
+            catch (Exception exceptionObject)
+            {
+                object httpFailRequestResultMessage = new { Message = "Unable to Process" };
+                //Return a bad http response message to the client
+                return BadRequest(httpFailRequestResultMessage);
+            }
+        }
+
 
         private bool BatchExists(int id)
         {

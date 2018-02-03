@@ -60,7 +60,7 @@
                                     Back
                                 </button>
                                 <button class="btn btn-primary pull-right" name="submit" type="submit">
-                                    Update
+                                    Save
                                 </button>
                             </div>
                         </div>
@@ -72,9 +72,8 @@
         </div>
     </section>
 </div>
-
 <!--modal-->
-<div class="modal fade" id="selectCompanyModal" tabindex="-1" role="dialog" aria-labelledby="selectCompanyModalLabel" aria-hidden="true">
+<div class="modal fade" id="selectCompanyModal" role="dialog" aria-labelledby="selectCompanyModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -84,26 +83,16 @@
                 </button>
             </div>
             <div class="modal-body">
-
                 <div class="col-12">
                     <form>
                         <div class="form-group">
-                            <div class="input-group">
-                                <input class="form-control" placeholder="Search...">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-search">
-                                    </i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <textarea class="form-control" rows="5">Convertium</textarea>
+                            <select id="companySelect" size="6" style="width: 100%;"></select>
                         </div>
                         <div class="form-group">
                             <div class="col-12">
                                 <div class="form-inline">
                                     <label>Selected: &nbsp;</label>
-                                    <input class="form-control" value="Convertium" readonly>
+                                    <input class="form-control" value="" readonly id="txtSelected">
                                 </div>
                             </div>
                         </div>
@@ -111,49 +100,161 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="submit">Confirm</button>
+                <button type="button" class="btn btn-secondary" id="btnSubmit">Confirm</button>
                 <!----   <a class="btn btn-primary" href="login.html">Logout</a>  -->
             </div>
         </div>
     </div>
 </div>
+
 <script>
     var editor;
-    $(document).ready(function () {
-        var table = $('#dataTable').DataTable({
-            "scrollY": '250px',
-            "scrollCollapse": true,
-            "paging": false,
-            "bPaginate": false,
-            "bLengthChange": false,
-            "bFilter": false,
-            "bSort": false,
-            "bInfo": false,
-            "bAutoWidth": false,
-            "asStripClasses": null,
-            //--disable the sorting--
-            dom: 'rti',
-            ajax: {
-                url: '/Api/Task_Record',
-                dataSrc: ''
+
+    var projectId;
+
+    $(function () {
+        $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
+            preventSubmit: true,
+            submitSuccess: function ($form, event) {
+                event.preventDefault();     // will not trigger the default submission in favor of the ajax function
+
+                var projectName = $('#projectName').val();
+                var company = $('#companySelect').val();
+                var supervisorName = $('#supervisorName').val();
+                var mobileNo = $('#mobileNo').val();
+                var email = $('#email').val();
+
+                var webFormData = new WebFormData(projectName, company, email, mobileNo, supervisorName);
+                var webFormDatainString = JSON.stringify(webFormData);
+                $saveBatchHandler = jQuery.ajax({
+                    url: '/API/Projects/UpdateOneProject/' + getCookie("selectedProject"),
+                    type: 'put',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: "'" + webFormDatainString + "'"
+
+                });
+                $saveBatchHandler.done(function (data, textStatus, jqXHR) {
+                    swal({
+                        type: data.AlertType,
+                        text: data.Messages
+                    }).then(
+                        function () {
+                            location.href = 'http://' + window.location.host + '/home/ViewProject';
+                        });
+
+                });//End .Done
             },
-            order: [[1, 'asc']],
-            columns: [
-                { data: "DayRecordId" },
-                { data: "Description" },
-                {
-                    data: null,
-                    "sWidth": "10%",
-                    "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
-                }
-            ],
-            language: {
-                emptyTable: "No task was found, please create one.",
+            submitError: function ($form, event, errors) {
+
             }
+
         });
+
+    });//End of jqBootstrapValidatio
+
+    $(document).ready(function () {
+
+        projectId = getCookie("selectedProject");
+
+        $.ajax({
+            url: '/api/Companies',
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                for (i = 0; i < data.length; i++) {
+                    $companyInputElement = $('#companySelect');
+                    $optionElement = $('<option>').text(data[i].CompanyName).attr('value', data[i].CompanyId);
+                    $companyInputElement.append($optionElement);
+                }
+                $('#companySelect').select2();
+            }//End of success
+        });//End of Ajax
+        
+        $.ajax({
+            url: '/api/Projects/' + getCookie("selectedProject"),
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                console.dir(data);
+                $('#projectName').val(data.ProjectName);
+                $('#companySelect').val(data.CompanyId).trigger('change');
+                $('#selectcompany').val(data.CompanyName)
+                $('#supervisorName').val(data.FullName);
+                $('#mobileNo').val(data.PhoneNumber);
+                $('#email').val(data.Email);
+            }//End of success
+        });//End of Ajax
+
+        $('#txtSearch').on("keyup", function (e) {
+            console.dir($(this).val());
+            var text = $(this).val();
+            var options = $('#companySelect option');
+            //var options = $('#companySelect').option;
+            for (var i = 0; i < options.length; i++) {
+                var option = options[i];
+                var optionText = option.text;
+                var lowerOptionText = optionText.toLowerCase();
+                var lowerText = text.toLowerCase();
+                var regex = new RegExp("^" + text, "i");
+                var match = optionText.match(regex);
+                var contains = lowerOptionText.indexOf(lowerText) != -1;
+                if (match || contains) {
+
+                    //option.selected = true;
+                    return;
+                }
+                $(this).selectedIndex = 0;
+            }
+        });//End of txtSearch function
+
+        $('#companySelect').on('change', function (e) {
+            $('#txtSelected').val($('#companySelect option:selected').text());
+        });//End of Select Change
+        $('#btnSubmit').on('click', function (e) {
+
+            $('#selectcompany').val($('#companySelect option:selected').text());// To set display text on input element
+            $('#selectcompany').attr('value', ($('#companySelect option:selected').val())); // To set company value id to the input element
+
+            $('#selectCompanyModal').modal('hide');
+        });//End of button submit for popup
     });
     function findCompanyModal() {
         $('#selectCompanyModal').modal('show');
+    }
+
+    function WebFormData(ProjectName, Company, SupervisorEmail, SupervisorNumber, SupervisorName) {
+        this.ProjectName = ProjectName;
+        this.Company = Company;
+        this.SupervisorEmail = SupervisorEmail;
+        this.SupervisorNumber = SupervisorNumber;
+        this.SupervisorName = SupervisorName;
+    }
+
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
+    }
+
+    function setCookie(inName, inValue) {
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
     }
 </script>
