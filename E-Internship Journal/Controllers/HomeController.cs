@@ -4,71 +4,138 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using E_Internship_Journal.Models;
 
 namespace E_Internship_Journal.Controllers
 {
     public class HomeController : Controller
     {
-        //[Authorize(Roles = "Admin")]
-        public IActionResult Index()
+        public IActionResult ChooseRole(string selected)
         {
-            if (User.IsInRole("SUPERVISOR"))
+            var Configurations = Startup.Configuration;
+            Configurations["_g"] = selected;
+            if (selected == "SLO")
             {
-                return View("~/Views/Home/Supervisor/Index.cshtml");
+                return View("~/Views/Home/SLO/Index.cshtml");
             }
-            else if (User.IsInRole("STUDENT"))
-            {
-                return View("~/Views/Home/Student/Index.cshtml");
-            }
-            else if (User.IsInRole("LO"))
+            else if (selected == "LO")
             {
                 return View("~/Views/Home/LO/Index.cshtml");
             }
-            else if (User.IsInRole("SLO"))
+            else
+            {
+                return View("~/Views/Home/Supervisor/Index.cshtml");
+            }
+        }
+
+        public IActionResult ChangeRole()
+        {
+            Startup.Configuration["_g"] = "norole";
+            return View("~/Views/Home/SLO/chooseRole.cshtml");
+        }
+
+        public IActionResult Index(string selected)
+        {
+            if (((User.IsInRole("SLO") && User.IsInRole("SUPERVISOR") && User.IsInRole("LO")) || (User.IsInRole("SLO") && User.IsInRole("LO")) || (User.IsInRole("SLO") && User.IsInRole("SUPERVISOR")) || (User.IsInRole("SUPERVISOR") && User.IsInRole("LO"))) && (Startup.Configuration["_g"] == "norole"))
+            {
+                //return ChangeRole(selected);
+                if (selected == "SLO" || selected == "LO" || selected == "Supervisor")
+                {
+                    return ChooseRole(selected);
+                }
+                else
+                {
+                    return ChangeRole();
+                }
+            }
+            else
+            {
+                if (Startup.Configuration["_g"] == "norole")
+                {
+                    if (User.IsInRole("SUPERVISOR"))
+                    {
+                        Startup.Configuration["_g"] = "SUPERVISOR";
+                    }
+                    else if (User.IsInRole("STUDENT"))
+                    {
+                        Startup.Configuration["_g"] = "STUDENT";
+                    }
+                    else if (User.IsInRole("SLO"))
+                    {
+                        Startup.Configuration["_g"] = "SLO";
+                    }
+                    else if (User.IsInRole("ADMIN"))
+                    {
+                        Startup.Configuration["_g"] = "ADMIN";
+                    }
+                    else
+                    {
+                        Startup.Configuration["_g"] = "LO";
+                    }
+                }
+                    return Homepage();
+            }
+        }
+        //[Authorize(Roles = "Admin")]
+        public IActionResult Homepage()
+        {
+            if (Startup.Configuration["_g"] == "SUPERVISOR")
+            {
+                return View("~/Views/Home/Supervisor/Index.cshtml");
+            }
+            else if (Startup.Configuration["_g"] == "STUDENT")
+            {
+                return View("~/Views/Home/Student/Index.cshtml");
+            }
+            else if (Startup.Configuration["_g"] == "ADMIN")
+            {
+                return View("~/Views/Home/Admin/Index.cshtml");
+            }
+            else if (Startup.Configuration["_g"] == "SLO")
             {
                 return View("~/Views/Home/SLO/Index.cshtml");
             }
             else
             {
-                return View("~/Views/Home/Admin/Index.cshtml");
+                return View("~/Views/Home/LO/Index.cshtml");
             }
         }
 
         public IActionResult Personal()
         {
-            if (User.IsInRole("SUPERVISOR"))
+            if (Startup.Configuration["_g"] == "SUPERVISOR")
             {
                 return View("~/Views/Home/Supervisor/personal.cshtml");
             }
-            else if (User.IsInRole("STUDENT"))
+            else if (Startup.Configuration["_g"] == "STUDENT")
             {
                 return View("~/Views/Home/Student/personal.cshtml");
             }
-            else if (User.IsInRole("LO"))
+            else if (Startup.Configuration["_g"] == "ADMIN")
             {
-                return View("~/Views/Home/LO/personal.cshtml");
+                return View("~/Views/Home/Admin/personal.cshtml");
             }
-            else if (User.IsInRole("SLO"))
+            else if (Startup.Configuration["_g"] == "SLO")
             {
                 return View("~/Views/Home/SLO/personal.cshtml");
             }
             else
             {
-                return View("~/Views/Home/Admin/personal.cshtml");
+                return View("~/Views/Home/LO/personal.cshtml");
             }
         }
 
         public IActionResult Guide()
         {
-            if (User.IsInRole("SUPERVISOR"))
+            if (Startup.Configuration["_g"] == "SUPERVISOR")
             {
                 return View("~/Views/Home/Supervisor/guide.cshtml");
             }
-            else if (User.IsInRole("SLO"))
+            else if (Startup.Configuration["_g"] == "SLO")
             {
                 return View("~/Views/Home/SLO/guide.cshtml");
             }
-            else if (User.IsInRole("LO"))
+            else if (Startup.Configuration["_g"] == "LO")
             {
                 return View("~/Views/Home/LO/guide.cshtml");
             }
@@ -80,19 +147,19 @@ namespace E_Internship_Journal.Controllers
 
         public IActionResult Grading()
         {
-            if (User.IsInRole("SUPERVISOR"))
+            if (Startup.Configuration["_g"] == "SUPERVISOR")
             {
                 return View("~/Views/Home/Supervisor/grading.cshtml");
             }
-            else if (User.IsInRole("STUDENT"))
+            else if (Startup.Configuration["_g"] == "STUDENT")
             {
                 return View("~/Views/Home/Student/grading.cshtml");
             }
-            else if (User.IsInRole("SLO"))
+            else if (Startup.Configuration["_g"] == "SLO")
             {
                 return View("~/Views/Home/SLO/grading.cshtml");
             }
-            else /*if(User.IsInRole("STUDENT"))*/
+            else /*if(Startup.Configuration["_g"] == "STUDENT")*/
             {
                 return View("~/Views/Home/LO/grading.cshtml");
             }
@@ -100,15 +167,15 @@ namespace E_Internship_Journal.Controllers
 
         public IActionResult Review()
         {
-            if (User.IsInRole("SUPERVISOR"))
+            if (Startup.Configuration["_g"] == "SUPERVISOR")
             {
                 return View("~/Views/Home/Supervisor/Review.cshtml");
             }
-            else if (User.IsInRole("STUDENT"))
+            else if (Startup.Configuration["_g"] == "STUDENT")
             {
                 return View("~/Views/Home/Student/Review.cshtml");
             }
-            else /*if(User.IsInRole("STUDENT"))*/
+            else /*if(Startup.Configuration["_g"] == "STUDENT")*/
             {
                 return View("~/Views/Home/LO/Review.cshtml");
             }
@@ -116,15 +183,15 @@ namespace E_Internship_Journal.Controllers
 
         public IActionResult Reflection_History()
         {
-            if (User.IsInRole("SUPERVISOR"))
+            if (Startup.Configuration["_g"] == "SUPERVISOR")
             {
                 return View("~/Views/Home/Supervisor/reflection_history.cshtml");
             }
-            else if (User.IsInRole("STUDENT"))
+            else if (Startup.Configuration["_g"] == "STUDENT")
             {
                 return View("~/Views/Home/Student/reflection_history.cshtml");
             }
-            else /*if(User.IsInRole("STUDENT"))*/
+            else /*if(Startup.Configuration["_g"] == "STUDENT")*/
             {
                 return View("~/Views/Home/LO/reflection_history.cshtml");
             }
@@ -132,15 +199,15 @@ namespace E_Internship_Journal.Controllers
 
         public IActionResult Attendance_History()
         {
-            if (User.IsInRole("SUPERVISOR"))
+            if (Startup.Configuration["_g"] == "SUPERVISOR")
             {
                 return View("~/Views/Home/Supervisor/attendance_history.cshtml");
             }
-            else if (User.IsInRole("STUDENT"))
+            else if (Startup.Configuration["_g"] == "STUDENT")
             {
                 return View("~/Views/Home/Student/attendance_history.cshtml");
             }
-            else /*if(User.IsInRole("STUDENT"))*/
+            else /*if(Startup.Configuration["_g"] == "STUDENT")*/
             {
                 return View("~/Views/Home/LO/attendance_history.cshtml");
             }
@@ -148,19 +215,19 @@ namespace E_Internship_Journal.Controllers
 
         public IActionResult Competency_History()
         {
-            if (User.IsInRole("SUPERVISOR"))
+            if (Startup.Configuration["_g"] == "SUPERVISOR")
             {
                 return View("~/Views/Home/Supervisor/competency_history.cshtml");
             }
-            else if (User.IsInRole("STUDENT"))
+            else if (Startup.Configuration["_g"] == "STUDENT")
             {
                 return View("~/Views/Home/Student/competency_history.cshtml");
             }
-            else if (User.IsInRole("SLO"))
+            else if (Startup.Configuration["_g"] == "SLO")
             {
                 return View("~/Views/Home/SLO/competency_history.cshtml");
             }
-            else /*if(User.IsInRole("STUDENT"))*/
+            else /*if(Startup.Configuration["_g"] == "STUDENT")*/
             {
                 return View("~/Views/Home/LO/competency_history.cshtml");
             }
@@ -169,32 +236,32 @@ namespace E_Internship_Journal.Controllers
         //student
         public IActionResult Attendance_Summary()
         {
-                return View("~/Views/Home/Student/attendance_summary.cshtml");
+            return View("~/Views/Home/Student/attendance_summary.cshtml");
         }
         public IActionResult Day_Task()
         {
-                return View("~/Views/Home/Student/day_task.cshtml");
+            return View("~/Views/Home/Student/day_task.cshtml");
         }
         public IActionResult Daily_Task()
         {
-                return View("~/Views/Home/Student/daily_task.cshtml");
+            return View("~/Views/Home/Student/daily_task.cshtml");
         }
         public IActionResult Competency_Checklist()
         {
-                return View("~/Views/Home/Student/competency_checklist.cshtml");
+            return View("~/Views/Home/Student/competency_checklist.cshtml");
         }
         public IActionResult Monthly_Reflection()
         {
-                return View("~/Views/Home/Student/monthly_reflection.cshtml");
+            return View("~/Views/Home/Student/monthly_reflection.cshtml");
         }
         public IActionResult View_Student()
         {
-                return View("~/Views/Home/LO/view_student.cshtml");
+            return View("~/Views/Home/LO/view_student.cshtml");
         }
-        
+
         public IActionResult Student_Journal()
         {
-            if (User.IsInRole("SUPERVISOR"))
+            if (Startup.Configuration["_g"] == "SUPERVISOR")
             {
                 return View("~/Views/Home/Supervisor/student_journal.cshtml");
             }
@@ -207,11 +274,11 @@ namespace E_Internship_Journal.Controllers
 
         public IActionResult Mentoring_History()
         {
-            if (User.IsInRole("SUPERVISOR"))
+            if (Startup.Configuration["_g"] == "SUPERVISOR")
             {
                 return View("~/Views/Home/Supervisor/mentoring_history.cshtml");
             }
-            else if (User.IsInRole("LO"))
+            else if (Startup.Configuration["_g"] == "LO")
             {
                 return View("~/Views/Home/LO/mentoring_history.cshtml");
             }
@@ -223,7 +290,7 @@ namespace E_Internship_Journal.Controllers
 
         public IActionResult Student_Info()
         {
-            if (User.IsInRole("SUPERVISOR"))
+            if (Startup.Configuration["_g"] == "SUPERVISOR")
             {
                 return View("~/Views/Home/Supervisor/student_info.cshtml");
             }
@@ -232,10 +299,10 @@ namespace E_Internship_Journal.Controllers
                 return View("~/Views/Home/LO/student_info.cshtml");
             }
         }
-        
+
         public IActionResult Company_Checklist()
         {
-            if (User.IsInRole("SUPERVISOR"))
+            if (Startup.Configuration["_g"] == "SUPERVISOR")
             {
                 return View("~/Views/Home/Supervisor/company_checklist.cshtml");
             }
@@ -247,7 +314,7 @@ namespace E_Internship_Journal.Controllers
 
         public IActionResult Task_History()
         {
-            if (User.IsInRole("SUPERVISOR"))
+            if (Startup.Configuration["_g"] == "SUPERVISOR")
             {
                 return View("~/Views/Home/Supervisor/task_history.cshtml");
             }
@@ -260,7 +327,7 @@ namespace E_Internship_Journal.Controllers
 
         public IActionResult Internship_Survey()
         {
-            if (User.IsInRole("LO"))
+            if (Startup.Configuration["_g"] == "LO")
             {
                 return View("~/Views/Home/LO/internship_survey.cshtml");
             }
@@ -275,14 +342,14 @@ namespace E_Internship_Journal.Controllers
         //LO
         public IActionResult Touchpoint()
         {
-            if (User.IsInRole("LO"))
+            if (Startup.Configuration["_g"] == "LO")
             {
                 return View("~/Views/Home/LO/touchpoint.cshtml");
             }
             else
             {
                 return View("~/Views/Home/Student/touchpoint.cshtml");
-            }           
+            }
         }
         public IActionResult Final_Grading()
         {

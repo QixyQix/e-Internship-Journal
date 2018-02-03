@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MimeKit;
 using MailKit.Security;
+using System.IO;
 
 namespace E_Internship_Journal.Services
 {
@@ -28,6 +29,7 @@ namespace E_Internship_Journal.Services
         {
             try
             {
+
                 //From Address    
                 string FromAddress = "myname@company.com";
                 string FromAdressTitle = "My Name";
@@ -43,6 +45,17 @@ namespace E_Internship_Journal.Services
                 int SmtpPortNumber = 465;
 
                 var mimeMessage = new MimeMessage();
+                var bodyBuilder = new BodyBuilder();
+                string filePath = System.IO.Path.GetFullPath("wwwroot/images/email.html");
+                using (StreamReader SourceReader = System.IO.File.OpenText(filePath))
+                {
+                    string text = SourceReader.ReadToEnd();
+                    var qq = text.Replace("href=\"\">Activate Account</a>", "href=\"" + message + "\">Activate Account</a>");
+                    //bodyBuilder.HtmlBody = SourceReader.ReadToEnd();
+                    bodyBuilder.HtmlBody = qq;
+                }
+                
+                //// bodyBuilder.HtmlBody = "<h1>Hello, World!</h1>";
                 mimeMessage.From.Add(new MailboxAddress
                                         (FromAdressTitle,
                                          FromAddress
@@ -52,10 +65,11 @@ namespace E_Internship_Journal.Services
                                          ToAddress
                                          ));
                 mimeMessage.Subject = Subject; //Subject  
-                mimeMessage.Body = new TextPart("plain")
-                {
-                    Text = BodyContent
-                };
+                mimeMessage.Body = bodyBuilder.ToMessageBody();
+                //mimeMessage.Body = new TextPart("plain")
+                //{
+                //    Text = BodyContent
+                //};
                 using (var client = new SmtpClient())
                 {
                     client.Connect(SmtpServer, SmtpPortNumber, true);
@@ -63,9 +77,9 @@ namespace E_Internship_Journal.Services
                         "yoshifumiprovidence5@gmail.com",
                         "chia85112904"
                         );
-                    client.SendAsync(mimeMessage);
+                    client.Send(mimeMessage);
 
-                    client.DisconnectAsync(true);
+                    client.Disconnect(true);
                 }
 
             }

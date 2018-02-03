@@ -386,9 +386,52 @@ namespace E_Internship_Journal.Data
                 .IsRequired(false);
 
             modelBuilder.Entity<Internship_Record>()
-            .Property(Internship_Records => Internship_Records.ReflectionGrading)
-            .HasColumnName("ReflectionGrading")
+            .Property(Internship_Records => Internship_Records.PosterGrading)
+            .HasColumnName("PosterGrading")
             .HasColumnType("int")
+            .IsRequired(false);
+
+            modelBuilder.Entity<Internship_Record>()
+            .Property(Internship_Records => Internship_Records.JournalGrading)
+            .HasColumnName("JournalGrading")
+            .HasColumnType("int")
+            .IsRequired(false);
+
+            modelBuilder.Entity<Internship_Record>()
+            .Property(Internship_Records => Internship_Records.OverallPerformance)
+            .HasColumnName("OverallPerformance")
+            .HasColumnType("int")
+            .IsRequired(false);
+            modelBuilder.Entity<Internship_Record>()
+            .Property(Internship_Records => Internship_Records.OverallGrading)
+            .HasColumnName("OverallGrading")
+            .HasColumnType("decimal")
+            .IsRequired(false);
+
+            modelBuilder.Entity<Internship_Record>()
+            .Property(Internship_Records => Internship_Records.FinalGrading)
+            .HasColumnName("FinalGrading")
+            .HasColumnType("decimal")
+            .IsRequired(false);
+
+            modelBuilder.Entity<Internship_Record>()
+            .Property(Internship_Records => Internship_Records.SLOOverallGrading)
+            .HasColumnName("SLOOverallGrading")
+            .HasColumnType("decimal")
+            .IsRequired(false);
+
+            modelBuilder.Entity<Internship_Record>()
+            .Property(Internship_Records => Internship_Records.SLOApproved)
+            .HasColumnName("SLOApproved")
+            .HasColumnType("bit")
+            .HasDefaultValue(false)
+            .IsRequired(false);
+
+            modelBuilder.Entity<Internship_Record>()
+            .Property(Internship_Records => Internship_Records.Approved)
+            .HasColumnName("Approved")
+            .HasColumnType("bit")
+            .HasDefaultValue(false)
             .IsRequired(false);
 
             modelBuilder.Entity<Internship_Record>()

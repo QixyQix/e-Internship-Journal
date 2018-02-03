@@ -18,18 +18,18 @@
             <div class="form-inline">
                 <div class="col-12">
                     <div class="col-md-8 col-sm-8 col-xs-12 pull-left">
-                        <button class="col-md-3 col-sm-3 col-xs-12 btn btn-default" onclick="popCSV()" id="bulkadd">
-                            Bulk Add
+                        <button class="col-md-3 col-sm-3 col-xs-12 btn btn-primary" onclick="popCSV()" id="bulkadd">
+                            + Bulk Add
                         </button>
                         &nbsp;
                         <button class="col-md-3 col-sm-3 col-xs-12 btn btn-danger" onclick="popbulkdel()" id="bulkdel">
-                            Bulk Delete
+                            - Bulk Delete
                         </button>
                         &nbsp;
                     </div>
                     <div class="col-md-3 col-sm-3 col-xs-12 pull-right">
                         <button class="col-12 btn btn-primary pull-right" id="addbatch" onclick="location.href='@Url.Action("createbatch", "Home")'">
-                            Add Batch
+                            + Add Batch
                         </button>
                     </div>
                     &nbsp;
@@ -329,6 +329,10 @@
         // Handle click on table cells with checkboxes
         $('#batch_dataTable').on('click', 'tbody td, thead th:first-child', function (e) {
             $(this).parent().find('input[type="checkbox"]').trigger('click');
+        });
+
+        $('#batch_dataTable_filter').on('keyup change', 'input', function (e) {
+            $('#batch_dataTable tbody input[type="checkbox"]:checked').trigger('click');
         });
 
         // Handle click on "Select all" control

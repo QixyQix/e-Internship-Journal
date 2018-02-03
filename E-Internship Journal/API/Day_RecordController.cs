@@ -98,7 +98,7 @@ namespace E_Internship_Journal.API
         }
 
         // GET: api/Day_Record
-        [Authorize(Roles = "LO")]
+        [Authorize(Roles = "LO,STUDENT")]
         [HttpGet("getStudentDayRecords/{id}")]
         public IActionResult GetStudentDayRecords(int id)
         {

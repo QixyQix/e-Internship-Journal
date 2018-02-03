@@ -18,22 +18,22 @@
             <div class="form-inline">
                 <div class="col-12">
                     <div class="col-md-8 col-sm-8 col-xs-12 pull-left">
-                        <button class="col-md-3 col-sm-3 col-xs-12 btn btn-default" onclick="popCSV()" id="bulkadd">
-                            Bulk Add
+                        <button class="col-md-3 col-sm-3 col-xs-12 btn btn-primary" onclick="popCSV()" id="bulkadd">
+                            + Bulk Add
                         </button>
                         &nbsp;
                         <button class="col-md-3 col-sm-3 col-xs-12 btn btn-danger" onclick="bulkdelact()" id="bulkdel">
-                            Bulk Delete
+                            - Bulk Delete
                         </button>
                         &nbsp;
-                        <button class="col-md-3 col-sm-3 col-xs-12 btn btn-primary" onclick="popbulkdeact()" id="bulkdeact">
+                        <button class="col-md-3 col-sm-3 col-xs-12 btn btn-default" onclick="popbulkdeact()" id="bulkdeact">
                             Bulk Deactivate
                         </button>
                         &nbsp;
                     </div>
                     <div class="col-md-3 col-sm-3 col-xs-12 pull-right">
                         <button class="col-12 btn btn-primary pull-right" id="adduser" onclick="location.href='@Url.Action("createuser", "Home")'">
-                            Add User
+                            + Add User
                         </button>
                     </div>
                     &nbsp;
@@ -74,10 +74,10 @@
                 <div class="col-12">
                     <div class="col-md-8 col-sm-8 col-xs-12 pull-left">
                         <button class="col-md-3 col-sm-3 col-xs-12 btn btn-danger" onclick="bulkdeldeact()" id="bulkdeactdel">
-                            Bulk Delete
+                            - Bulk Delete
                         </button>
                         &nbsp;
-                        <button class="col-md-3 col-sm-3 col-xs-12 btn btn-primary" onclick="popdeactbulkact()" id="bulkdeactact">
+                        <button class="col-md-3 col-sm-3 col-xs-12 btn btn-default" onclick="popdeactbulkact()" id="bulkdeactact">
                             Bulk Activate
                         </button>
                         &nbsp;
@@ -543,6 +543,10 @@
             $(this).parent().find('input[type="checkbox"]').trigger('click');
         });
 
+        $('#act_dataTable_filter').on('keyup change', 'input', function (e) {
+            $('#act_dataTable tbody input[type="checkbox"]:checked').trigger('click');
+        });
+
         // Handle click on "Select all" control
         $('thead input[name="select_all"]', table.table().container()).on('click', function (e) {
             if (this.checked) {
@@ -687,6 +691,10 @@
         // Handle click on table cells with checkboxes
         $('#deact_dataTable').on('click', 'tbody td, thead th:first-child', function (e) {
             $(this).parent().find('input[type="checkbox"]').trigger('click');
+        });
+
+        $('#deact_dataTable_filter').on('keyup change', 'input', function (e) {
+            $('#deact_dataTable tbody input[type="checkbox"]:checked').trigger('click');
         });
 
         // Handle click on "Select all" control

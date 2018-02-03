@@ -19,18 +19,18 @@
             <div class="form-inline">
                 <div class="col-12">
                     <div class="col-md-8 col-sm-8 col-xs-12 pull-left">
-                        <button class="col-md-3 col-sm-3 col-xs-12 btn btn-default" onclick="popCSV()" id="bulkadd">
-                            Bulk Add
+                        <button class="col-md-3 col-sm-3 col-xs-12 btn btn-primary" onclick="popCSV()" id="bulkadd">
+                            + Bulk Add
                         </button>
                         &nbsp;
                         <button class="col-md-3 col-sm-3 col-xs-12 btn btn-danger" onclick="popbulkdel()" id="bulkdel">
-                            Bulk Delete
+                            - Bulk Delete
                         </button>
                         &nbsp;
                     </div>
                     <div class="col-md-3 col-sm-3 col-xs-12 pull-right">
                         <button class="col-12 btn btn-primary pull-right" id="addcompany" onclick="location.href='@Url.Action("add_company", "Home")'">
-                            Add Company
+                            + Add Company
                         </button>
                     </div>
                     &nbsp;
@@ -270,7 +270,8 @@
                 hideFilter1();
             }
         });
-
+        $('#company_dataTable').off('click');
+        $('#company_dataTable tbody').off('click');
         // Handle click on checkbox
         $('#company_dataTable tbody').on('click', 'input[type="checkbox"]', function (e) {
             var $row = $(this).closest('tr');
@@ -310,6 +311,10 @@
             $(this).parent().find('input[type="checkbox"]').trigger('click');
         });
 
+        $('#company_dataTable_filter').on('keyup change', 'input', function (e) {
+            $('#company_dataTable tbody input[type="checkbox"]:checked').trigger('click');
+        });
+
         // Handle click on "Select all" control
         $('thead input[name="select_all"]', table.table().container()).on('click', function (e) {
             if (this.checked) {
@@ -339,7 +344,7 @@
         // Apply the filter
         $("#company_dataTable thead input").on('keyup change', function () {
             if ($(this).attr('type') == "text") {
-                table
+                $('#company_dataTable').DataTable()
                     .column($(this).parent().index() + ':visible')
                     .search(this.value)
                     .draw();

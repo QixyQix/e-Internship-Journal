@@ -173,26 +173,11 @@
             contentType: "application/json; charset=utf-8",
             cache: false,
             success: function (data) {
-                var g_Month = [];
-                var g_MonthRecordId = [];
-                $("#selectWeek option").remove();
+                $('#selectWeek').find('option').remove();
                 for (i = 0; i < data.length; i++) {
-                    if (g_Month.includes((i + 1) * 4)) {
-
-                    } else {
-                        g_Month.push((i + 1) * 4);
-                        g_MonthRecordId.push(data[i].MonthId);
-                    }
-                }
-
-                for (k = 0; k < g_Month.length; k++) {
-                    var tempWeek = g_Month[k];
-
-                    var tempWeekText = "Week " + (tempWeek - 3) + " to Week " + tempWeek;
-                    $weekInputElement = $('#selectWeek');
-                    $weekOptionElement = $('<option>').text(tempWeekText).attr('value', g_MonthRecordId[k]);
-                    $weekInputElement.append($weekOptionElement);
-
+                    var selectMonthRecord
+                    var newOption = $('<option>').text('Week ' + (((i + 1) * 4) - 3) + ' to Week ' + (i + 1) * 4).val(i);
+                    $('#selectWeek').append(newOption);
                 }
                 selectedReflection();
             },//End of success
@@ -209,11 +194,11 @@
     function selectedReflection() {
         monthRecords.then(function (data) {
             var selectedWeek;
-            for (o = 0; o < data.length; o++) {
-                if (data[o].MonthId == $('#selectWeek').val())
-                    selectedWeek = data[o];
+            //for (o = 0; o < data.length; o++) {
+               // if (data[o] == $('#selectWeek').val())
+                selectedWeek = data[$('#selectWeek').val()];
 
-            }
+            //}
            // var selectedWeek =
            // console.dir($('#selectWeek').val());
             //var selectedWeek = data[$('#selectWeek').val()];
