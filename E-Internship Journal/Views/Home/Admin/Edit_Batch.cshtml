@@ -75,7 +75,7 @@
                                     Back
                                 </button>
                                 <button class="btn btn-primary pull-right" name="submit" type="submit">
-                                    Update
+                                    Save
                                 </button>
                             </div>
                         </div>
@@ -87,9 +87,8 @@
         </div>
     </section>
 </div>
-
 <!-- Course Modal -->
-<div class="modal fade" id="courseModal" tabindex="-1" role="dialog" aria-labelledby="courseModalLabel" aria-hidden="true">
+<div class="modal fade" id="courseModal" role="dialog" aria-labelledby="courseModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -99,7 +98,6 @@
                 </button>
             </div>
             <div class="modal-body">
-
                 <div class="col-12">
                     <form>
                         <div class="form-group">
@@ -123,9 +121,8 @@
         </div>
     </div>
 </div>
-
 <!-- SLO Modal -->
-<div class="modal fade" id="sloModal" tabindex="-1" role="dialog" aria-labelledby="sloModalLabel" aria-hidden="true">
+<div class="modal fade" id="sloModal" role="dialog" aria-labelledby="sloModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -135,11 +132,10 @@
                 </button>
             </div>
             <div class="modal-body">
-
                 <div class="col-12">
                     <form>
                         <div class="form-group">
-                            <select id="sloSelect" size="6" style="width: 100%;"></select>
+                            <select id="sloSelect" size="6" style="width: 100%;" multiple="multiple"></select>
                         </div>
                         <div class="form-group">
                             <div class="col-12">
@@ -160,9 +156,52 @@
     </div>
 </div>
 <script>
-            $(document).ready(function () {
-        //  console.dir($('#contactForm input'));
-        //  $('#courseName').jqBootstrapValidation();
+    var batchId = getCookie("selectedBatch");
+
+    $(function () {
+        $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
+            preventSubmit: true,
+            submitSuccess: function ($form, event) {
+                event.preventDefault();     // will not trigger the default submission in favor of the ajax function
+                var collectedBatchName = $('#batchname').val();
+                var collectedCourseAssigned = $('#courseSelect').val();
+                var collectedSLOAssigned = $('#sloSelect').val();
+                var collectedStartDate = $('#selectstartdate').val();
+                var collectedEndDate = $('#selectenddate').val();
+
+                var webFormData = new WebFormData(collectedBatchName, collectedCourseAssigned, collectedSLOAssigned, collectedStartDate, collectedEndDate);
+                console.dir(webFormData);
+                var webFormDatainString = JSON.stringify(webFormData);
+                $saveBatchHandler = jQuery.ajax({
+                    url: '/API/Batches/UpdateOneBatch/'+batchId,
+                    type: 'PUT',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: "'" + webFormDatainString + "'"
+
+                });
+                $saveBatchHandler.done(function (data, textStatus, jqXHR) {
+                    swal({
+                        type: data.Status,
+                        text: data.Message
+                    }).then(
+                        function () {
+                            location.href = 'http://' + window.location.host + '/home/ViewBatch';
+                        });
+
+                });
+            },
+            submitError: function ($form, event, errors) {
+
+            }
+
+        });
+
+    });//End of jqBootstrapValidatio
+
+    $(document).ready(function () {
+        batchId = getCookie("selectedBatch");
+
         $.ajax({
             url: '/api/Courses',
             method: 'GET',
@@ -214,7 +253,7 @@
 
         //SLO
         $.ajax({
-            url: '/api/Accounts/LiaisonOfficers',
+            url: '/api/Accounts/UsersInRole/SLO',
             method: 'GET',
             dataType: 'json',
             cache: false,
@@ -223,7 +262,7 @@
                 for (i = 0; i < data.length; i++) {
                     //    $('#projectSelect').val(data[i].)
                     $sloInputElement = $('#sloSelect');
-                    $optionElement2 = $('<option>').text(data[i].Name).attr('value', data[i].UserId);
+                    $optionElement2 = $('<option>').text(data[i].FullName).attr('value', data[i].Id);
                     $sloInputElement.append($optionElement2);
                 }
             }//End of success
@@ -262,8 +301,27 @@
             $('#sloModal').modal('hide');
         });//End of button submit for popup
 
-
+        $.ajax({
+            url: '/api/Batches/GetOneBatches/'+batchId,
+            method: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function (data) {
+                $('#batchname').val(data.BatchName);
+                $('#courseSelect').val(data.CourseId).trigger('change');
+                $('#selectCourse').val(data.CourseName)
+                var sloids = [];
+                for (i = 0; i < data.UserList.length; i++) { 
+                    sloids.push(data.UserList[i]);
+                }
+                $('#sloSelect').val(sloids).trigger('change');
+                $('#btnSubmit2').trigger('click');
+                $('#selectstartdate').val(moment(data.StartDate).format('DD/MM/YYYY'));
+                $('#selectenddate').val(moment(data.EndDate).format('DD/MM/YYYY'));
+            }//End of success
+        });//End of Ajax
     });//End of document ready.
+
     function findCourseModal() {
         $('#courseModal').modal('show');
         //http://www.dyn-web.com/tutorials/forms/select/multi-selected.php
@@ -274,163 +332,79 @@
         //http://www.dyn-web.com/tutorials/forms/select/multi-selected.php
         //please take a look at this for reference
     }
-    var g_batchId = getBatchIdFromAddressBar();
-    getDropDown();
-    $('#btnSave').on('click', function () {
-        var collectedBatchNo = $('#batchNo').val();
-        var collectedBatchDescription = $('#batchDescription').val();
-        var collectedCourseAssigned = $('#courseAssigned').attr('value');
-        var collectedSLOAssigned = $('#assignedSlo').attr('value');
-        var collectedStartDate = new Date($('.startDate').val());
-        var collectedEndDate = new Date($('.endDate').val());
+    $getUserHandler = jQuery.ajax({
 
-        var webFormData = new WebFormData(collectedBatchNo, collectedBatchDescription, collectedCourseAssigned, collectedSLOAssigned, collectedStartDate, collectedEndDate)
-        var webFormDatainString = JSON.stringify(webFormData);
-        $updateBatchHandler = jQuery.ajax({
-            url: '/API/Batches/UpdateOneBatch/' + g_batchId,
-            type: 'put',
-            dataType: 'json',
-            contentType: 'application/json',
-            data: "'" + webFormDatainString + "'"
-
-        });
-        $updateBatchHandler.done(function (data, textStatus, jqXHR) {
-            console.dir("Success");
-            //getBatchDetails(g_batchId);
-        });//
+        url: '/API/Batches/GetUserCourseInformation',
+        method: 'get',
+        dataType: 'json',
+        cache: false
 
     });
-    function WebFormData(inBatchName, inBatchDescription, inCourseAssigned, inSLOAssigned, inStartDate, inEndDate) {
+    $getUserHandler.done(function (data, textStatus, jqXHR) {
+        $SLODownElement = $('#dropSLO');
+        $CourseDownElement = $('#dropCourse')
+        for (i = 0; i < data.UserList.length; i++) {
+            // $tableBodyElement = $('.dropdown-menu');
+            Name = data.UserList[i].Name;
+            Emails = data.UserList[i].Email;
+            $dropElement = $('<a>', { text: Name }).attr('class', 'dropdown-item').attr('name', 'SLO').attr('value', Emails);
+            $drop2Element = $('<li>');
+            $drop2Element.append($dropElement);
+            //$dropElement = $('<input>').attr('type', 'radio').val(visibilityId).attr('name', 'visibilityIdInput');
+            $SLODownElement.append($drop2Element);
+        }
+        for (k = 0; k < data.CourseList.length; k++) {
+            CourseId = data.CourseList[k].CourseId;
+            CourseCode = data.CourseList[k].CourseCode;
+            $dropElement = $('<a>', { text: CourseCode }).attr('class', 'dropdown-item').attr('name', 'Course').attr('value', CourseId);
+            $drop2Element = $('<li>');
+            $drop2Element.append($dropElement);
+            $CourseDownElement.append($drop2Element)
+        }
+        $('#dropCourse li > a').on('click', function () {
+            // $('#courseAssigned').val($(this).text());
+            $('#courseAssigned').val($(this).text());
+            $('#courseAssigned').attr('value', $(this).attr('value'));
+
+        });
+
+        $('#dropSLO li > a').on('click', function () {
+            $('#assignedSlo').val($(this).text());
+            $('#assignedSlo').attr('value', $(this).attr('value'));
+        });
+    }); // End of .Done Handler
+
+    function WebFormData(inBatchName, inCourseAssigned, inSLOAssigned, inStartDate, inEndDate) {
         this.BatchName = inBatchName;
-        this.BatchDescription = inBatchDescription;
         this.CourseAssigned = inCourseAssigned;
         this.SLOAssigned = inSLOAssigned;
         this.StartDate = inStartDate;
         this.EndDate = inEndDate;
-
     }
-    function getBatchIdFromAddressBar() {
 
-        var urlArray = window.location.href.split('/');
-        var batchId = urlArray[urlArray.length - 1];
-        return batchId;
+    function getCookie(name) {
+        var dc = document.cookie;
+        var prefix = name + "=";
+        var begin = dc.indexOf("; " + prefix);
+        if (begin == -1) {
+            begin = dc.indexOf(prefix);
+            if (begin != 0) return null;
+        } else {
+            begin += 2;
+        }
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+            end = dc.length;
+        }
+        return unescape(dc.substring(begin + prefix.length, end));
     }
-    function getDropDown() {
-        $getUserHandler = jQuery.ajax({
 
-            url: '/API/Batches/GetUserCourseInformation',
-            method: 'get',
-            dataType: 'json',
-            cache: false
-
-        });
-        $getUserHandler.done(function (data, textStatus, jqXHR) {
-            $SLODownElement = $('#dropSLO');
-            $CourseDownElement = $('#dropCourse')
-            getBatchDetails(g_batchId);
-            for (i = 0; i < data.UserList.length; i++) {
-                // $tableBodyElement = $('.dropdown-menu');
-                Name = data.UserList[i].Name;
-                Emails = data.UserList[i].Email;
-                $dropElement = $('<a>', { text: Name }).attr('class', 'dropdown-item').attr('name', 'SLO').attr('value', Emails);
-                $drop2Element = $('<li>');
-                $drop2Element.append($dropElement);
-                //$dropElement = $('<input>').attr('type', 'radio').val(visibilityId).attr('name', 'visibilityIdInput');
-                $SLODownElement.append($drop2Element);
-            }
-            for (k = 0; k < data.CourseList.length; k++) {
-                CourseId = data.CourseList[k].CourseId;
-                CourseCode = data.CourseList[k].CourseCode;
-                $dropElement = $('<a>', { text: CourseCode }).attr('class', 'dropdown-item').attr('name', 'Course').attr('value', CourseId);
-                $drop2Element = $('<li>');
-                $drop2Element.append($dropElement);
-                $CourseDownElement.append($drop2Element)
-            }
-            $('#dropCourse li > a').on('click', function () {
-                // $('#courseAssigned').val($(this).text());
-                $('#courseAssigned').val($(this).text());
-                $('#courseAssigned').attr('value', $(this).attr('value'));
-
-            });
-
-            $('#dropSLO li > a').on('click', function () {
-                $('#assignedSlo').val($(this).text());
-                $('#assignedSlo').attr('value', $(this).attr('value'));
-            });
-
-
-        }); // End of .Done Handler
-
-    }
-    function getBatchDetails(inBatchId) {
-
-        $loadProductHandler = jQuery.ajax({
-            method: 'get',
-            dataType: 'json',
-            cache: false,
-            url: '/API/Batches/GetOneBatches/' + inBatchId
-        })
-        $loadProductHandler.done(function (data, textStatus, jqXHR) {
-
-            var oneBatch = data;
-
-            $SLODownElement = $('#dropSLO');
-            $CourseDownElement = $('#dropCourse')
-
-            batchId = data.BatchId;
-            batchName = data.BatchName;
-            description = data.Description;
-            startDate = new Date(data.StartDate);
-            finalStartDate = moment(startDate).format('MM/DD/YYYY');
-            // newDate = startDate.format('DD MMMM YYYY');
-            endDate = new Date(data.EndDate);
-            finalEndDate = moment(endDate).format('MM/DD/YYYY');
-            fullName = data.FullName;
-            email = data.Email;
-            courseCode = data.CourseCode;
-            courseId = data.CourseId;
-
-            $('#batchNo').val(batchName);
-            $('#batchDescription').val(description);
-            $('#courseCode').val(courseCode);
-            $('#assignedSlo').val(fullName);
-            $('#assignedSlo').attr('value', email);
-            $('#courseAssigned').val(courseCode);
-            $('#courseAssigned').attr('value', courseId)
-            $('.startDate').val(finalStartDate);
-            $('.endDate').val(finalEndDate);
-            //for (i = 0; i < data.length; i++) {
-            //    // $tableBodyElement = $('.dropdown-menu');
-            //    Name = data[i].Name;
-            //    Emails = data[i].Email;
-            //    $dropElement = $('<a>', { text: Name }).attr('class', 'dropdown-item').attr('name', 'SLO').attr('value', Emails);
-            //    $drop2Element = $('<li>');
-            //    $drop2Element.append($dropElement);
-            //    //$dropElement = $('<input>').attr('type', 'radio').val(visibilityId).attr('name', 'visibilityIdInput');
-            //    $SLODownElement.append($drop2Element);
-            //}
-            //for (k = 0; k < data.length; k++) {
-            //    CourseId = data.CourseList[k].CourseId;
-            //    CourseCode = data.CourseList[k].CourseCode;
-            //    $dropElement = $('<a>', { text: CourseCode }).attr('class', 'dropdown-item').attr('name', 'Course').attr('value', CourseId);
-            //    $drop2Element = $('<li>');
-            //    $drop2Element.append($dropElement);
-            //    $CourseDownElement.append($drop2Element)
-            //}
-            //$('#dropCourse li > a').on('click', function () {
-            //    // $('#courseAssigned').val($(this).text());
-            //    $('#courseAssigned').val($(this).text());
-            //    $('#courseAssigned').attr('value', $(this).attr('value'));
-
-            //});
-
-            //$('#dropSLO li > a').on('click', function () {
-            //    $('#assignedSlo').val($(this).text());
-            //    $('#assignedSlo').attr('value', $(this).attr('value'));
-            //});
-
-
-        });
-    }
+    function setCookie(inName, inValue) {
+        var exdate = new Date();
+        var expiredays = 1;
+        exdate.setHours(exdate.getHours() + 4);
+        exdate.setDate(exdate.getDate());
+        document.cookie = inName + "=" + inValue + ";path=/" + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+    };
 
 </script>

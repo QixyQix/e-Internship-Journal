@@ -138,9 +138,26 @@ namespace E_Internship_Journal.API
         }
 
         [HttpGet("UsersInRole/{role}")]
-        public IActionResult GetUsersInRole([FromRoute] string role)
+        public async Task<IActionResult> GetUsersInRoleAsync([FromRoute] string role)
         {
-            return Ok();
+            var users =await _userManager.GetUsersInRoleAsync(role);
+
+            List<object> userlist = new List<object>();
+
+            foreach (var user in users) {
+                userlist.Add(new
+                {
+                    user.Id,
+                    user.Email,
+                    user.UserName,
+                    user.StudentId,
+                    user.FullName,
+                    user.IsEnabled,
+                    user.PhoneNumber
+                });
+            }
+
+            return Ok(userlist);
         }
 
 
