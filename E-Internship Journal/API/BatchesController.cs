@@ -99,7 +99,7 @@ namespace E_Internship_Journal.API
                 if (await _userManager.IsInRoleAsync(ub.User, "STUDENT"))
                 {
                     string studentName = ub.User.FullName;
-                    string studentUserId = ub.User.Id;
+                    string studentUserId = ub.User.StudentId;
                     string studentEmail = ub.User.Email;
                     string studentPhonenumber = ub.User.PhoneNumber;
                     if (ub.InternshipRecord != null)

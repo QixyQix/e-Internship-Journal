@@ -193,15 +193,15 @@
 
         var supervisorGrade = parseFloat($('#supervisorGrading').val());
         var average = (collectedPoster + collectedPresentation + collectedJournal + collectedPerformance) / 4;
-        var totalAverage = Math.ceil((supervisorGrade + average) / 2);
+        var totalAverage = (supervisorGrade + average) / 2;
 
-        var grade = getGrade(totalAverage);
+        var grade = getGrade(Math.ceil(totalAverage));
 
         var gradingFormData = new GradingFormData(collectedPoster, collectedPresentation, collectedJournal, collectedPerformance, average, totalAverage);
         var selectedStudent = $('#selectstudent').val();
         swal({
             title: 'Confirm grading?',
-            html: "You are about to submit this student grade of <strong>" + totalAverage + "(" + grade + ")</strong><br/>THIS CANNOT BE UNDONE.",
+            html: "You are about to submit this student grade of <strong>" + Math.ceil(totalAverage) + "(" + grade + ")</strong><br/>THIS CANNOT BE UNDONE.",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#007bff',
@@ -240,7 +240,7 @@
                     text: 'Grade not applied to the student!'
                 })
             }
-        
+
         })//End of then function
 
     });
@@ -293,12 +293,12 @@
                         $('#OverallGrade').val("Not Graded yet");
                         $('#OverallGrading').val("Not Graded yet");
                         $('#btnSubmit').prop('disabled', true);
-                   
+
                     }
 
 
                 } else {
-                  
+
                     $('#posterGrade').val(data.PosterGrading);
                     $('#presentationGrade').val(data.PresentationGrading);
                     $('#studentJournalGrade').val(data.JournalGrading);

@@ -506,9 +506,9 @@ namespace E_Internship_Journal.API
                 internshipRecord.PresentationGrading = Int32.Parse(gradingInput.PresentationGrade.Value.ToString());
                 internshipRecord.JournalGrading = Int32.Parse(gradingInput.StudentJournalGrade.Value.ToString());
                 internshipRecord.OverallPerformance = Int32.Parse(gradingInput.OverallPerformanceGrade.Value.ToString());
-                internshipRecord.OverallGrading = Int32.Parse(gradingInput.OverallGrading.Value.ToString());
-                internshipRecord.FinalGrading = Int32.Parse(gradingInput.FinalGrading.Value.ToString());
-                
+                internshipRecord.OverallGrading = Decimal.Parse(gradingInput.OverallGrading.Value.ToString());
+                internshipRecord.FinalGrading = Decimal.Parse(gradingInput.FinalGrading.Value.ToString());
+
                 internshipRecord.Approved = true;
                 _context.SaveChanges();
 
@@ -539,6 +539,7 @@ namespace E_Internship_Journal.API
             {
                 return NotFound();
             }
+            var approved = true;
             List<object> studentGrade = new List<object>();
 
             foreach (var eachBatchInternshipRecord in batchInternship_Record)
@@ -549,45 +550,79 @@ namespace E_Internship_Journal.API
                     {
                         eachBatchInternshipRecord.UserBatch.User.FullName,
                         eachBatchInternshipRecord.UserBatch.User.StudentId,
-                        eachBatchInternshipRecord.OverallGrading,
+                        OverallGrading = "Not Graded",
+                        SupervisorGrade = "Not Graded",
+                        FinalGrading = "Not Graded"
                         //supervisorGrade
                     });
-                    //  return BadRequest(new { Message = "This Internship's records has not been graded by the LO" });
+                    approved = false;
                 }
                 else
                 {
-                    double supervisorGrade2 = 0;
-                    List<object> supervisorGrade = new List<object>();
+                    if (eachBatchInternshipRecord.SLOApproved != true)
+                    {
+                        approved = false;
+                    }
+                    decimal supervisorGrading = 0;
                     for (int i = 0; i < eachBatchInternshipRecord.MonthRecords.Count; i++)
                     {
                         if (eachBatchInternshipRecord.MonthRecords[i].Approved == true)
                         {
-                            var average = Int32.Parse(eachBatchInternshipRecord.MonthRecords[i].PerformanceGrading.ToString()) + Int32.Parse(eachBatchInternshipRecord.MonthRecords[i].TechnicalGrading.ToString()) +
-                                Int32.Parse(eachBatchInternshipRecord.MonthRecords[i].IndependenceGrading.ToString()) + Int32.Parse(eachBatchInternshipRecord.MonthRecords[i].CommunicationGrading.ToString());
-                            supervisorGrade2 = average / 4;
+                            supervisorGrading = supervisorGrading + decimal.Parse(eachBatchInternshipRecord.MonthRecords[i].OverallGrading.ToString());
                         }
-                        supervisorGrade.Add(new
-                        {
-                            eachBatchInternshipRecord.MonthRecords[i].Approved,
-                            eachBatchInternshipRecord.MonthRecords[i].PerformanceGrading,
-                            eachBatchInternshipRecord.MonthRecords[i].TechnicalGrading,
-                            eachBatchInternshipRecord.MonthRecords[i].IndependenceGrading,
-                            eachBatchInternshipRecord.MonthRecords[i].CommunicationGrading,
-                        });
                     }
                     studentGrade.Add(new
                     {
+                        eachBatchInternshipRecord.InternshipRecordId,
                         eachBatchInternshipRecord.UserBatch.User.FullName,
                         eachBatchInternshipRecord.UserBatch.User.StudentId,
                         eachBatchInternshipRecord.OverallGrading,
-                        supervisorGrade = (supervisorGrade2 / eachBatchInternshipRecord.MonthRecords.Count)
+                        eachBatchInternshipRecord.SLOOverallGrading,
+                        SupervisorGrade = (supervisorGrading / eachBatchInternshipRecord.MonthRecords.Count),
+                        eachBatchInternshipRecord.FinalGrading,
+                        eachBatchInternshipRecord.SLOApproved,
                     });
                 }//End of else statement
             }
-            return new JsonResult(studentGrade);
+            return new JsonResult( new { approved, studentGrade });
 
         }//End of Lo_GetStudentGrading
+        [HttpPut("SLOGradeStudentInternship/")]
+        [Authorize(Roles = "SLO")]
+        public async Task<IActionResult> SLOGradeStudentInternship([FromBody] string value)
+        {
 
+            //var internshipRecord = _context.Internship_Records.Where(ir => ir.UserBatch.UserId.Equals(foundUserId))
+            //    .Where(ir => ir.LiaisonOfficerId.Equals(_userManager.GetUserId(User)))
+            //    .Include(ub => ub.UserBatch)
+            //    .SingleOrDefault();
+
+
+            var gradingInput = JsonConvert.DeserializeObject<dynamic>(value);
+
+            try
+            {
+
+                //  new List<int>(intArray);
+                var internshipIdList = gradingInput.InternshipIdList;
+                for (int i = 0; i < internshipIdList.Count; i++)
+                {
+                    var eachId = (int) internshipIdList[i].Value;
+                    var foundInternshipRecord = _context.Internship_Records.Where(ir => ir.InternshipRecordId == eachId).Single();
+
+                    foundInternshipRecord.SLOApproved = true;
+
+                }
+                await _context.SaveChangesAsync();
+
+                return new OkObjectResult(new { Message = "Internship record graded!!" });
+            }
+            catch (Exception e)
+            {
+                return new BadRequestObjectResult(new { Message = e.Message.ToString() });
+            }
+
+        }//End of SLOGradeStudentInternship
         private bool Internship_RecordExists(int id)
         {
             return _context.Internship_Records.Any(e => e.InternshipRecordId == id);

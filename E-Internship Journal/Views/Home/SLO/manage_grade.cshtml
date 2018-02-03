@@ -42,9 +42,9 @@
                         <tr id="filterrow">
                             <th>Student ID</th>
                             <th>Student Name</th>
-                            <th>Supervisor's Grading (%)</th>
+                            <th>Supervisor's Grading (1-5)</th>
                             <th>LO's Grading (1-5)</th>
-                            <th>Final Grading (%)</th>
+                            <th>Final Grading (1-5)</th>
                             <th>Grade</th>
                             <th></th>
                         </tr>
@@ -88,7 +88,7 @@
                 <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Manage_Batch'">
                     Back
                 </button>
-                <button class="btn btn-primary pull-right" id="submit">
+                <button class="btn btn-primary pull-right" id="btnSubmit">
                     Submit
                 </button>
             </div>
@@ -97,8 +97,54 @@
     &nbsp;
 </div>
 
+<!-- finalg Modal -->
+<div class="modal fade" id="finalgModal" tabindex="-1" role="dialog" aria-labelledby="finalgModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="finalgModalLabel">Final Grading for P1551581</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <form>
+                        <div class="form-group ">
+                            <label>Student ID:</label>
+                            <input class="form-control" id="student_Id" readonly>
+                        </div>
+                        <div class="form-group ">
+                            <label>Student Name:</label>
+                            <input class="form-control" id="student_Name" readonly>
+                        </div>
+                        <div class="form-group ">
+                            <label>Supervisor's Grading:</label>
+                            <input class="form-control" type="number" id="s_g" readonly>
+                        </div>
+                        <div class="form-group ">
+                            <label>Liaison Officer's Grading:</label>
+                            <input class="form-control" type="number" id="lo_g" readonly>
+                        </div>
+                        <div class="form-group ">
+                            <label>Final Grading:</label>
+                            <input class="form-control" type="number" id="finalg">
+                        </div>
+                        <div class="form-group ">
+                            <label>Grade:</label>
+                            <input class="form-control" id="grade" readonly>
+                        </div>
+                        <div class="text-center">
+                            <input type="button" id="btnConfirmFG" class="btn btn-primary col-lg-6 col-md-6 col-sm-12" value="Confirm" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
-
+    var g_Grading;
     $(document).ready(function () {
         for (i = 0; i < sessionStorage.length; i++) {
             if (sessionStorage.key(i) != 'selected' && sessionStorage.key(i) != 'editStudent') {
@@ -111,8 +157,93 @@
         var selectedBatch = sessionStorage.getItem('selected');
         $('#selectBatch').val(selectedBatch);
 
-        $.ajax({
-            url: '/api/Internship_Record/SLo_GetBatchGrading/' + selectedBatch,
+        g_Grading = getBatchGrading(selectedBatch);
+
+
+
+
+        $('#btnSubmit').on('click', function (e) {
+            var InternshipRecordId = [];
+            var finalGrade = [];
+            $('#grade_dataTable tbody').find('tr').each(function (i, el) {
+                var $tds = $(this).find('td');
+                // var $row = $(this).closest('tr');
+                var data = $('#grade_dataTable').DataTable().row($(this)).data();
+
+                InternshipRecordId.push(data.InternshipRecordId);
+                //finalGrade.push(data.FinalGrading);
+                //console.dir(data);
+                // do something with productId, product, Quantity
+            });//End of foreach
+            swal({
+                title: 'Confirm grading?',
+                html: "You are about to submit the grade of this batch <strong>" + $('#selectBatch option:selected').text() + "</strong><br/>THIS CANNOT BE UNDONE.",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#007bff',
+                confirmButtonText: 'Submit'
+            }).then((result) => {
+                if (result.value) {
+                    //var qqq = InternshipRecordId.indexOf("undfined");
+                   // var www = InternshipRecordId.includes(undefined);
+                    if (!InternshipRecordId.includes(undefined)) {
+                        var gradingFormData = new GradingFormData(InternshipRecordId);
+                        $.ajax({
+                            url: '/Api/Internship_Record/SLOGradeStudentInternship/',
+                            method: 'PUT',
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+                            cache: false,
+                            data: "'" + JSON.stringify(gradingFormData) + "'",
+                            success: function (data) {
+                                swal({
+                                    type: 'success',
+                                    title: 'Graded!',
+                                    text: 'The grade has been applied to the batch!'
+                                }).then(function () {
+                                    //  object.closest('tr').remove();
+                                    window.location.href = "/";
+                                });
+                            },
+                            error: function (data) {
+                                swal({
+                                    type: 'error',
+                                    title: 'Oops!',
+                                    text: data.Message
+                                });
+                            }//End of fail
+                        });//End of ajax
+
+                    }//end of indexof
+                    else {
+                        swal({
+                            type: 'error',
+                            title: 'Oops!',
+                            text: "Cannot be submitted as some student is not graded yet."
+                        });
+
+                    }
+
+                } else if (result.dismiss === 'cancel') {
+                    swal({
+                        type: 'warning',
+                        title: 'Canceled!',
+                        text: 'Grade not applied to the student!'
+                    })
+                }//end of else if
+
+            })//End of then function
+            // console.dir(InternshipRecordId);
+        });
+        $('#selectBatch').on('change', function (e) {
+
+            g_Grading = getBatchGrading($(this).val());
+            hideFilter1();
+        });
+    });//End of document ready
+    function getBatchGrading(inId) {
+        return $.ajax({
+            url: '/api/Internship_Record/SLo_GetBatchGrading/' + inId,
             method: 'GET',
             dataType: 'json',
             cache: false,
@@ -120,55 +251,57 @@
                 loadDataTable(data);
             }//End of success
         });//End of Ajax
-
-
-
-    });//End of document ready
+    }
     function loadDataTable(inData) {
         // Array holding selected row IDs
         var rows_selected = [];
-      //  var finalSupervisorGrade = 0;
+        //  var finalSupervisorGrade = 0;
+        var approved = inData.approved;
+        if (approved == true) {
+            $('#btnSubmit').prop('disabled', true);
+
+        } else {
+            $('#btnSubmit').prop('disabled', false);
+
+        }
         var table = $('#grade_dataTable').DataTable({
             bSortable: false,
             dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
-            data: inData,
+            data: inData.studentGrade,
+            destroy: true,
             columns: [
                 { data: "StudentId" },
                 { data: "FullName" },
                 {
-                    data: "supervisorGrade",
-                    "mRender": function (o) {
-                        var finalSupervisorGrade = 0;
-                        if (o != undefined) {
-                            for (i = 0; i < o.length; i++) {
-                                //  o[]
-                                var eachSupervisor = o[i];
-                                if (eachSupervisor.Approved == true) {
-                                    var CommunicationGrading = parseFloat(eachSupervisor.CommunicationGrading);
-                                    var IndependenceGrading = parseFloat(eachSupervisor.IndependenceGrading);
-                                    var PerformanceGrading = parseFloat(eachSupervisor.PerformanceGrading);
-                                    var TechnicalGrading = parseFloat(eachSupervisor.TechnicalGrading);
-
-                                    var average = (CommunicationGrading + IndependenceGrading + PerformanceGrading + TechnicalGrading) / 4;
-                                    finalSupervisorGrade = finalSupervisorGrade + average;
-                                }
-                                //console.dir(finalSupervisorGrade);
-                            }
-
-                        }
-                        
-                        return finalSupervisorGrade
-                    }
-
+                    data: "SupervisorGrade",
                 },
                 { data: "OverallGrading" },
-                { data: "Description" },
-                { data: "Description" },
+                { data: "FinalGrading" },
                 {
-                    data: null,
+                    data: 'FinalGrading',
+                    "mRender": function (o) {
+                        if (o != "Not Graded") {
+                            return getGrade(o)
+                        } else {
+                            return o
+
+                        }
+                    }
+                },
+                {
+                    data: 'InternshipRecordId',
                     "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn"><i class="fa fa-trash"></i></button>' }
+                    "mRender": function (o) {
+                        if (approved == true) {
+                           // console.dir('test');
+                            return '<button class="btn btn-sm btn-primary" value="' + o + '" disabled><i class="fa fa-pencil-square-o"></i>'
+                        } else{
+
+                            return '<button class="btn btn-sm btn-primary" value="' + o + '"><i class="fa fa-pencil-square-o"></i>'
+                        }
+                       
+                    }
                 }
             ],
             language: {
@@ -218,31 +351,32 @@
         //    });
         //});
         $('#grade_dataTable tbody').on('click', 'button.btn-primary', function (e) {
-            location.href = 'edit_grade';
-        });
-        $('#grade_dataTable tbody').on('click', 'button.btn-danger', function (e) {
-            swal({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then(function (result) {
-                if (result.value) {
-                    swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
+            //  location.href = 'edit_grade';
+            var selected = $(this).val();
+            g_Grading.then(function (data) {
+                //var task = data[$('#selectWeek').val()];
+                for (i = 0; i < data.studentGrade.length; i++) {
+                    if (data.studentGrade[i].InternshipRecordId == selected) {
+                        //$('#attendanceModalLabel').text(moment(task.AttendanceRecords[i].Date).format("DD MMMM YYYY"));
+                        //$('#reviewtask').val(task.AttendanceRecords[i].SupervisorRemarks);
+                        $('#student_Id').val(data.studentGrade[i].StudentId);
+                        $('#student_Name').val(data.studentGrade[i].FullName);
+                        $('#s_g').val(data.studentGrade[i].SupervisorGrade);
+                        $('#lo_g').val(data.studentGrade[i].OverallGrading);
+                        $('#finalg').val(data.studentGrade[i].FinalGrading);
+                        $('#grade').val(getGrade($('#finalg').val()));
+                    }
+
                 }
-            }).catch(swal.noop);
+                $('#finalgModal').modal('show');
+            });
+
         });
-
     }
-  
 
+    function GradingFormData(internshipIdList) {
+        this.InternshipIdList = internshipIdList;
+    }
 
     function hideFilter1() {
         $("#grade_dataTable thead input").val("");
@@ -279,5 +413,26 @@
         } else {
             evt.cancelBubble = true;
         }
+    }
+    function getGrade(average) {
+        // console.dir(average);
+        if (average >= 4.5)
+            return 'DIST';
+        else if (average >= 4.0)
+            return 'A';
+        else if (average >= 3.5)
+            return 'B+';
+        else if (average >= 3.0)
+            return 'B';
+        else if (average >= 2.5)
+            return 'C+';
+        else if (average >= 2.0)
+            return 'C';
+        else if (average >= 1.5)
+            return 'D+';
+        else if (average >= 1.0)
+            return 'D';
+        else if (average < 1.0)
+            return 'F';
     }
 </script>
