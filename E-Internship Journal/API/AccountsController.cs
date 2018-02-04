@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System.IO;
+using E_Internship_Journal.Services;
 
 namespace E_Internship_Journal.API
 {
@@ -22,10 +23,12 @@ namespace E_Internship_Journal.API
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public AccountsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
+        private readonly IEmailSender _emailSender;
+        public AccountsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IEmailSender emailSender,
             SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
+            _emailSender = emailSender;
             _signInManager = signInManager;
             _context = context;
         }
@@ -294,6 +297,17 @@ namespace E_Internship_Journal.API
                     await userManager.AddToRoleAsync(newUser, role);
                 }
             }
+            if (roleList.Contains("SLO") || roleList.Contains("LO"))
+            {
+                var newUserEmail = newUser.Email;
+                var newUserName = newUser.FullName;
+                //var role = roleList.Contains("SLO") ? null : "test";
+                await _emailSender.SendChangeEmailAsync(false, newUserEmail, "Your account has been created!",
+                    "Hi, " + newUserName, "Your account has been created!" +
+                    "Kindly proceed to activate/login your account.");
+            }
+            
+
 
             return new OkObjectResult(new { Message = "User created successfully!" });
         }

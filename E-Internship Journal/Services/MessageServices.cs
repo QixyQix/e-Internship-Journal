@@ -25,19 +25,19 @@ namespace E_Internship_Journal.Services
             // Plug in your SMS service here to send a text message.
             return Task.FromResult(0);
         }
-        public Task SendChangeEmailAsync(string email, string subject, string message)
+        public Task SendChangeEmailAsync(Boolean button,string email, string subject, string greetings, string message)
         {
             try
             {
 
                 //From Address    
-                string FromAddress = "myname@company.com";
-                string FromAdressTitle = "My Name";
+                string FromAddress = "admin@sp.edu.sg";
+                string FromAdressTitle = "ADMIN @ SP";
                 //To Address    
                 string ToAddress = email;
-                string ToAdressTitle = "Microsoft ASP.NET Core";
+                string ToAdressTitle = "e-Internship Journal";
                 string Subject = subject;
-                string BodyContent = message;
+                //string BodyContent = message;
 
                 //Smtp Server    
                 string SmtpServer = "smtp.gmail.com";
@@ -46,11 +46,19 @@ namespace E_Internship_Journal.Services
 
                 var mimeMessage = new MimeMessage();
                 var bodyBuilder = new BodyBuilder();
-                string filePath = System.IO.Path.GetFullPath("wwwroot/images/email.html");
+                string filePath = System.IO.Path.GetFullPath("wwwroot/images/Email_Templates/GeneralTemplate.html");
                 using (StreamReader SourceReader = System.IO.File.OpenText(filePath))
                 {
                     string text = SourceReader.ReadToEnd();
-                    var qq = text.Replace("href=\"\">Activate Account</a>", "href=\"" + message + "\">Activate Account</a>");
+                    var qq = "";
+                    if (button == false)
+                    {
+                        qq = text.Replace("display: inline-block;\" class=\"mobile-button\"", "display: none;\" class=\"mobile-button\"");
+                    }
+                    qq = qq.Replace("Header</td>", subject + "</td>");
+                    qq = qq.Replace("Greetings</td>", greetings + "</td>");
+                    qq = qq.Replace("Body</td>", message + "</td>");
+                    //   var qq = text.Replace("href=\"\">Activate Account</a>", "href=\"" + message + "\">Activate Account</a>");
                     //bodyBuilder.HtmlBody = SourceReader.ReadToEnd();
                     bodyBuilder.HtmlBody = qq;
                 }
@@ -74,8 +82,8 @@ namespace E_Internship_Journal.Services
                 {
                     client.Connect(SmtpServer, SmtpPortNumber, true);
                     client.Authenticate(
-                        "yoshifumiprovidence5@gmail.com",
-                        "chia85112904"
+                        "yoshifumiprovidence6@gmail.com",
+                        "85112904"
                         );
                     client.Send(mimeMessage);
 

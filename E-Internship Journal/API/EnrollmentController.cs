@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
+using E_Internship_Journal.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,9 +23,10 @@ namespace E_Internship_Journal.Controllers
     public class EnrollmentController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public EnrollmentController(ApplicationDbContext context)
+        private readonly IEmailSender _emailSender;
+        public EnrollmentController(ApplicationDbContext context, IEmailSender emailSender)
         {
+            _emailSender = emailSender;
             _context = context;
         }
 
@@ -67,7 +69,9 @@ namespace E_Internship_Journal.Controllers
                         csvLine.Add(fileLine);
                     }
                 }
-
+                var studentAdded = new List<UserBatch>();
+                var studentCreated = new List<RegistrationPin>();
+                var studentCreatedBatch = new List<UserBatch>();
                 foreach (var line in csvLine)
                 {
 
@@ -93,6 +97,7 @@ namespace E_Internship_Journal.Controllers
                                         Batch = thisBatch,
                                         User = user
                                     };
+                                    studentAdded.Add(newUserBatch);
                                     _context.UserBatches.Add(newUserBatch);
                                     await _context.SaveChangesAsync();
                                 }
@@ -131,7 +136,7 @@ namespace E_Internship_Journal.Controllers
                                 _context.UserBatches.Add(newUserBatch);
 
                                 var repeatPinGeneration = true;
-
+                                studentCreatedBatch.Add(newUserBatch);
                                 do
                                 {
                                     var registationPin = generateRandomString(50);
@@ -145,6 +150,7 @@ namespace E_Internship_Journal.Controllers
                                         };
                                         _context.RegistrationPins.Add(newRegistrationPin);
                                         repeatPinGeneration = false;
+                                        studentCreated.Add(newRegistrationPin);
                                     }
                                 } while (repeatPinGeneration);
                                 await _context.SaveChangesAsync();
@@ -157,6 +163,29 @@ namespace E_Internship_Journal.Controllers
 
                         }
                     }
+                }
+                for (int i = 0; i < studentCreated.Count; i++)
+                {
+                    var studentEmail = studentCreated[i].User.Email;
+                    var studentName = studentCreated[i].User.FullName;
+                    var batchName = studentCreatedBatch[i].Batch.BatchName;
+                    var startDate = studentCreatedBatch[i].Batch.StartDate.ToString("dd MMMM yyyy");
+                    var endDate = studentCreatedBatch[i].Batch.EndDate.ToString("dd MMMM yyyy");
+                    await _emailSender.SendChangeEmailAsync(false, studentEmail, "Your account has been created and enrolled!",
+                        "Hi, " + studentName, "Your student account has been created and enrolled into Batch " + batchName + "." +
+                        " The Semester will start from " + startDate + " and end on " + endDate +". Kindly proceed to activate your account before your internship starts.");
+                }
+                for (int k =0;k<studentAdded.Count; k++)
+                {
+                    var studentEmail = studentAdded[k].User.Email;
+                    var studentName = studentAdded[k].User.FullName;
+                    var batchName = studentAdded[k].Batch.BatchName;
+                    var startDate = studentAdded[k].Batch.StartDate.ToString("dd MMMM yyyy");
+                    var endDate = studentAdded[k].Batch.EndDate.ToString("dd MMMM yyyy");
+                    await _emailSender.SendChangeEmailAsync(false, studentEmail, "You have been enrolled into " + batchName, "Hi, " + studentName,
+                        "You have been enrolled into Batch " + batchName + "." +
+                        " The Semester will start from " + startDate + " and end on " + endDate +".Kindly login to confirm your batch.");
+
                 }
             }
 

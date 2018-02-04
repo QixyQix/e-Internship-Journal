@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using System.Globalization;
+using E_Internship_Journal.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,9 +22,11 @@ namespace E_Internship_Journal.API
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        public Month_RecordController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+        private readonly IEmailSender _emailSender;
+        public Month_RecordController(UserManager<ApplicationUser> userManager, IEmailSender emailSender, ApplicationDbContext context)
         {
             _userManager = userManager;
+            _emailSender = emailSender;
             _context = context;
         }
 
@@ -601,8 +604,11 @@ namespace E_Internship_Journal.API
             Month_Record monthRecord = _context.Month_Records.Where(mr => mr.MonthId == id)
                 .Include(mr => mr.InternshipRecord)
                 .ThenInclude(ir => ir.Project)
+                .Include(ir=>ir.InternshipRecord)
+                .ThenInclude(ub=>ub.UserBatch)
+                .ThenInclude(u=>u.User)
                 .SingleOrDefault();
-
+            
             if (monthRecord == null)
             {
                 return BadRequest(new { Message = "This month record is not editable or does not exist." });
@@ -628,7 +634,9 @@ namespace E_Internship_Journal.API
                 monthRecord.OverallFeedback = gradingInput.OverallFeedback.Value.ToString();
                 monthRecord.Approved = true;
                 _context.SaveChanges();
-
+                var studentEmail = monthRecord.InternshipRecord.UserBatch.User.Email;
+                var studentName = monthRecord.InternshipRecord.UserBatch.User.FullName;
+               _emailSender.SendChangeEmailAsync(false,studentEmail, "Your Supervisor graded you!", "Hi, " + studentName, "Your Supervisor has graded your previous month record. You may view your grade via the website.");
                 return new OkObjectResult(new { Message = "Month record graded!!" });
             }
             catch (Exception e)

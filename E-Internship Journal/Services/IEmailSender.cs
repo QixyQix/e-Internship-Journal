@@ -8,6 +8,6 @@ namespace E_Internship_Journal.Services
     public interface IEmailSender
     {
         Task SendEmailAsync(string email, string subject, string message);
-        Task SendChangeEmailAsync(string email, string subject, string message);
+        Task SendChangeEmailAsync(Boolean button,string email, string subject, string greetings, string message);
     }
 }
