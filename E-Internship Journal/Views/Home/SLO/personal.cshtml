@@ -15,34 +15,36 @@
             <i class="fa fa-pencil fa-2x pull-left"></i> <h3>Personal Particulars</h3>
         </div>
         <div class="card-body">
+            <form name="sentMessage" id="contactForm" novalidate="novalidate">
                 <div class="form-group">
                     <label class="control-label" for="name">
                         Name:
                     </label>
-                    <input type='text' class="form-control" id="name" readonly/>
+                    <input type='text' class="form-control" id="nameInput" readonly />
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="contact">
                         Contact:
                     </label>
-                    <input type='text' class="form-control" id="contact" />
+                    <input type='number' class="form-control" id="contactInput" required="required" data-validation-required-message="Please enter valid number." />
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="email">
                         Email:
                     </label>
-                    <input type='text' class="form-control" id="email" />
+                    <input type='email' class="form-control" id="emailInput" required="required" data-validation-required-message="Please enter valid email." />
                 </div>
+            </form>
         </div>
     </div>
 </div>
 <div class="card-body">
     <div class="form-group">
         <div class="col-12">
-            <button class="btn btn-default pull-left" onclick="window.history.go(-1); return false">
+            <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Index'">
                 Back
             </button>
-            <button class="location.href='http://' + window.location.host +'/Home/Index'">
+            <button class="btn btn-primary pull-right" name="submit" type="submit" id="btnUpdate">
                 Update Details
             </button>
         </div>
@@ -50,8 +52,113 @@
 </div>
 <br />
 <script>
-    $('#promptreset').on('click', function (e) {
-        $('#resetModal').modal('show');
-        console.log("hi")
+
+
+    $.ajax({
+        url: '/api/Accounts/loggedInUserDetails',
+        method: 'GET',
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        cache: false,
+        success: function (data) {
+            console.dir(data);
+            $('#nameInput').val(data.FullName);
+            $('#contactInput').val(data.PhoneNumber)
+            $('#emailInput').val(data.Email)
+        },//End of success
+        error: function (data) {
+            swal({
+                type: 'error',
+                title: 'Error',
+                text: data.Message
+            });
+        }//End of error
+    });//End of ajax call
+
+    $('#btnUpdate').on('click', function (e) {
+        var contactNumber = $('#contactInput').val();
+        var email = $('#emailInput').val();
+
+        var webFormData = new WebFormData(contactNumber, email);
+
+        console.dir(webFormData);
+
+        $.ajax({
+            url: '/API/Accounts/updateParticulars',
+            method: 'PUT',
+            contentType: "application/json",
+            cache: false,
+            data: "'" + JSON.stringify(webFormData) + "'",
+            success: function (data) {
+                swal({
+                    type: 'success',
+                    title: 'Saved',
+                    text: data.Message
+                }).then(
+                    function () {
+                        window.location.reload();
+                    });
+            },
+            error: function (data) {
+                swal({
+                    type: 'error',
+                    title: 'Error',
+                    text: data.Message
+                });
+            }//End of error
+        });//End of ajax
+
+
+    });//End of btnUpdate
+
+    document.querySelector("#contactInput").addEventListener("keypress", function (evt) {
+        if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57) {
+            evt.preventDefault();
+        }
     });
+
+    //$(function () {
+    //    $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
+    //        preventSubmit: true,
+    //        submitSuccess: function ($form, event) {
+    //            var contactNumber = $('#contactInput').val();
+    //            var email = $('#emailInput').val();
+
+    //            var webFormData = new WebFormData(contactNumber, email);
+
+    //            $.ajax({
+    //                url: '/API/Accounts/updateParticulars',
+    //                method: 'PUT',
+    //                contentType: "application/json",
+    //                cache: false,
+    //                data: "'" + JSON.stringify(webFormData) + "'",
+    //                success: function (data) {
+    //                    swal({
+    //                        type: 'success',
+    //                        title: 'Saved',
+    //                        text: data.Message
+    //                    }).then(
+    //                        function () {
+    //                            window.location.reload();
+    //                        });
+    //                },
+    //                error: function (data) {
+    //                    swal({
+    //                        type: 'error',
+    //                        title: 'Error',
+    //                        text: data.Message
+    //                    });
+    //                }//End of error
+    //            });//End of ajax
+    //        },
+    //        submitError: function ($form, event, errors) {
+
+    //        }
+    //    });
+
+    //});//End of jqBootstrapValidatio
+    function WebFormData(inContactNumber, inEmail) {
+        this.PhoneNumber = inContactNumber;
+        this.Email = inEmail;
+    }
 </script>

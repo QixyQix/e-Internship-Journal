@@ -143,11 +143,12 @@ namespace E_Internship_Journal.API
         [HttpGet("UsersInRole/{role}")]
         public async Task<IActionResult> GetUsersInRoleAsync([FromRoute] string role)
         {
-            var users =await _userManager.GetUsersInRoleAsync(role);
+            var users = await _userManager.GetUsersInRoleAsync(role);
 
             List<object> userlist = new List<object>();
 
-            foreach (var user in users) {
+            foreach (var user in users)
+            {
                 userlist.Add(new
                 {
                     user.Id,
@@ -527,7 +528,8 @@ namespace E_Internship_Journal.API
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserAsync(string id) {
+        public async Task<IActionResult> DeleteUserAsync(string id)
+        {
 
             var user = _userManager.Users.Where(u => u.Id.Equals(id))
                 .Include(u => u.UserBatches)
@@ -587,6 +589,54 @@ namespace E_Internship_Journal.API
             else
             {
                 return new OkObjectResult(new { Messages = messageList, AlertType = "warning" });
+            }
+        }
+
+        [HttpGet("loggedInUserDetails")]
+        public IActionResult GetLoggedInUserDetail()
+        {
+            string userId = _userManager.GetUserId(User);
+            ApplicationUser user = _userManager.Users.Where(u => u.Id.Equals(userId)).SingleOrDefault();
+
+            if (user != null)
+            {
+                return new OkObjectResult(new
+                {
+                    FullName = user.FullName,
+                    PhoneNumber = user.PhoneNumber,
+                    Email = user.Email
+                });
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("updateParticulars")]
+        public IActionResult UpdateParticulars([FromBody] string value) {
+            string userId = _userManager.GetUserId(User);
+            ApplicationUser user = _userManager.Users.Where(u => u.Id.Equals(userId)).SingleOrDefault();
+
+            var particularsInput = JsonConvert.DeserializeObject<dynamic>(value);
+            string email = particularsInput.Email.Value.ToString().Trim();
+
+            if (user != null && _userManager.Users.Any(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase)))
+            {
+                user.PhoneNumber = particularsInput.PhoneNumber.Value.ToString().Trim();
+                user.Email = email;
+                user.UserName = email;
+
+                _context.SaveChanges();
+
+                return new OkObjectResult(new
+                {
+                    Message = "Updated particulars successully"
+                });
+            }
+            else
+            {
+                return BadRequest(new { Message = "Another user with that email already exists!" });
             }
         }
 
