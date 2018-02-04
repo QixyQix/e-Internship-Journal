@@ -50,33 +50,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>P1551321</td>
-                            <td>Catelyn Tan</td>
-                            <td>98%</td>
-                            <td>95%</td>
-                            <td>97%</td>
-                            <td>Dist</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>P1584512</td>
-                            <td>Emily Teo</td>
-                            <td>96%</td>
-                            <td>96%</td>
-                            <td>96%</td>
-                            <td>Dist</td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td>P1581324</td>
-                            <td>Jemma Sarah</td>
-                            <td>84%</td>
-                            <td>97%</td>
-                            <td>90%</td>
-                            <td>A+</td>
-                            <td></td>
-                        </tr>
+                      
                     </tbody>
                 </table>
             </div>
@@ -156,9 +130,12 @@
         }
         var selectedBatch = sessionStorage.getItem('selected');
         $('#selectBatch').val(selectedBatch);
-
+        $('#grade_dataTable').dataTable().fnClearTable();
         g_Grading = getBatchGrading(selectedBatch);
+        g_Grading.then(function (data) {
+            loadDataTable(data);
 
+        })
 
 
 
@@ -185,7 +162,7 @@
             }).then((result) => {
                 if (result.value) {
                     //var qqq = InternshipRecordId.indexOf("undfined");
-                   // var www = InternshipRecordId.includes(undefined);
+                    // var www = InternshipRecordId.includes(undefined);
                     if (!InternshipRecordId.includes(undefined)) {
                         var gradingFormData = new GradingFormData(InternshipRecordId);
                         $.ajax({
@@ -238,7 +215,42 @@
         $('#selectBatch').on('change', function (e) {
 
             g_Grading = getBatchGrading($(this).val());
-            hideFilter1();
+            g_Grading.then(function (data) {
+                loadDataTable(data);
+
+            })
+          hideFilter1();
+        });
+        $('#btnConfirmFG').on('click', function (e) {
+            var collectedId = $(this).attr('data-value');
+            var collectedFinalGrade = $('#finalg').val();
+
+            var finalGradeFormData = new FinalGradeFormData(collectedFinalGrade);
+            $.ajax({
+                url: '/Api/Internship_Record/editStudentGrade/' + collectedId,
+                method: 'PUT',
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                cache: false,
+                data: "'" + JSON.stringify(finalGradeFormData) + "'",
+                success: function (data) {
+                    swal({
+                        type: 'success',
+                        title: 'Graded!',
+                        text: 'The grade has been applied to the batch!'
+                    }).then(function () {
+                        //  object.closest('tr').remove();
+                        window.location.href = "/";
+                    });
+                },
+                error: function (data) {
+                    swal({
+                        type: 'error',
+                        title: 'Oops!',
+                        text: data.Message
+                    });
+                }//End of fail
+            });//End of ajax
         });
     });//End of document ready
     function getBatchGrading(inId) {
@@ -248,11 +260,13 @@
             dataType: 'json',
             cache: false,
             success: function (data) {
-                loadDataTable(data);
-            }//End of success
+                //loadDataTable(data);
+            },//End of success
+
         });//End of Ajax
     }
     function loadDataTable(inData) {
+
         // Array holding selected row IDs
         var rows_selected = [];
         //  var finalSupervisorGrade = 0;
@@ -292,15 +306,20 @@
                 {
                     data: 'InternshipRecordId',
                     "bSortable": false,
-                    "mRender": function (o) {
+                    "mRender": function (data, type, dataToSet) {
                         if (approved == true) {
-                           // console.dir('test');
-                            return '<button class="btn btn-sm btn-primary" value="' + o + '" disabled><i class="fa fa-pencil-square-o"></i>'
-                        } else{
-
-                            return '<button class="btn btn-sm btn-primary" value="' + o + '"><i class="fa fa-pencil-square-o"></i>'
+                            // console.dir('test');
+                            return '<button class="btn btn-sm btn-primary" disabled><i class="fa fa-pencil-square-o"></i>'
+                        } else if (dataToSet.SupervisorGrade == "Not Graded") {
+                            $('#btnSubmit').prop('disabled', true);
+                            return '<button class="btn btn-sm btn-primary" disabled><i class="fa fa-pencil-square-o"></i>'
                         }
-                       
+
+                        else {
+                            $('#btnSubmit').prop('disabled', false);
+                            return '<button class="btn btn-sm btn-primary" value="' + data + '"><i class="fa fa-pencil-square-o"></i>'
+                        }
+
                     }
                 }
             ],
@@ -365,6 +384,7 @@
                         $('#lo_g').val(data.studentGrade[i].OverallGrading);
                         $('#finalg').val(data.studentGrade[i].FinalGrading);
                         $('#grade').val(getGrade($('#finalg').val()));
+                        $('#btnConfirmFG').attr('data-value',data.studentGrade[i].InternshipRecordId);
                     }
 
                 }
@@ -377,7 +397,9 @@
     function GradingFormData(internshipIdList) {
         this.InternshipIdList = internshipIdList;
     }
-
+    function FinalGradeFormData(inFinalGrading) {
+        this.FinalGrading = inFinalGrading;
+    }
     function hideFilter1() {
         $("#grade_dataTable thead input").val("");
         $("#grade_dataTable thead input").change();

@@ -113,15 +113,15 @@ namespace E_Internship_Journal.Data
 
             //Student
             var studentUser = new ApplicationUser[] {
-                new ApplicationUser { UserName = "P1551581@TEST.COM", FullName = "Ong Boon Ping, Klein", Email = "P1551581@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
-                new ApplicationUser { UserName = "P1530247@TEST.COM", FullName = "Amelia Goh Jia Pei", Email = "P1530247@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
-                new ApplicationUser { UserName = "P1551635@TEST.COM", FullName = "Loo Jia Wei", Email = "P1551635@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
-                new ApplicationUser { UserName = "P1551677@TEST.COM", FullName = "Tan Chia Wei", Email = "P1551677@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
-                new ApplicationUser { UserName = "P1530078@TEST.COM", FullName = "Cho Qi Xiang", Email = "P1530078@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
-                new ApplicationUser { UserName = "P1555555@TEST.COM", FullName = "Sim Zi Quan", Email = "P1555555@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
-                new ApplicationUser { UserName = "P1566666@TEST.COM", FullName = "Kish Choy", Email = "P1566666@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
-                new ApplicationUser { UserName = "P1577777@TEST.COM", FullName = "Mark Lee Guo Jing", Email = "P1577777@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
-                new ApplicationUser { UserName = "STUDENT@TEST.COM", FullName = "James Bond", Email = "STUDENT@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
+                new ApplicationUser { StudentId="P1551581" , UserName = "P1551581@TEST.COM", FullName = "Ong Boon Ping, Klein", Email = "P1551581@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
+                new ApplicationUser { StudentId="P1530247" , UserName = "P1530247@TEST.COM", FullName = "Amelia Goh Jia Pei", Email = "P1530247@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
+                new ApplicationUser { StudentId="P1551635" , UserName = "P1551635@TEST.COM", FullName = "Loo Jia Wei", Email = "P1551635@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
+                new ApplicationUser { StudentId="P1551677" , UserName = "P1551677@TEST.COM", FullName = "Tan Chia Wei", Email = "P1551677@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
+                new ApplicationUser { StudentId="P1530078" , UserName = "P1530078@TEST.COM", FullName = "Cho Qi Xiang", Email = "P1530078@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
+                new ApplicationUser { StudentId="P1555555" , UserName = "P1555555@TEST.COM", FullName = "Sim Zi Quan", Email = "P1555555@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
+                new ApplicationUser { StudentId="P1566666" , UserName = "P1566666@TEST.COM", FullName = "Kish Choy", Email = "P1566666@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
+                new ApplicationUser { StudentId="P1577777" , UserName = "P1577777@TEST.COM", FullName = "Mark Lee Guo Jing", Email = "P1577777@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
+                new ApplicationUser { StudentId="STUDENT" , UserName = "STUDENT@TEST.COM", FullName = "James Bond", Email = "STUDENT@TEST.COM", /*Course=courseObject,*/ IsEnabled = true },
             };
             ph = new PasswordHasher<ApplicationUser>();
             for (int i = 0; i < studentUser.Length; i++)

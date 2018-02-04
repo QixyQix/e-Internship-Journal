@@ -430,7 +430,7 @@ namespace E_Internship_Journal.API
 
             if (studentInternship_Record == null)
             {
-                return NotFound();
+                // return NotFound();
             }
             List<object> supervisorGrade = new List<object>();
             for (int i = 0; i < studentInternship_Record.MonthRecords.Count; i++)
@@ -537,7 +537,7 @@ namespace E_Internship_Journal.API
 
             if (batchInternship_Record.Count == 0)
             {
-                return NotFound();
+                //return NotFound();
             }
             var approved = true;
             List<object> studentGrade = new List<object>();
@@ -548,11 +548,13 @@ namespace E_Internship_Journal.API
                 {
                     studentGrade.Add(new
                     {
+                        eachBatchInternshipRecord.InternshipRecordId,
                         eachBatchInternshipRecord.UserBatch.User.FullName,
                         eachBatchInternshipRecord.UserBatch.User.StudentId,
                         OverallGrading = "Not Graded",
                         SupervisorGrade = "Not Graded",
-                        FinalGrading = "Not Graded"
+                        FinalGrading = "Not Graded",
+                        eachBatchInternshipRecord.SLOApproved,
                         //supervisorGrade
                     });
                     approved = false;
@@ -584,9 +586,46 @@ namespace E_Internship_Journal.API
                     });
                 }//End of else statement
             }
-            return new JsonResult( new { approved, studentGrade });
+            return new JsonResult(new { approved, studentGrade });
 
         }//End of Lo_GetStudentGrading
+
+        [HttpPut("editStudentGrade/{id}")]
+        [Authorize(Roles = "SLO")]
+        public async Task<IActionResult> EditStudentGrade(int id, [FromBody] string value)
+        {
+
+          //  var foundUserId = (await _userManager.FindByEmailAsync(id)).Id;
+            var internshipRecord = _context.Internship_Records.Where(ir => ir.InternshipRecordId == id)
+                .SingleOrDefault();
+
+            if (internshipRecord == null)
+            {
+                return BadRequest(new { Message = "This Internship record is not editable or does not exist." });
+            }
+            else if (internshipRecord.SLOApproved == true)
+            {
+                return BadRequest(new { Message = "This Internship's records have already been approved and cannot be regraded!" });
+            }
+
+            var gradingInput = JsonConvert.DeserializeObject<dynamic>(value);
+
+            try
+            {
+                internshipRecord.FinalGrading = Decimal.Parse(gradingInput.FinalGrading.Value.ToString());
+
+                //internshipRecord.Approved = true;
+                _context.SaveChanges();
+
+                return new OkObjectResult(new { Message = "Final Grading Changed!!" });
+            }
+            catch (Exception e)
+            {
+                return new BadRequestObjectResult(new { Message = e.Message.ToString() });
+            }
+
+        }
+
         [HttpPut("SLOGradeStudentInternship/")]
         [Authorize(Roles = "SLO")]
         public async Task<IActionResult> SLOGradeStudentInternship([FromBody] string value)
@@ -607,7 +646,7 @@ namespace E_Internship_Journal.API
                 var internshipIdList = gradingInput.InternshipIdList;
                 for (int i = 0; i < internshipIdList.Count; i++)
                 {
-                    var eachId = (int) internshipIdList[i].Value;
+                    var eachId = (int)internshipIdList[i].Value;
                     var foundInternshipRecord = _context.Internship_Records.Where(ir => ir.InternshipRecordId == eachId).Single();
 
                     foundInternshipRecord.SLOApproved = true;
