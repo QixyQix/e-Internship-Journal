@@ -31,12 +31,12 @@
                 <table class="table table-bordered" id="grade_dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>Student ID</th>
-                            <th>Student Name</th>
-                            <th>Supervisor's Grading (%)</th>
-                            <th>LO's Grading (1-5)</th>
-                            <th>Final Grading (%)</th>
-                            <th>Grade</th>
+                            <th class="export">Student ID</th>
+                            <th class="export">Student Name</th>
+                            <th class="export">Supervisor's Grading (1-5)</th>
+                            <th class="export">LO's Grading (1-5)</th>
+                            <th class="export">Final Grading (1-5)</th>
+                            <th class="export">Grade</th>
                             <th width="10%">Action</th>
                         </tr>
                         <tr id="filterrow">
@@ -280,8 +280,63 @@
         }
         var table = $('#grade_dataTable').DataTable({
             bSortable: false,
-            dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
+            dom: "<'row'<'col-sm-6'<B>><'col-sm-6'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" + //"<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
+            //dom: "<'row'<'col-sm-12'<f><'toolbar'>>><'row'<'col-sm-12'tr>>" +
+            //"<'row'<'col-sm-4'l><'col-sm-8'p>>",
+            buttons: [
+                'copyHtml5',
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: [0,1,2,3,4, 5]
+                    }
+                },
+                {
+                    extend: 'csvHtml5',
+                    exportOptions: {
+                        columns: [0,1,2,3,4, 5]
+                    },
+                    customize: function (csv) {
+                        var qwqweq = $('.export');
+                        var array = ["test", "test2"];
+                        var ra = [];
+                        for (i = 0; i < qwqweq.length; i++) {
+                            ra.push(qwqweq[i].textContent);
+
+                        }
+                        //test.for(function (entry) {
+                        //    ra.push(entry.TextContent);
+                        //});
+                        // var $ths = $row.children("th.export");
+                        return ra + csv;
+                    },
+                    // header: true
+                },
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: [0,1,2,3,4, 5],
+                        format: {
+                            header: function (data, column, row) {
+                                var qwqweq = $('.export');
+                                //var ra = [];
+                                //for (i = 0; i < qwqweq.length; i++) {
+                                //    ra.push(qwqweq[i].textContent);
+
+                                //}
+                                //var tt = data.substring(data.indexOf("inline-block") + 15, data.indexOf("<span"));
+                                return qwqweq[column].textContent;
+                            }
+                            //return data.substring(data.indexOf("inline-block") + 15, data.indexOf("<span"));
+                        }
+                        // columns: ':visible',
+                    },
+
+
+                    //header: true
+                },
+            ],
             data: inData.studentGrade,
             destroy: true,
             columns: [
