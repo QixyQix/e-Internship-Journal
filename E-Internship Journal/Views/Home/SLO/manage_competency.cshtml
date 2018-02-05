@@ -258,7 +258,7 @@
                         $rowElement = $('<tr></tr>');
                         $cellElement = $('<td></td>');
                         //$cellElement = $('<td></td>', { text: data[i].CompetencyList[k].Description });
-                        $cellElement.html(dataForCompetencyList[k].Description);
+                        $cellElement.html(decodeURIComponent(dataForCompetencyList[k].Description));
                         $rowElement.append($cellElement);
 
                         $cellElement = $('<th width="10%"><div class="container"><div class="row"><button title="edit description" id="btnEditCompetency" class="btn btn-sm btn-primary" data-value="' + dataForCompetencyList[k].ViewBy + '" value="' + dataForCompetencyList[k].CompetencyId + '"><i class="fa fa-pencil-square-o"></i></button><button title="delete description" class="btn btn-sm btn-danger" id="btnDeleteCompetency" value="' + dataForCompetencyList[k].CompetencyId + '"><i class="fa fa-trash"></i></button></div></div></th>');
@@ -279,6 +279,11 @@
                     $('#btnCompetencySave').attr('name', 'SaveNew');
                     $('#btnCompetencySave').val($(this).val())
                     $('#competencyModal').modal('show');
+                });
+                $('#competency_dataTable thead').on('click', 'button#btnDeleteCategory', function (e) {
+                    console.dir($(this).val());
+
+
                 });
                 $('#competency_dataTable').on('click', 'button#btnEditCompetency', function (e) {
                     var $row = $(this).closest('tr');
@@ -340,7 +345,7 @@
         var collectedDescription = tinyMCE.get('CateDesc').getContent()
         var collectedId = $(this).val();
         var DisplayBy = $('#inputDisplayBy').val();
-
+        collectedDescription = encodeURIComponent(collectedDescription); 
         var webFormData = new WebFormData(collectedMethod, collectedId, collectedDescription,
             DisplayBy);
         console.dir(webFormData);

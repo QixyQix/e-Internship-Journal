@@ -250,7 +250,9 @@
                         type: data.AlertType,
                         title: title,
                         html: data.Messages.join('<br>')
-                    });
+                    }).then(function () {
+                        window.location.reload();
+                    })
                 },//End of success
                 error: function (data) {
                     swal({

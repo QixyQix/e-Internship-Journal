@@ -402,7 +402,17 @@ namespace E_Internship_Journal.API
                             Designation = userNewInput.Designation.Value
                         };
                         studentCreatedBatch = newUserBatch;
+                       
                         _context.UserBatches.Add(newUserBatch);
+                        string LoEmail = userNewInput.LO.Value;
+                        var LoId = (await _userManager.FindByEmailAsync(LoEmail)).Id;
+                        var newInternshipRecord = new Internship_Record
+                        {
+                            ProjectId = Int32.Parse(userNewInput.ProjectId.Value),
+                            LiaisonOfficerId = LoId,
+                            UserBatch = newUserBatch
+                        };
+                        _context.Internship_Records.Add(newInternshipRecord);
                         var repeatPinGeneration = true;
                         do
                         {
