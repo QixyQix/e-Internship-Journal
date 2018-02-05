@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace E_Internship_Journal.Migrations
 {
-    public partial class a : Migration
+    public partial class efTest : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -230,6 +230,7 @@ namespace E_Internship_Journal.Migrations
                     CompetencyTitleId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     CourseId = table.Column<int>(type: "int", nullable: false),
+                    DeletedAt = table.Column<DateTime>(nullable: true),
                     TitleCompetency = table.Column<string>(type: "VARCHAR(50)", nullable: false),
                     ViewBy = table.Column<int>(type: "int", nullable: false)
                 },

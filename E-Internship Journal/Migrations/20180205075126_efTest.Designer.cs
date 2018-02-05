@@ -8,8 +8,8 @@ using E_Internship_Journal.Data;
 namespace E_Internship_Journal.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180203093019_a")]
-    partial class a
+    [Migration("20180205075126_efTest")]
+    partial class efTest
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -237,6 +237,9 @@ namespace E_Internship_Journal.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnName("CourseId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnName("DeletedAt");
 
                     b.Property<string>("TitleCompetency")
                         .IsRequired()

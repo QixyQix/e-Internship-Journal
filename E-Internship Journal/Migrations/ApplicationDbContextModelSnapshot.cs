@@ -35,6 +35,8 @@ namespace E_Internship_Journal.Migrations
 
                     b.Property<bool>("IsEnabled");
 
+                    b.Property<DateTime?>("LastLoginDate");
+
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
@@ -235,6 +237,9 @@ namespace E_Internship_Journal.Migrations
                         .HasColumnName("CourseId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnName("DeletedAt");
+
                     b.Property<string>("TitleCompetency")
                         .IsRequired()
                         .HasColumnName("TitleCompetency")
@@ -344,6 +349,12 @@ namespace E_Internship_Journal.Migrations
                         .HasColumnName("InternshipRecordId")
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool?>("Approved")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("Approved")
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Comment")
                         .ValueGeneratedOnAdd()
@@ -465,8 +476,28 @@ namespace E_Internship_Journal.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
+                    b.Property<decimal?>("FinalGrading")
+                        .HasColumnName("FinalGrading")
+                        .HasColumnType("decimal");
+
+                    b.Property<int?>("JournalGrading")
+                        .HasColumnName("JournalGrading")
+                        .HasColumnType("int");
+
                     b.Property<string>("LiaisonOfficerId")
                         .IsRequired();
+
+                    b.Property<decimal?>("OverallGrading")
+                        .HasColumnName("OverallGrading")
+                        .HasColumnType("decimal");
+
+                    b.Property<int?>("OverallPerformance")
+                        .HasColumnName("OverallPerformance")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PosterGrading")
+                        .HasColumnName("PosterGrading")
+                        .HasColumnType("int");
 
                     b.Property<string>("PosterUrl")
                         .ValueGeneratedOnAdd()
@@ -482,9 +513,15 @@ namespace E_Internship_Journal.Migrations
                         .HasColumnName("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ReflectionGrading")
-                        .HasColumnName("ReflectionGrading")
-                        .HasColumnType("int");
+                    b.Property<bool?>("SLOApproved")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("SLOApproved")
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<decimal?>("SLOOverallGrading")
+                        .HasColumnName("SLOOverallGrading")
+                        .HasColumnType("decimal");
 
                     b.Property<int>("UserBatchId")
                         .HasColumnName("UserBatchId")
