@@ -219,7 +219,7 @@ namespace E_Internship_Journal.API
                 {
                     var heading = streamReader.ReadLine();
                     //Check if CSV file is in correct order
-                    if (!heading.Equals("Company Name,Company Address,Contact Person Name,Contact Person Number,Contact Person Email, Contact Person Fax"))
+                    if (!heading.Equals("Company Name,Company Address,Contact Person Name,Contact Person Number,Contact Person Email,Contact Person Fax"))
                     {
                         return BadRequest(new { Message = "CSV file does not follow correct format" });
                     }
