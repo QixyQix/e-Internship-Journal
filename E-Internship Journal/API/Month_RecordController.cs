@@ -341,6 +341,15 @@ namespace E_Internship_Journal.API
         [Authorize(Roles = "LO")]
         public IActionResult GetReviewInternshipMonth(int id)
         {
+            //Internship_Record internshipRecord = _context.Internship_Records.Where(ir => ir.InternshipRecordId == id)
+            //.Include(ir => ir.MonthRecords)
+            //.ThenInclude(mr => mr.TaskRecords)
+            //.Include(ir => ir.MonthRecords)
+            //.ThenInclude(mr => mr.DayRecords)
+            //.Include(ir => ir.MonthRecords)
+            //.ThenInclude(mr => mr.CompetencyCheckeds)
+            //.Include(ir => ir.Project)
+            //.SingleOrDefault();
             var internshipRecord = _context.Internship_Records
                 .Where(ir => ir.InternshipRecordId == id)
                 .Include(ir => ir.MonthRecords)
@@ -353,9 +362,9 @@ namespace E_Internship_Journal.API
                 .ThenInclude(ub => ub.Batch)
                 .ThenInclude(batch => batch.Course)
                 .ThenInclude(course => course.CompetencyTitle)
-
-
                 .SingleOrDefault();
+
+            //    .SingleOrDefault();
 
             if (internshipRecord == null)
             {

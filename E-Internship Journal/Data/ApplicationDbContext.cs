@@ -301,6 +301,10 @@ namespace E_Internship_Journal.Data
                 .IsRequired();
 
             modelBuilder.Entity<CompetencyTitle>()
+                .Property(competencies => competencies.DeletedAt)
+                .HasColumnName("DeletedAt")
+                .IsRequired(false);
+            modelBuilder.Entity<CompetencyTitle>()
                 .HasIndex(compenties => compenties.TitleCompetency).IsUnique()
                 .HasName("CompetencyTitle_TitleCompetency_UniqueConstraint");
 

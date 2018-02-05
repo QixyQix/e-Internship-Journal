@@ -40,8 +40,9 @@ namespace E_Internship_Journal.API
                 .Where(qq => qq.CompetencyTitle.Course.CourseId == id);
             try
             {
-                if (Deleted.Equals("Y"))
-                {
+                if (Deleted.Equals("Y")) { 
+
+                    competencies = competencies.Where(c => c.DeletedAt != null).ToList();
                     foreach (var oneCompetency in competencies)
                     {
                         //oneCompetency.Competencies
@@ -66,10 +67,11 @@ namespace E_Internship_Journal.API
                 }
                 else
                 {
+                    competencies = competencies.Where(c => c.DeletedAt == null).ToList();
                     foreach (var oneCompetency in competencies)
                     {
                         //   List<int> categoryIdList = new List<int>();
-
+                     
                         competencies_List.Add(new
                         {
                             oneCompetency.CompetencyTitleId,
@@ -462,8 +464,13 @@ namespace E_Internship_Journal.API
             {
                 // _context.Competencies.Remove(competency);
                 // await _context.SaveChangesAsync();
-               // competency = DateTime.Now;
-                _context.SaveChanges();
+               competency.DeletedAt = DateTime.Now;
+                foreach(var eachCompetencyList in competency.Competencies)
+                {
+                    eachCompetencyList.DeletedAt = DateTime.Now;
+                    eachCompetencyList.DeletedBy = (await _userManager.FindByNameAsync(_userManager.GetUserName(User))).FullName;
+                }
+                await _context.SaveChangesAsync();
                 var responseObject = new
                 {
                     AlertType = alertType,
@@ -524,6 +531,51 @@ namespace E_Internship_Journal.API
                 return BadRequest(httpFailRequestResultMessage);
 
 
+            }//End of Get(id) Web API method
+        }
+        [HttpPut("RevertCompetencyTitle/{id}")]
+        public async Task<IActionResult> RevertCompetencyTitle(int id)
+        {
+            string alertType = "success";
+            if (CompetencyExists(id))
+            {
+                try
+                {
+                    var foundOneCompetencies = _context.CompetencyTitles
+                        .Where(eachCompetencyEntity => eachCompetencyEntity.CompetencyTitleId == id)
+                        .Include(c => c.Competencies)
+                        .SingleOrDefault();
+
+
+                    foundOneCompetencies.DeletedAt = null;
+                    foreach(var eachCompetency in foundOneCompetencies.Competencies)
+                    {
+                        eachCompetency.DeletedAt = null;
+                        eachCompetency.DeletedBy = null;
+                    }
+                    await _context.SaveChangesAsync();
+
+                    var responseObject = new
+                    {
+                        AlertType = alertType,
+                        Messages = "Success"
+                    };
+
+                    return new OkObjectResult(responseObject);
+
+                }
+                catch (Exception exceptionObject)
+                {
+                    object httpFailRequestResultMessage =
+                    new { Message = exceptionObject };
+                    return BadRequest(httpFailRequestResultMessage);
+                }
+            }
+            else
+            {
+                object httpFailRequestResultMessage =
+                new { Message = "Competency Title ID not found" };
+                return BadRequest(httpFailRequestResultMessage);
             }//End of Get(id) Web API method
         }
 

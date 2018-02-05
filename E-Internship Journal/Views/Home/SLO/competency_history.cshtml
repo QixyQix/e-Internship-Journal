@@ -132,7 +132,10 @@
                     $rowElement.append($cellElement);
                     $cellElement = $('<th></th>', { text: "Deleted By" });
                     $rowElement.append($cellElement);
-                    $cellElement = $('<th></th>', { text: "Action" });
+                    //$cellElement = $('<th></th>', { text: "Action" });
+                    //$rowElement.append($cellElement);
+
+                    $cellElement = $('<th width="10%"><div class="container"><div class="row"><button title="Revert title" class="btn btn-sm btn-danger" id="btnRevertCompetencyTitle" value="' + data[i].CompetencyTitleId + '"><i class="fa fa-refresh"></i></button></div></div></th>');
                     $rowElement.append($cellElement);
 
                     $threadElement.append($rowElement);
@@ -198,7 +201,43 @@
                         }//End of error
                     });//End of ajax call
 
-                });
+                });//End of on CLick 
+                $('#competency_dataTable thead').on('click', 'button#btnRevertCompetencyTitle', function (e) {
+                    // console.dir($(this).val());
+                    var selectedCompetency = $(this).val();
+                    $.ajax({
+                        url: '/Api/Competencies/RevertCompetencyTitle/' + selectedCompetency,
+                        method: 'PUT',
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        success: function (data, status, jqXHR) {
+                            var title = 'Success';
+                            if (data.AlertType == 'error') {
+                                title = 'Error';
+
+                            } else if (data.AlertType == 'warning') {
+                                title = 'Warning';
+                            }
+                            swal({
+                                type: data.AlertType,
+                                title: title,
+                                text: data.Messages
+                            }).then(
+                                function () {
+                                    title == 'Error' ? null : window.location.reload();
+                                });
+                        },//End of success
+                        error: function (data) {
+                            swal({
+                                type: 'error',
+                                title: 'Error',
+                                text: data.Message
+                            });
+                        }//End of error
+                    });//End of ajax call
+
+                });//End of on btnRevertCompetencyTitle CLick 
                 
             },//End of success
 
