@@ -388,8 +388,8 @@ namespace E_Internship_Journal.API
                             //Course = thisBatch.Course
                         };
                         PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
-                        newStudentUser.PasswordHash = ph.HashPassword(newStudentUser, generateRandomString(11));
-
+                        //newStudentUser.PasswordHash = ph.HashPassword(newStudentUser, generateRandomString(11));
+                        newStudentUser.PasswordHash = ph.HashPassword(newStudentUser,"P@ssw0rd");
                         await userManager.CreateAsync(newStudentUser);
                         await userManager.AddToRoleAsync(newStudentUser, "STUDENT");
 
@@ -448,14 +448,21 @@ namespace E_Internship_Journal.API
                         //await _context.SaveChangesAsync();
                         //BackgroundJob.Schedule(() => CreateInternshipJournalAsync(scheduleCreationRecord.ScheduleIntershipRecordId), startDate);
 
-                        var studentEmail = studentCreated.User.Email;
-                        var studentName = studentCreated.User.FullName;
+                        //var studentEmail = studentCreated.User.Email;
+                        //var studentName = studentCreated.User.FullName;
+                        var studentEmail = studentCreatedBatch.User.Email;
+                        var studentName = studentCreatedBatch.User.FullName;
                         var batchName = studentCreatedBatch.Batch.BatchName;
                         var startDate = studentCreatedBatch.Batch.StartDate.ToString("dd MMMM yyyy");
                         var endDate = studentCreatedBatch.Batch.EndDate.ToString("dd MMMM yyyy");
-                        await _emailSender.SendChangeEmailAsync(false, studentEmail, "Your account has been created and enrolled!",
+
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(studentCreated.User);
+                        string codeHtmlVersion = System.Net.WebUtility.UrlEncode(code);
+
+                        await _emailSender.SendChangeEmailAsync(true, studentEmail, "Your account has been created and enrolled!",
                             "Hi, " + studentName, "Your student account has been created and enrolled into Batch " + batchName + "." +
-                            " The Semester will start from " + startDate + " and end on " + endDate + ". Kindly proceed to activate your account before your internship starts.");
+                            " The Semester will start from " + startDate + " and end on " + endDate + ". Kindly proceed to activate your account before your internship starts.",
+                            "http://localhost:63071/Account/ConfirmEmail?registrationPin=" + studentCreated.RegistrationPinId, "Activate Account");
 
                         messageList = "Created Student Account";
                         alertType = "success";

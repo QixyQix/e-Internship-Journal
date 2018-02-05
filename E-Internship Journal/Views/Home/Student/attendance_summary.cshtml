@@ -28,7 +28,7 @@
             <div class="form-group">
                 <div class="col-md-2 col-sm-2 col-xs-12 pull-right">
                     <button class="btn btn-primary form-control" id="addattendance">
-                       + Add
+                        + Add
                     </button>
                 </div>
             </div>
@@ -213,6 +213,7 @@
                                 <option value="">Present</option>
                                 <option value="MC">MC</option>
                                 <option value="LOA">Leave Of Absence</option>
+                                <option value="PH">Public Holiday</option>
                                 <option value="COMPANY OFF">Company Off-Day</option>
                                 <option value="OTHERS">Others</option>
                             </select>
@@ -233,7 +234,10 @@
         </div>
     </div>
 </div>
+
+
 <script>
+
     var editor;
     var internshipId = getCookie("InternshipRecordId");
     var dayRecords = [];
@@ -241,7 +245,7 @@
     $(document).ready(function () {
         $.fn.dataTable.moment('HH:mm MMM D, YY'); //format sort date
         $.fn.dataTable.moment('dddd, MMMM Do, YYYY'); //format sort date
-       // $('#dataTable').DataTable();
+        // $('#dataTable').DataTable();
         var table = $('#dataTable').DataTable({
             dom: "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-4'l><'col-sm-8'p>>",
@@ -429,17 +433,17 @@
         this.Specify = inSpecify;
     }
 
-    function formatDateTime(inDate) { 
+    function formatDateTime(inDate) {
         var date = inDate;
         var day = date.getDate();       // yields date
         var month = date.getMonth() + 1;    // yields month (add one as '.getMonth()' is zero indexed)
         var year = date.getFullYear();  // yields year
-        var hour = date.getHours();     // yields hours 
+        var hour = date.getHours();     // yields hours
         var minute = date.getMinutes(); // yields minutes
         var second = date.getSeconds(); // yields seconds
 
         // After this construct a string with the above results as below
-        var time = day + "/" + month + "/" + year + " " + hour + ':' + minute + ':' + second; 
+        var time = day + "/" + month + "/" + year + " " + hour + ':' + minute + ':' + second;
         return time;
     }
 </script>

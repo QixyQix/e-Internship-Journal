@@ -89,7 +89,7 @@
                         $rowElement = $('<tr></tr>');
                         $cellElement = $('<td></td>');
                         //$cellElement = $('<td></td>', { text: data[i].CompetencyList[k].Description });
-                        $cellElement.html(dataForCompetencyList[k].Description);
+                        $cellElement.html(decodeURIComponent(dataForCompetencyList[k].Description));
                         $rowElement.append($cellElement);
 
                         $cellElement = $('<td style="text-align:center; vertical-align:center;"><input name="CompetencyCheck" type="checkbox"  disabled value="' + dataForCompetencyList[k].CompetencyId + '"></td>');

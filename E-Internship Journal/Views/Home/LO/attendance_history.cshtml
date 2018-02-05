@@ -83,13 +83,8 @@
                             <th>Leave of Absence</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
+                    <tbody id="attendanceHistoryTBody">
+                        
                     </tbody>
                 </table>
             </div>
@@ -184,7 +179,7 @@
         $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
             var selected = $(this).val();
             g_dayData.then(function (data) {
-                var task = data[$('#selectWeek').val()];
+                var task = data.monthObjList[$('#selectWeek').val()];
                 for (i = 0; i < task.DayRecords.length; i++) {
                     if (task.DayRecords[i].DayId == selected) {
                         $('#commentTask').val(task.DayRecords[i].SupervisorRemarks);
@@ -242,12 +237,56 @@
             dataType: 'json',
             cache: false,
             success: function (data) {
+                var workingDays = data.BusinessDay;
+                var totalWorkingDays = 0; 
+                var MC = 0;
+                var off = 0;
+                var leave = 0;
+                var PH = 0;
                 $('#selectWeek').find('option').remove();
-                for (i = 0; i < data.length; i++) {
+                for (i = 0; i < data.monthObjList.length; i++) {
+                    totalWorkingDays = totalWorkingDays + data.monthObjList[i].DayRecords.length;
                     var selectMonthRecord
                     var newOption = $('<option>').text('Week ' + (((i + 1) * 4) - 3) + ' to Week ' + (i + 1) * 4).val(i);
                     $('#selectWeek').append(newOption);
-                }
+                    for (k = 0; k < data.monthObjList[i].DayRecords.length; k++) {
+                        // console.dir(data[i].DayRecords[k].Remarks);
+                        if (data.monthObjList[i].DayRecords[k].Remarks == "MC") {
+                            MC++;
+
+                        }
+                        if (data.monthObjList[i].DayRecords[k].Remarks == "COMPANY OFF") {
+                            off++;
+
+                        }
+                        if (data.monthObjList[i].DayRecords[k].Remarks == "LOA") {
+                            leave++;
+
+                        }
+                        if (data.monthObjList[i].DayRecords[k].Remarks == "PH") {
+                            leave++;
+                            workingDays--;
+
+                        }
+
+                    }//End of k for loop
+                }//End of for loop
+                $dataTable2 = $('#attendanceHistoryTBody');
+                $rowElement = $('<tr></tr>');
+                $cellElement = $('<td></td>', { text: PH });
+                $rowElement.append($cellElement);
+                $cellElement = $('<td></td>', { text: MC });
+                $rowElement.append($cellElement);
+                $cellElement = $('<td></td>', { text: off });
+                $rowElement.append($cellElement);
+                $cellElement = $('<td></td>', { text: leave });
+                $rowElement.append($cellElement);
+                $dataTable2.append($rowElement);
+
+
+
+                $('#requiredDays').val(workingDays);
+                $('#workingDays').val(totalWorkingDays);
             }//End of success
         });//End of Ajax
     }//End of function LoadAttendanceData
@@ -291,7 +330,7 @@
         g_dayData.then(function (data) {
             var selectedWeek = $('#selectWeek').val();
             $('#dataTable').dataTable().fnClearTable();
-            loadDataTable(data[selectedWeek]);
+            loadDataTable(data.monthObjList[selectedWeek]);
         })
     }
 

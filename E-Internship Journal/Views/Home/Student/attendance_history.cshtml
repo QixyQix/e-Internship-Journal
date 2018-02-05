@@ -16,14 +16,14 @@
     <div class="card" style="border-width:0px;">
         <div class="card-body">
             <div class="form-group">
-  
+
                 <div class="col-xs-12 pull-right">
                     <label>View By:&nbsp</label>
                     <select class="form-control" id="selectWeek">
                         @*<option>Week 1</option>
-                        <option>Week 2</option>
-                        <option>Week 3</option>
-                        <option>Week 4</option>*@
+                            <option>Week 2</option>
+                            <option>Week 3</option>
+                            <option>Week 4</option>*@
                     </select>
                 </div>
             </div>
@@ -81,11 +81,11 @@
                     </thead>
                     <tbody id="attendanceHistoryTBody">
                         @*<tr>
-                            <td>1</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>*@
+                                <td>1</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>*@
                     </tbody>
                 </table>
             </div>
@@ -119,7 +119,7 @@
     </div>
     <br />
 </div>
-    <!-- comment Modal -->
+<!-- comment Modal -->
 <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="attendanceModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -143,6 +143,7 @@
         </div>
     </div>
 </div>
+<script src="https://apis.google.com/js/api.js"></script>
 <script>
     var g_getLocalStorage;
     var g_dayData;
@@ -156,15 +157,15 @@
         //g_taskData.then(function (data) {
         //    loadDataTable(data);
         //});
-       // loadWeekOption(g_dayData)
+        // loadWeekOption(g_dayData)
         selectedWeek();
         // Activate an inline edit on click of a table cell
         $('#dataTable tbody').on('click', 'button.btn-primary', function (e) {
             var selected = $(this).val();
             g_dayData.then(function (data) {
-                for (i = 0; i < data.length; i++) {
-                    if (data[i].DayId == selected) {
-                        $('#CommentTask').val(data[i].Remarks);
+                for (i = 0; i < data.monthObjList.length; i++) {
+                    if (data.monthObjList[i].DayId == selected) {
+                        $('#CommentTask').val(data.monthObjList[i].Remarks);
                         $('#commentModal').modal('show');
                     }
 
@@ -205,39 +206,43 @@
             dataType: 'json',
             cache: false,
             success: function (data) {
+                var workingDays = data.BusinessDay;
+                var totalWorkingDays = 0; 
                 $('#selectWeek').find('option').remove();
                 var MC = 0;
-                var ph = 0;
                 var off = 0;
                 var leave = 0;
-                for (i = 0; i < data.length; i++) {
+                var PH = 0;
+                for (i = 0; i < data.monthObjList.length; i++) {
+                    totalWorkingDays = totalWorkingDays + data.monthObjList[i].DayRecords.length;
                     var selectMonthRecord
-                    var newOption = $('<option>').text('Week ' + (((i + 1)*4)-3) + ' to Week ' + (i+1)*4).val(i);
+                    var newOption = $('<option>').text('Week ' + (((i + 1) * 4) - 3) + ' to Week ' + (i + 1) * 4).val(i);
                     $('#selectWeek').append(newOption);
-                    for (k = 0; k < data[i].DayRecords.length; k++) {
-                      // console.dir(data[i].DayRecords[k].Remarks);
-                        if (data[i].DayRecords[k].Remarks == "MC") {
+                    for (k = 0; k < data.monthObjList[i].DayRecords.length; k++) {
+                        // console.dir(data[i].DayRecords[k].Remarks);
+                        if (data.monthObjList[i].DayRecords[k].Remarks == "MC") {
                             MC++;
 
                         }
-                        if (data[i].DayRecords[k].Remarks == "MC") {
-                            MC++;
-
-                        }
-                        if (data[i].DayRecords[k].Remarks == "COMPANY OFF") {
+                        if (data.monthObjList[i].DayRecords[k].Remarks == "COMPANY OFF") {
                             off++;
 
                         }
-                        if (data[i].DayRecords[k].Remarks == "LOA") {
+                        if (data.monthObjList[i].DayRecords[k].Remarks == "LOA") {
                             leave++;
 
                         }
+                        if (data.monthObjList[i].DayRecords[k].Remarks == "PH") {
+                            leave++;
+                            workingDays--;
 
-                    }
-                }
+                        }
+
+                    }//End of k for loop
+                }//End of outside loop
                 $dataTable2 = $('#attendanceHistoryTBody');
                 $rowElement = $('<tr></tr>');
-                $cellElement = $('<td></td>', { text: ph });
+                $cellElement = $('<td></td>', { text: PH });
                 $rowElement.append($cellElement);
                 $cellElement = $('<td></td>', { text: MC });
                 $rowElement.append($cellElement);
@@ -247,7 +252,10 @@
                 $rowElement.append($cellElement);
                 $dataTable2.append($rowElement);
 
+                $('#requiredDays').val(workingDays);
+                $('#workingDays').val(totalWorkingDays);
             }//End of success
+
         });//End of Ajax
     }//End of function LoadAttendanceData
     function loadDataTable(data) {
@@ -275,7 +283,7 @@
                     //data: "TaskRecordId",
                     "bSortable": false,
                     "mRender": function (data, type, row) {
-                        var button = row.Remarks == "" ?  '<button class="btn btn-sm btn-danger" disabled>No Remarks</button>' :  '<button class="btn btn-sm btn-primary" id="btnViewComment" value="' + row.DayId + '">View</button>'
+                        var button = row.Remarks == "" ? '<button class="btn btn-sm btn-danger" disabled>No Remarks</button>' : '<button class="btn btn-sm btn-primary" id="btnViewComment" value="' + row.DayId + '">View</button>'
                         return button;
                         //  return '<button class="btn btn-sm btn-primary" id="btnViewComment" value="' + row.DayId + '">View</button>'
                     } //note under condition if no remarks was given the column would be blank
@@ -289,7 +297,9 @@
     function selectedWeek() {
         g_dayData.then(function (data) {
             var selectedWeek = $('#selectWeek').val();
-            loadDataTable(data[selectedWeek]);
+            loadDataTable(data.monthObjList[selectedWeek]);
         })
     }
+    
+            
 </script>

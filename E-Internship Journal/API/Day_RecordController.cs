@@ -286,11 +286,6 @@ namespace E_Internship_Journal.API
         [AllowAnonymous]
         public async Task<IActionResult> SaveUpdateDayRecord([FromBody] string value)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             string customMessage = "";
             try
             {

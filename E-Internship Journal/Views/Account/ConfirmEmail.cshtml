@@ -2,9 +2,30 @@
     ViewData["Title"] = "Confirm Email";
 }
 
-<h2>@ViewData["Title"].</h2>
-<div>
-    <p>
-        Thank you for confirming your email. Please <a asp-controller="Account" asp-action="Login">Click here to Log in</a>.
-    </p>
+
+@{
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
+}
+
+<div class="col-lg-5 col-md-5 col-sm-12 mx-auto">
+    <div class="card mt-5">
+
+        <div class="card-header" style="font-size:1.05em">Confirm Email<a class="btn-sm btn-primary pull-right" asp-controller="Account" asp-action="Login">Click here to Log in</a></div>
+        <div class="card-body">
+            <div class="text-center mt-4 mb-5">
+                <h4>Email Confirmed?</h4>
+                <p>Your Email address has been confirm. Kindly proceed to login.</p>
+            </div>
+            
+            <div class="text-center">
+                @*<a asp-action="Login">Forgot your password?</a>
+                    <a class="d-block small" href="login.html">Login Page</a>*@
+            </div>
+        </div>
+    </div>
 </div>
+<style>
+    nav#mainNav {
+        display: none;
+    }
+</style>

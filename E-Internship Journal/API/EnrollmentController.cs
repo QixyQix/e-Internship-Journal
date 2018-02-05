@@ -173,7 +173,7 @@ namespace E_Internship_Journal.Controllers
                     var endDate = studentCreatedBatch[i].Batch.EndDate.ToString("dd MMMM yyyy");
                     await _emailSender.SendChangeEmailAsync(false, studentEmail, "Your account has been created and enrolled!",
                         "Hi, " + studentName, "Your student account has been created and enrolled into Batch " + batchName + "." +
-                        " The Semester will start from " + startDate + " and end on " + endDate +". Kindly proceed to activate your account before your internship starts.");
+                        " The Semester will start from " + startDate + " and end on " + endDate +". Kindly proceed to activate your account before your internship starts." ,"","");
                 }
                 for (int k =0;k<studentAdded.Count; k++)
                 {
@@ -184,7 +184,7 @@ namespace E_Internship_Journal.Controllers
                     var endDate = studentAdded[k].Batch.EndDate.ToString("dd MMMM yyyy");
                     await _emailSender.SendChangeEmailAsync(false, studentEmail, "You have been enrolled into " + batchName, "Hi, " + studentName,
                         "You have been enrolled into Batch " + batchName + "." +
-                        " The Semester will start from " + startDate + " and end on " + endDate +".Kindly login to confirm your batch.");
+                        " The Semester will start from " + startDate + " and end on " + endDate +".Kindly login to confirm your batch." ,"","");
 
                 }
             }

@@ -474,7 +474,7 @@ namespace E_Internship_Journal.API
                     var CompanyName = _context.Companies.Where(c => c.CompanyId == createdProject.CompanyID).Select(c => c.CompanyName).Single();
                     await _emailSender.SendChangeEmailAsync(false, supervisorEmail, "Your account has been created and enrolled!",
                         "Hi, " + supervisorName, "Your supervisor account has been created on behalf of you." +
-                        "Your account has been assigned to Project " + projectName + " and Company " + CompanyName + ". Kindly proceed to activate your account.");
+                        "Your account has been assigned to Project " + projectName + " and Company " + CompanyName + ". Kindly proceed to activate your account." , "need account" ,"need account");
 
 
                     messageList = "Saved Project & Created Supervisor Account";

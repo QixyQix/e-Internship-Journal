@@ -25,7 +25,7 @@ namespace E_Internship_Journal.Services
             // Plug in your SMS service here to send a text message.
             return Task.FromResult(0);
         }
-        public Task SendChangeEmailAsync(Boolean button,string email, string subject, string greetings, string message)
+        public Task SendChangeEmailAsync(Boolean button,string email, string subject, string greetings, string message , string url, string urlButtonName)
         {
             try
             {
@@ -54,6 +54,10 @@ namespace E_Internship_Journal.Services
                     if (button == false)
                     {
                         qq = text.Replace("display: inline-block;\" class=\"mobile-button\"", "display: none;\" class=\"mobile-button\"");
+                    }
+                    else
+                    {
+                        qq = text.Replace("href=\"\">Activate Account</a>", "href=\"" + url + "\">" + urlButtonName + "</a>");
                     }
                     qq = qq.Replace("Header</td>", subject + "</td>");
                     qq = qq.Replace("Greetings</td>", greetings + "</td>");

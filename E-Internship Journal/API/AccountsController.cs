@@ -305,7 +305,7 @@ namespace E_Internship_Journal.API
                 //var role = roleList.Contains("SLO") ? null : "test";
                 await _emailSender.SendChangeEmailAsync(false, newUserEmail, "Your account has been created!",
                     "Hi, " + newUserName, "Your account has been created!" +
-                    "Kindly proceed to activate/login your account.");
+                    "Kindly proceed to activate/login your account." , "" , "");
             }
             
 

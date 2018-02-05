@@ -64,21 +64,37 @@ namespace E_Internship_Journal.API
             Internship_Record internshipRecord = _context.Internship_Records
                 .Include(ir => ir.UserBatch)
                 .ThenInclude(ub => ub.Batch)
-                .Include(m=>m.MonthRecords)
+                .Include(m => m.MonthRecords)
                 .Where(ir => ir.UserBatch.UserId.Equals(userId) && ir.UserBatch.Batch.StartDate <= DateTime.Now && ir.UserBatch.Batch.EndDate.AddDays(1) >= DateTime.Now)
                 .Single();
 
             var internshiprecordId = internshipRecord.InternshipRecordId;
             DateTime startDate = internshipRecord.UserBatch.Batch.StartDate;
-            var tryDate = DateTime.ParseExact("06/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            double BusinessDay = BusinessDaysUntil(startDate, tryDate);
+            DateTime endDate = internshipRecord.UserBatch.Batch.EndDate;
+           // var tryDate = DateTime.ParseExact("06/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            double BusinessDay = BusinessDaysUntil(startDate, endDate);
             var weekNo = Math.Ceiling(BusinessDay / 5.0);
+           // var tt = weekNo / 4;
             if (internshipRecord == null)
             {
                 return NotFound(new { Message = "No internship record found" });
             }
             else
             {
+                Month_Record monthRecord;
+                if (internshipRecord.MonthRecords.Count * 4 < (weekNo))
+                // if (internshipRecord.MonthRecords.Count > 0)
+                {
+                    //Create new record
+                    monthRecord = new Month_Record { InternshipRecord = internshipRecord };
+                    _context.Month_Records.Add(monthRecord);
+                    _context.SaveChanges();
+                    //Get the latest record
+                    // monthRecord = internshipRecord.MonthRecords[internshipRecord.MonthRecords.Count - 1];
+                }
+             //   if (weekNo )
+
+
                 return new JsonResult(new { InternshipRecordId = internshipRecord.InternshipRecordId });
             }
 
@@ -600,7 +616,7 @@ namespace E_Internship_Journal.API
         public async Task<IActionResult> EditStudentGrade(int id, [FromBody] string value)
         {
 
-          //  var foundUserId = (await _userManager.FindByEmailAsync(id)).Id;
+            //  var foundUserId = (await _userManager.FindByEmailAsync(id)).Id;
             var internshipRecord = _context.Internship_Records.Where(ir => ir.InternshipRecordId == id)
                 .SingleOrDefault();
 
@@ -670,12 +686,14 @@ namespace E_Internship_Journal.API
 
         [HttpGet("AllInternshipRecords")]
         [Authorize(Roles = "ADMIN")]
-        public IActionResult GetAllInternshipRecords() {
-            var internshipRecords = _context.Internship_Records.Include(ir => ir.UserBatch).ThenInclude(ub => ub.Batch).ThenInclude(b=>b.Course).Include(ir => ir.UserBatch).ThenInclude(ub => ub.User).ToList();
+        public IActionResult GetAllInternshipRecords()
+        {
+            var internshipRecords = _context.Internship_Records.Include(ir => ir.UserBatch).ThenInclude(ub => ub.Batch).ThenInclude(b => b.Course).Include(ir => ir.UserBatch).ThenInclude(ub => ub.User).ToList();
 
             List<object> internshipRecordList = new List<object>();
 
-            foreach (var ir in internshipRecords) {
+            foreach (var ir in internshipRecords)
+            {
                 internshipRecordList.Add(new
                 {
                     ir.InternshipRecordId,
@@ -707,10 +725,12 @@ namespace E_Internship_Journal.API
         }
 
         [HttpPut("toggleLock/{id}")]
-        public IActionResult toggleLock(int id) {
+        public IActionResult toggleLock(int id)
+        {
             var internshipRecord = _context.Internship_Records.Where(ir => ir.InternshipRecordId == id).SingleOrDefault();
 
-            if (internshipRecord != null) {
+            if (internshipRecord != null)
+            {
                 internshipRecord.SLOApproved = !internshipRecord.SLOApproved;
                 _context.SaveChanges();
             }

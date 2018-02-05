@@ -25,7 +25,7 @@
                 </div>
                 <div class="col-xs-12 pull-right">
                     <label>View By:&nbsp</label>
-                    <select class="form-control" id="exampleSelect1">
+                    <select class="form-control" id="selectMonthRecord">
                         <option>Week 1</option>
                         <option>Week 2</option>
                         <option>Week 3</option>
@@ -90,13 +90,8 @@
                             <th>Leave of Absence</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td>0</td>
-                        </tr>
+                    <tbody id="attendanceHistoryTBody">
+                        
                     </tbody>
                 </table>
             </div>
@@ -111,7 +106,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">No. of working days:</label>
                         <div class="col-sm-10">
-                            <input class="form-control" id="doneDays" type="text" value="-" readonly>
+                            <input class="form-control" id="workingDays" type="text" value="-" readonly>
                         </div>
                     </div>
                 </form>
@@ -211,14 +206,59 @@
             dataType: 'json',
             cache: false,
             success: function (data) {
+                var workingDays = data.BusinessDay;
+                var totalWorkingDays = 0; 
+                var MC = 0;
+                var off = 0;
+                var leave = 0;
+                var PH = 0;
                 $('#selectMonthRecord').find('option').remove();
-                for (i = 0; i < data.length; i++) {
-                    var selectMonthRecord
-                    var newOption = $('<option>').text('Month ' + (i + 1)).val(i);
+                for (i = 0; i < data.monthObjList.length; i++) {
+                    totalWorkingDays = totalWorkingDays + data.monthObjList[i].DayRecords.length;
+                    var selectMonthRecord;
+                    var newOption = $('<option>').text('Week ' + (((i + 1) * 4) - 3) + ' to Week ' + (i + 1) * 4).val(i);
+                   // var newOption = $('<option>').text('Month ' + (i + 1)).val(i);
                     $('#selectMonthRecord').append(newOption);
+
+                    for (k = 0; k < data.monthObjList[i].DayRecords.length; k++) {
+                        // console.dir(data[i].DayRecords[k].Remarks);
+                        if (data.monthObjList[i].DayRecords[k].Remarks == "MC") {
+                            MC++;
+
+                        }
+                        if (data.monthObjList[i].DayRecords[k].Remarks == "COMPANY OFF") {
+                            off++;
+
+                        }
+                        if (data.monthObjList[i].DayRecords[k].Remarks == "LOA") {
+                            leave++;
+
+                        }
+                        if (data.monthObjList[i].DayRecords[k].Remarks == "PH") {
+                            leave++;
+                            workingDays--;
+
+                        }
+
+                    }//End of k for loop
                 }
-                console.dir(data);
-                monthRecords = data;
+                $dataTable2 = $('#attendanceHistoryTBody');
+                $rowElement = $('<tr></tr>');
+                $cellElement = $('<td></td>', { text: PH });
+                $rowElement.append($cellElement);
+                $cellElement = $('<td></td>', { text: MC });
+                $rowElement.append($cellElement);
+                $cellElement = $('<td></td>', { text: off });
+                $rowElement.append($cellElement);
+                $cellElement = $('<td></td>', { text: leave });
+                $rowElement.append($cellElement);
+                $dataTable2.append($rowElement);
+
+                $('#requiredDays').val(workingDays);
+                $('#workingDays').val(totalWorkingDays);
+
+                console.dir(data.monthObjList);
+                monthRecords = data.monthObjList;
                 loadData(monthRecords[0]);
             },
             fail: function (data) {

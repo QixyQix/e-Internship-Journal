@@ -130,6 +130,7 @@ namespace E_Internship_Journal.API
             Internship_Record internshipRecord = _context.Internship_Records.Where(ir => ir.InternshipRecordId == id)
                 .Include(ir => ir.MonthRecords)
                 .ThenInclude(mr => mr.DayRecords)
+                .Include(ub=>ub.UserBatch).ThenInclude(b=>b.Batch)
                 .SingleOrDefault();
 
             if (internshipRecord == null)
@@ -159,8 +160,12 @@ namespace E_Internship_Journal.API
                 }
                 monthObjList.Add(new { DayRecords = dayObjList });
             }
+            var batchStart = internshipRecord.UserBatch.Batch.StartDate;
+            var batchEnd = internshipRecord.UserBatch.Batch.EndDate;
 
-            return new OkObjectResult(monthObjList);
+            double BusinessDay = BusinessDaysUntil(batchStart, batchEnd);
+           // return new OkObjectResult(monthObjList);
+              return new OkObjectResult(new { BusinessDay, monthObjList });
         }
 
         // GET Latest month record
@@ -647,7 +652,7 @@ namespace E_Internship_Journal.API
                 _context.SaveChanges();
                 var studentEmail = monthRecord.InternshipRecord.UserBatch.User.Email;
                 var studentName = monthRecord.InternshipRecord.UserBatch.User.FullName;
-               _emailSender.SendChangeEmailAsync(false,studentEmail, "Your Supervisor graded you!", "Hi, " + studentName, "Your Supervisor has graded your previous month record. You may view your grade via the website.");
+               _emailSender.SendChangeEmailAsync(false,studentEmail, "Your Supervisor graded you!", "Hi, " + studentName, "Your Supervisor has graded your previous month record. You may view your grade via the website." ,"","");
                 return new OkObjectResult(new { Message = "Month record graded!!" });
             }
             catch (Exception e)
@@ -656,11 +661,42 @@ namespace E_Internship_Journal.API
             }
 
         }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        private int BusinessDaysUntil(DateTime firstDay, DateTime lastDay, params DateTime[] bankHolidays)
         {
+            //REFERENCE FROM https://stackoverflow.com/questions/1617049/calculate-the-number-of-business-days-between-two-dates
+            firstDay = firstDay.Date;
+            lastDay = lastDay.Date;
+            if (firstDay > lastDay)
+                throw new ArgumentException("Incorrect last day " + lastDay);
+
+            TimeSpan span = lastDay - firstDay;
+            int businessDays = span.Days + 1;
+            int fullWeekCount = businessDays / 7;
+            // find out if there are weekends during the time exceedng the full weeks
+            if (businessDays > fullWeekCount * 7)
+            {
+                // we are here to find out if there is a 1-day or 2-days weekend
+                // in the time interval remaining after subtracting the complete week
+                int firstDayOfWeek = firstDay.DayOfWeek == DayOfWeek.Sunday ? 7 : (int)firstDay.DayOfWeek;
+                int lastDayOfWeek = lastDay.DayOfWeek == DayOfWeek.Sunday ? 7 : (int)lastDay.DayOfWeek;
+                if (lastDayOfWeek < firstDayOfWeek)
+                    lastDayOfWeek += 7;
+                if (firstDayOfWeek <= 6)
+                {
+                    if (lastDayOfWeek >= 7)// Both Saturday and Sunday are in the remaining time interval
+                        businessDays -= 2;
+                    else if (lastDayOfWeek >= 6)// Only Saturday is in the remaining time interval
+                        businessDays -= 1;
+                }
+                else if (firstDayOfWeek <= 7 && lastDayOfWeek >= 7)// Only Sunday is in the remaining time interval
+                    businessDays -= 1;
+            }
+
+            // subtract the weekends during the full weeks in the interval
+            businessDays -= fullWeekCount + fullWeekCount;
+            
+
+            return businessDays;
         }
     }
 }
