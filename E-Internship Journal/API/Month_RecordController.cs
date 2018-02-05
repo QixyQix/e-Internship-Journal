@@ -492,6 +492,8 @@ namespace E_Internship_Journal.API
                 _context.Competency_Checkeds.Remove(cc);
             }
 
+            _context.SaveChanges();
+
             foreach (var competencyId in competencyInput.CompetencyIds)
             {
                 _context.Competency_Checkeds.Add(new Competency_Checked { MonthRecord = monthRecord, CompetencyId = competencyId });
