@@ -11,6 +11,7 @@ namespace E_Internship_Journal.Models
         public string TitleCompetency { get; set; }
         public int ViewBy { get; set; }
         public List<Competency> Competencies { get; set; }
+        public DateTime? DeletedAt { get; set; }
 
         public Course Course { get; set; }
         public int CourseId { get; set; }

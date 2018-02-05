@@ -174,7 +174,8 @@ namespace E_Internship_Journal.API
                 {
                     var user = _userManager.Users.Any(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
 
-                    if (user) {
+                    if (user)
+                    {
                         return BadRequest();
                     }
 
@@ -194,64 +195,32 @@ namespace E_Internship_Journal.API
                     await userManager.CreateAsync(newSupervisorUser);
                     await userManager.AddToRoleAsync(newSupervisorUser, "SUPERVISOR");
                     project.Supervisor = newSupervisorUser;
+
+                    await _context.SaveChangesAsync();
+
+                    //Registration Pin
+                    var repeatPinGeneration = true;
+                    string registationPin;
+                    do
+                    {
+                        registationPin = generateRandomString(50);
+                        if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
+                        {
+                            //Create new registration pin
+                            var newRegistrationPin = new RegistrationPin
+                            {
+                                User = newSupervisorUser,
+                                RegistrationPinId = generateRandomString(50)
+                            };
+                            _context.RegistrationPins.Add(newRegistrationPin);
+                            repeatPinGeneration = false;
+                        }
+                    } while (repeatPinGeneration);
                 }
-                
+
             }
             await _context.SaveChangesAsync();
-            return new OkObjectResult(new { Messages = "Updated project" , AlertType="success"});
-        }
-
-        // POST: api/Projects
-        [HttpPost("SaveNewProjectInformation")]
-        public async Task<IActionResult> SaveNewProjectInformation([FromBody] string value)
-        {
-            //string tqq = "ADMIN@TEST.com";
-            //_userManager.
-            //var userManager = await _userManager.FindByEmailAsync(tqq);
-            //userManager.Id;
-            //var qqq = userManager.Id;
-            //var claims = _userManager.GetClaimsAsync();
-            //_userManager.GetUserId((ClaimsPrincipal)qqq);
-            //_userManager.
-            //var ttt = await _userManager.GetClaimsAsync(userManager);
-            //var qw = _userManager.GetClaimsAsync(userManager);
-            //var user = User;
-            //var iden = (ClaimsIdentity)User;
-            //var claims = _userManager.GetClaimsAsync(userManager);
-            //IEnumerable<Claim> claims = iden.Claims;
-            //var ww = _context.ApplicationUsers.Find("ADMIN@TEST.com");
-            //var ttt = _userManager.GetUserId(userManager);
-            string customMessage = "";
-            try
-            {
-
-                var projectNewInput = JsonConvert.DeserializeObject<dynamic>(value);
-                Project newProject = new Project
-                {
-                    ProjectName = projectNewInput.ProjectName.Value,
-                    CompanyID = Convert.ToInt32(projectNewInput.Company.Value),
-                    SupervisorId = (await _userManager.FindByEmailAsync(projectNewInput.Supervisor.Value)).Id
-                };
-                // newProject.SupervisorId = _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail);
-                //var ttt = _userManager.GetUserId(_userManager.FindByEmailAsync(projectNewInput.SupervisorEmail));
-
-                _context.Projects.Add(newProject);
-                await _context.SaveChangesAsync();
-
-            }
-            catch (Exception exceptionObject)
-            {
-                customMessage = "Unable to save to database";
-                //return 
-            }
-            var successRequestResultMessage = new
-            {
-                Message = "Saved Course into database"
-            };
-
-            OkObjectResult httpOkResult =
-            new OkObjectResult(successRequestResultMessage);
-            return httpOkResult;
+            return new OkObjectResult(new { Messages = "Updated project", AlertType = "success" });
         }
 
         [HttpPut("SaveNewProjectRecord")]
@@ -338,9 +307,6 @@ namespace E_Internship_Journal.API
                         alertType = "success";
 
                     }
-                    //Check if Supervisor name & Phone Number matches with existing record in the DB
-                    //if (checkSupervisorExist.FullName.Equals(projectNewInput.SupervisorName.Value, StringComparison.OrdinalIgnoreCase) && (checkSupervisorExist.PhoneNumber.Equals(projectNewInput.SupervisorNumber.Value)))
-                    //{
                     if (projectNewInput.SupervisorName.Value.Equals(checkSupervisorExist.FullName, StringComparison.OrdinalIgnoreCase) && (projectNewInput.SupervisorNumber.Value.Equals(checkSupervisorExist.PhoneNumber)))
                     {
                         //Do nothing
@@ -449,10 +415,13 @@ namespace E_Internship_Journal.API
                         await _context.SaveChangesAsync();
                     }
 
+                    //Registration Pin
+                    //Registration Pin
                     var repeatPinGeneration = true;
+                    string registationPin;
                     do
                     {
-                        var registationPin = generateRandomString(50);
+                        registationPin = generateRandomString(50);
                         if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
                         {
                             //Create new registration pin
@@ -470,7 +439,7 @@ namespace E_Internship_Journal.API
                     var supervisorEmail = newSupervisorUser.Email;
                     var supervisorName = newSupervisorUser.FullName;
                     var projectName = createdProject.ProjectName;
-                    var CompanyName = _context.Companies.Where(c => c.CompanyId == createdProject.CompanyID).Select(c=>c.CompanyName).Single();
+                    var CompanyName = _context.Companies.Where(c => c.CompanyId == createdProject.CompanyID).Select(c => c.CompanyName).Single();
                     await _emailSender.SendChangeEmailAsync(false, supervisorEmail, "Your account has been created and enrolled!",
                         "Hi, " + supervisorName, "Your supervisor account has been created on behalf of you." +
                         "Your account has been assigned to Project " + projectName + " and Company " + CompanyName + ". Kindly proceed to activate your account.");
@@ -505,7 +474,7 @@ namespace E_Internship_Journal.API
 
         // DELETE: api/Projects/5
         [HttpDelete("DeleteProjects/bulk")]
-        [Authorize(Roles ="SLO, ADMIN")]
+        [Authorize(Roles = "SLO, ADMIN")]
         public async Task<IActionResult> DeleteProject([FromQuery]string selectedProjects)
         {
             var listOfId = selectedProjects.Split(',').Select(Int32.Parse).ToList();
@@ -562,7 +531,8 @@ namespace E_Internship_Journal.API
 
             try
             {
-                foreach (var idstr in idList) {
+                foreach (var idstr in idList)
+                {
                     int projId = Int32.Parse(idstr.ToString());
 
                     var project = _context.Projects.Where(p => p.ProjectId == projId).Include(p => p.InternshipRecords).SingleOrDefault();
@@ -575,7 +545,7 @@ namespace E_Internship_Journal.API
                     else
                     {
                         _context.Projects.Remove(project);
-                        
+
                     }
                 }
                 if (messageList.Count < 1)
@@ -593,14 +563,16 @@ namespace E_Internship_Journal.API
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "ADMIN, SLO")]
-        public async Task<IActionResult> DeleteAProject(int id) {
+        public async Task<IActionResult> DeleteAProject(int id)
+        {
             var project = _context.Projects.Where(p => p.ProjectId == id).Include(p => p.InternshipRecords).SingleOrDefault();
 
             if (project.InternshipRecords.Count > 0)
             {
-                return new OkObjectResult(new { Message = "This project could not be deleted as there are internship records attached to it", AlertType = "warning"});
+                return new OkObjectResult(new { Message = "This project could not be deleted as there are internship records attached to it", AlertType = "warning" });
             }
-            else {
+            else
+            {
                 _context.Projects.Remove(project);
                 _context.SaveChanges();
             }
@@ -660,7 +632,7 @@ namespace E_Internship_Journal.API
                             //Get individual data
                             string[] oneProjectData = line.Split(',');
                             //var www = oneProjectData[3];
-                            var company = _context.Companies.Include(pr => pr.Projects).SingleOrDefault(companyData => companyData.CompanyName.Equals(oneProjectData[1], StringComparison.OrdinalIgnoreCase));
+                            var company = _context.Companies.Include(pr => pr.Projects).Where(companyData => companyData.CompanyName.Equals(oneProjectData[1], StringComparison.OrdinalIgnoreCase)).SingleOrDefault();
                             // var user = _context.ApplicationUsers.SingleOrDefault(appuser => appuser.UserName.Equals(oneStudentData[1], StringComparison.OrdinalIgnoreCase));
                             var checkError = false;
                             if (!Regex.IsMatch(oneProjectData[3], "^[0-9]+$"))
@@ -670,11 +642,14 @@ namespace E_Internship_Journal.API
                                 checkError = true;
                                 // return BadRequest(FailedMessage);
                             }
-                            if (company.Projects.Select(pr => pr.ProjectName).Contains(oneProjectData[0]))
+                            if (company != null)
                             {
-                                alertType = "warning";
-                                messageList.Add("Duplicate Project Name at Row " + currentRow);
-                                checkError = true;
+                                if (company.Projects.Select(pr => pr.ProjectName).Contains(oneProjectData[0]))
+                                {
+                                    alertType = "warning";
+                                    messageList.Add("Duplicate Project Name at Row " + currentRow);
+                                    checkError = true;
+                                }
                             }
                             //Regex reference http://www.rhyous.com/2010/06/15/regular-expressions-in-cincluding-a-new-comprehensive-email-pattern/
                             string emailPattern = @"^(([^<>()[\]\\.,;:\s@\""""]+(\.[^<>()[\]\\.,;:\s@\""""]+)*)|(\"""".+\""""))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$";
@@ -768,7 +743,7 @@ namespace E_Internship_Journal.API
                             else
                             {
                                 alertType = "warning";
-                                messageList.Add("Unable to locate Company Details " + oneProjectData[1]);
+                                messageList.Add("Unable to locate Company Details at Row " + currentRow);// oneProjectData[1]);
                             }
                         }
                         catch (Exception ex)

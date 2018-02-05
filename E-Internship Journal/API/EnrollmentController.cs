@@ -214,6 +214,31 @@ namespace E_Internship_Journal.Controllers
             return builder.ToString();
         }
 
+        [HttpPut("SetPassword/{pin}")]
+        [AllowAnonymous]
+        public IActionResult SetPassword(string pin, [FromBody] string value) {
+            RegistrationPin rp = _context.RegistrationPins.Where(p => p.RegistrationPinId.Equals(pin)).Include(p => p.User).SingleOrDefault();
+
+            if (rp != null)
+            {
+                var passwordInput = JsonConvert.DeserializeObject<dynamic>(value);
+
+                var userStore = new UserStore<ApplicationUser>(_context);
+                var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
+
+                PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
+                rp.User.PasswordHash = ph.HashPassword(rp.User, passwordInput.Password.Value.ToString());
+
+                _context.SaveChanges();
+                _context.RegistrationPins.Remove(rp);
+                _context.SaveChanges();
+                return new OkObjectResult(new { Message = "Set password successfully! You may now log in." });
+            }
+            else {
+                return BadRequest();
+            }
+        }
+
         [HttpPut("MassAssignStudent/{id}")]
         [Authorize(Roles = "SLO")]
         public async Task<IActionResult> MassAssignStudent(int id, [FromBody] string value)
