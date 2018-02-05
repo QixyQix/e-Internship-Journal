@@ -2,58 +2,62 @@
     ViewData["Title"] = "Personal Particulars Page";
 }
 <div class="container-fluid">
-    <!-- Breadcrumbs-->
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a href="~/Home/Index">Homepage</a>
-        </li>
-        <li class="breadcrumb-item active">Personal Particulars</li>
-    </ol>
     <!-- Example DataTables Card-->
-    <div class="card">
-        <div class="card-header d-inline">
-            <i class="fa fa-pencil fa-2x pull-left"></i> <h3>Personal Particulars</h3>
-        </div>
-        <div class="card-body">
-            <form name="sentMessage" id="contactForm" novalidate="novalidate">
-                <div class="form-group">
-                    <label class="control-label" for="name">
-                        Name:
-                    </label>
-                    <input type='text' class="form-control" id="nameInput" readonly />
+    <section id="contact">
+        <div class="container">
+            <h2 class="text-center text-uppercase text-secondary mb-0">Personal Particulars</h2>
+            <hr />
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
+                    <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
+                    <form name="sentMessage" id="contactForm" novalidate="novalidate">
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Name</label>
+                                <input class="form-control" id="nameInput" type="text" placeholder="Name" required="required" data-validation-required-message="Please enter a name." readonly>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Contact</label>
+                                <input class="form-control" id="contactInput" type="number" placeholder="Contact" required="required" data-validation-required-message="Please enter a contact.">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Email</label>
+                                <input class="form-control" id="emailInput" type="email" placeholder="Email" required="required" data-validation-required-message="Please enter email address.">
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <br>
+                        <div id="success"></div>
+                        <div class="form-group">
+                            <div class="col-12">
+                                <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Index'">
+                                    Back
+                                </button>
+                                <button class="btn btn-primary pull-right" name="submit" id="btnUpdate" type="submit">
+                                    Update Details
+                                </button>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label class="control-label" for="contact">
-                        Contact:
-                    </label>
-                    <input type='number' class="form-control" id="contactInput" required="required" data-validation-required-message="Please enter valid number." />
-                </div>
-                <div class="form-group">
-                    <label class="control-label" for="email">
-                        Email:
-                    </label>
-                    <input type='email' class="form-control" id="emailInput" required="required" data-validation-required-message="Please enter valid email."/>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
-</div>
-<div class="card-body">
-    <div class="form-group">
-        <div class="col-12">
-            <button class="btn btn-default pull-left" onclick="location.href='http://' + window.location.host +'/Home/Index'">
-                Back
-            </button>
-            <button class="btn btn-primary pull-right" name="submit" type="submit" id="btnUpdate">
-                Update Details
-            </button>
-        </div>
-    </div>
+    </section>
 </div>
 <br />
 <script>
-    
-
+    $('.floating-label-form-group input').change(function (e) {
+        $('body .floating-label-form-group').addClass("floating-label-form-group-with-value", !!$(e.target).val());
+    });
     $.ajax({
         url: '/api/Accounts/loggedInUserDetails',
         method: 'GET',
@@ -62,9 +66,9 @@
         cache: false,
         success: function (data) {
             console.dir(data);
-            $('#nameInput').val(data.FullName);
-            $('#contactInput').val(data.PhoneNumber)
-            $('#emailInput').val(data.Email)
+            $('#nameInput').val(data.FullName).trigger('change');
+            $('#contactInput').val(data.PhoneNumber);
+            $('#emailInput').val(data.Email);
         },//End of success
         error: function (data) {
             swal({
@@ -75,88 +79,50 @@
         }//End of error
     });//End of ajax call
 
-    $('#btnUpdate').on('click', function (e) {
-        var contactNumber = $('#contactInput').val();
-        var email = $('#emailInput').val();
 
-        var webFormData = new WebFormData(contactNumber, email);
+    $(function () {
+        $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
+            preventSubmit: true,
+            submitSuccess: function ($form, event) {
+                var contactNumber = $('#contactInput').val();
+                var email = $('#emailInput').val();
 
-        console.dir(webFormData);
+                var webFormData = new WebFormData(contactNumber, email);
 
-        $.ajax({
-            url: '/API/Accounts/updateParticulars',
-            method: 'PUT',
-            contentType: "application/json",
-            cache: false,
-            data: "'" + JSON.stringify(webFormData) + "'",
-            success: function (data) {
-                swal({
-                    type: 'success',
-                    title: 'Saved',
-                    text: data.Message
-                }).then(
-                    function () {
-                        window.location.reload();
-                    });
+                $.ajax({
+                    url: '/API/Accounts/updateParticulars',
+                    method: 'PUT',
+                    contentType: "application/json",
+                    cache: false,
+                    data: "'" + JSON.stringify(webFormData) + "'",
+                    success: function (data) {
+                        swal({
+                            type: 'success',
+                            title: 'Saved',
+                            text: data.Message
+                        }).then(
+                            function () {
+                                window.location.reload();
+                            });
+                    },
+                    error: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            text: data.Message
+                        });
+                    }//End of error
+                });//End of ajax
             },
-            error: function (data) {
-                swal({
-                    type: 'error',
-                    title: 'Error',
-                    text: data.Message
-                });
-            }//End of error
-        });//End of ajax
+            submitError: function ($form, event, errors) {
+
+            }
+        });
+
+    });//End of jqBootstrapValidatio
 
 
-    });//End of btnUpdate
 
-    document.querySelector("#contactInput").addEventListener("keypress", function (evt) {
-        if (evt.which != 8 && evt.which != 0 && evt.which < 48 || evt.which > 57) {
-            evt.preventDefault();
-        }
-    });
-
-    //$(function () {
-    //    $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
-    //        preventSubmit: true,
-    //        submitSuccess: function ($form, event) {
-    //            var contactNumber = $('#contactInput').val();
-    //            var email = $('#emailInput').val();
-
-    //            var webFormData = new WebFormData(contactNumber, email);
-
-    //            $.ajax({
-    //                url: '/API/Accounts/updateParticulars',
-    //                method: 'PUT',
-    //                contentType: "application/json",
-    //                cache: false,
-    //                data: "'" + JSON.stringify(webFormData) + "'",
-    //                success: function (data) {
-    //                    swal({
-    //                        type: 'success',
-    //                        title: 'Saved',
-    //                        text: data.Message
-    //                    }).then(
-    //                        function () {
-    //                            window.location.reload();
-    //                        });
-    //                },
-    //                error: function (data) {
-    //                    swal({
-    //                        type: 'error',
-    //                        title: 'Error',
-    //                        text: data.Message
-    //                    });
-    //                }//End of error
-    //            });//End of ajax
-    //        },
-    //        submitError: function ($form, event, errors) {
-
-    //        }
-    //    });
-
-    //});//End of jqBootstrapValidatio
     function WebFormData(inContactNumber, inEmail) {
         this.PhoneNumber = inContactNumber;
         this.Email = inEmail;

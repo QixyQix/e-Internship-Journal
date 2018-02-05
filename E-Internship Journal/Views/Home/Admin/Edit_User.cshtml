@@ -155,7 +155,9 @@
 </div>
 <script>
     var userId = getCookie("selectedUser");
-
+    $('.floating-label-form-group input').change(function (e) {
+        $('body .floating-label-form-group').addClass("floating-label-form-group-with-value", !!$(e.target).val());
+    });
     if (userId != null) {
         $.ajax({
             url: '/Api/Accounts/' + userId,
@@ -164,7 +166,7 @@
             cache: false,
             success: function (data) {
                 console.dir(data);
-                $('#fullname').val(data.FullName);
+                $('#fullname').val(data.FullName).trigger('change');
                 $('#mobileNo').val(data.PhoneNumber);
                 $('#email').val(data.Email);
 
@@ -210,7 +212,7 @@
             preventSubmit: true,
             submitSuccess: function ($form, event) {
                 event.preventDefault();     // will not trigger the default submission in favor of the ajax function
-                var collectedFullName = $('#fullname').val();
+                var collectedFullName = $('#fullname').trigger('change');
                 var collectedMobileNumber = $('#mobileNo').val();
                 var collectedEmail = $('#email').val();
                 var collectedPassword = $('#password').val();

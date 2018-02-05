@@ -76,14 +76,17 @@
 </div>
 <script>
     var companyId = getCookie("selectedCompany");
-
+    $('.floating-label-form-group input').change(function (e) {
+        $('body .floating-label-form-group').addClass("floating-label-form-group-with-value", !!$(e.target).val());
+    });
+    $('#coursecode').trigger('change');
     $.ajax({
         method: 'get',
         dataType: 'json',
         cache: false,
         url: '/API/Companies/' + companyId
     }).done(function (data, textStatus, jqXHR) {
-        $('#companyName').val(data.CompanyName);
+        $('#companyName').val(data.CompanyName).trigger('change');
         $('#companyAddress').val(data.CompanyAddress);
         $('#contactName').val(data.ContactPersonName);
         $('#contactEmail').val(data.ContactPersonEmail);
