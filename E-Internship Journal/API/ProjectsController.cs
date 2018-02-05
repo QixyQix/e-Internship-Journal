@@ -195,64 +195,32 @@ namespace E_Internship_Journal.API
                     await userManager.CreateAsync(newSupervisorUser);
                     await userManager.AddToRoleAsync(newSupervisorUser, "SUPERVISOR");
                     project.Supervisor = newSupervisorUser;
+
+                    await _context.SaveChangesAsync();
+
+                    //Registration Pin
+                    var repeatPinGeneration = true;
+                    string registationPin;
+                    do
+                    {
+                        registationPin = generateRandomString(50);
+                        if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
+                        {
+                            //Create new registration pin
+                            var newRegistrationPin = new RegistrationPin
+                            {
+                                User = newSupervisorUser,
+                                RegistrationPinId = generateRandomString(50)
+                            };
+                            _context.RegistrationPins.Add(newRegistrationPin);
+                            repeatPinGeneration = false;
+                        }
+                    } while (repeatPinGeneration);
                 }
 
             }
             await _context.SaveChangesAsync();
             return new OkObjectResult(new { Messages = "Updated project", AlertType = "success" });
-        }
-
-        // POST: api/Projects
-        [HttpPost("SaveNewProjectInformation")]
-        public async Task<IActionResult> SaveNewProjectInformation([FromBody] string value)
-        {
-            //string tqq = "ADMIN@TEST.com";
-            //_userManager.
-            //var userManager = await _userManager.FindByEmailAsync(tqq);
-            //userManager.Id;
-            //var qqq = userManager.Id;
-            //var claims = _userManager.GetClaimsAsync();
-            //_userManager.GetUserId((ClaimsPrincipal)qqq);
-            //_userManager.
-            //var ttt = await _userManager.GetClaimsAsync(userManager);
-            //var qw = _userManager.GetClaimsAsync(userManager);
-            //var user = User;
-            //var iden = (ClaimsIdentity)User;
-            //var claims = _userManager.GetClaimsAsync(userManager);
-            //IEnumerable<Claim> claims = iden.Claims;
-            //var ww = _context.ApplicationUsers.Find("ADMIN@TEST.com");
-            //var ttt = _userManager.GetUserId(userManager);
-            string customMessage = "";
-            try
-            {
-
-                var projectNewInput = JsonConvert.DeserializeObject<dynamic>(value);
-                Project newProject = new Project
-                {
-                    ProjectName = projectNewInput.ProjectName.Value,
-                    CompanyID = Convert.ToInt32(projectNewInput.Company.Value),
-                    SupervisorId = (await _userManager.FindByEmailAsync(projectNewInput.Supervisor.Value)).Id
-                };
-                // newProject.SupervisorId = _userManager.FindByEmailAsync(projectNewInput.SupervisorEmail);
-                //var ttt = _userManager.GetUserId(_userManager.FindByEmailAsync(projectNewInput.SupervisorEmail));
-
-                _context.Projects.Add(newProject);
-                await _context.SaveChangesAsync();
-
-            }
-            catch (Exception exceptionObject)
-            {
-                customMessage = "Unable to save to database";
-                //return 
-            }
-            var successRequestResultMessage = new
-            {
-                Message = "Saved Course into database"
-            };
-
-            OkObjectResult httpOkResult =
-            new OkObjectResult(successRequestResultMessage);
-            return httpOkResult;
         }
 
         [HttpPut("SaveNewProjectRecord")]
@@ -339,9 +307,6 @@ namespace E_Internship_Journal.API
                         alertType = "success";
 
                     }
-                    //Check if Supervisor name & Phone Number matches with existing record in the DB
-                    //if (checkSupervisorExist.FullName.Equals(projectNewInput.SupervisorName.Value, StringComparison.OrdinalIgnoreCase) && (checkSupervisorExist.PhoneNumber.Equals(projectNewInput.SupervisorNumber.Value)))
-                    //{
                     if (projectNewInput.SupervisorName.Value.Equals(checkSupervisorExist.FullName, StringComparison.OrdinalIgnoreCase) && (projectNewInput.SupervisorNumber.Value.Equals(checkSupervisorExist.PhoneNumber)))
                     {
                         //Do nothing
@@ -450,10 +415,13 @@ namespace E_Internship_Journal.API
                         await _context.SaveChangesAsync();
                     }
 
+                    //Registration Pin
+                    //Registration Pin
                     var repeatPinGeneration = true;
+                    string registationPin;
                     do
                     {
-                        var registationPin = generateRandomString(50);
+                        registationPin = generateRandomString(50);
                         if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
                         {
                             //Create new registration pin
