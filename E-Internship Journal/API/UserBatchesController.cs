@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System.Text;
 using Hangfire;
+using E_Internship_Journal.Services;
 
 namespace E_Internship_Journal.API
 {
@@ -23,10 +24,12 @@ namespace E_Internship_Journal.API
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public UserBatchesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
+        private readonly IEmailSender _emailSender;
+        public UserBatchesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IEmailSender emailSender,
             SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
+            _emailSender = emailSender;
             _signInManager = signInManager;
             _context = context;
         }
@@ -299,9 +302,9 @@ namespace E_Internship_Journal.API
 
 
         }
-        [HttpPut("SaveNewStudentRecord/{id}")]
+        [HttpPut("SaveNewStudentRecord/")]
         [Authorize(Roles = "SLO")]
-        public async Task<IActionResult> SaveNewStudentRecord([FromBody] string value, int id)
+        public async Task<IActionResult> SaveNewStudentRecord([FromBody] string value)
         {
 
             string messageList = "";
@@ -316,11 +319,14 @@ namespace E_Internship_Journal.API
                 //{
 
                 //}
-                if ((_context.UserBatches.Any(ub => ub.UserBatchId == id)))
+
+                //if ((_context.UserBatches.Any(ub => ub.UserBatchId == id)))
+                if (userNewInput.UserBatchId != null)
                 {
                     string userEmail = userNewInput.StudentEmail.Value;
+                    int id = Int32.Parse(userNewInput.UserBatchId.Value);
                     var user = _context.ApplicationUsers.SingleOrDefault(appuser => appuser.UserName.Equals(userEmail, StringComparison.OrdinalIgnoreCase));
-                    var userBatch = _context.UserBatches.Include(b=>b.Batch).Include(ir=>ir.InternshipRecord).Single(ub => ub.UserBatchId == id);
+                    var userBatch = _context.UserBatches.Include(b => b.Batch).Include(ir => ir.InternshipRecord).Single(ub => ub.UserBatchId == id);
 
                     user.FullName = userNewInput.StudentName.Value;
                     user.PhoneNumber = userNewInput.StudentNumber.Value;
@@ -334,19 +340,19 @@ namespace E_Internship_Journal.API
                         var code = await _userManager.GenerateChangeEmailTokenAsync(user, userNewInput.StudentEmail.Value.ToString());
                         string codeHtmlVersion = System.Net.WebUtility.UrlEncode(code);
                     }
-                    if (_context.ScheduleInternshipRecords.Any(ub=>ub.UserBatchId == id) && userBatch.Batch.StartDate <= DateTime.Now && userBatch.InternshipRecord ==null)
+                    if (_context.ScheduleInternshipRecords.Any(ub => ub.UserBatchId == id) && userBatch.Batch.StartDate <= DateTime.Now && userBatch.InternshipRecord == null)
                     {
                         var ScheduleInternshipRecord = _context.ScheduleInternshipRecords.Where(ub => ub.UserBatchId == id).Single();
                         ScheduleInternshipRecord.ProjectId = Int32.Parse(userNewInput.ProjectId.Value);
                         var LOEmail = (string)userNewInput.LO.Value;
                         ScheduleInternshipRecord.LiaisonOfficerId = (await _userManager.FindByEmailAsync(LOEmail)).Id;
                     }
-                    if(userBatch.InternshipRecord!= null)
+                    if (userBatch.InternshipRecord != null)
                     {
                         userBatch.InternshipRecord.ProjectId = Int32.Parse(userNewInput.ProjectId.Value);
                         var LOEmail = (string)userNewInput.LO.Value;
                         userBatch.InternshipRecord.LiaisonOfficerId = (await _userManager.FindByEmailAsync(LOEmail)).Id;
-                        
+
                     }
                     await _context.SaveChangesAsync();
                     messageList = "Updated Student Account";
@@ -355,6 +361,9 @@ namespace E_Internship_Journal.API
                 }
                 else
                 {
+                    var studentCreatedBatch = new UserBatch();
+                    var studentCreated = new RegistrationPin();
+
                     string userEmail = userNewInput.StudentEmail.Value;
                     var user = _context.ApplicationUsers.SingleOrDefault(appuser => appuser.UserName.Equals(userEmail, StringComparison.OrdinalIgnoreCase));
                     if (user != null)
@@ -364,6 +373,7 @@ namespace E_Internship_Journal.API
                     }
                     else
                     {
+                        int id = Int32.Parse(userNewInput.BatchId.Value);
                         //Create user
                         var userStore = new UserStore<ApplicationUser>(_context);
                         var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
@@ -386,11 +396,12 @@ namespace E_Internship_Journal.API
                         //Create UserBatch objects
                         var newUserBatch = new UserBatch
                         {
-                            BatchId = id,
+                            Batch = _context.Batches.Where(batch => batch.BatchId == id).Single(),
                             User = newStudentUser,
                             Allowance = userNewInput.Allowance.Value,
                             Designation = userNewInput.Designation.Value
                         };
+                        studentCreatedBatch = newUserBatch;
                         _context.UserBatches.Add(newUserBatch);
                         var repeatPinGeneration = true;
                         do
@@ -406,23 +417,35 @@ namespace E_Internship_Journal.API
                                 };
                                 _context.RegistrationPins.Add(newRegistrationPin);
                                 repeatPinGeneration = false;
+                                studentCreated = newRegistrationPin;
                             }
                         } while (repeatPinGeneration);
                         await _context.SaveChangesAsync();
-                        var LOEmail = (string)userNewInput.LO.Value;
-                        var startDate = _context.Batches.Where(b => b.BatchId == id).Select(b => b.StartDate).Single();
 
-                        var scheduleCreationRecord = new ScheduleInternshipRecord
-                        {
-                            ProjectId = Int32.Parse(userNewInput.ProjectId.Value),
-                            LiaisonOfficerId = (await _userManager.FindByEmailAsync(LOEmail)).Id,
-                            UserBatchId = newUserBatch.UserBatchId
 
-                        };
+                        //var LOEmail = (string)userNewInput.LO.Value;
+                        //var startDate = _context.Batches.Where(b => b.BatchId == id).Select(b => b.StartDate).Single();
 
-                        _context.ScheduleInternshipRecords.Add(scheduleCreationRecord);
-                        await _context.SaveChangesAsync();
-                        BackgroundJob.Schedule(() => CreateInternshipJournalAsync(scheduleCreationRecord.ScheduleIntershipRecordId), startDate);
+                        //var scheduleCreationRecord = new ScheduleInternshipRecord
+                        //{
+                        //    ProjectId = Int32.Parse(userNewInput.ProjectId.Value),
+                        //    LiaisonOfficerId = (await _userManager.FindByEmailAsync(LOEmail)).Id,
+                        //    UserBatchId = newUserBatch.UserBatchId
+
+                        //};
+
+                        //_context.ScheduleInternshipRecords.Add(scheduleCreationRecord);
+                        //await _context.SaveChangesAsync();
+                        //BackgroundJob.Schedule(() => CreateInternshipJournalAsync(scheduleCreationRecord.ScheduleIntershipRecordId), startDate);
+
+                        var studentEmail = studentCreated.User.Email;
+                        var studentName = studentCreated.User.FullName;
+                        var batchName = studentCreatedBatch.Batch.BatchName;
+                        var startDate = studentCreatedBatch.Batch.StartDate.ToString("dd MMMM yyyy");
+                        var endDate = studentCreatedBatch.Batch.EndDate.ToString("dd MMMM yyyy");
+                        await _emailSender.SendChangeEmailAsync(false, studentEmail, "Your account has been created and enrolled!",
+                            "Hi, " + studentName, "Your student account has been created and enrolled into Batch " + batchName + "." +
+                            " The Semester will start from " + startDate + " and end on " + endDate + ". Kindly proceed to activate your account before your internship starts.");
 
                         messageList = "Created Student Account";
                         alertType = "success";

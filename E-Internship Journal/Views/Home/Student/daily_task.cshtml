@@ -127,7 +127,8 @@
             end: moment(data.studentBatch.EndDate).format('YYYY-MM-DD'),
             overlap: false,
             rendering: 'background',
-            color: '#4DF64F'
+           // color: '#4DF64F'
+            color: '#FAF445'
         }
         $('#calendar').fullCalendar('renderEvent', newEvent, true);
    
@@ -171,6 +172,7 @@
         eventLimit: true, // allow "more" link when too many events
         selectable: true,
         eventColor: '#FAF445',
+        //eventColor: '#4DF64F',
         validRange: {
             end: new Date() + 1
         },

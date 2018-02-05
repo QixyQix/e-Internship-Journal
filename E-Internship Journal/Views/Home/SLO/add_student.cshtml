@@ -257,6 +257,7 @@
                 preventSubmit: true,
                 submitSuccess: function ($form, event) {
                     event.preventDefault();     // will not trigger the default submission in favor of the ajax function
+                    var collectedSelectedBatch = sessionStorage.getItem('selected');
                     var collectedStudentId = $('#studentId').val();
                     var colectedStudentName = $('#studentName').val();
                     var collectedStudentNumber = $('#mobileNo').val();
@@ -266,11 +267,11 @@
                     var collectedAllowance = $('#allowance').val();
                     var collectedDesignation = $('#designation').val();
 
-                    var webFormData = new WebFormData(collectedStudentId, colectedStudentName, collectedStudentNumber, collectedStudentEmailAddress, collectedProjectId,
+                    var webFormData = new WebFormData(collectedSelectedBatch,collectedStudentId, colectedStudentName, collectedStudentNumber, collectedStudentEmailAddress, collectedProjectId,
                         collectedLO, collectedAllowance, collectedDesignation);
 
                     $.ajax({
-                        url: '/Api/UserBatches/SaveNewStudentRecord/' + sessionStorage.getItem('selected'),
+                        url: '/Api/UserBatches/SaveNewStudentRecord/' ,
                         method: 'PUT',
                         dataType: "json",
                         contentType: "application/json; charset=utf-8",
@@ -310,8 +311,8 @@
 
         });//end of function
 
-        function WebFormData(inStudentId, inStudentName, inStudentNumber, inStudentEmail, inProjectId, inLO, inAllowance, inDesignation) {
-
+        function WebFormData(inBatchId, inStudentId, inStudentName, inStudentNumber, inStudentEmail, inProjectId, inLO, inAllowance, inDesignation) {
+            this.BatchId = inBatchId;
             this.StudentId = inStudentId;
             this.StudentName = inStudentName;
             this.StudentNumber = inStudentNumber;

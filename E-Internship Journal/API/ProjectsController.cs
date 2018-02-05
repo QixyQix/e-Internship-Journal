@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
+using E_Internship_Journal.Services;
 
 namespace E_Internship_Journal.API
 {
@@ -25,10 +26,12 @@ namespace E_Internship_Journal.API
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public ProjectsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
+        private readonly IEmailSender _emailSender;
+        public ProjectsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IEmailSender emailSender,
             SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
+            _emailSender = emailSender;
             _signInManager = signInManager;
             _context = context;
         }
@@ -364,6 +367,8 @@ namespace E_Internship_Journal.API
                 }
                 else
                 {
+
+                    var createdProject = new Project();
                     //Create user
                     var userStore = new UserStore<ApplicationUser>(_context);
                     var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
@@ -408,6 +413,7 @@ namespace E_Internship_Journal.API
                             SupervisorId = newSupervisorUser.Id
                         };
                         _context.Projects.Add(newProject);
+                        createdProject = newProject;
                         await _context.SaveChangesAsync();
                     }
                     else
@@ -438,25 +444,36 @@ namespace E_Internship_Journal.API
                         projectRecord.SupervisorId = newSupervisorUser.Id;
 
                         //_context.SaveChanges();
-                        var repeatPinGeneration = true;
-                        do
-                        {
-                            var registationPin = generateRandomString(50);
-                            if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
-                            {
-                                //Create new registration pin
-                                var newRegistrationPin = new RegistrationPin
-                                {
-                                    User = newSupervisorUser,
-                                    RegistrationPinId = generateRandomString(50)
-                                };
-                                _context.RegistrationPins.Add(newRegistrationPin);
-                                repeatPinGeneration = false;
-                            }
-                        } while (repeatPinGeneration);
 
+                        createdProject = projectRecord;
                         await _context.SaveChangesAsync();
                     }
+
+                    var repeatPinGeneration = true;
+                    do
+                    {
+                        var registationPin = generateRandomString(50);
+                        if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
+                        {
+                            //Create new registration pin
+                            var newRegistrationPin = new RegistrationPin
+                            {
+                                User = newSupervisorUser,
+                                RegistrationPinId = generateRandomString(50)
+                            };
+                            _context.RegistrationPins.Add(newRegistrationPin);
+                            repeatPinGeneration = false;
+                        }
+                    } while (repeatPinGeneration);
+                    await _context.SaveChangesAsync();
+
+                    var supervisorEmail = newSupervisorUser.Email;
+                    var supervisorName = newSupervisorUser.FullName;
+                    var projectName = createdProject.ProjectName;
+                    var CompanyName = _context.Companies.Where(c => c.CompanyId == createdProject.CompanyID).Select(c=>c.CompanyName).Single();
+                    await _emailSender.SendChangeEmailAsync(false, supervisorEmail, "Your account has been created and enrolled!",
+                        "Hi, " + supervisorName, "Your supervisor account has been created on behalf of you." +
+                        "Your account has been assigned to Project " + projectName + " and Company " + CompanyName + ". Kindly proceed to activate your account.");
 
 
                     messageList = "Saved Project & Created Supervisor Account";
