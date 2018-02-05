@@ -281,9 +281,32 @@
                     $('#competencyModal').modal('show');
                 });
                 $('#competency_dataTable thead').on('click', 'button#btnDeleteCategory', function (e) {
-                    console.dir($(this).val());
+                   // console.dir($(this).val());
+                    var collectedId = $(this).val();
 
+                    $.ajax({
+                        url: '/Api/Competencies/DeleteCategory/' + collectedId,
+                        method: 'DELETE',
+                        success: function (data, status, jqXHR) {
+                            //var title = data.AlertType == 'warning' ? 'Records displayed below not removed ' : 'Selected Records removed successfully!';
 
+                            swal({
+                                type: data.AlertType,
+                                title: 'Success',
+                                //html: data.Messages.join('<br>')
+                                text: data.Messages
+                            }).then(function () {
+                                window.location.reload();
+                            })
+                        },//End of success
+                        error: function (data) {
+                            swal({
+                                type: 'error',
+                                title: 'Error',
+                                text: data.Message
+                            });
+                        }//end of error
+                    });//End of ajax call
                 });
                 $('#competency_dataTable').on('click', 'button#btnEditCompetency', function (e) {
                     var $row = $(this).closest('tr');

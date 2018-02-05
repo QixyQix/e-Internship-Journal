@@ -232,6 +232,32 @@
 
             $('#btnUpdate').val($(this).val());
         });
+        $('#dataTable tbody').on('click', 'button.btn-danger', function (e) {
+            var collectedTouchPointId = $(this).val();
+            $.ajax({
+                url: '/Api/TouchPoint/DeleteTouchPointRecord/' + collectedTouchPointId,
+                method: 'DELETE',
+                dataType: 'json',
+                cache: false,
+                success: function (data) {
+                    swal({
+                        type: 'success',
+                        title: 'Saved!',
+                        text: data.Message
+                    }).then(function () {
+                        window.location.reload();
+                    });
+                },
+                error: function (data) {
+                    swal({
+                        type: 'error',
+                        title: 'Oops!',
+                        text: data.Message
+                    });
+                }
+            });
+
+        });
         $('#btnCreate').on('click', function (e) {
             if ($('#newDate').val() == null || $('#newTimeIn').val() == null) {
 
@@ -389,7 +415,7 @@
                     data: "TouchPointId",
                     "sWidth": "10%",
                     "bSortable": false,
-                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary" value="' + o + '"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button onclick="deleteTouchPointRecord()" class="btn btn-sm btn-danger" id="deletebtn" value="' + o + '"><i class="fa fa-trash"></i></button>' }
+                    "mRender": function (o) { return '<button class="btn btn-sm btn-primary" value="' + o + '"><i class="fa fa-pencil-square-o"></i></button>&nbsp<button class="btn btn-sm btn-danger" id="deletebtn" value="' + o + '"><i class="fa fa-trash"></i></button>' }
                 }
             ],
             language: {

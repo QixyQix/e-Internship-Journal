@@ -132,7 +132,7 @@ namespace E_Internship_Journal.API
                 .Single(eachTouchPointRecord => eachTouchPointRecord.TouchPointId == id);
                 //foundOneCategory.DeletedAt = DateTime.Now;
 
-                _context.Update(foundOneTouchPointRecord);
+                _context.TouchPointRecords.Remove(foundOneTouchPointRecord);
                 //   Database.Remove(foundOneCategory);
                 _context.SaveChanges();
                 var successRequestResultMessage = new

@@ -453,7 +453,7 @@ namespace E_Internship_Journal.API
         public async Task<IActionResult> DeleteCategory([FromRoute] int id)
         {
             string alertType = "success";
-            var competency = await _context.Competencies.SingleOrDefaultAsync(m => m.CompetencyId == id);
+            var competency = _context.CompetencyTitles.Where(ct => ct.CompetencyTitleId == id).Include(c => c.Competencies).SingleOrDefault();
             if (competency == null)
             {
                 return NotFound();
@@ -462,7 +462,7 @@ namespace E_Internship_Journal.API
             {
                 // _context.Competencies.Remove(competency);
                 // await _context.SaveChangesAsync();
-                competency.DeletedAt = DateTime.Now;
+               // competency = DateTime.Now;
                 _context.SaveChanges();
                 var responseObject = new
                 {
