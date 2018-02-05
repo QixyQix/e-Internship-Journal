@@ -49,7 +49,9 @@
 
 <script>
     var courseId = getCookie("selectedCourse");
-
+    $('.floating-label-form-group input').change(function (e) {
+        $('body .floating-label-form-group').addClass("floating-label-form-group-with-value", !!$(e.target).val());
+    });
     if (courseId != null) { 
         $.ajax({
             url: '/Api/Courses/' + courseId,
@@ -58,7 +60,7 @@
             cache: false,
             success: function (data) {
                 console.dir(data);
-                $('#coursecode').val(data.CourseCode);
+                $('#coursecode').val(data.CourseCode).trigger('change');
                 $('#coursename').val(data.CourseName);
             },
             fail: function (data) {

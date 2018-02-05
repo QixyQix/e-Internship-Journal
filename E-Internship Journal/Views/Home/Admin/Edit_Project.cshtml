@@ -111,7 +111,9 @@
     var editor;
 
     var projectId;
-
+    $('.floating-label-form-group input').change(function (e) {
+        $('body .floating-label-form-group').addClass("floating-label-form-group-with-value", !!$(e.target).val());
+    });
     $(function () {
         $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
             preventSubmit: true,
