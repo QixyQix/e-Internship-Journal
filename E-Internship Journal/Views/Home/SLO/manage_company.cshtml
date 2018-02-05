@@ -196,6 +196,8 @@
                         type: data.AlertType,
                         title: title,
                         html: data.Messages.join('<br>')
+                    }).then(function (data) {
+                        window.location.reload();
                     });
                 },//End of success
                 error: function (data) {

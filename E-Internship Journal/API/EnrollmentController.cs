@@ -56,7 +56,7 @@ namespace E_Internship_Journal.Controllers
                 {
                     var heading = streamReader.ReadLine();
                     //Check if CSV file is in correct order
-                    if (!heading.Equals("Student Name,Email,Contact No,Project,Company"))
+                    if (!heading.Equals("Student Id,Student Name,Email,Contact No"))
                     {
                         return BadRequest(new { Message = "CSV file does not follow correct format" });
                     }
@@ -82,7 +82,7 @@ namespace E_Internship_Journal.Controllers
                             //Get individual data
                             string[] oneStudentData = line.Split(',');
 
-                            var user = _context.ApplicationUsers.SingleOrDefault(appuser => appuser.UserName.Equals(oneStudentData[1], StringComparison.OrdinalIgnoreCase));
+                            var user = _context.ApplicationUsers.SingleOrDefault(appuser => appuser.UserName.Equals(oneStudentData[2], StringComparison.OrdinalIgnoreCase));
 
                             if (user != null)
                             {
@@ -115,11 +115,11 @@ namespace E_Internship_Journal.Controllers
 
                                 var newStudentUser = new ApplicationUser
                                 {
-                                    UserName = oneStudentData[1],
-                                    Email = oneStudentData[1],
-                                    FullName = oneStudentData[0],
-                                    PhoneNumber = oneStudentData[2]
-                                    //Course = thisBatch.Course
+                                    StudentId = oneStudentData[0],
+                                    UserName = oneStudentData[2],
+                                    Email = oneStudentData[2],
+                                    FullName = oneStudentData[1],
+                                    PhoneNumber = oneStudentData[3]
                                 };
                                 PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
                                 newStudentUser.PasswordHash = ph.HashPassword(newStudentUser, generateRandomString(11));
