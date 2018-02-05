@@ -222,9 +222,11 @@ namespace E_Internship_Journal.API
         {
             string messageList = "";
             string alertType = "success";
-            var competencies_NewInput = JsonConvert.DeserializeObject<dynamic>(value);
+        
             try
             {
+               
+                var competencies_NewInput = JsonConvert.DeserializeObject<dynamic>(value);
                 if (competencies_NewInput.Method.Value.Equals("SaveNew"))
                 {
                     Competency newCompetencies = new Competency
