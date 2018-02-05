@@ -163,6 +163,42 @@
                         competencyTable.append($tbodyElement);
                     }
                 }
+                $('#competency_dataTable tbody').on('click', 'button#btnRevertCompetency', function (e) {
+                    // console.dir($(this).val());
+                    var selectedCompetency = $(this).val();
+                    $.ajax({
+                        url: '/Api/Competencies/RevertCompetency/' + selectedCompetency,
+                        method: 'PUT',
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        success: function (data, status, jqXHR) {
+                            var title = 'Success';
+                            if (data.AlertType == 'error') {
+                                title = 'Error';
+
+                            } else if (data.AlertType == 'warning') {
+                                title = 'Warning';
+                            }
+                            swal({
+                                type: data.AlertType,
+                                title: title,
+                                text: data.Messages
+                            }).then(
+                                function () {
+                                    title == 'Error' ? null : window.location.reload();
+                                });
+                        },//End of success
+                        error: function (data) {
+                            swal({
+                                type: 'error',
+                                title: 'Error',
+                                text: data.Message
+                            });
+                        }//End of error
+                    });//End of ajax call
+
+                });
                 
             },//End of success
 

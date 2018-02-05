@@ -479,6 +479,51 @@ namespace E_Internship_Journal.API
 
 
         }
+        [HttpPut("RevertCompetency/{id}")]
+        public async Task<IActionResult> RevertCompetency(int id)
+        {
+            string alertType = "success";
+            if (CompetencyExists(id))
+            {
+                try
+                {
+                    var foundOneCompetencies = _context.Competencies
+                        .Where(eachCompetencyEntity => eachCompetencyEntity.CompetencyId == id)
+                        .Single();
+
+
+                    foundOneCompetencies.DeletedAt = null;
+                    await _context.SaveChangesAsync();
+
+                    var responseObject = new
+                    {
+                        AlertType = alertType,
+                        Messages = "Success"
+                    };
+
+                    return new OkObjectResult(responseObject);
+
+                }
+                catch (Exception exceptionObject)
+                {
+                    //Create a fail message anonymous object
+                    //This anonymous object only has one Message property 
+                    //which contains a simple string message
+                    object httpFailRequestResultMessage =
+                    new { Message = exceptionObject };
+                    //Return a bad http response message to the client
+                    return BadRequest(httpFailRequestResultMessage);
+                }
+            }
+            else
+            {
+                object httpFailRequestResultMessage =
+                new { Message = "Competencies ID not found" };
+                return BadRequest(httpFailRequestResultMessage);
+
+
+            }//End of Get(id) Web API method
+        }
 
         private bool CompetencyExists(int id)
         {
