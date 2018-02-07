@@ -135,7 +135,7 @@
                 $('#selectMonthRecord').find('option').remove();
                 for (i = 0; i < data.length; i++) {
                     var selectMonthRecord
-                    var newOption = $('<option>').text('Month ' + (i + 1)).val(i);
+                    var newOption = $('<option>').text('Week ' + (((i + 1) * 4) - 3) + ' to Week ' + (i + 1) * 4).val(i);
                     $('#selectMonthRecord').append(newOption);
                 }
                 console.dir(data);
@@ -149,9 +149,9 @@
     }
 
     function loadData(selectedMonth) {
-        $('#datelocked').val(moment(new Date(selectedMonth.MentorSessionDateTimeStart)).format('DD/MM/YYYY'));
-        $('#MentorSessionDateTimeStart').val(moment(new Date(selectedMonth.MentorSessionDateTimeStart)).format('hh:mm A'));
-        $('#MentorSessionDateTimeEnd').val(moment(new Date(selectedMonth.MentorSessionDateTimeEnd)).format('hh:mm A'));
+        selectedMonth.MentorSessionDateTimeStart == null ? $('#datelocked').val("") : $('#datelocked').val(moment(new Date(selectedMonth.MentorSessionDateTimeStart)).format('DD/MM/YYYY'));
+        selectedMonth.MentorSessionDateTimeStart == null ? $('#MentorSessionDateTimeStart').val("") : $('#MentorSessionDateTimeStart').val(moment(new Date(selectedMonth.MentorSessionDateTimeStart)).format('hh:mm A'));
+        selectedMonth.MentorSessionDateTimeEnd == null ? $('#MentorSessionDateTimeEnd').val("") : $('#MentorSessionDateTimeEnd').val(moment(new Date(selectedMonth.MentorSessionDateTimeEnd)).format('hh:mm A'));
         $('#MentorSessionReflection').val(selectedMonth.MentorSessionReflection);
     }
 

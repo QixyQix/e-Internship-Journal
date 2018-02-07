@@ -212,7 +212,7 @@
             preventSubmit: true,
             submitSuccess: function ($form, event) {
                 event.preventDefault();     // will not trigger the default submission in favor of the ajax function
-                var collectedFullName = $('#fullname').trigger('change');
+                var collectedFullName = $('#fullname').val();
                 var collectedMobileNumber = $('#mobileNo').val();
                 var collectedEmail = $('#email').val();
                 var collectedPassword = $('#password').val();

@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System.IO;
 using E_Internship_Journal.Services;
+using System.Text;
 
 namespace E_Internship_Journal.API
 {
@@ -298,16 +299,58 @@ namespace E_Internship_Journal.API
                     await userManager.AddToRoleAsync(newUser, role);
                 }
             }
-            if (roleList.Contains("SLO") || roleList.Contains("LO"))
+
+            var repeatPinGeneration = true;
+            RegistrationPin registrationPin = new RegistrationPin();
+            do
             {
-                var newUserEmail = newUser.Email;
-                var newUserName = newUser.FullName;
-                //var role = roleList.Contains("SLO") ? null : "test";
-                await _emailSender.SendChangeEmailAsync(false, newUserEmail, "Your account has been created!",
-                    "Hi, " + newUserName, "Your account has been created!" +
-                    "Kindly proceed to activate/login your account." , "" , "");
+                var registationPin = generateRandomString(50);
+                if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
+                {
+                    //Create new registration pin
+                    var newRegistrationPin = new RegistrationPin
+                    {
+                        User = newUser,
+                        RegistrationPinId = generateRandomString(50)
+                    };
+                    _context.RegistrationPins.Add(newRegistrationPin);
+                    repeatPinGeneration = false;
+                    registrationPin = newRegistrationPin;
+                }
+            } while (repeatPinGeneration);
+            await _context.SaveChangesAsync();
+            var newUserEmail = newUser.Email;
+            var newUserName = newUser.FullName;
+            var accountType = "";
+
+            if (roleList.Contains("SUPERVISOR"))
+            {
+                accountType = "Supervisor";
             }
-            
+            if (roleList.Contains("SLO"))
+            {
+                accountType = "SLO";
+            }
+            if (roleList.Contains("LO"))
+            {
+                accountType = "LO";
+            }
+            if (roleList.Contains("ADMIN"))
+            {
+                accountType = "Admin";
+            }
+            if (roleList.Contains("SLO") && roleList.Contains("LO"))
+            {
+                accountType = "SLO / LO";
+            }
+            if (roleList.Contains("SUPERVISOR") && roleList.Contains("LO"))
+            {
+                accountType = "Supervisor / LO";
+            }
+            await _emailSender.SendChangeEmailAsync(true, newUserEmail, "Your account has been created!",
+                 "Hi, " + newUserName, "Your " + accountType + " account has been created!" +
+                 "Kindly proceed to activate/login your account.",
+                 "http://localhost:63071/Account/SetPassword?registrationPin=" + registrationPin.RegistrationPinId, "Activate Account");
 
 
             return new OkObjectResult(new { Message = "User created successfully!" });
@@ -324,9 +367,11 @@ namespace E_Internship_Journal.API
 
             var csvFile = files[0];
 
+            
+            List<string> csvLine = new List<string>();
             using (var memoryStream = new MemoryStream())
             {
-                List<string> csvLine = new List<string>();
+            
                 await csvFile.CopyToAsync(memoryStream);
                 memoryStream.Position = 0;
 
@@ -348,63 +393,92 @@ namespace E_Internship_Journal.API
                         csvLine.Add(fileLine);
                     }
                 }
+            }
+            var userStore = new UserStore<ApplicationUser>(_context);
+            var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
 
-                var userStore = new UserStore<ApplicationUser>(_context);
-                var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
-
-                foreach (var line in csvLine)
+            var accountCreated = new List<ApplicationUser>();
+            var accountRegistrationPin = new List<RegistrationPin>();
+            foreach (var line in csvLine)
+            {
+                if (!(line.Replace(",", "").Trim().Equals("")))
                 {
-                    if (!(line.Replace(",", "").Trim().Equals("")))
+                    try
                     {
-                        try
+                        //Get individual data
+                        string[] userData = line.Split(',');
+
+                        if (!_userManager.Users.Any(u => u.Email.Equals(userData[0])))
                         {
-                            //Get individual data
-                            string[] userData = line.Split(',');
+                            //Create user
 
-                            if (!_userManager.Users.Any(u => u.Email.Equals(userData[0])))
+
+                            var newUser = new ApplicationUser
                             {
-                                //Create user
+                                UserName = userData[0],
+                                Email = userData[0],
+                                FullName = userData[1],
+                                PhoneNumber = userData[2],
+                                IsEnabled = false
+                            };
 
+                            PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
+                            accountCreated.Add(newUser);
+                            newUser.PasswordHash = ph.HashPassword(newUser, userData[3]);
+                            await userManager.CreateAsync(newUser);
 
-                                var newUser = new ApplicationUser
-                                {
-                                    UserName = userData[0],
-                                    Email = userData[0],
-                                    FullName = userData[1],
-                                    PhoneNumber = userData[2],
-                                    IsEnabled = false
-                                };
-
-                                PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
-
-                                newUser.PasswordHash = ph.HashPassword(newUser, userData[3]);
-                                await userManager.CreateAsync(newUser);
-                            }
-                            else
+                            var repeatPinGeneration = true;
+                            do
                             {
-                                if (messageList.Count < 1)
+                                var registationPin = generateRandomString(50);
+                                if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
                                 {
-                                    messageList.Add("Completed with the following errors:");
-                                    alertType = "warning";
-                                    title = "Completed with errors";
+                                    //Create new registration pin
+                                    var newRegistrationPin = new RegistrationPin
+                                    {
+                                        User = newUser,
+                                        RegistrationPinId = generateRandomString(50)
+                                    };
+                                    _context.RegistrationPins.Add(newRegistrationPin);
+                                    repeatPinGeneration = false;
+                                    accountRegistrationPin.Add(newRegistrationPin);
                                 }
-
-                                messageList.Add(userData[1] + "(" + userData[0] + ") Another user already exists and was therefore not created");
-                            }
+                            } while (repeatPinGeneration);
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            return BadRequest();
+                            if (messageList.Count < 1)
+                            {
+                                messageList.Add("Completed with the following errors:");
+                                alertType = "warning";
+                                title = "Completed with errors";
+                            }
+
+                            messageList.Add(userData[1] + "(" + userData[0] + ") Another user already exists and was therefore not created");
                         }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest();
                     }
                 }
-                await _context.SaveChangesAsync();
-
-                if (messageList.Count < 1)
-                    messageList.Add("Courses in csv file created successfully! Please assign their roles individually.");
-
-                return new OkObjectResult(new { Title = title, Messages = messageList, AlertType = alertType });
             }
+            await _context.SaveChangesAsync();
+
+            for (int i = 0; i < accountCreated.Count; i++)
+            {
+                var accountEmail = accountCreated[i].Email;
+                var accountName = accountCreated[i].FullName;
+                await _emailSender.SendChangeEmailAsync(true, accountEmail, "Your account has been created and enrolled!",
+                    "Hi, " + accountName, "Your account has been created. Kindly proceed to activate your account before your internship starts.",
+                    "http://localhost:63071/Account/SetPassword?registrationPin=" + accountRegistrationPin[i].RegistrationPinId, "Activate Account");
+            }
+            if (messageList.Count < 1)
+                messageList.Add("Courses in csv file created successfully! Please assign their roles individually.");
+
+            return new OkObjectResult(new { Title = title, Messages = messageList, AlertType = alertType });
+
         }
 
 
@@ -614,7 +688,8 @@ namespace E_Internship_Journal.API
         }
 
         [HttpPut("updateParticulars")]
-        public IActionResult UpdateParticulars([FromBody] string value) {
+        public IActionResult UpdateParticulars([FromBody] string value)
+        {
             string userId = _userManager.GetUserId(User);
             ApplicationUser user = _userManager.Users.Where(u => u.Id.Equals(userId)).SingleOrDefault();
 
@@ -644,6 +719,20 @@ namespace E_Internship_Journal.API
         {
             var id = (await _userManager.FindByEmailAsync(email)).Id;
             return _context.ApplicationUsers.Any(e => e.Id == id);
+        }
+        public string generateRandomString(int size)
+        {
+            //ACKNOWLEDGEMENT: http://azuliadesigns.com/generate-random-strings-characters/
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            char ch;
+            for (int i = 1; i < size + 1; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+
+            return builder.ToString();
         }
     }
 }

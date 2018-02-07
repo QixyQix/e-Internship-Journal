@@ -47,37 +47,47 @@
     </section>
 </div>
 <script>
-    $('#btnSave').click(function () {
-        var collectedCourseCode = $('#coursecode').val();
-        var collectedCourseName = $('#coursename').val();
-        var webFormData = new WebFormData(collectedCourseCode, collectedCourseName);
-        console.dir(webFormData);
-        $.ajax({
-            url: '/api/Courses/SaveNewCourseInformation',
-            method: 'POST',
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            cache: false,
-            data: "'" + JSON.stringify(webFormData) + "'",
-            success: function (data) {
-                swal({
-                    type: 'success',
-                    title: 'Saved!',
-                    text: data.Message
-                }).then(
-                    function () {
-                        location.href = 'http://' + window.location.host + '/home/ViewCourse';
-                    });
+    $(function () {
+        $('#addCourseForm').find('input').not('[type=submit]').jqBootstrapValidation({
+            preventSubmit: true,
+            submitSuccess: function ($form, event) {
+                event.preventDefault();
+                var collectedCourseCode = $('#coursecode').val();
+                var collectedCourseName = $('#coursename').val();
+                var webFormData = new WebFormData(collectedCourseCode, collectedCourseName);
+                console.dir(webFormData);
+                $.ajax({
+                    url: '/api/Courses/SaveNewCourseInformation',
+                    method: 'POST',
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    cache: false,
+                    data: "'" + JSON.stringify(webFormData) + "'",
+                    success: function (data) {
+                        swal({
+                            type: 'success',
+                            title: 'Saved!',
+                            text: data.Message
+                        }).then(
+                            function () {
+                                location.href = 'http://' + window.location.host + '/home/ViewCourse';
+                            });
+                    },
+                    error: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            text: data.Message
+                        });
+                    }
+                });//End of ajax
             },
-            error: function (data) {
-                swal({
-                    type: 'error',
-                    title: 'Error',
-                    text: data.Message
-                });
+            submitError: function ($form, event, errors) {
+
             }
-        });
-    });
+
+        });//End of jqValidation
+    });//End of function
 
     function WebFormData(courseCode, courseName) {
         this.CourseCode = courseCode;

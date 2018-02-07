@@ -258,7 +258,7 @@
                 $('#selectMonthRecord').find('option').remove();
                 for (i = 0; i < data.length; i++) {
                     var selectMonthRecord
-                    var newOption = $('<option>').text('Month ' + (i + 1)).val(i);
+                    var newOption = $('<option>').text('Week ' + (((i + 1) * 4) - 3) + ' to Week ' + (i + 1) * 4).val(i);
                     $('#selectMonthRecord').append(newOption);
                 }
                 console.dir(data);

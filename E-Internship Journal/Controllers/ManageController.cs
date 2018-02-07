@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using E_Internship_Journal.Models;
 using E_Internship_Journal.Models.ManageViewModels;
 using E_Internship_Journal.Services;
+using E_Internship_Journal.Models.AccountViewModels;
 
 namespace E_Internship_Journal.Controllers
 {

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace E_Internship_Journal.Models.ManageViewModels
+namespace E_Internship_Journal.Models.AccountViewModels
 {
     public class SetPasswordViewModel
     {
@@ -18,5 +18,7 @@ namespace E_Internship_Journal.Models.ManageViewModels
         [Display(Name = "Confirm new password")]
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public string RegistrationPin { get; set; }
     }
 }

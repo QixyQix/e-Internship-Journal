@@ -46,13 +46,12 @@
         </div>
     </section>
 </div>
-
 <script>
     var courseId = getCookie("selectedCourse");
     $('.floating-label-form-group input').change(function (e) {
         $('body .floating-label-form-group').addClass("floating-label-form-group-with-value", !!$(e.target).val());
     });
-    if (courseId != null) { 
+    if (courseId != null) {
         $.ajax({
             url: '/Api/Courses/' + courseId,
             method: 'GET',
@@ -68,39 +67,48 @@
             }
         });
 
-        $('#btnSave').click(function () { 
-            var webFormData = new WebFormData($('#coursecode').val(), $('#coursename').val());
-            console.dir(webFormData);
+        $(function () {
+            $('#contactForm').find('input').not('[type=submit]').jqBootstrapValidation({
+                preventSubmit: true,
+                submitSuccess: function ($form, event) {
+                    event.preventDefault();
+                    var webFormData = new WebFormData($('#coursecode').val(), $('#coursename').val());
+                    console.dir(webFormData);
 
-            $.ajax({
-                url: '/api/Courses/UpdateOneCourse/' + courseId,
-                method: 'PUT',
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                cache: false,
-                data: "'" + JSON.stringify(webFormData) + "'",
-                success: function (data) {
-                    swal({
-                        type: 'success',
-                        title: 'Saved!',
-                        text: data.Message
-                    }).then(
-                        function () {
-                            window.location.reload();
-                        });
+                    $.ajax({
+                        url: '/api/Courses/UpdateOneCourse/' + courseId,
+                        method: 'PUT',
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        data: "'" + JSON.stringify(webFormData) + "'",
+                        success: function (data) {
+                            swal({
+                                type: 'success',
+                                title: 'Saved!',
+                                text: data.Message
+                            }).then(
+                                function () {
+                                    window.location.reload();
+                                });
+                        },
+                        error: function (data) {
+                            swal({
+                                type: 'error',
+                                title: 'Error',
+                                text: data.Message
+                            });
+                        }
+                    });//End of ajax
                 },
-                error: function (data) {
-                    swal({
-                        type: 'error',
-                        title: 'Error',
-                        text: data.Message
-                    });
-                }
-            });
-        });
-    }
+                submitError: function ($form, event, errors) {
 
-    function WebFormData(courseCode, courseName) { 
+                }
+
+            });//End of jqValidation
+        });//End of function
+    }
+    function WebFormData(courseCode, courseName) {
         this.CourseCode = courseCode;
         this.CourseName = courseName;
     }

@@ -17,6 +17,8 @@ namespace E_Internship_Journal.Services
         public Task SendEmailAsync(string email, string subject, string message)
         {
             // Plug in your email service here to send an email.
+
+
             return Task.FromResult(0);
         }
 
@@ -25,7 +27,7 @@ namespace E_Internship_Journal.Services
             // Plug in your SMS service here to send a text message.
             return Task.FromResult(0);
         }
-        public Task SendChangeEmailAsync(Boolean button,string email, string subject, string greetings, string message , string url, string urlButtonName)
+        public Task SendChangeEmailAsync(Boolean button, string email, string subject, string greetings, string message, string url, string urlButtonName)
         {
             try
             {
@@ -66,7 +68,7 @@ namespace E_Internship_Journal.Services
                     //bodyBuilder.HtmlBody = SourceReader.ReadToEnd();
                     bodyBuilder.HtmlBody = qq;
                 }
-                
+
                 //// bodyBuilder.HtmlBody = "<h1>Hello, World!</h1>";
                 mimeMessage.From.Add(new MailboxAddress
                                         (FromAdressTitle,

@@ -9,15 +9,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 using E_Internship_Journal.Models;
 using E_Internship_Journal.Models.AccountViewModels;
 using E_Internship_Journal.Services;
+using E_Internship_Journal.Data;
+using E_Internship_Journal.Models.ManageViewModels;
 
 namespace E_Internship_Journal.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
@@ -31,9 +35,11 @@ namespace E_Internship_Journal.Controllers
             IOptions<IdentityCookieOptions> identityCookieOptions,
             IEmailSender emailSender,
             ISmsSender smsSender,
+             ApplicationDbContext context,
             ILoggerFactory loggerFactory)
         {
             _userManager = userManager;
+            _context = context;
             _signInManager = signInManager;
             _externalCookieScheme = identityCookieOptions.Value.ExternalCookieAuthenticationScheme;
             _emailSender = emailSender;
@@ -104,13 +110,51 @@ namespace E_Internship_Journal.Controllers
         }
 
         //
-        // GET: /Account/Register
+        // GET: /Account/SetPassword
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult SetPassword(string returnUrl = null)
+        public IActionResult SetPassword(string registrationPin, string returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
-            return View();
+            var verifyUser = _context.RegistrationPins.Where(rp => rp.RegistrationPinId.Equals(registrationPin)).SingleOrDefault();
+            // ViewData["ReturnUrl"] = verifyUser.RegistrationPinId == null ? returnUrl : verifyUser.RegistrationPinId;
+
+            SetPasswordViewModel setPassword = new SetPasswordViewModel();
+            setPassword.RegistrationPin = verifyUser?.RegistrationPinId;
+            return verifyUser == null ? View("Error") : View(setPassword);
+            //ViewData["ReturnUrl"] = returnUrl;
+            //return verifyUser ? View();
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SetPassword(SetPasswordViewModel model, string returnurl = null)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+            var registrationPin = _context.RegistrationPins.Where(p => p.RegistrationPinId.Equals(model.RegistrationPin)).SingleOrDefault();
+            var user = await _userManager.FindByIdAsync(registrationPin.UserId);
+            var resetCode = await _userManager.GeneratePasswordResetTokenAsync(user);
+            if (user == null)
+            {
+                // Don't reveal that the user does not exist
+                return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
+            }
+            var result = await _userManager.ResetPasswordAsync(user, resetCode, model.ConfirmPassword);
+            if (result.Succeeded)
+            {
+                //   var foundUser = _context.Users.Where(u => u.Id.Equals(registrationPin.UserId)).SingleOrDefaultAsync();
+                user.EmailConfirmed = true;
+                user.IsEnabled = true;
+                _context.RegistrationPins.Remove(registrationPin);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
+            }
+            AddErrors(result);
+            return View(model);
+
+            //return View(model);
         }
 
         //
@@ -125,7 +169,7 @@ namespace E_Internship_Journal.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
-                
+
                 if (result.Succeeded)
                 {
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
@@ -305,11 +349,19 @@ namespace E_Internship_Journal.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
                 // Send an email with this link
-                //var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                //var callbackUrl = Url.Action(nameof(ResetPassword), "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var callbackUrl = Url.Action(nameof(ResetPassword), "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+
                 //await _emailSender.SendEmailAsync(model.Email, "Reset Password",
                 //   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
-                //return View("ForgotPasswordConfirmation");
+
+                await _emailSender.SendChangeEmailAsync(true, model.Email, "Reset Password!",
+                          "Hi, Requestor", "You have requested for a password reset on your account. Kindly click the button to reset your password." +
+                          " Kindly contact the administrator if you have not request any reset password.",
+                           callbackUrl, "Reset Password");
+
+                return View("ForgotPasswordConfirmation");
             }
 
             // If we got this far, something failed, redisplay form

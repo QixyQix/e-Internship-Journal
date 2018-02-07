@@ -152,7 +152,7 @@ namespace E_Internship_Journal.API
                 return BadRequest(ModelState);
             }
 
-            Project project = await _context.Projects.Where(p => p.ProjectId == id).Include(p => p.Supervisor).SingleOrDefaultAsync();
+            Project project = await _context.Projects.Where(p => p.ProjectId == id).Include(p => p.Supervisor).Include(c=>c.Company).SingleOrDefaultAsync();
 
             if (project != null)
             {
@@ -201,6 +201,7 @@ namespace E_Internship_Journal.API
                     //Registration Pin
                     var repeatPinGeneration = true;
                     string registationPin;
+                    RegistrationPin createdRegistrationPin = new RegistrationPin();
                     do
                     {
                         registationPin = generateRandomString(50);
@@ -212,13 +213,22 @@ namespace E_Internship_Journal.API
                                 User = newSupervisorUser,
                                 RegistrationPinId = generateRandomString(50)
                             };
+                            createdRegistrationPin = newRegistrationPin;
                             _context.RegistrationPins.Add(newRegistrationPin);
                             repeatPinGeneration = false;
                         }
                     } while (repeatPinGeneration);
+
+
+                    await _emailSender.SendChangeEmailAsync(true, newSupervisorUser.Email, "Your account has been created!",
+               "Hi, " + newSupervisorUser.FullName, "Your supervisor account has been created on behalf of you." +
+               "Your account has been assigned to Project " + project.ProjectName + " and Company " + project.Company.CompanyName + ". Kindly proceed to activate your account.",
+               "http://localhost:63071/Account/SetPassword?registrationPin=" + createdRegistrationPin.RegistrationPinId, "Activate Account");
                 }
 
             }
+
+
             await _context.SaveChangesAsync();
             return new OkObjectResult(new { Messages = "Updated project", AlertType = "success" });
         }
@@ -335,6 +345,7 @@ namespace E_Internship_Journal.API
                 {
 
                     var createdProject = new Project();
+                    var registrationPin = new RegistrationPin();
                     //Create user
                     var userStore = new UserStore<ApplicationUser>(_context);
                     var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
@@ -430,6 +441,7 @@ namespace E_Internship_Journal.API
                                 User = newSupervisorUser,
                                 RegistrationPinId = generateRandomString(50)
                             };
+                            registrationPin = newRegistrationPin;
                             _context.RegistrationPins.Add(newRegistrationPin);
                             repeatPinGeneration = false;
                         }
@@ -440,9 +452,10 @@ namespace E_Internship_Journal.API
                     var supervisorName = newSupervisorUser.FullName;
                     var projectName = createdProject.ProjectName;
                     var CompanyName = _context.Companies.Where(c => c.CompanyId == createdProject.CompanyID).Select(c => c.CompanyName).Single();
-                    await _emailSender.SendChangeEmailAsync(false, supervisorEmail, "Your account has been created and enrolled!",
+                    await _emailSender.SendChangeEmailAsync(true, supervisorEmail, "Your account has been created and enrolled!",
                         "Hi, " + supervisorName, "Your supervisor account has been created on behalf of you." +
-                        "Your account has been assigned to Project " + projectName + " and Company " + CompanyName + ". Kindly proceed to activate your account." , "need account" ,"need account");
+                        "Your account has been assigned to Project " + projectName + " and Company " + CompanyName + ". Kindly proceed to activate your account.",
+                        "http://localhost:63071/Account/SetPassword?registrationPin=" + registrationPin.RegistrationPinId, "Activate Account");
 
 
                     messageList = "Saved Project & Created Supervisor Account";

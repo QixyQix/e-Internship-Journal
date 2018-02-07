@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using System.Globalization;
+using E_Internship_Journal.Services;
 
 namespace E_Internship_Journal.API
 {
@@ -21,10 +22,11 @@ namespace E_Internship_Journal.API
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-
-        public Internship_RecordController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        private readonly IEmailSender _emailSender;
+        public Internship_RecordController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IEmailSender emailSender)
         {
             _context = context;
+            _emailSender = emailSender;
             _userManager = userManager;
         }
 
@@ -65,16 +67,18 @@ namespace E_Internship_Journal.API
                 .Include(ir => ir.UserBatch)
                 .ThenInclude(ub => ub.Batch)
                 .Include(m => m.MonthRecords)
+                .Include(p => p.Project)
+                .ThenInclude(s => s.Supervisor)
                 .Where(ir => ir.UserBatch.UserId.Equals(userId) && ir.UserBatch.Batch.StartDate <= DateTime.Now && ir.UserBatch.Batch.EndDate.AddDays(1) >= DateTime.Now)
                 .Single();
 
             var internshiprecordId = internshipRecord.InternshipRecordId;
             DateTime startDate = internshipRecord.UserBatch.Batch.StartDate;
             DateTime endDate = internshipRecord.UserBatch.Batch.EndDate;
-           // var tryDate = DateTime.ParseExact("06/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            // var tryDate = DateTime.ParseExact("06/11/2017", "dd/MM/yyyy", CultureInfo.InvariantCulture);
             double BusinessDay = BusinessDaysUntil(startDate, endDate);
             var weekNo = Math.Ceiling(BusinessDay / 5.0);
-           // var tt = weekNo / 4;
+            // var tt = weekNo / 4;
             if (internshipRecord == null)
             {
                 return NotFound(new { Message = "No internship record found" });
@@ -89,10 +93,18 @@ namespace E_Internship_Journal.API
                     monthRecord = new Month_Record { InternshipRecord = internshipRecord };
                     _context.Month_Records.Add(monthRecord);
                     _context.SaveChanges();
+
+
+                    var supervisorEmail = internshipRecord.Project.Supervisor.Email;
+                    var supervisorName = internshipRecord.Project.Supervisor.FullName;
+                    var studentName = _context.Users.Where(u => u.Id == internshipRecord.UserBatch.UserId).Select(u => u.FullName).Single();
+                    // var gradeRecord = internshipRecord.MonthRecords[internshipRecord.MonthRecords.Count - 1];
+                    await _emailSender.SendChangeEmailAsync(false, supervisorEmail, "Grade your student monthly record",
+           "Hi, " + supervisorName, "The student " + studentName + ", last month's record is ready to be graded. Kindly login to grade the student.", "", "");
                     //Get the latest record
                     // monthRecord = internshipRecord.MonthRecords[internshipRecord.MonthRecords.Count - 1];
                 }
-             //   if (weekNo )
+                //   if (weekNo )
 
 
                 return new JsonResult(new { InternshipRecordId = internshipRecord.InternshipRecordId });

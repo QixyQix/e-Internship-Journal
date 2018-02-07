@@ -46,10 +46,10 @@ namespace E_Internship_Journal.Controllers
                 .Single();
 
             var csvFile = files[0];
-
+            List<string> csvLine = new List<string>();
             using (var memoryStream = new MemoryStream())
             {
-                List<string> csvLine = new List<string>();
+
                 await csvFile.CopyToAsync(memoryStream);
                 memoryStream.Position = 0;
                 using (var streamReader = new StreamReader(memoryStream))
@@ -69,125 +69,127 @@ namespace E_Internship_Journal.Controllers
                         csvLine.Add(fileLine);
                     }
                 }
-                var studentAdded = new List<UserBatch>();
-                var studentCreated = new List<RegistrationPin>();
-                var studentCreatedBatch = new List<UserBatch>();
-                foreach (var line in csvLine)
+            }
+            var studentAdded = new List<UserBatch>();
+            var studentCreated = new List<RegistrationPin>();
+            var studentCreatedBatch = new List<UserBatch>();
+            foreach (var line in csvLine)
+            {
+
+                if (!(line.Replace(",", "").Trim().Equals("")))
                 {
-
-                    if (!(line.Replace(",", "").Trim().Equals("")))
+                    try
                     {
-                        try
+                        //Get individual data
+                        string[] oneStudentData = line.Split(',');
+
+                        var user = _context.ApplicationUsers.SingleOrDefault(appuser => appuser.UserName.Equals(oneStudentData[2], StringComparison.OrdinalIgnoreCase));
+
+                        if (user != null)
                         {
-                            //Get individual data
-                            string[] oneStudentData = line.Split(',');
-
-                            var user = _context.ApplicationUsers.SingleOrDefault(appuser => appuser.UserName.Equals(oneStudentData[2], StringComparison.OrdinalIgnoreCase));
-
-                            if (user != null)
+                            //Check if the user is already enrolled
+                            if (!(_context.UserBatches.Any(ub => ub.UserId.Equals(user.Id) && ub.BatchId == thisBatch.BatchId)))
                             {
-                                //Check if the user is already enrolled
-                                if (!(_context.UserBatches.Any(ub => ub.UserId.Equals(user.Id) && ub.BatchId == thisBatch.BatchId)))
-                                {
 
-                                    var www = (_context.UserBatches.Any(ub => ub.UserId.Equals(user.Id) && ub.BatchId == thisBatch.BatchId));
-                                    //Create UserBatch objects
-                                    var newUserBatch = new UserBatch
-                                    {
-                                        Batch = thisBatch,
-                                        User = user
-                                    };
-                                    studentAdded.Add(newUserBatch);
-                                    _context.UserBatches.Add(newUserBatch);
-                                    await _context.SaveChangesAsync();
-                                }
-                                else
-                                {
-                                    messageList.Add(user.FullName + " is already enrolled in this batch.");
-                                    alertType = "warning";
-                                }
-                            }
-                            else
-                            {
-                                //Create user
-                                var userStore = new UserStore<ApplicationUser>(_context);
-                                var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
-
-                                var newStudentUser = new ApplicationUser
-                                {
-                                    StudentId = oneStudentData[0],
-                                    UserName = oneStudentData[2],
-                                    Email = oneStudentData[2],
-                                    FullName = oneStudentData[1],
-                                    PhoneNumber = oneStudentData[3]
-                                };
-                                PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
-                                newStudentUser.PasswordHash = ph.HashPassword(newStudentUser, generateRandomString(11));
-
-                                await userManager.CreateAsync(newStudentUser);
-                                await userManager.AddToRoleAsync(newStudentUser, "STUDENT");
-
+                                var www = (_context.UserBatches.Any(ub => ub.UserId.Equals(user.Id) && ub.BatchId == thisBatch.BatchId));
                                 //Create UserBatch objects
                                 var newUserBatch = new UserBatch
                                 {
                                     Batch = thisBatch,
-                                    User = newStudentUser
+                                    User = user
                                 };
+                                studentAdded.Add(newUserBatch);
                                 _context.UserBatches.Add(newUserBatch);
-
-                                var repeatPinGeneration = true;
-                                studentCreatedBatch.Add(newUserBatch);
-                                do
-                                {
-                                    var registationPin = generateRandomString(50);
-                                    if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
-                                    {
-                                        //Create new registration pin
-                                        var newRegistrationPin = new RegistrationPin
-                                        {
-                                            User = newStudentUser,
-                                            RegistrationPinId = generateRandomString(50)
-                                        };
-                                        _context.RegistrationPins.Add(newRegistrationPin);
-                                        repeatPinGeneration = false;
-                                        studentCreated.Add(newRegistrationPin);
-                                    }
-                                } while (repeatPinGeneration);
                                 await _context.SaveChangesAsync();
-                            }//End of Else
-
+                            }
+                            else
+                            {
+                                messageList.Add(user.FullName + " is already enrolled in this batch.");
+                                alertType = "warning";
+                            }
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            return BadRequest();
+                            //Create user
+                            var userStore = new UserStore<ApplicationUser>(_context);
+                            var userManager = new UserManager<ApplicationUser>(userStore, null, null, null, null, null, null, null, null);
 
-                        }
+                            var newStudentUser = new ApplicationUser
+                            {
+                                StudentId = oneStudentData[0],
+                                UserName = oneStudentData[2],
+                                Email = oneStudentData[2],
+                                FullName = oneStudentData[1],
+                                PhoneNumber = oneStudentData[3]
+                            };
+                            PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
+                            newStudentUser.PasswordHash = ph.HashPassword(newStudentUser, generateRandomString(11));
+
+                            await userManager.CreateAsync(newStudentUser);
+                            await userManager.AddToRoleAsync(newStudentUser, "STUDENT");
+
+                            //Create UserBatch objects
+                            var newUserBatch = new UserBatch
+                            {
+                                Batch = thisBatch,
+                                User = newStudentUser
+                            };
+                            _context.UserBatches.Add(newUserBatch);
+
+                            studentCreatedBatch.Add(newUserBatch);
+                            var repeatPinGeneration = true;
+                            do
+                            {
+                                var registationPin = generateRandomString(50);
+                                if (!_context.RegistrationPins.Any(rp => rp.RegistrationPinId.Equals(registationPin)))
+                                {
+                                    //Create new registration pin
+                                    var newRegistrationPin = new RegistrationPin
+                                    {
+                                        User = newStudentUser,
+                                        RegistrationPinId = generateRandomString(50)
+                                    };
+                                    _context.RegistrationPins.Add(newRegistrationPin);
+                                    repeatPinGeneration = false;
+                                    studentCreated.Add(newRegistrationPin);
+                                }
+                            } while (repeatPinGeneration);
+                            await _context.SaveChangesAsync();
+                        }//End of Else
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest();
+
                     }
                 }
-                for (int i = 0; i < studentCreated.Count; i++)
-                {
-                    var studentEmail = studentCreated[i].User.Email;
-                    var studentName = studentCreated[i].User.FullName;
-                    var batchName = studentCreatedBatch[i].Batch.BatchName;
-                    var startDate = studentCreatedBatch[i].Batch.StartDate.ToString("dd MMMM yyyy");
-                    var endDate = studentCreatedBatch[i].Batch.EndDate.ToString("dd MMMM yyyy");
-                    await _emailSender.SendChangeEmailAsync(false, studentEmail, "Your account has been created and enrolled!",
-                        "Hi, " + studentName, "Your student account has been created and enrolled into Batch " + batchName + "." +
-                        " The Semester will start from " + startDate + " and end on " + endDate +". Kindly proceed to activate your account before your internship starts." ,"","");
-                }
-                for (int k =0;k<studentAdded.Count; k++)
-                {
-                    var studentEmail = studentAdded[k].User.Email;
-                    var studentName = studentAdded[k].User.FullName;
-                    var batchName = studentAdded[k].Batch.BatchName;
-                    var startDate = studentAdded[k].Batch.StartDate.ToString("dd MMMM yyyy");
-                    var endDate = studentAdded[k].Batch.EndDate.ToString("dd MMMM yyyy");
-                    await _emailSender.SendChangeEmailAsync(false, studentEmail, "You have been enrolled into " + batchName, "Hi, " + studentName,
-                        "You have been enrolled into Batch " + batchName + "." +
-                        " The Semester will start from " + startDate + " and end on " + endDate +".Kindly login to confirm your batch." ,"","");
-
-                }
             }
+            for (int i = 0; i < studentCreated.Count; i++)
+            {
+                var studentEmail = studentCreated[i].User.Email;
+                var studentName = studentCreated[i].User.FullName;
+                var batchName = studentCreatedBatch[i].Batch.BatchName;
+                var startDate = studentCreatedBatch[i].Batch.StartDate.ToString("dd MMMM yyyy");
+                var endDate = studentCreatedBatch[i].Batch.EndDate.ToString("dd MMMM yyyy");
+                await _emailSender.SendChangeEmailAsync(true, studentEmail, "Your account has been created and enrolled!",
+                    "Hi, " + studentName, "Your student account has been created and enrolled into Batch " + batchName + "." +
+                    " The Semester will start from " + startDate + " and end on " + endDate + ". Kindly proceed to activate your account before your internship starts.",
+                    "http://localhost:63071/Account/SetPassword?registrationPin=" + studentCreated[i].RegistrationPinId, "Activate Account");
+            }
+            for (int k = 0; k < studentAdded.Count; k++)
+            {
+                var studentEmail = studentAdded[k].User.Email;
+                var studentName = studentAdded[k].User.FullName;
+                var batchName = studentAdded[k].Batch.BatchName;
+                var startDate = studentAdded[k].Batch.StartDate.ToString("dd MMMM yyyy");
+                var endDate = studentAdded[k].Batch.EndDate.ToString("dd MMMM yyyy");
+                await _emailSender.SendChangeEmailAsync(false, studentEmail, "You have been enrolled into " + batchName, "Hi, " + studentName,
+                    "You have been enrolled into Batch " + batchName + "." +
+                    " The Semester will start from " + startDate + " and end on " + endDate + ".Kindly login to confirm your batch.", "", "");
+
+            }
+
 
             messageList.Add("All Records saved successfully!");
             var responseObject = new
@@ -216,7 +218,8 @@ namespace E_Internship_Journal.Controllers
 
         [HttpPut("SetPassword/{pin}")]
         [AllowAnonymous]
-        public IActionResult SetPassword(string pin, [FromBody] string value) {
+        public IActionResult SetPassword(string pin, [FromBody] string value)
+        {
             RegistrationPin rp = _context.RegistrationPins.Where(p => p.RegistrationPinId.Equals(pin)).Include(p => p.User).SingleOrDefault();
 
             if (rp != null)
@@ -234,7 +237,8 @@ namespace E_Internship_Journal.Controllers
                 _context.SaveChanges();
                 return new OkObjectResult(new { Message = "Set password successfully! You may now log in." });
             }
-            else {
+            else
+            {
                 return BadRequest();
             }
         }

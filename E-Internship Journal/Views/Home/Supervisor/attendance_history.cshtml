@@ -141,6 +141,10 @@
         console.dir("CHANGE STUDENT TO: " + internshipId);
         loadMonths(internshipId);
     });
+    $('#selectMonthRecord').change(function () {
+        selectedMonthData = monthRecords[$(this).val()];
+        loadData(selectedMonthData);
+    });
 
     var table = $('#dataTable').DataTable({
         dom: "<'row'<'col-sm-12'tr>>" +

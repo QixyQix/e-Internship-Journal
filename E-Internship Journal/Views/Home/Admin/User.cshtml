@@ -455,7 +455,7 @@
                 console.dir(deactivatedAccounts);
                 if (activatedAccounts.length > 0)
                     $('#act_dataTable').dataTable().fnAddData(activatedAccounts);
-                if (activatedAccounts.length > 0)
+                if (deactivatedAccounts.length > 0)
                     $('#deact_dataTable').dataTable().fnAddData(deactivatedAccounts);
             },
             fail: function (data) {
