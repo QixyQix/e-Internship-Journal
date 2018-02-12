@@ -260,11 +260,29 @@
                 },
                 {
                     data: "ArrivalTime",
-                    mRender: function (o) { return moment(o).format("hh:mm A"); }
+                    mRender: function (o) {
+                        if (o != null) {
+                            return moment(o).format("hh:mm A");
+
+                        } else {
+
+                            return "Not Present";
+                        }
+
+                    }
                 },
                 {
                     data: "DepartureTime",
-                    mRender: function (o) { return moment(o).format("hh:mm A"); }
+                    mRender: function (o) {
+                        if (o != null) {
+                            return moment(o).format("hh:mm A");
+
+                        } else {
+
+                            return "Not Present";
+                        }
+
+                    }
                 },
                 { data: "Remarks" },
                 {
@@ -353,45 +371,106 @@
     });
 
     $('#submit').on('click', function () {
+
+        var collectedSpecify = $('#specify').val();
         var collectedId = $('#dayidval').val();
         var collectedDate = moment($('#dateval').val(), ["DD/MM/YYYY"]).toDate().toDateString();
         var collectedArrivalTime = ($('#timeinval').val() != "") ? moment($('#dateval').val() + ' ' + $('#timeinval').val(), ["DD/MM/YYYY h:mm A"]).toDate() : null;
         var collectedDepartureTime = ($('#timeoutval').val() != "") ? moment($('#dateval').val() + ' ' + $('#timeoutval').val(), ["DD/MM/YYYY h:mm A"]).toDate() : null;
         var collectedRemarks = $('#remarks').val();
-        var collectedSpecify = $('#specify').val();
+
         if (collectedRemarks == "") {
-            collectedArrivalTime = formatDateTime(collectedArrivalTime);
-            collectedDepartureTime = formatDateTime(collectedDepartureTime);
-
-        }
-        var webFormData = new WebFormData(collectedId, collectedDate, collectedArrivalTime, collectedDepartureTime, collectedRemarks, collectedSpecify);
-
-        console.dir(webFormData);
-
-        $.ajax({
-            url: '/API/Day_Record/SaveUpdateDayRecord',
-            method: 'PUT',
-            contentType: "application/json",
-            cache: false,
-            data: "'" + JSON.stringify(webFormData) + "'",
-            success: function (data) {
-                swal({
-                    type: 'success',
-                    title: 'Saved',
-                    text: data.Message
-                }).then(
-                    function () {
-                        window.location.reload();
-                    });
-            },
-            error: function (data) {
+            if (collectedDate == "Invalid Date" || collectedArrivalTime == null || collectedDepartureTime == null) {
                 swal({
                     type: 'error',
                     title: 'Error',
-                    text: data.responseJSON.Message
+                    text: "Fields Empty. Please fill in all required fields."
                 });
-            }
-        })
+
+            } else {
+                if (collectedRemarks == "") {
+                    collectedArrivalTime = formatDateTime(collectedArrivalTime);
+                    collectedDepartureTime = formatDateTime(collectedDepartureTime);
+
+                }
+                var webFormData = new WebFormData(collectedId, collectedDate, collectedArrivalTime, collectedDepartureTime, collectedRemarks, collectedSpecify);
+
+                console.dir(webFormData);
+
+                $.ajax({
+                    url: '/API/Day_Record/SaveUpdateDayRecord',
+                    method: 'PUT',
+                    contentType: "application/json",
+                    cache: false,
+                    data: "'" + JSON.stringify(webFormData) + "'",
+                    success: function (data) {
+                        swal({
+                            type: 'success',
+                            title: 'Saved',
+                            text: data.Message
+                        }).then(
+                            function () {
+                                window.location.reload();
+                            });
+                    },
+                    error: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            text: data.responseJSON.Message
+                        });
+                    }
+                })
+
+            }//End of Else statement
+        }//End of if statement for checking remarks
+        else {
+            if (collectedDate == "Invalid Date") {
+                swal({
+                    type: 'error',
+                    title: 'Error',
+                    text: "Fields Empty. Please fill in all required fields."
+                });
+
+            } else {
+                if (collectedRemarks == "") {
+                    collectedArrivalTime = formatDateTime(collectedArrivalTime);
+                    collectedDepartureTime = formatDateTime(collectedDepartureTime);
+
+                }
+                var webFormData = new WebFormData(collectedId, collectedDate, collectedArrivalTime, collectedDepartureTime, collectedRemarks, collectedSpecify);
+
+                console.dir(webFormData);
+
+                $.ajax({
+                    url: '/API/Day_Record/SaveUpdateDayRecord',
+                    method: 'PUT',
+                    contentType: "application/json",
+                    cache: false,
+                    data: "'" + JSON.stringify(webFormData) + "'",
+                    success: function (data) {
+                        swal({
+                            type: 'success',
+                            title: 'Saved',
+                            text: data.Message
+                        }).then(
+                            function () {
+                                window.location.reload();
+                            });
+                    },
+                    error: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Error',
+                            text: data.responseJSON.Message
+                        });
+                    }
+                })
+
+            }//End of Else statement
+
+        }//End of else statement
+
     });
 
     $('#remarks').on('change', function () {

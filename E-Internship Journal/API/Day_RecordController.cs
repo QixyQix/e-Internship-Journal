@@ -435,7 +435,8 @@ namespace E_Internship_Journal.API
             }
             catch (Exception exceptionObject)
             {
-                return BadRequest(new { Message = exceptionObject.ToString() });
+                //return BadRequest(new { Message = exceptionObject.ToString() });
+                return BadRequest(new { Message = "Error occured. Please try again." });
             }
 
             return new OkObjectResult(new { Message = "Saved day record successfully." });
