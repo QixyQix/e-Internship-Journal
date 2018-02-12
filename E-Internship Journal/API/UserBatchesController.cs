@@ -389,7 +389,7 @@ namespace E_Internship_Journal.API
                         };
                         PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
                         newStudentUser.PasswordHash = ph.HashPassword(newStudentUser, generateRandomString(11));
-                       // newStudentUser.PasswordHash = ph.HashPassword(newStudentUser,"P@ssw0rd");
+                        // newStudentUser.PasswordHash = ph.HashPassword(newStudentUser,"P@ssw0rd");
                         await userManager.CreateAsync(newStudentUser);
                         await userManager.AddToRoleAsync(newStudentUser, "STUDENT");
 
@@ -402,7 +402,7 @@ namespace E_Internship_Journal.API
                             Designation = userNewInput.Designation.Value
                         };
                         studentCreatedBatch = newUserBatch;
-                       
+
                         _context.UserBatches.Add(newUserBatch);
                         string LoEmail = userNewInput.LO.Value;
                         var LoId = (await _userManager.FindByEmailAsync(LoEmail)).Id;
@@ -458,11 +458,15 @@ namespace E_Internship_Journal.API
 
                         //var code = await _userManager.GenerateEmailConfirmationTokenAsync(studentCreated.User);
                         //string codeHtmlVersion = System.Net.WebUtility.UrlEncode(code);
-
+                        var absoluteUri = string.Concat(
+      Request.Scheme,
+      "://",
+      Request.Host.ToUriComponent(),
+      Request.PathBase.ToUriComponent());
                         await _emailSender.SendChangeEmailAsync(true, studentEmail, "Your account has been created and enrolled!",
                             "Hi, " + studentName, "Your student account has been created and enrolled into Batch " + batchName + "." +
                             " The Semester will start from " + startDate + " and end on " + endDate + ". Kindly proceed to activate your account before your internship starts.",
-                            "http://localhost:63071/Account/SetPassword?registrationPin=" + studentCreated.RegistrationPinId, "Activate Account");
+                            absoluteUri + "/Account/SetPassword?registrationPin=" + studentCreated.RegistrationPinId, "Activate Account");
 
                         messageList = "Created Student Account";
                         alertType = "success";

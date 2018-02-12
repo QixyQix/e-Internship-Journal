@@ -347,10 +347,15 @@ namespace E_Internship_Journal.API
             {
                 accountType = "Supervisor / LO";
             }
+            var absoluteUri = string.Concat(
+      Request.Scheme,
+      "://",
+      Request.Host.ToUriComponent(),
+      Request.PathBase.ToUriComponent());
             await _emailSender.SendChangeEmailAsync(true, newUserEmail, "Your account has been created!",
                  "Hi, " + newUserName, "Your " + accountType + " account has been created!" +
                  "Kindly proceed to activate/login your account.",
-                 "http://localhost:63071/Account/SetPassword?registrationPin=" + registrationPin.RegistrationPinId, "Activate Account");
+                 absoluteUri + "/Account/SetPassword?registrationPin=" + registrationPin.RegistrationPinId, "Activate Account");
 
 
             return new OkObjectResult(new { Message = "User created successfully!" });
@@ -367,11 +372,11 @@ namespace E_Internship_Journal.API
 
             var csvFile = files[0];
 
-            
+
             List<string> csvLine = new List<string>();
             using (var memoryStream = new MemoryStream())
             {
-            
+
                 await csvFile.CopyToAsync(memoryStream);
                 memoryStream.Position = 0;
 
@@ -465,14 +470,18 @@ namespace E_Internship_Journal.API
                 }
             }
             await _context.SaveChangesAsync();
-
+            var absoluteUri = string.Concat(
+      Request.Scheme,
+      "://",
+      Request.Host.ToUriComponent(),
+      Request.PathBase.ToUriComponent());
             for (int i = 0; i < accountCreated.Count; i++)
             {
                 var accountEmail = accountCreated[i].Email;
                 var accountName = accountCreated[i].FullName;
                 await _emailSender.SendChangeEmailAsync(true, accountEmail, "Your account has been created and enrolled!",
                     "Hi, " + accountName, "Your account has been created. Kindly proceed to activate your account before your internship starts.",
-                    "http://localhost:63071/Account/SetPassword?registrationPin=" + accountRegistrationPin[i].RegistrationPinId, "Activate Account");
+                    absoluteUri + "/Account/SetPassword?registrationPin=" + accountRegistrationPin[i].RegistrationPinId, "Activate Account");
             }
             if (messageList.Count < 1)
                 messageList.Add("Courses in csv file created successfully! Please assign their roles individually.");

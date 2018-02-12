@@ -165,6 +165,11 @@ namespace E_Internship_Journal.Controllers
                     }
                 }
             }
+            var absoluteUri = string.Concat(
+                  Request.Scheme,
+                  "://",
+                  Request.Host.ToUriComponent(),
+                  Request.PathBase.ToUriComponent());
             for (int i = 0; i < studentCreated.Count; i++)
             {
                 var studentEmail = studentCreated[i].User.Email;
@@ -175,7 +180,7 @@ namespace E_Internship_Journal.Controllers
                 await _emailSender.SendChangeEmailAsync(true, studentEmail, "Your account has been created and enrolled!",
                     "Hi, " + studentName, "Your student account has been created and enrolled into Batch " + batchName + "." +
                     " The Semester will start from " + startDate + " and end on " + endDate + ". Kindly proceed to activate your account before your internship starts.",
-                    "http://localhost:63071/Account/SetPassword?registrationPin=" + studentCreated[i].RegistrationPinId, "Activate Account");
+                     absoluteUri + "/Account/SetPassword?registrationPin=" + studentCreated[i].RegistrationPinId, "Activate Account");
             }
             for (int k = 0; k < studentAdded.Count; k++)
             {

@@ -219,11 +219,15 @@ namespace E_Internship_Journal.API
                         }
                     } while (repeatPinGeneration);
 
-
+                    var absoluteUri = string.Concat(
+      Request.Scheme,
+      "://",
+      Request.Host.ToUriComponent(),
+      Request.PathBase.ToUriComponent());
                     await _emailSender.SendChangeEmailAsync(true, newSupervisorUser.Email, "Your account has been created!",
                "Hi, " + newSupervisorUser.FullName, "Your supervisor account has been created on behalf of you." +
                "Your account has been assigned to Project " + project.ProjectName + " and Company " + project.Company.CompanyName + ". Kindly proceed to activate your account.",
-               "http://localhost:63071/Account/SetPassword?registrationPin=" + createdRegistrationPin.RegistrationPinId, "Activate Account");
+               absoluteUri + "/Account/SetPassword?registrationPin=" + createdRegistrationPin.RegistrationPinId, "Activate Account");
                 }
 
             }
@@ -452,10 +456,15 @@ namespace E_Internship_Journal.API
                     var supervisorName = newSupervisorUser.FullName;
                     var projectName = createdProject.ProjectName;
                     var CompanyName = _context.Companies.Where(c => c.CompanyId == createdProject.CompanyID).Select(c => c.CompanyName).Single();
+                    var absoluteUri = string.Concat(
+      Request.Scheme,
+      "://",
+      Request.Host.ToUriComponent(),
+      Request.PathBase.ToUriComponent());
                     await _emailSender.SendChangeEmailAsync(true, supervisorEmail, "Your account has been created and enrolled!",
                         "Hi, " + supervisorName, "Your supervisor account has been created on behalf of you." +
                         "Your account has been assigned to Project " + projectName + " and Company " + CompanyName + ". Kindly proceed to activate your account.",
-                        "http://localhost:63071/Account/SetPassword?registrationPin=" + registrationPin.RegistrationPinId, "Activate Account");
+                        absoluteUri + "/Account/SetPassword?registrationPin=" + registrationPin.RegistrationPinId, "Activate Account");
 
 
                     messageList = "Saved Project & Created Supervisor Account";
