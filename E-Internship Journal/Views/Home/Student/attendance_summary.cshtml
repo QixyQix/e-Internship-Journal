@@ -359,8 +359,12 @@
         var collectedDepartureTime = ($('#timeoutval').val() != "") ? moment($('#dateval').val() + ' ' + $('#timeoutval').val(), ["DD/MM/YYYY h:mm A"]).toDate() : null;
         var collectedRemarks = $('#remarks').val();
         var collectedSpecify = $('#specify').val();
+        if (collectedRemarks == "") {
+            collectedArrivalTime = formatDateTime(collectedArrivalTime);
+            collectedDepartureTime = formatDateTime(collectedDepartureTime);
 
-        var webFormData = new WebFormData(collectedId, collectedDate, formatDateTime(collectedArrivalTime), formatDateTime(collectedDepartureTime), collectedRemarks, collectedSpecify);
+        }
+        var webFormData = new WebFormData(collectedId, collectedDate, collectedArrivalTime, collectedDepartureTime, collectedRemarks, collectedSpecify);
 
         console.dir(webFormData);
 
@@ -384,7 +388,7 @@
                 swal({
                     type: 'error',
                     title: 'Error',
-                    text: data.Message
+                    text: data.responseJSON.Message
                 });
             }
         })

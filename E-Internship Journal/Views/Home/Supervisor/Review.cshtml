@@ -657,38 +657,46 @@
 
         swal({
             title: 'Confirm grading?',
-            html: "You are about to approve this student's month records and give him/her a grade of <strong>"+average+"("+grade+")</strong><br/>THIS CANNOT BE UNDONE.",
+            html: "You are about to approve this student's month records and give him/her a grade of <strong>" + average + "(" + grade + ")</strong><br/>THIS CANNOT BE UNDONE.",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#007bff',
             confirmButtonText: 'Approve'
-        }).then(function () {
-            $.ajax({
-                url: '/Api/Month_Record/gradeMonth/' + selectedMonth.MonthId,
-                method: 'PUT',
-                dataType: "json",
-                contentType: "application/json; charset=utf-8",
-                cache: false,
-                data: "'" + JSON.stringify(gradingFormData) + "'",
-                success: function (data) {
-                    swal({
-                        type: 'success',
-                        title: 'Graded!',
-                        text: 'The grade has been applied to the student!'
-                    }).then(function () {
-                        object.closest('tr').remove();
-                        window.location.href = "/";
-                    });
-                },
-                fail: function (data) {
-                    swal({
-                        type: 'error',
-                        title: 'Oops!',
-                        text: data.Message
-                    });
-                }
-            });
-        })
+        }).then(function (result) {
+            if (result.value) {
+                $.ajax({
+                    url: '/Api/Month_Record/gradeMonth/' + selectedMonth.MonthId,
+                    method: 'PUT',
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    cache: false,
+                    data: "'" + JSON.stringify(gradingFormData) + "'",
+                    success: function (data) {
+                        swal({
+                            type: 'success',
+                            title: 'Graded!',
+                            text: 'The grade has been applied to the student!'
+                        }).then(function () {
+                            //object.closest('tr').remove();
+                            window.location.href = "/";
+                        });
+                    },
+                    fail: function (data) {
+                        swal({
+                            type: 'error',
+                            title: 'Oops!',
+                            text: data.Message
+                        });
+                    }
+                });//End of Ajax
+            } else if (result.dismiss === 'cancel') {
+                swal({
+                    type: 'warning',
+                    title: 'Canceled!',
+                    text: 'Grade not applied to the student!'
+                })
+            }
+        })//End of then function
     });
 
     $('#btnSaveTaskComment').click(function () {
@@ -843,7 +851,7 @@
         this.Comment = comment;
     }
 
-    function GradingFormData(CommunicationGrading, TechnicalGrading, IndependenceGrading, PerformanceGrading, OverallFeedback) { 
+    function GradingFormData(CommunicationGrading, TechnicalGrading, IndependenceGrading, PerformanceGrading, OverallFeedback) {
         this.CommunicationGrading = CommunicationGrading;
         this.TechnicalGrading = TechnicalGrading;
         this.IndependenceGrading = IndependenceGrading;

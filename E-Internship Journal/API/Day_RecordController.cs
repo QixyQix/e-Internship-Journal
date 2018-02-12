@@ -326,7 +326,7 @@ namespace E_Internship_Journal.API
                         {
                             if (aDayRecord.Date.Equals(date) && !aDayRecord.DayId.ToString().Equals(day_RecordNewInput.Id.Value.ToString()))
                             {
-                                return BadRequest(new { Message = "Day record for " + date.ToString() + " already exists!" });
+                                return BadRequest(new { Message = "Day record for " + date.ToString("dd/MM/yyyy") + " already exists!" });
                             }
                         }
 
@@ -354,8 +354,13 @@ namespace E_Internship_Journal.API
                     _context.Month_Records.Add(monthRecord);
                 }
 
-                string arrivalTimeStr = day_RecordNewInput.ArrivalTime.Value.ToString();
-                string departTimeStr = day_RecordNewInput.DepartureTime.Value.ToString();
+                string arrivalTimeStr = "";
+                string departTimeStr = "";
+                if (day_RecordNewInput.ArrivalTime != null && day_RecordNewInput.DepartureTime != null)
+                {
+                    arrivalTimeStr = day_RecordNewInput.ArrivalTime.Value.ToString();
+                    departTimeStr = day_RecordNewInput.DepartureTime.Value.ToString();
+                }
                 var timeIn = new DateTime();
                 var timeOut = new DateTime();
                 bool isPresent = false;

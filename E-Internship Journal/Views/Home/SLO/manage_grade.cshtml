@@ -344,6 +344,15 @@
                 { data: "FullName" },
                 {
                     data: "SupervisorGrade",
+                    "mRender": function (o) {
+                        if (o != "Not Graded") {
+                            return Math.ceil(o);
+                        } else {
+                            return o
+
+                        }
+                      
+                    }
                 },
                 { data: "OverallGrading" },
                 { data: "FinalGrading" },
