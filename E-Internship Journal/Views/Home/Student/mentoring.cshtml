@@ -121,7 +121,7 @@
             
             $('#MentorSessionDateTimeStart').val(moment(new Date(data.MentorSessionDateTimeStart)).format('hh:mm A'));
             $('#MentorSessionDateTimeEnd').val(moment(new Date(data.MentorSessionDateTimeEnd)).format('hh:mm A'));
-            $('#MentorSessionReflection').val(data.MentorSessionReflection);
+            $('#MentorSessionReflection').val(decodeURIComponent(data.MentorSessionReflection));
         }
     });
 
@@ -129,7 +129,7 @@
         var collectedStartTime = ($('#MentorSessionDateTimeStart').val() != "") ? moment($('#date').val() + ' ' + $('#MentorSessionDateTimeStart').val(), ["DD/MM/YYYY h:mm A"]).toDate() : null;
         var collectedEndTime = ($('#MentorSessionDateTimeEnd').val() != "") ? moment($('#date').val() + ' ' + $('#MentorSessionDateTimeEnd').val(), ["DD/MM/YYYY h:mm A"]).toDate() : null;
         var collectedReflection = $('#MentorSessionReflection').val().toString();
-
+        collectedReflection = encodeURIComponent(collectedReflection);
         var webFormData = new WebFormData(formatDateTime(collectedStartTime), formatDateTime(collectedEndTime), collectedReflection);
 
         console.dir(webFormData);

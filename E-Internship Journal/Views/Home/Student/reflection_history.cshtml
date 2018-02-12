@@ -110,11 +110,11 @@
                 monthRecords = data;
                 if (data.length > 0) { 
                     var selectedMonth = monthRecords[0];
-                    $('#softskilldonewell').val(selectedMonth.SoftSkillsCompetencyDoneWell);
-                    $('#softskillimprove').val(selectedMonth.SoftSkillsCompetencyImprove);
-                    $('#hardskillapply').val(selectedMonth.TechnicalCompetencyApplied);
-                    $('#hardskilldonewell').val(selectedMonth.TechnicalCompetencyDoneWell);
-                    $('#hardskillimprove').val(selectedMonth.TechnicalCompetencyImprove);
+                    $('#softskilldonewell').val(decodeURIComponent(selectedMonth.SoftSkillsCompetencyDoneWell));
+                    $('#softskillimprove').val(decodeURIComponent(selectedMonth.SoftSkillsCompetencyImprove));
+                    $('#hardskillapply').val(decodeURIComponent(selectedMonth.TechnicalCompetencyApplied));
+                    $('#hardskilldonewell').val(decodeURIComponent(selectedMonth.TechnicalCompetencyDoneWell));
+                    $('#hardskillimprove').val(decodeURIComponent(selectedMonth.TechnicalCompetencyImprove));
                 }
                 for (i = 0; i < data.length; i++) {
                     var selectMonthRecord
@@ -128,11 +128,11 @@
 
     $('#selectMonthRecord').change(function () {
         var selectedMonth = monthRecords[$(this).val()];
-        $('#softskilldonewell').val(selectedMonth.SoftSkillsCompetencyDoneWell);
-        $('#softskillimprove').val(selectedMonth.SoftSkillsCompetencyImprove);
-        $('#hardskillapply').val(selectedMonth.TechnicalCompetencyApplied);
-        $('#hardskilldonewell').val(selectedMonth.TechnicalCompetencyDoneWell);
-        $('#hardskillimprove').val(selectedMonth.TechnicalCompetencyImprove);
+        $('#softskilldonewell').val(decodeURIComponent(selectedMonth.SoftSkillsCompetencyDoneWell));
+        $('#softskillimprove').val(decodeURIComponent(selectedMonth.SoftSkillsCompetencyImprove));
+        $('#hardskillapply').val(decodeURIComponent(selectedMonth.TechnicalCompetencyApplied));
+        $('#hardskilldonewell').val(decodeURIComponent(selectedMonth.TechnicalCompetencyDoneWell));
+        $('#hardskillimprove').val(decodeURIComponent(selectedMonth.TechnicalCompetencyImprove));
     });
 
 

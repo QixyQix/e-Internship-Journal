@@ -130,11 +130,11 @@
         dataType: 'json',
         success: function (data) {
             console.dir(data);
-            $('#softskilldonewell').val(data.SoftSkillsCompetencyDoneWell);
-            $('#softskillimprove').val(data.SoftSkillsCompetencyImprove);
-            $('#hardskillapply').val(data.TechnicalCompetencyApplied);
-            $('#hardskilldonewell').val(data.TechnicalCompetencyDoneWell);
-            $('#hardskillimprove').val(data.TechnicalCompetencyImprove);
+            $('#softskilldonewell').val(decodeURIComponent(data.SoftSkillsCompetencyDoneWell));
+            $('#softskillimprove').val(decodeURIComponent(data.SoftSkillsCompetencyImprove));
+            $('#hardskillapply').val(decodeURIComponent(data.TechnicalCompetencyApplied));
+            $('#hardskilldonewell').val(decodeURIComponent(data.TechnicalCompetencyDoneWell));
+            $('#hardskillimprove').val(decodeURIComponent(data.TechnicalCompetencyImprove));
             monthRecordId = data.MonthId;
             LoadCount($('#softskilldonewell').val().length, $('#wordcount1'));
             LoadCount($('#softskillimprove').val().length, $('#wordcount2'));
@@ -191,6 +191,13 @@
             var hardskillapply = "" + $('#hardskillapply').val();
             var hardskilldonewell = "" + $('#hardskilldonewell').val();
             var hardskillimprove = "" + $('#hardskillimprove').val();
+
+            softskilldonewell = encodeURIComponent(softskilldonewell);
+            softskillimprove = encodeURIComponent(softskillimprove);
+            hardskillapply = encodeURIComponent(hardskillapply);
+            hardskilldonewell = encodeURIComponent(hardskilldonewell);
+            hardskillimprove = encodeURIComponent(hardskillimprove);
+
 
             if (softskilldonewell && softskillimprove && hardskillapply && hardskilldonewell && hardskillimprove) {
                 var webFormData = new WebFormData(softskilldonewell, softskillimprove, hardskillapply, hardskilldonewell, hardskillimprove);

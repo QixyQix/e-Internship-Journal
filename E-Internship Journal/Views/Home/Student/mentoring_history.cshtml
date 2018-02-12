@@ -117,7 +117,7 @@
                     $('#date').val(moment(new Date(selectedMonth.MentorSessionDateTimeStart)).format('DD/MM/YYYY'));
                     $('#MentorSessionDateTimeStart').val(moment(new Date(selectedMonth.MentorSessionDateTimeStart)).format('hh:mm A'));
                     $('#MentorSessionDateTimeEnd').val(moment(new Date(selectedMonth.MentorSessionDateTimeEnd)).format('hh:mm A'));
-                    $('#MentorSessionReflection').val(selectedMonth.MentorSessionReflection);
+                    $('#MentorSessionReflection').val(decodeURIComponent(selectedMonth.MentorSessionReflection));
                 }
                 for (i = 0; i < data.length; i++) {
                     var selectMonthRecord
@@ -134,7 +134,7 @@
         $('#datelocked').val(moment(new Date(selectedMonth.MentorSessionDateTimeStart)).format('DD/MM/YYYY'));
         $('#MentorSessionDateTimeStart').val(moment(new Date(selectedMonth.MentorSessionDateTimeStart)).format('hh:mm A'));
         $('#MentorSessionDateTimeEnd').val(moment(new Date(selectedMonth.MentorSessionDateTimeEnd)).format('hh:mm A'));
-        $('#MentorSessionReflection').val(selectedMonth.MentorSessionReflection);
+        $('#MentorSessionReflection').val(decodeURIComponent(selectedMonth.MentorSessionReflection));
     });
 
 

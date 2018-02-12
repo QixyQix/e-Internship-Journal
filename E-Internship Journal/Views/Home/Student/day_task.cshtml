@@ -100,7 +100,7 @@
                 console.dir(data);
                 for (i = 0; i < data.length; i++) {
                     var onetask = data[i];
-                    table.append('<tr><td> <input type="text" name="taskInputId" value="' + onetask.Id + '" hidden/><textarea name="taskInput" class="form-control textbox">' + onetask.Description + '</textarea></td ><td><button class="btn btn-sm btn-danger" onClick="removeTask($(this), ' + onetask.Id + ')"><i class="fa fa-times"></i></button></td></tr >');
+                    table.append('<tr><td> <input type="text" name="taskInputId" value="' + onetask.Id + '" hidden/><textarea name="taskInput" class="form-control textbox">' + decodeURIComponent(onetask.Description) + '</textarea></td ><td><button class="btn btn-sm btn-danger" onClick="removeTask($(this), ' + onetask.Id + ')"><i class="fa fa-times"></i></button></td></tr >');
                 }
             }
         });
@@ -134,9 +134,12 @@
 
                 for (i = 0; i < tasks.length; i++) {
                     if (i < taskIds.length) {
-                        taskObjs.push(new TaskDataObject(taskIds[i], tasks[i]));
+                        var existing = encodeURIComponent(tasks[i]);
+                        taskObjs.push(new TaskDataObject(taskIds[i], existing));
                     } else {
-                        taskObjs.push(new TaskDataObject("", tasks[i]));
+                        var tt = encodeURIComponent(tasks[i]);
+                        
+                        taskObjs.push(new TaskDataObject("", tt));
                     }
                 }
 

@@ -112,7 +112,7 @@
                 events: [
                     {
                         id: task.Date,
-                        title: task.Description,
+                        title: decodeURIComponent(task.Description),
                         start: new Date(task.Date).toDateString(),
                         end: new Date(task.Date).toDateString()
                     }

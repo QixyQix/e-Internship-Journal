@@ -125,10 +125,10 @@
                 $('#FeedbackExperiences').val('' + data.FeedbackExperiences);
                 $('#FeedbackRecommend').val('' + data.FeedbackRecommend);
 
-                $('#FeedbackEnjoy').val('' + data.FeedbackEnjoy);
-                $('#FeedbackLeastEnjoy').val('' + data.FeedbackLeastEnjoy);
-                $('#FeedbackTakeaway').val('' + data.FeedbackTakeaway);
-                $('#FeedbackCareer').val('' + data.FeedbackCareer);
+                $('#FeedbackEnjoy').val('' + decodeURIComponent(data.FeedbackEnjoy));
+                $('#FeedbackLeastEnjoy').val('' + decodeURIComponent(data.FeedbackLeastEnjoy));
+                $('#FeedbackTakeaway').val('' + decodeURIComponent(data.FeedbackTakeaway));
+                $('#FeedbackCareer').val('' + decodeURIComponent(data.FeedbackCareer));
             }
         });
     }
@@ -144,6 +144,10 @@
             var FeedbackLeastEnjoy = "" + $('#FeedbackLeastEnjoy').val().toString();
             var FeedbackTakeaway = "" + $('#FeedbackTakeaway').val().toString();
             var FeedbackCareer = "" + $('#FeedbackCareer').val().toString();
+            FeedbackEnjoy = encodeURIComponent(FeedbackEnjoy);
+            FeedbackLeastEnjoy = encodeURIComponent(FeedbackLeastEnjoy);
+            FeedbackTakeaway = encodeURIComponent(FeedbackTakeaway);
+            FeedbackCareer = encodeURIComponent(FeedbackCareer);
 
             if (FeedbackUseful && FeedbackImproved && FeedbackExperiences && FeedbackRecommend && FeedbackEnjoy && FeedbackLeastEnjoy && FeedbackTakeaway && FeedbackCareer) {
                 var webFormData = new WebFormData(FeedbackUseful, FeedbackImproved, FeedbackExperiences, FeedbackRecommend, FeedbackEnjoy, FeedbackLeastEnjoy, FeedbackTakeaway, FeedbackCareer);

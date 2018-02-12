@@ -246,7 +246,7 @@
                         $('#OverallGrade').val("Not Graded Yet");
                     }
                     
-                    $('#OverallFeedback').val(selectedMonth.OverallFeedback);
+                    $('#OverallFeedback').val(decodeURIComponent(selectedMonth.OverallFeedback));
                 }
                 for (i = 0; i < data.length; i++) {
                     var selectMonthRecord
@@ -270,7 +270,7 @@
         } else {
             $('#OverallGrade').val("Not Graded Yet");
         }
-        $('#OverallFeedback').val(selectedMonth.OverallFeedback);
+        $('#OverallFeedback').val(decodeURIComponent(selectedMonth.OverallFeedback));
     });
 
     function getGrade(average) {
